@@ -370,7 +370,7 @@ def editclient(request, id_client):
 
     if request.method == "GET":
         
-        editform = ClientForm(instance=editclient)
+        editform = EditClientForm(instance=editclient)
         context = {
             'editform': editform,
             'editclient': editclient,

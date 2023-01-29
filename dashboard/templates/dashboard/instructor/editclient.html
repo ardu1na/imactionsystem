@@ -40,7 +40,7 @@
                                             <a href="/dashboard/instructor-students/" class="btn fs-7 mx-2">
                                                 <i class="fa-solid fa-arrow-left me-2 fs-7"></i> Cancel
                                             </a>
-                                            
+
                                         </div>
                                     </div>
                                 </form>
@@ -53,6 +53,50 @@
 
 {% endblock %}
 
+
+
+
+
 {% block additional_js %}
+
+
+<!--- SHOW CANCELLATION FORM -->
+<script>
+    var cancelation = document.getElementById("cancelled");
+    var coso = document.getElementById("fail_can");
+
+    coso.style.display="none"
+  
+    cancelation.onchange=function(){
+     
+        if (this.value == "Active"){
+            coso.style.display = "none";
+ 
+        }
+        else {
+            coso.style.display = "block";
+
+        }
+    }
+</script>
+
+<script>
+    var cancelations = document.getElementById("cancelled");
+    var coso2 = document.getElementById("comment_can");
+
+    coso2.style.display="none"
+  
+    cancelations.onchange=function(){
+     
+        if (this.value == "Active"){
+            coso2.style.display = "none";
+ 
+        }
+        else {
+            coso2.style.display = "block";
+
+        }
+    }
+</script>
 
 {% endblock %}
