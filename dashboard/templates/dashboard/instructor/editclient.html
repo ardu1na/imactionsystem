@@ -25,13 +25,69 @@
                             <form method="post">
                                 {% csrf_token %}
                                     <div class="pt-2 pb-4">
-                                            <div class="formcontrol">
-                                                {% for field in editform %}
-                                                    <div class="form-floating my-3">
-                                                        {{field.label}} {{field}}
+
+                                        <div class="formcontrol">
+                                            
+                                            <div class="form-floating my-3">
+                                                <div class="form-group my-2">
+                                                    {{editform.customer}}
+                                                </div>
+                                                <div class="form-group my-2">
+                                                    {{editform.business_name}}
+                                                </div>
+                                                <div class="form-group my-2">
+                                                    {{editform.source.label}}
+                                                    {{editform.source}}
+                                                </div>
+                                                <div class="form-group my-2">
+                                                    {{editform.website}}
+                                                </div>
+                                                <div class="form-group my-2">
+                                                    {{editform.email}}
+                                                </div>
+                                                <div class="form-group my-2">
+                                                    {{editform.email_2}}
+                                                </div>
+                                                <div class="form-group my-2">
+                                                    {{editform.email_admin}}
+                                                </div>
+                                                <div class="form-group my-2">
+                                                    {{editform.phone_number}}
+                                                </div>
+                                                <div class="form-group my-2">
+                                                    {{editform.phone_2}}
+                                                </div>
+                                                <div class="form-group my-2">
+                                                    {{editform.landing_page}}
+                                                </div>
+
+                                                <div class="form-group my-5 d-flex flex-row">
+                                                    <div class="fs-4 ml-4">
+                                                        Cancel client? 
                                                     </div>
-                                                {% endfor %}
+                                                    {{editform.cancelled}} 
+                                                </div>
+
+                                                <div class="my-4" id="cancelation">
+                                                    <h4>Cancellation</h4>
+
+                                                    <div class="form-group mb-5 d-flex flex-row">
+                                                        {{editform.comment_can}}
+                                                    </div>
+
+                                                    <div class="form-group my-5 d-flex flex-row">
+                                                        <div class="fs-4 ml-4">
+                                                            Do we fail? 
+                                                        </div>
+                                                        {{editform.fail_can}}
+                                                    </div>
+                                                </div>
+
+
+
                                             </div>
+
+                                        </div>
                                             
                                         <div class="form-floating pt-4 my-3 d-flex flex-row-reverse">
                                             
@@ -42,8 +98,9 @@
                                             </a>
 
                                         </div>
+
                                     </div>
-                                </form>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -59,44 +116,17 @@
 
 {% block additional_js %}
 
-
-<!--- SHOW CANCELLATION FORM -->
 <script>
-    var cancelation = document.getElementById("cancelled");
-    var coso = document.getElementById("fail_can");
-
+    var can = document.getElementById("cancelled");
+    var coso = document.getElementById("cancelation");
     coso.style.display="none"
-  
-    cancelation.onchange=function(){
-     
-        if (this.value == "Active"){
-            coso.style.display = "none";
- 
+    can.onchange=function(){
+    
+        if(this.value=="Active"){
+            coso.style.display="none";  
+        }else{
+            coso.style.display="block";
         }
-        else {
-            coso.style.display = "block";
-
-        }
-    }
+    }        
 </script>
-
-<script>
-    var cancelations = document.getElementById("cancelled");
-    var coso2 = document.getElementById("comment_can");
-
-    coso2.style.display="none"
-  
-    cancelations.onchange=function(){
-     
-        if (this.value == "Active"){
-            coso2.style.display = "none";
- 
-        }
-        else {
-            coso2.style.display = "block";
-
-        }
-    }
-</script>
-
 {% endblock %}

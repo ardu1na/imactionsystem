@@ -1,5 +1,5 @@
 from django.forms import ModelForm, \
-TextInput, URLInput, EmailInput, Select
+TextInput, URLInput, EmailInput, Select, Textarea
 
 from customers.models import Client
 
@@ -162,7 +162,7 @@ class EditClientForm(ModelForm):
             'id':"fail_can",
             'placeholder':"Do we fail?",}),
             
-            'comment_can' : TextInput(attrs={
+            'comment_can' : Textarea(attrs={
                 'class':"form-control",
                 'id':"comment_can",
                 'placeholder' : "Comment"
