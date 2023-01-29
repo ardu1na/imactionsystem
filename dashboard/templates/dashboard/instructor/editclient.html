@@ -13,52 +13,68 @@
                 <li class="breadcrumb-item"><a> Edit {{editclient.customer}} </a></li>
             </ol>
         </div>
-        <!-- row -->
+       
         <div class="row">
             <div class="col-xl-12 col-lg-12">
                 <div class="card">
                     <div class="card-header">
                         <h4 class="card-title">{{editclient.customer}}</h4>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body mt-0 pt-0">
                         <div class="basic-form">
                             <form method="post">
                                 {% csrf_token %}
-                                    <div class="pt-2 pb-4">
-
-                                        <div class="formcontrol">
-                                            
-                                            <div class="form-floating my-3">
-                                                <div class="form-group my-2">
+                                    <div class="pt-1 pb-4">
+                                        <div class="formcontrol">                                         
+                                            <div class="form-floating mb-3">
+                                                <div class="form-group my-3">
                                                     {{editform.customer}}
                                                 </div>
-                                                <div class="form-group my-2">
+                                                <div class="form-group my-3">
                                                     {{editform.business_name}}
                                                 </div>
-                                                <div class="form-group my-2">
-                                                    {{editform.source.label}}
+                                                <div class="form-group my-3">
+                                                    <div class="fs-5 ml-4">
+                                                        Source
+                                                    </div>
                                                     {{editform.source}}
                                                 </div>
-                                                <div class="form-group my-2">
+                                                <div class="form-group my-3">
                                                     {{editform.website}}
                                                 </div>
-                                                <div class="form-group my-2">
-                                                    {{editform.email}}
-                                                </div>
-                                                <div class="form-group my-2">
-                                                    {{editform.email_2}}
-                                                </div>
-                                                <div class="form-group my-2">
-                                                    {{editform.email_admin}}
-                                                </div>
-                                                <div class="form-group my-2">
-                                                    {{editform.phone_number}}
-                                                </div>
-                                                <div class="form-group my-2">
-                                                    {{editform.phone_2}}
-                                                </div>
-                                                <div class="form-group my-2">
-                                                    {{editform.landing_page}}
+
+                                                <div class="accordion accordion-rounded-stylish" id="accordion-twelve">
+                                                    <div class="accordion-item">
+                                                        <div class="accordion-header  rounded-lg" id="accord-12One" data-bs-toggle="collapse" data-bs-target="#collapse12One" aria-controls="collapse12One"   aria-expanded="true"  role="button">
+                                                            <span class="accordion-header-icon"></span>
+                                                            <span class="accordion-header-text">Contact Data</span>
+                                                            <span class="accordion-header-indicator"></span>
+                                                        </div>
+
+                                                        <div id="collapse12One" class="collapse accordion__body hidden" aria-labelledby="accord-12One" data-bs-parent="#accordion-twelve">
+                                                            <div class="accordion-body-text">
+                                                             
+                                                                <div class="form-group my-3 d-flex justify-content-between">
+                                                                    {{editform.email}} 
+                                                                    {{editform.email_2}} 
+                                                                    
+                                                                </div>
+                                                                <div class="form-group my-3">
+                                                                    {{editform.email_admin}}
+                                                                </div>
+                                                                <div class="form-group my-3 d-flex justify-content-between">
+                                                                {{editform.phone_number}}
+                                                                {{editform.phone_2}}
+                                                                </div>
+                                                                
+                                                                <div class="form-group my-3">
+                                                                    {{editform.landing_page}}
+                                                                </div>
+                                                                
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
                                                 </div>
 
                                                 <div class="form-group my-5 d-flex flex-row">
@@ -70,11 +86,9 @@
 
                                                 <div class="my-4" id="cancelation">
                                                     <h4>Cancellation</h4>
-
                                                     <div class="form-group mb-5 d-flex flex-row">
                                                         {{editform.comment_can}}
                                                     </div>
-
                                                     <div class="form-group my-5 d-flex flex-row">
                                                         <div class="fs-4 ml-4">
                                                             Do we fail? 
@@ -82,21 +96,14 @@
                                                         {{editform.fail_can}}
                                                     </div>
                                                 </div>
-
-
-
                                             </div>
+                                        </div>       
 
-                                        </div>
-                                            
                                         <div class="form-floating pt-4 my-3 d-flex flex-row-reverse">
-                                            
                                             <button type="submit" class="shadow-sm btn btn-secondary fs-3 " name="editclient"><i class="fa-solid fa-check"></i> Save </button>
-
                                             <a href="/dashboard/instructor-students/" class="btn fs-7 mx-2">
                                                 <i class="fa-solid fa-arrow-left me-2 fs-7"></i> Cancel
                                             </a>
-
                                         </div>
 
                                     </div>
