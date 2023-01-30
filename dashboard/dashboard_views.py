@@ -15,6 +15,8 @@ import mimetypes
 
 from customers.models import *
 from customers.forms import *
+from sales.models import *
+from sales.forms import *
 
 @login_required(login_url='dashboard:login')
 @permission_required({'dashboard.view_configurations'}, raise_exception=True)
@@ -271,16 +273,12 @@ def profile(request):
     }
     return render(request,'dashboard/profile.html',context)
 
-@login_required(login_url='dashboard:login')
-def courses(request):
-    context={
-        "page_title":"Courses"
-    }
-    return render(request,'dashboard/courses/courses.html',context)
+
 
 
 @login_required(login_url='dashboard:login')
 def course_details_1(request):
+    
     context={
         "page_title":"Courses"
     }
@@ -316,7 +314,14 @@ def instructor_schedule(request):
 
 
 
-
+@login_required(login_url='dashboard:login')
+def courses(request):
+    sales = Sale.objects.all()
+    context={
+        "page_title":"Sales",
+        "sales" : sales
+    }
+    return render(request,'dashboard/courses/courses.html',context)
 
 
 @login_required(login_url='dashboard:login')
@@ -766,17 +771,69 @@ def table_bootstrap_basic(request):
     }
     return render(request,'dashboard/table/table-bootstrap-basic.html',context)
 
+
+
+
 @login_required(login_url='dashboard:login')
 def table_datatable_basic(request):
+    
+    sales = Sale.objects.all()
+    
+    if request.method == 'GET':
+        addform = SaleForm()
+        
+    if request.method == 'POST':
+        if "addsale" in request.POST:
+            addform = SaleForm(request.POST)
+            if addform.is_valid():
+                addform.save()
+                return redirect(reverse('dashboard:table-datatable-basic')+ "?added")
+            else:
+                return HttpResponse("hacked from las except else form")
+                
     context={
-        "page_title":"Table Datatable"
+        "page_title":"Sales",
+        "sales" : sales,
+        "addform" : addform
     }
     return render(request,'dashboard/table/table-datatable-basic.html',context)
 
 
+@login_required(login_url='dashboard:login')
+def deletesale(request, id_sale):
+    sale = Sale.objects.get(id_sale=id_sale)
+    sale.delete()
+    return redirect(reverse('dashboard:table-datatable-basic')+ "?deleted")
+
+
+@login_required(login_url='dashboard:login')
+def editsale(request, id_sale):
+    
+    editsale = Sale.objects.get(id_sale=id_sale)
+
+    if request.method == "GET":
+        
+        editform = EditSaleForm(instance=editsale)
+        context = {
+            'editform': editform,
+            'editsale': editsale,
+            'id_sale': id_sale,
+            }
+        return render (request, 'dashboard/table-datatable-basic/editsale.html', context)
+
+    
+    if request.method == 'POST':
+        editform = EditSaleForm(request.POST, instance=editsale)
+        if editform.is_valid():
+            editform.save()
+            return redirect(reverse('dashboard:table-datatable-basic')+ "?ok")
+        else: return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
 
 
 
+    
+
+        
 def page_lock_screen(request):
     return render(request,'dashboard/pages/page-lock-screen.html')
 

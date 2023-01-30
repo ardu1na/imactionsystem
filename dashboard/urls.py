@@ -129,6 +129,9 @@ urlpatterns = [
 
     path('table-bootstrap-basic/',dashboard_views.table_bootstrap_basic,name="table-bootstrap-basic"),
     path('table-datatable-basic/',dashboard_views.table_datatable_basic,name="table-datatable-basic"),
+    path('table-datatable-basic/deletesale/<int:id_sale>/', dashboard_views.deletesale, name="deletesale"),
+    path('table-datatable-basic/editsale/<int:id_sale>/', dashboard_views.editsale, name="editsale"),
+
 
     path('page-lock-screen/',dashboard_views.page_lock_screen,name="page-lock-screen"),
     path('page-error-400/',dashboard_views.page_error_400,name="page-error-400"),
