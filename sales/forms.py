@@ -69,6 +69,67 @@ class SaleForm(ModelForm):
 
 
 
+class ClientSaleForm(ModelForm):
+    
+    account = TextInput(attrs={'class':'form-control', 'hidden':'true'})
+
+    
+    class Meta:
+        model = Sale
+        
+        exclude = ['id_sale', 'cancelled', 'date', 'comment_can', 'date_can', 'fail_can', 'revenue']
+        
+        
+        
+        widgets = {
+
+
+            'kind' : Select(attrs={'class':"form-select",
+            'id':"kind",
+            'placeholder':"Kind",}),
+
+            'comments' : TextInput(attrs={'class':"form-control",
+            'id':"comments",
+            'placeholder':"Comments",}),
+
+            'service' : Select(attrs={
+                'class':"form-select",
+                'id':"service",
+                'placeholder' : "Service",
+                }
+            ),
+
+
+            'price' : TextInput(attrs={
+                'class':"form-control",
+                'id':"price",
+                'placeholder' : "Price"
+                }
+            ),
+
+            'note' : TextInput(attrs={
+                'class':"form-control",
+                'id':"note",
+                'placeholder' : "Note"
+                }
+            ),
+
+            'cost' : TextInput(attrs={
+                'class':"form-control",
+                'id':"cost",
+                'placeholder' : "Cost"
+                }
+            ),
+
+            'status' : Select(attrs={
+                'class':"form-select",
+                'id':"status",
+                'placeholder' : "Status"
+                }
+            ),
+
+        }
+
 
 class EditSaleForm(ModelForm):
     

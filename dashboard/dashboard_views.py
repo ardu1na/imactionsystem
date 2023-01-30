@@ -399,7 +399,7 @@ def addclientsale(request, id_client):
 
     if request.method == "GET":
         
-        addclientsaleform = SaleForm(instance=addclientsale)
+        addclientsaleform = ClientSaleForm(instance=addclientsale)
         context = {
             'addclientsaleform': addclientsaleform,
             'addclientsale': addclientsale,
@@ -409,11 +409,19 @@ def addclientsale(request, id_client):
 
     
     if request.method == 'POST':
-        addclientsaleform = SaleForm(request.POST, instance=addclientsale)
+        
+        addclientsaleform = ClientSaleForm(request.POST)
+        id_client = addclientsale.id_client
+        addclientsaleform.account = id_client
+        
         if addclientsaleform.is_valid():
             addclientsaleform.save()
-            return redirect(reverse('dashboard:instructor-students')+ "?ok")
-        else: return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
+            print (addclientsaleform.errors)
+            print (addclientsaleform)
+           
+            return HttpResponse("SALE SAVED")
+        else: 
+            return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
 
         
 

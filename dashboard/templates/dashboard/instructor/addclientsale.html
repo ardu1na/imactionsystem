@@ -9,7 +9,7 @@
 
         <div class="row page-titles">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item active"><a href="#">Client {{addclientsale}} </a></li>
+                <li class="breadcrumb-item active"><a href="{% url 'dashboard:editclient' id_client=addclientsale.id_client %}">Client {{addclientsale}} </a></li>
                 <li class="breadcrumb-item"><a> New sale</a></li>
             </ol>
         </div>
@@ -22,7 +22,7 @@
                     </div>
                     <div class="card-body mt-0 pt-0">
                         <div class="basic-form">
-                            <form method="post">
+                            <form method="post" action="{% url 'dashboard:addclientsale' id_client=addclientsale.id_client %}">
                                 {% csrf_token %}
                                     <div class="pt-1 pb-4">
                                         <div class="formcontrol">                                         
