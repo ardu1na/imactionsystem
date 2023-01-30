@@ -819,7 +819,7 @@ def editsale(request, id_sale):
             'editsale': editsale,
             'id_sale': id_sale,
             }
-        return render (request, 'dashboard/table-datatable-basic/editsale.html', context)
+        return render (request, 'dashboard/table/editsale.html', context)
 
     
     if request.method == 'POST':

@@ -27,6 +27,16 @@
         </div>
         {% endif %}
     </div>
+
+     <!-- editSALE CONFIRMATION -->
+     <div class="my-3">
+        {% if 'ok' in request.GET %}
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            ☑ Sale changed successfully!
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endif %}
+    </div>
 <!-- END ALERTS -->
 
 
@@ -69,7 +79,7 @@
                                         <tr>
                                             <td>
                                                 <div class="d-flex align-items-center">
-                                                    <a class="mb-0 fs-16 font-w500" href="#">{{sale.account}}</a>
+                                                    <a class="mb-0 fs-16 font-w500" href="{% url 'dashboard:editsale' id_sale=sale.id_sale %}">{{sale.account}}</a>
                                                 </div>
                                             </td>
                                             <td>{{sale.service}}</td>
@@ -105,9 +115,9 @@
                                                             <i class="fa-solid fa-trash fs-7"></i>
                                                             </button>                                                                                  
                                                         <!-- edit BUTTON -->
-                                                            <a href="#" class="shadow-sm btn btn-secondary mx-1">
-                                                                <i class="fa-solid fa-pen-to-square"></i>
-                                                            </a>                                                
+                                                        <a href="{% url 'dashboard:editsale' id_sale=sale.id_sale %}" class="shadow-sm btn btn-secondary mx-1">
+                                                            <i class="fa-solid fa-pen-to-square"></i>
+                                                        </a>                                                 
                                                     </div>
                                                 </div>                                        
                                             </td>
