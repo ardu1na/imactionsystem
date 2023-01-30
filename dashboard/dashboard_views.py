@@ -390,6 +390,30 @@ def editclient(request, id_client):
             editform.save()
             return redirect(reverse('dashboard:instructor-students')+ "?ok")
         else: return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
+        
+        
+@login_required(login_url='dashboard:login')
+def addclientsale(request, id_client):
+    
+    addclientsale = Client.objects.get(id_client=id_client)
+
+    if request.method == "GET":
+        
+        addclientsaleform = SaleForm(instance=addclientsale)
+        context = {
+            'addclientsaleform': addclientsaleform,
+            'addclientsale': addclientsale,
+            'id_client': id_client
+            }
+        return render (request, 'dashboard/instructor/addclientsale.html', context)
+
+    
+    if request.method == 'POST':
+        addclientsaleform = SaleForm(request.POST, instance=addclientsale)
+        if addclientsaleform.is_valid():
+            addclientsaleform.save()
+            return redirect(reverse('dashboard:instructor-students')+ "?ok")
+        else: return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
 
         
 

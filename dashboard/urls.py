@@ -66,9 +66,15 @@ urlpatterns = [
     path('instructor-courses/',dashboard_views.instructor_courses,name="instructor-courses"),
     path('instructor-schedule/',dashboard_views.instructor_schedule,name="instructor-schedule"),
     
+    
+    
     path('instructor-students/',dashboard_views.instructor_students,name="instructor-students"),
     path('instructor-students/deleteclient/<int:id_client>/', dashboard_views.deleteclient, name="deleteclient"),
     path('instructor-students/editclient/<int:id_client>/', dashboard_views.editclient, name="editclient"),
+    path('instructor-students/addclientsale/<int:id_client>/', dashboard_views.addclientsale, name="addclientsale"),
+
+
+
 
     path('instructor-resources/',dashboard_views.instructor_resources,name="instructor-resources"),
     path('instructor-transactions/',dashboard_views.instructor_transactions,name="instructor-transactions"),

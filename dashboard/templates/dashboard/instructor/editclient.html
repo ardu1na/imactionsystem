@@ -20,7 +20,7 @@
                     <div class="card-header">
                         <h4 class="card-title">{{editclient.customer}}</h4>
                         <div class="card-header border-0 flex-wrap pb-0 mb-3">
-                            <a href="#" class="btn btn-primary">ADD Sale<span class="btn-icon-end">
+                            <a href="{% url 'dashboard:addclientsale' id_client=editclient.id_client %}" class="btn btn-primary">ADD Sale<span class="btn-icon-end">
                                 <i class="fa fa-plus"></i></span></a>
                         </div>  
                     </div>
