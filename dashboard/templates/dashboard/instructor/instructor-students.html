@@ -67,6 +67,7 @@
                             </thead>
                             <tbody>
                                 {% for client in clients %}
+                                {% if client.get_rr_client %}
                                 <tr>
                                     <td>
                                         <div class="d-flex align-items-center">
@@ -102,6 +103,7 @@
                                         </div>                                        
                                     </td>
                                 </tr>
+                                {% endif %}
                                 {% endfor %}
                             </tbody>
                         </table>
@@ -114,7 +116,7 @@
 
 
 <!-- modals delete clients -->
-    {% for client in clients%}
+    {% for client in clients %}
         <div class="modal" id="deleteclient{{client.id_client}}">
             {% include 'dashboard/instructor/deleteclient.html' %}
         </div>

@@ -70,12 +70,14 @@ class Client(Cancellation):
         if self.comment_can == None or self.comment_can == "":
             return "Active"
 
-    """def get_rr_tabla(self):
-        sales = self.sales.all()
-        for sale in sales:
-            if sale.revenue == "RR":
-                return "RR"
-            break"""
+    @property
+    def get_rr_client(self):
+        rr_client = False
+        if self.sales:
+            for sale in self.sales.all():
+                if sale.revenue == "RR" and sale.cancelled == "Active":
+                    rr_client = True
+        return rr_client
 
 
 

@@ -326,7 +326,8 @@ def courses(request):
 
 @login_required(login_url='dashboard:login')
 def instructor_students(request):
-    clients = Client.objects.all()
+    clients = Client.objects.filter(cancelled="Active")
+      
     total_rr = 0
     for client in clients:
         if client.cancelled == "Active":
@@ -334,12 +335,11 @@ def instructor_students(request):
                 if sale.cancelled == "Active":
                     if sale.revenue == "RR":
                         total_rr += sale.price
+                        
+        
     addform=ClientForm()
-
     if request.method == 'GET':
         addform = ClientForm()
-
-        
     if request.method == 'POST':
         if "addclient" in request.POST:
             addform = ClientForm(request.POST)
@@ -347,9 +347,7 @@ def instructor_students(request):
                 addform.save()
                 return redirect(reverse('dashboard:instructor-students')+ "?added")
             else:
-                return HttpResponse("hacked from las except else form")
-
-       
+                return HttpResponse("hacked from las except else form")      
     
     context={
         "total_rr": total_rr,
