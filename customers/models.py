@@ -73,12 +73,7 @@ class Client(models.Model):
     def __str__(self):
        return str(self.name)
 
-    def get_cancelled(self):
-        if self.comment_can:
-            return 'Cancelled'
-        if self.comment_can == None or self.comment_can == "":
-            return "Active"
-
+    
     @property
     def get_rr_client(self):
         rr_client = False
@@ -88,12 +83,6 @@ class Client(models.Model):
                     rr_client = True
         return rr_client
 
-
-
-    def save(self, *args, **kwargs):
-        self.cancelled = self.get_cancelled()
-        #self.rr_tabla = self.get_rr_tabla()
-        super(Client, self).save(*args, **kwargs)
 
 
     @property

@@ -8,7 +8,7 @@ import json
 from dashboard import setup_config
 import os
 from django.conf import settings
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required, permission_required 
 import pickle
 import mimetypes
@@ -409,16 +409,13 @@ def addclientsale(request, id):
         addclientsaleform = ClientSaleForm(request.POST)
               
         if addclientsaleform.is_valid():
-            print (addclientsaleform)
-
-            asa = addclientsaleform.save(commit=False)
-            asa.client=client
-            print (asa)
-            asa.save()
+            instance = addclientsaleform.save(commit=False)
+            instance.client=client
+            instance.save()
            
-            return HttpResponse("SALE SAVED")
+            return HttpResponseRedirect('/dashboard/instructor-students/')
+
         else:
-            print (addclientsaleform)
 
             print (addclientsaleform.errors) 
             return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")

@@ -68,7 +68,7 @@ class ClientAdmin(ModelAdmin):
         }),
         ('CANCELLATION', {
             'classes' : ('collapse',),
-            'fields': ('date_can', 'comment_can', 'fail_can')
+            'fields': ('cancelled', 'comment_can', 'fail_can')
         }),
     )
 
