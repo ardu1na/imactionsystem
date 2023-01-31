@@ -71,7 +71,7 @@ class SaleForm(ModelForm):
 
 class ClientSaleForm(ModelForm):
     
-    account = TextInput(attrs={'class':'form-control', 'hidden':'true'})
+    id_account = TextInput(attrs={'class':'form-control', 'hidden':'true'})
 
     
     class Meta:

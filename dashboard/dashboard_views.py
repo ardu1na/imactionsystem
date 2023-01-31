@@ -393,14 +393,14 @@ def editclient(request, id_client):
 @login_required(login_url='dashboard:login')
 def addclientsale(request, id_client):
     
-    addclientsale = Client.objects.get(id_client=id_client)
+    client = Client.objects.get(id_client=id_client)
 
     if request.method == "GET":
         
-        addclientsaleform = ClientSaleForm(instance=addclientsale)
+        addclientsaleform = ClientSaleForm(instance=client, initial={'id_account': client.id_client})
         context = {
             'addclientsaleform': addclientsaleform,
-            'addclientsale': addclientsale,
+            'client': client,
             'id_client': id_client
             }
         return render (request, 'dashboard/instructor/addclientsale.html', context)
@@ -409,8 +409,7 @@ def addclientsale(request, id_client):
     if request.method == 'POST':
         
         addclientsaleform = ClientSaleForm(request.POST)
-        id_client = addclientsale.id_client
-        addclientsaleform.account = id_client
+       
         
         if addclientsaleform.is_valid():
             addclientsaleform.save()
