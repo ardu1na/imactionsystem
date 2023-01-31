@@ -12,7 +12,7 @@ class SaleInstanceInline(admin.TabularInline):
     model = Sale
     extra = 0
     show_change_link = True
-    fk_name = 'account'
+    fk_name = 'client'
 
     fieldsets = (
         ('SALE', {
@@ -40,11 +40,11 @@ class BankDataInstanceInline(admin.StackedInline):
 
 class ClientAdmin(ModelAdmin): 
     inlines = [SaleInstanceInline, BankDataInstanceInline]
-    list_display = ('tier', "customer", 'get_seo', "get_gads", "get_fads", "get_lnkd", "get_cm", "get_wp", 'get_combo', 'rr')
-    search_fields = ("customer", "business_name")
+    list_display = ('tier', "name", 'get_seo', "get_gads", "get_fads", "get_lnkd", "get_cm", "get_wp", 'get_combo', 'rr')
+    search_fields = ("name", "business_name")
     date_hierarchy = 'date'
     list_per_page = 500
-    list_display_links = ('customer', 'business_name', 'website')
+    list_display_links = ('name', 'business_name', 'website')
 
     """def get_queryset(self, request):
         
@@ -53,7 +53,7 @@ class ClientAdmin(ModelAdmin):
 
     fieldsets = (
         ('CLIENT', {
-            'fields': ('customer', 'date')
+            'fields': ('name', 'date')
         }),
         (None, {
             'fields': ( 'business_name', 'source', 'website')

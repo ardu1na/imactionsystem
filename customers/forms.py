@@ -9,12 +9,12 @@ class ClientForm(ModelForm):
     class Meta:
         model = Client
         
-        exclude = ['id_client', 'cancelled', 'date', 'comment_can', 'date_can', 'fail_can']
+        exclude = ['id', 'cancelled', 'date', 'comment_can', 'date_can', 'fail_can']
         
         widgets = {
 
-            'customer' : TextInput(attrs={'class':"form-control",
-            'id':"customer",
+            'name' : TextInput(attrs={'class':"form-control",
+            'id':"name",
             'placeholder':"Client",}),
 
             'website' : URLInput(attrs={'class':"form-control",
@@ -86,12 +86,12 @@ class EditClientForm(ModelForm):
     class Meta:
         model = Client
         
-        exclude = ['id_client','date', 'date_can',]
+        exclude = ['id','date', 'date_can',]
         
         widgets = {
 
-            'customer' : TextInput(attrs={'class':"form-control",
-            'id':"customer",
+            'name' : TextInput(attrs={'class':"form-control",
+            'id':"name",
             'placeholder':"Client",}),
 
             'website' : URLInput(attrs={'class':"form-control",

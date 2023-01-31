@@ -4,7 +4,6 @@ from django.contrib.admin.models import LogEntry
 #from django.db.models import Sum
 
 from unfold.admin import ModelAdmin
-from cancellations.models import Cancellation
 from sales.models import Sale
 
 @admin.register(LogEntry)
@@ -44,19 +43,19 @@ class LogEntryAdmin(ModelAdmin):
     
 
 class SaleAdmin(ModelAdmin):
-    list_display = ('account',  'service', 'note', 'get_total', 'kind','status', 'date', 'comments')
+    list_display = ('client',  'service', 'note', 'get_total', 'kind','status', 'date', 'comments')
     radio_fields = {'kind':admin.VERTICAL,}
     list_filter = ('kind', 'revenue', 'status')
     date_hierarchy = 'date'
-    search_fields = ('account__customer', 'note', 'service')
+    search_fields = ('client__name', 'note', 'service')
     empty_value_display = ''
-    #autocomplete_fields = ('account',)
+    #autocomplete_fields = ('client',)
     show_change_link = True
-    list_display_links = ('account',  'service', 'kind','status', 'date', 'comments')
+    list_display_links = ('client',  'service', 'kind','status', 'date', 'comments')
 
     fieldsets = (
-        ('ACCOUNT', {
-            'fields': ('account','kind',)
+        ('client', {
+            'fields': ('client','kind',)
         }),
         ('SERVICE', {
             'fields': ('revenue', 'service', 'price' )
@@ -88,7 +87,7 @@ class SaleAdmin(ModelAdmin):
         url = reverse("admin:customers_client_change", args=[customers.client.id])
         link = '<a href="%s">%s</a>' % (url, customers.client.id)
         return mark_safe(link)
-    client_link.short_description = 'Account'"""   
+    client_link.short_description = 'client'"""   
     
 
 
@@ -122,86 +121,4 @@ class SaleAdmin(ModelAdmin):
 
 
 admin.site.register(Sale, SaleAdmin)
-
-
-class CancellationAdmin(ModelAdmin):
-    list_display =  ('date_can', 'get_type', 'get_client', 'get_service', 'get_price', 'fail_can', 'comment_can')
-    search_fields = ("comment_can",)
-    list_filter = ('fail_can',)
-    date_hierarchy = 'date_can'
-    list_display_links = ('date_can', 'comment_can', 'fail_can','get_type', 'get_client', 'get_service')
-
-
-
-    readonly_fields = ('get_type', 'get_client', 'get_service',)
-    
-    fieldsets = (
-        (None, {
-            'fields': ('date_can', 'get_type',)
-        }),
-        
-        (None, {
-            'fields': ('get_client', 'get_service')
-        }),
-
-        (None, {
-            'fields': ('comment_can', 'fail_can')
-        }),
-        
-        
-    )
-
-
-
-    def has_add_permission(self, request):
-        return False
-
-
-    @admin.display(description='ACC/SERV')
-    def get_type(self, obj):
-        
-        try:
-            if obj.client.cancelled == "Cancelled":
-                return "ACCOUNT"
-        except:
-            return "SERVICE"
-
-    @admin.display(description='ACCOUNT')
-    def get_client(self, obj):
-        
-        try:
-            if obj.client.cancelled == "Cancelled":
-                return obj.client.customer
-        except:
-            return obj.sale.account
-
-
-    @admin.display(description='SERVICE')
-    def get_service(self, obj):
-        
-        try:
-            if obj.client.cancelled == "Cancelled":
-                sales = obj.client.sales.all()
-                return ", " .join(sale.service for sale in sales[:5])
-        except:
-            return obj.sale.service
-
-
-    @admin.display(description=' $$ ')
-    def get_price(self, obj):
-        
-        try:
-            if obj.client.cancelled == "Cancelled":
-                sales = obj.client.sales.all()
-                total = 0
-                for sale in sales:
-                    total += sale.price 
-                return '${:,}'.format(total)
-        except:
-            return '${:,}'.format(obj.sale.price)
-                        
-    
-
-admin.site.register(Cancellation, CancellationAdmin)
-
 

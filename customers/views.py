@@ -1,4 +1,4 @@
-from django.shortcuts import render
+"""from django.shortcuts import render
 from django.views.generic import ListView
 
 from customers.models import Client
@@ -96,4 +96,4 @@ class ClientsRR(ListView):
             'rr_total' : rr_total
             }
 
-        return render(request, 'dashboard/cms/rr.html', context)
+        return render(request, 'dashboard/cms/rr.html', context)"""

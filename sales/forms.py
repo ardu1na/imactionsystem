@@ -1,20 +1,21 @@
 from django.forms import ModelForm, \
 TextInput, Select, ModelChoiceField, Textarea
 
-from sales.models import Sale, Client
+from sales.models import Sale
+from customers.models import Client
 
 
 class SaleForm(ModelForm):
     
-    account = ModelChoiceField(queryset=Client.objects.all(), widget=Select(attrs={'class':"form-select",
-            'id':"account",
-            'placeholder':"Account",}))
+    client = ModelChoiceField(queryset=Client.objects.all(), widget=Select(attrs={'class':"form-select",
+            'id':"client",
+            'placeholder':"client",}))
 
     
     class Meta:
         model = Sale
         
-        exclude = ['id_sale', 'cancelled', 'date', 'comment_can', 'date_can', 'fail_can', 'revenue']
+        exclude = ['sale_id', 'cancelled', 'date', 'comment_can', 'date_can', 'fail_can', 'revenue']
         
         
         
@@ -71,18 +72,20 @@ class SaleForm(ModelForm):
 
 class ClientSaleForm(ModelForm):
     
-    id_account = TextInput(attrs={'class':'form-control', 'hidden':'true'})
-
+    
+    
     
     class Meta:
         model = Sale
         
-        exclude = ['id_sale', 'cancelled', 'date', 'comment_can', 'date_can', 'fail_can', 'revenue']
+        exclude = ['id', 'cancelled', 'date', 'comment_can', 'date_can', 'fail_can', 'revenue', 'client']
         
         
         
         widgets = {
-
+            
+            
+            
 
             'kind' : Select(attrs={'class':"form-select",
             'id':"kind",
@@ -137,7 +140,7 @@ class EditSaleForm(ModelForm):
     class Meta:
         model = Sale
         
-        exclude = ['id_sale', 'date', 'date_can', 'revenue']
+        exclude = ['id', 'date', 'date_can', 'revenue', 'client']
         
         
         

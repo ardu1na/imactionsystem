@@ -2,10 +2,9 @@ from datetime import date
 from django.db import models
 from django.contrib import admin
 from customers.models import Client
-from cancellations.models import Cancellation, CancellationManager
 
 
-class Sale(Cancellation):
+class Sale(models.Model):
 
 
     UPSELL='Upsell'
@@ -82,9 +81,8 @@ class Sale(Cancellation):
         (ACTIVE, ('Active'))
     )
 
-    id_sale = models.AutoField(primary_key=True)
 
-    account = models.ForeignKey(Client, related_name='sales', null=True, blank=True, on_delete=models.CASCADE, verbose_name="ACCOUNT")
+    client = models.ForeignKey(Client, related_name='sales', null=True, blank=True, on_delete=models.CASCADE, verbose_name="ACCOUNT")
     kind = models.CharField(max_length=50, choices=KIND_CHOICES, null=True, blank=True, verbose_name="KIND")
     date = models.DateField(default=date.today, verbose_name="DATE")
     total = models.IntegerField(blank=True, null=True, verbose_name="TOTAL")
@@ -97,8 +95,21 @@ class Sale(Cancellation):
     status = models.CharField(max_length=5, choices=S_CHOICES, null=True, blank=True, verbose_name="STATUS $")
     cancelled = models.CharField(default='Active', max_length=50, choices=CANCELLED_CHOICES)
     objects = models.Manager()
-    customan = CancellationManager()
     
+    YES = 'YES'
+    NO = 'NO'
+    DEBATIBLE = 'DEBATIBLE'
+
+    FAIL_CHOICES = (
+        (YES, ('YES')),
+        (NO, ('NO')),
+        (DEBATIBLE, ('DEBATIBLE')),
+        )
+    
+    comment_can = models.CharField(max_length=500, blank=True, null=True, verbose_name="COMMENT")
+    date_can = models.DateField(null=True, blank=True, verbose_name="DATE")
+    fail_can = models.CharField(max_length=50, choices=FAIL_CHOICES, blank=True, null=True, verbose_name="DO WE FAIL?")
+        
     def get_cancelled(self):
         if self.comment_can:
             return 'Cancelled'
@@ -117,7 +128,7 @@ class Sale(Cancellation):
         return '${}'.format(result)
 
     def __str__(self):
-       return '{} - {}'.format(self.account, self.date)
+       return '{} - {}'.format(self.client, self.date)
 
 
     @admin.display

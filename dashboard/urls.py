@@ -69,9 +69,9 @@ urlpatterns = [
     
     
     path('instructor-students/',dashboard_views.instructor_students,name="instructor-students"),
-    path('instructor-students/deleteclient/<int:id_client>/', dashboard_views.deleteclient, name="deleteclient"),
-    path('instructor-students/editclient/<int:id_client>/', dashboard_views.editclient, name="editclient"),
-    path('instructor-students/addclientsale/<int:id_client>/', dashboard_views.addclientsale, name="addclientsale"),
+    path('instructor-students/deleteclient/<int:id>/', dashboard_views.deleteclient, name="deleteclient"),
+    path('instructor-students/editclient/<int:id>/', dashboard_views.editclient, name="editclient"),
+    path('instructor-students/addclientsale/<int:id>/', dashboard_views.addclientsale, name="addclientsale"),
 
 
 
@@ -135,8 +135,8 @@ urlpatterns = [
 
     path('table-bootstrap-basic/',dashboard_views.table_bootstrap_basic,name="table-bootstrap-basic"),
     path('table-datatable-basic/',dashboard_views.table_datatable_basic,name="table-datatable-basic"),
-    path('table-datatable-basic/deletesale/<int:id_sale>/', dashboard_views.deletesale, name="deletesale"),
-    path('table-datatable-basic/editsale/<int:id_sale>/', dashboard_views.editsale, name="editsale"),
+    path('table-datatable-basic/deletesale/<int:id>/', dashboard_views.deletesale, name="deletesale"),
+    path('table-datatable-basic/editsale/<int:id>/', dashboard_views.editsale, name="editsale"),
 
 
     path('page-lock-screen/',dashboard_views.page_lock_screen,name="page-lock-screen"),

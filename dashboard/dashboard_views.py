@@ -359,17 +359,17 @@ def instructor_students(request):
 
 
 @login_required(login_url='dashboard:login')
-def deleteclient(request, id_client):
-    client = Client.objects.get(id_client=id_client)
+def deleteclient(request, id):
+    client = Client.objects.get(id=id)
     client.delete()
     return redirect(reverse('dashboard:instructor-students')+ "?deleted")
 
 
 
 @login_required(login_url='dashboard:login')
-def editclient(request, id_client):
+def editclient(request, id):
     
-    editclient = Client.objects.get(id_client=id_client)
+    editclient = Client.objects.get(id=id)
 
     if request.method == "GET":
         
@@ -377,7 +377,7 @@ def editclient(request, id_client):
         context = {
             'editform': editform,
             'editclient': editclient,
-            'id_client': id_client
+            'id': id
             }
         return render (request, 'dashboard/instructor/editclient.html', context)
 
@@ -391,33 +391,36 @@ def editclient(request, id_client):
         
         
 @login_required(login_url='dashboard:login')
-def addclientsale(request, id_client):
+def addclientsale(request, id):
     
-    client = Client.objects.get(id_client=id_client)
+    client = Client.objects.get(id=id)
 
     if request.method == "GET":
         
-        addclientsaleform = ClientSaleForm(instance=client, initial={'id_account': client.id_client})
+        addclientsaleform = ClientSaleForm()
         context = {
             'addclientsaleform': addclientsaleform,
             'client': client,
-            'id_client': id_client
             }
         return render (request, 'dashboard/instructor/addclientsale.html', context)
 
     
     if request.method == 'POST':
-        
         addclientsaleform = ClientSaleForm(request.POST)
-       
-        
+              
         if addclientsaleform.is_valid():
-            addclientsaleform.save()
-            print (addclientsaleform.errors)
             print (addclientsaleform)
+
+            asa = addclientsaleform.save(commit=False)
+            asa.client=client
+            print (asa)
+            asa.save()
            
             return HttpResponse("SALE SAVED")
-        else: 
+        else:
+            print (addclientsaleform)
+
+            print (addclientsaleform.errors) 
             return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
 
         
@@ -829,16 +832,16 @@ def table_datatable_basic(request):
 
 
 @login_required(login_url='dashboard:login')
-def deletesale(request, id_sale):
-    sale = Sale.objects.get(id_sale=id_sale)
+def deletesale(request, id):
+    sale = Sale.objects.get(id=id)
     sale.delete()
     return redirect(reverse('dashboard:table-datatable-basic')+ "?deleted")
 
 
 @login_required(login_url='dashboard:login')
-def editsale(request, id_sale):
+def editsale(request, id):
     
-    editsale = Sale.objects.get(id_sale=id_sale)
+    editsale = Sale.objects.get(id=id)
 
     if request.method == "GET":
         
@@ -846,7 +849,7 @@ def editsale(request, id_sale):
         context = {
             'editform': editform,
             'editsale': editsale,
-            'id_sale': id_sale,
+            'id': id,
             }
         return render (request, 'dashboard/table/editsale.html', context)
 

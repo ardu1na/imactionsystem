@@ -79,7 +79,7 @@
                                         <tr>
                                             <td>
                                                 <div class="d-flex align-items-center">
-                                                    <a class="mb-0 fs-16 font-w500" href="{% url 'dashboard:editsale' id_sale=sale.id_sale %}">{{sale.account}}</a>
+                                                    <a class="mb-0 fs-16 font-w500" href="{% url 'dashboard:editsale' id=sale.id %}">{{sale.client}}</a>
                                                 </div>
                                             </td>
                                             <td>{{sale.service}}</td>
@@ -111,11 +111,11 @@
                                                     </a>
                                                     <div class="dropdown-menu dropdown-menu-start">
                                                         <!-- delete BUTTON -->
-                                                            <button type="button" class="shadow-sm btn btn-danger" data-bs-toggle="modal" data-bs-target="#deletesale{{sale.id_sale}}">
+                                                            <button type="button" class="shadow-sm btn btn-danger" data-bs-toggle="modal" data-bs-target="#deletesale{{sale.id}}">
                                                             <i class="fa-solid fa-trash fs-7"></i>
                                                             </button>                                                                                  
                                                         <!-- edit BUTTON -->
-                                                        <a href="{% url 'dashboard:editsale' id_sale=sale.id_sale %}" class="shadow-sm btn btn-secondary mx-1">
+                                                        <a href="{% url 'dashboard:editsale' id=sale.id %}" class="shadow-sm btn btn-secondary mx-1">
                                                             <i class="fa-solid fa-pen-to-square"></i>
                                                         </a>                                                 
                                                     </div>
@@ -163,7 +163,7 @@
 
 <!-- modals delete sale -->
 {% for sale in sales %}
-<div class="modal" id="deletesale{{sale.id_sale}}">
+<div class="modal" id="deletesale{{sale.id}}">
     {% include 'dashboard/table/deletesale.html' %}
 </div>
 {% endfor %}
