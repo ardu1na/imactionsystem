@@ -79,10 +79,10 @@
                                         <tr>
                                             <td>
                                                 <div class="d-flex align-items-center">
-                                                    <a class="mb-0 fs-16 font-w500" href="{% url 'dashboard:editsale' id=sale.id %}">{{sale.client}}</a>
+                                                    <a class="mb-0 fs-16 font-w500" href="{% url 'dashboard:editclient' id=sale.client.id %}">{{sale.client}}</a>
                                                 </div>
                                             </td>
-                                            <td>{{sale.service}}</td>
+                                            <td> <a class="mb-0 fs-16 font-w500" href="{% url 'dashboard:editsale' id=sale.id %}"> {{sale.service}} </a> </td>
                                             <td>{{sale.note|default_if_none:"-"}}</td>
                                             <td>{{sale.total}}</td>
                                             <td>{{sale.kind|default_if_none:"-"}}</td>

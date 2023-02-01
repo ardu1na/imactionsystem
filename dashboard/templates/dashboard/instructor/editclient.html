@@ -184,14 +184,14 @@
                                                 <div class="basic-list-group m-3">
                                                     
                                                     <ul class="list-group">
-                                                        <li class="list-group-item"><h4>{{account.payment}}</h4> <div class="form-floating pt-4 my-3 d-flex flex-row-reverse">
-                                                            <a href="{% url 'dashboard:editbankdata' id=account.id %}" class="btn btn-info mx-3">Change<span class="btn-icon-end">
-                                                                <i class="fa-solid fa-pen-to-square"></i></span></a>
-                                                        </div></li>
+                                                       
+                                                        <li class="list-group-item"><h4>{{account.payment}}</h4>                                                           
+                                                        </li>
                                                         <li class="list-group-item">CBU: {{account.cbu}}</li>
                                                         <li class="list-group-item">ALIAS: {{account.alias}}</li>
                                                         <li class="list-group-item">CUIT: {{account.cuit}}</li>
                                                         <li class="list-group-item">DETAIL: {{account.detail}}</li>
+                                                        <li class="list-group-item centered"><a href="{% url 'dashboard:editbankdata' id=account.id %}" class="btn btn-info">Change</a></li>
                                                     </ul>
                                                 </div>
                                                 
@@ -210,11 +210,32 @@
                                 </div>
                                 <div class="tab-pane fade" id="contact">
                                     <div class="pt-4">
-                                        <h4>This is contact title</h4>
-                                        <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove.
-                                        </p>
-                                        <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove.
-                                        </p>
+                                        {% if editclient.sales %}
+                    
+                                        <div>
+                                            <div class="basic-list-group m-3">
+                                                
+                                                <ul class="list-group">
+                                                    {% for sale in editclient.sales.all %}
+
+                                                    <li class="list-group-item">
+                                                        <h4>{{sale.service}}  </h4>
+                                                        <p> ${{sale.price}}</p>
+                                                        <p> {{sale.date|date:"d/m/Y"}}</p>
+                                                        {% if sale.note %}
+                                                        <p> {{sale.note}}
+                                                        {% endif %}
+                                                        <div class="form-floating pt-4 my-3 d-flex flex-row-reverse">
+                                                        <a href="{% url 'dashboard:editsale' id=sale.id %}" class="btn btn-info mx-3">Change<span class="btn-icon-end">
+                                                            <i class="fa-solid fa-pen-to-square"></i></span></a>
+                                                    </div></li>
+                                                    {% endfor %}
+
+                                                </ul>
+                                            </div>
+                                            
+                                        </div>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
