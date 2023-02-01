@@ -14,9 +14,9 @@
             <div class="card students-list">
                           
                 <!-- TABLE CANCELLATIONS -->
-                <div class="card-body py-0">
+                <div class="card-body py-4">
                     <div class="table-responsive">
-                        <table id="example4" class="display" style="min-width: 845px">                            <thead>
+                        <table id="example4" class="display  pb-5" style="min-width: 845px">                            <thead>
                                 <tr>
                                     <th>DATE</th>
 
@@ -42,7 +42,7 @@
                                         
                                         <td> ACCOUNT </td>
                                         <td>
-                                            {% for sale in client.sales.all %}
+                                            {% for sale in client.sales.all|slice:":3"%}
                                             {% if sale.revenue == "RR" %}
                                             {{sale.service}}/
                                             {% endif %} 
