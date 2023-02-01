@@ -392,6 +392,23 @@ def allclients(request):
     return render(request,'dashboard/instructor/allclients.html',context)
 
 
+
+@login_required(login_url='dashboard:login')
+def cancellations(request):
+    clients_cancelled = Client.objects.filter(cancelled="Cancelled")
+    sales_cancelled = Sale.objects.filter(cancelled="Cancelled")
+    
+    
+    context={
+        "clients_cancelled": clients_cancelled,
+        "sales_cancelled" : sales_cancelled,
+       
+        "page_title":"Cancellations"
+    }   
+    
+    return render(request,'dashboard/instructor/cancellations.html',context)
+
+
 @login_required(login_url='dashboard:login')
 def deleteclient(request, id):
     client = Client.objects.get(id=id)
@@ -496,11 +513,10 @@ def bankdata(request, id):
         
 @login_required(login_url='dashboard:login')
 def editbankdata(request, id):
-    
     editbankdata = BankData.objects.get(id=id)
-
+    
     if request.method == "GET":
-        
+    
         form = BankDataForm(instance=editbankdata)
         
         context = {

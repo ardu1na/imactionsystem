@@ -1,0 +1,67 @@
+{% extends 'dashboard/elements/layouts/admin.html' %}
+
+{% load static %}
+
+{% block additional_css %}
+{% endblock %}
+
+{% block content %}
+
+
+<!-- MAIN CANCELLATIONS -->
+    <div class="row">
+        <div class="col-xl-12">            
+            <div class="card students-list">
+                          
+                <!-- TABLE CANCELLATIONS -->
+                <div class="card-body py-0">
+                    <div class="table-responsive">
+                        <table class="table display mb-4 dataTablesCard order-table card-table text-black application" id="application-tbl1">
+                            <thead>
+                                <tr>
+                                    <th>DATE</th>
+                                    <th>ACC/SERV</th>
+                                    <th>ACCOUNT</th>
+                                    <th>SERVICE</th>
+                                    <th>$$</th>
+                                    <th>DO WE FAIL?</th>
+                                    <th>COMMENT</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if clients_cancelled %}
+                                    {% for client in clients_cancelled %}
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <a class="mb-0 fs-16 font-w500" href="#">{{client.name}}</a>
+                                            </div>
+                                        </td>
+                                        <td> add date !! </td>
+                                        <td> ACCOUNT </td>
+                                        <td>
+                                            {% for sale in client.sales.all %}
+                                            {% if sale.revenue == "RR" %}
+                                            {{sale.service}}/
+                                            {% endif %} 
+                                            {% endfor %}
+                                        </td>
+                                        <td>{{client.total_rr}}</td>
+                                        <td>{{client.fail_can}}</td>
+                                        <td>{{client.comment_can}}</td>    
+                                    {% endfor %}
+                                {%endif%}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- end MAIN clients -->
+
+{% endblock %}
+
+
+{% block additional_js %}
+{% endblock %}

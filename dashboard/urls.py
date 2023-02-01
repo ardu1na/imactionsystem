@@ -78,6 +78,7 @@ urlpatterns = [
 
     path('allclients/', dashboard_views.allclients, name="allclients"),
 
+    path('cancellations/', dashboard_views.cancellations, name="cancellations"),
 
 
 
