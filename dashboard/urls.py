@@ -72,7 +72,8 @@ urlpatterns = [
     path('instructor-students/deleteclient/<int:id>/', dashboard_views.deleteclient, name="deleteclient"),
     path('instructor-students/editclient/<int:id>/', dashboard_views.editclient, name="editclient"),
     path('instructor-students/addclientsale/<int:id>/', dashboard_views.addclientsale, name="addclientsale"),
-    
+    path('instructor-students/bankdata/<int:id>/', dashboard_views.bankdata, name="bankdata"),
+
     path('allclients/', dashboard_views.allclients, name="allclients"),
 
 

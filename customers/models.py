@@ -257,7 +257,7 @@ class BankData(models.Model):
     payment = models.CharField(max_length=50,choices=PAYMENT_CHOICES, blank=False, null=False)
     cbu = models.CharField(null=True, blank=True, max_length=100)
     alias = models.CharField(max_length=200, blank=True, null=True, default="")
-    CUIT = models.CharField(max_length=50, blank=True, null=True, default="")
+    cuit = models.CharField(max_length=50, blank=True, null=True, default="")
     detail = models.CharField(max_length=500, default="", blank=True, null=True)
     account = models.ForeignKey(Client, related_name= 'accounts', on_delete=models.CASCADE, blank=False, null=False)
     

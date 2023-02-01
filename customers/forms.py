@@ -1,7 +1,7 @@
 from django.forms import ModelForm, \
 TextInput, URLInput, EmailInput, Select, Textarea
 
-from customers.models import Client
+from customers.models import Client, BankData
 
 
 class ClientForm(ModelForm):
@@ -170,5 +170,57 @@ class EditClientForm(ModelForm):
                 }
             ),
 
+
+        }
+
+
+
+
+class BankDataForm(ModelForm):
+    
+    
+    
+    
+    class Meta:
+        model = BankData
+        
+        exclude = ['id', 'account',]
+        
+        
+        
+        widgets = {
+            
+            
+            
+
+            'payment' : Select(attrs={'class':"form-select",
+            'id':"payment",
+            'placeholder':"Payment",}),
+
+            'cbu' : TextInput(attrs={'class':"form-control",
+            'id':"cbu",
+            'placeholder':"CBU",}),
+
+            'alias' : TextInput(attrs={
+                'class':"form-control",
+                'id':"alias",
+                'placeholder' : "Alias",
+                }
+            ),
+
+
+            'cuit' : TextInput(attrs={
+                'class':"form-control",
+                'id':"cuit",
+                'placeholder' : "CUIT"
+                }
+            ),
+
+            'detail' : TextInput(attrs={
+                'class':"form-control",
+                'id':"detail",
+                'placeholder' : "Detail"
+                }
+            ),
 
         }

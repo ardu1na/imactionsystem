@@ -427,6 +427,9 @@ def editclient(request, id):
         else: return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
         
         
+        
+        
+        
 @login_required(login_url='dashboard:login')
 def addclientsale(request, id):
     
@@ -455,6 +458,39 @@ def addclientsale(request, id):
         else:
 
             print (addclientsaleform.errors) 
+            return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
+        
+        
+        
+    
+@login_required(login_url='dashboard:login')
+def bankdata(request, id):
+    
+    client = Client.objects.get(id=id)
+
+    if request.method == "GET":
+        
+        bankdataform = BankDataForm(instance=client)
+        context = {
+            'bankdataform': bankdataform,
+            'client': client,
+            }
+        return render (request, 'dashboard/instructor/bankdata.html', context)
+
+    
+    if request.method == 'POST':
+        bankdataform = BankDataForm(request.POST)
+              
+        if bankdataform.is_valid():
+            nbk = bankdataform.save(commit=False)
+            nbk.account = client
+            nbk.save()
+            
+            return HttpResponseRedirect('/dashboard/instructor-students/')
+
+        else:
+
+            print (bankdataform.errors) 
             return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
 
         

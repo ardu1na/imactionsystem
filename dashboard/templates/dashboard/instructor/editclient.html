@@ -7,10 +7,37 @@
 
 {% block content %}
 
+<!-- modal delete clients -->
+<div class="modal" id="deleteclient{{editclient.id}}">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center py-5">
+                <h4 class="fs-2 my-2">Deleting {{editclient.name}} permanently...</h4>
+                <p class="fs-5 my-2">If {{editclient.name}} has previous sales, his name and info will be gone. Maybe you just want to cancel the account... </p>
+                <h4 class="fs-2 my-2">¿Are you sure?</h4>
+
+                <div class="form-floating mt-5">
+                    <a href="./" class="btn fs-7 mx-2">
+                        <i class="fa-solid fa-arrow-left me-2 fs-7"></i> Nop, go back.
+                    </a>
+                    <a href="{% url 'dashboard:deleteclient' id=editclient.id %}" class="shadow-sm btn btn-danger fs-6 p-3">
+                        <i class="fa-regular fa-trash-can fs-5 me-1"></i> Yes!
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- MAIN -->
+
+
         <div class="row page-titles">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item active"><a href="/dashboard/instructor-students/">Clients</a></li>
-                <li class="breadcrumb-item"><a> Edit {{editclient.name}} </a></li>
+                <li class="breadcrumb-item"><a> Edit {{editclient.name}} </a> </li>
             </ol>
         </div>
        
@@ -19,10 +46,15 @@
                 <div class="card">
                     <div class="card-header">
                         <h4 class="card-title">{{editclient.name}}</h4>
+                        
                         <div class="card-header border-0 flex-wrap pb-0 mb-3">
+                            <a href="{% url 'dashboard:bankdata' id=editclient.id %}" class="btn btn-success mx-3">ADD BankData<span class="btn-icon-end">
+                                <i class="fa fa-plus"></i></span></a>
                             <a href="{% url 'dashboard:addclientsale' id=editclient.id %}" class="btn btn-primary">ADD Sale<span class="btn-icon-end">
                                 <i class="fa fa-plus"></i></span></a>
+                                
                         </div>  
+                        
                     </div>
                     <div class="card-body mt-0 pt-0">
                         <div class="basic-form">
@@ -104,20 +136,61 @@
                                             </div>
                                         </div>       
 
+
                                         <div class="form-floating pt-4 my-3 d-flex flex-row-reverse">
                                             <button type="submit" class="shadow-sm btn btn-secondary fs-3 " name="editclient"><i class="fa-solid fa-check"></i> Save </button>
                                             <a href="/dashboard/instructor-students/" class="btn fs-7 mx-2">
                                                 <i class="fa-solid fa-arrow-left me-2 fs-7"></i> Cancel
                                             </a>
+                                            
                                         </div>
 
                                     </div>
                             </form>
+
+                            <div class="form-floating pt-4 my-3 d-flex flex-row-reverse">
+                                
+                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteclient{{editclient.id}}">Delete Client<span class="btn-icon-end">
+                                    <i class="fa-solid fa-trash fs-7"></i></span></button>
+                            </div>
+
                         </div>
                     </div>
                 </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">BankData</h4>
+                            
+                            <div class="card-header border-0 flex-wrap pb-0 mb-3">
+                                <a href="{% url 'dashboard:bankdata' id=editclient.id %}" class="btn btn-success mx-3">ADD BankData<span class="btn-icon-end">
+                                    <i class="fa fa-plus"></i></span></a>
+                            </div>  
+                            
+                        </div>
+                        {% if editclient.accounts %}
+
+                        <div class="card-body mt-0 pt-0">
+                            {% for account in editclient.accounts.all %}
+                            <div>
+                                <h4>{{account.payment}}</h4>
+                                CBU: {{account.cbu}}
+                                ALIAS: {{account.alias}}
+                                CUIT: {{account.cuit}}
+                                DETAIL: {{account.detail}}
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+
+                    </div>
+
+                    
+                </div>
+                
             </div>
-        </div>
+
+
 
 
 
@@ -143,6 +216,12 @@
             coso.style.display="block";
         }
     }        
+</script>
+
+
+<!-- NEWMODAL -->
+<script>
+    const deleteclient = new bootstrap.Modal('#deleteclient',   {keyboard: true}    )
 </script>
 
 {% endblock %}
