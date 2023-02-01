@@ -9,9 +9,14 @@ class ClientForm(ModelForm):
     class Meta:
         model = Client
         
-        exclude = ['id', 'cancelled', 'date', 'comment_can', 'date_can', 'fail_can']
+        exclude = ['id', 'cancelled', 'comment_can', 'date_can', 'fail_can']
         
         widgets = {
+
+            'date' : TextInput(attrs={'class':"datetimepicker form-control",
+            'id':"PublishDateTimeTextbox",
+            'type':"date",
+            'placeholder':"Date",}),
 
             'name' : TextInput(attrs={'class':"form-control",
             'id':"name",
@@ -86,9 +91,15 @@ class EditClientForm(ModelForm):
     class Meta:
         model = Client
         
-        exclude = ['id','date', 'date_can',]
+        exclude = ['id',]
         
         widgets = {
+
+            'date' : TextInput(attrs={'class':"datetimepicker form-control",
+            'id':"PublishDateTimeTextbox",
+            'type':"date",
+            'placeholder':"Date",}),
+
 
             'name' : TextInput(attrs={'class':"form-control",
             'id':"name",
@@ -155,6 +166,11 @@ class EditClientForm(ModelForm):
                 'class':"form-select",
             'id':"cancelled",
             'placeholder':"Cancelled?",}),
+            
+            'date_can' : TextInput(attrs={'class':"datetimepicker form-control",
+            'id':"PublishDateTimeTextbox",
+            'type':"date",
+            'placeholder':"Cancellation date",}),
             
             
             'fail_can' : Select(attrs={

@@ -15,12 +15,16 @@ class SaleForm(ModelForm):
     class Meta:
         model = Sale
         
-        exclude = ['sale_id', 'cancelled', 'date', 'comment_can', 'date_can', 'fail_can', 'revenue']
+        exclude = ['sale_id', 'cancelled', 'comment_can', 'date_can', 'fail_can', 'revenue']
         
         
         
         widgets = {
-
+            
+            'date' : TextInput(attrs={'class':"datetimepicker form-control",
+            'id':"PublishDateTimeTextbox",
+            'type':"date",
+            'placeholder':"Date",}),
 
             'kind' : Select(attrs={'class':"form-select",
             'id':"kind",
@@ -78,14 +82,17 @@ class ClientSaleForm(ModelForm):
     class Meta:
         model = Sale
         
-        exclude = ['id', 'cancelled', 'date', 'comment_can', 'date_can', 'fail_can', 'revenue', 'client']
+        exclude = ['id', 'cancelled', 'comment_can', 'date_can', 'fail_can', 'revenue', 'client']
         
         
         
         widgets = {
             
             
-            
+            'date' : TextInput(attrs={'class':"datetimepicker form-control",
+            'id':"PublishDateTimeTextbox",
+            'type':"date",
+            'placeholder':"Date",}),
 
             'kind' : Select(attrs={'class':"form-select",
             'id':"kind",
@@ -140,13 +147,17 @@ class EditSaleForm(ModelForm):
     class Meta:
         model = Sale
         
-        exclude = ['id', 'date', 'date_can', 'revenue', 'client']
+        exclude = ['id', 'revenue', 'client']
         
         
         
         widgets = {
 
-
+            'date' : TextInput(attrs={'class':"datetimepicker form-control",
+            'id':"PublishDateTimeTextbox",
+            'type':"date",
+            'placeholder':"Date",}),
+            
             'kind' : Select(attrs={'class':"form-select",
             'id':"kind",
             'placeholder':"Kind",}),
@@ -196,6 +207,10 @@ class EditSaleForm(ModelForm):
             'id':"cancelled",
             'placeholder':"Cancelled?",}),
             
+            'date_can' : TextInput(attrs={'class':"datetimepicker form-control",
+            'id':"PublishDateTimeTextbox",
+            'type':"date",
+            'placeholder':"Cancellation date",}),
             
             'fail_can' : Select(attrs={
                 'class':"form-select",

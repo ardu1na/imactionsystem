@@ -33,7 +33,8 @@
                                 {% if clients_cancelled %}
                                     {% for client in clients_cancelled %}
                                     <tr>
-                                        <td> add date !! </td>
+                                        <td> {% if client.date_can %} {{client.date_can}}
+                                            {% else %} add date !! {% endif %}</td>
                                         <td>
                                             <div class="d-flex align-items-center">
                                                 <a class="mb-0 fs-16 font-w500" href="{% url 'dashboard:editclient' id=client.id %}">{{client.name}}</a>
@@ -58,7 +59,9 @@
                                 {% if sales_cancelled %}
                                     {% for sale in sales_cancelled %}
                                     <tr>
-                                        <td> add date !! </td>
+                                        <td> {% if sale.date_can %} {{sale.date_can}}
+                                            {% else %} add date !! {% endif %}</td>
+                                        
 
                                         <td>
                                             <div class="d-flex align-items-center">
