@@ -1,0 +1,96 @@
+{% extends 'dashboard/elements/layouts/admin.html' %}
+
+{% load static %}
+
+{% block additional_css %}
+{% endblock %}
+
+{% block content %}
+
+
+
+<!-- MAIN -->
+
+
+        <div class="row page-titles">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item active"><a href="./">{{editbankdata.account}}</a></li>
+                <li class="breadcrumb-item"><a> BankData {{editbankdata.payment}} </a> </li>
+            </ol>
+        </div>
+       
+        <div class="row">
+            <div class="col-xl-12 col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Change</h4>
+                        
+                        
+                    </div>
+                    <div class="card-body mt-0 pt-0">
+                        <div class="basic-form">
+                            <form method="post">
+                                {% csrf_token %}
+                                    <div class="pt-1 pb-4">
+                                        <div class="formcontrol">                                         
+                                            <div class="form-floating mb-3">
+                                                <div class="form-group my-3">
+                                                    <div class="fs-5 ml-4">
+                                                        Payment Method
+                                                    </div>
+                                                    {{form.payment}}
+                                                </div>
+                                                <div class="form-group my-3">
+                                                    {{form.cbu}}
+                                                </div>
+                                                <div class="form-group my-3">
+                                                    
+                                                    {{form.alias}}
+                                                </div>
+                                                <div class="form-group my-3">
+                                                    {{form.cuit}}
+                                                </div>
+                                                <div class="form-group my-3">
+                                                    {{form.detail}}
+                                                </div>
+
+                                                
+                                                
+                                            </div>
+                                        </div>       
+
+                                        <div class="form-floating pt-4 my-3 d-flex flex-row-reverse">
+                                            <button type="submit" class="shadow-sm btn btn-secondary fs-3 " name="bankdata"><i class="fa-solid fa-check"></i> Save </button>
+                                            <a href="{% url 'dashboard:editclient' id=editbankdata.account.id %}" class="btn fs-7 mx-2">
+                                                <i class="fa-solid fa-arrow-left me-2 fs-7"></i> Cancel
+                                            </a>
+                                        </div>
+
+                                    </div>
+                            </form>
+
+
+                        </div>
+                    </div>
+                    
+                </div>
+                
+            </div>
+        </div>
+
+
+
+
+
+
+
+{% endblock %}
+
+
+
+
+
+{% block additional_js %}
+
+
+{% endblock %}

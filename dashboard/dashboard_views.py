@@ -492,6 +492,31 @@ def bankdata(request, id):
 
             print (bankdataform.errors) 
             return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
+        
+        
+@login_required(login_url='dashboard:login')
+def editbankdata(request, id):
+    
+    editbankdata = BankData.objects.get(id=id)
+
+    if request.method == "GET":
+        
+        form = BankDataForm(instance=editbankdata)
+        
+        context = {
+            'form': form,
+            'editbankdata': editbankdata,
+            'id': id
+            }
+        return render (request, 'dashboard/instructor/editbankdata.html', context)
+
+    
+    if request.method == 'POST':
+        form = BankDataForm(request.POST, instance=editbankdata)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/dashboard/instructor-students/')
+        else: return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
 
         
 
