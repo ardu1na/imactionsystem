@@ -110,14 +110,9 @@ class Sale(models.Model):
     date_can = models.DateField(null=True, blank=True, verbose_name="DATE")
     fail_can = models.CharField(max_length=50, choices=FAIL_CHOICES, blank=True, null=True, verbose_name="DO WE FAIL?")
         
-    def get_cancelled(self):
-        if self.comment_can:
-            return 'Cancelled'
-        if self.comment_can == None or self.comment_can == "":
-            return "Active"
-
+    
     def save(self, *args, **kwargs):
-        self.cancelled = self.get_cancelled()
+        
         self.revenue = self.get_revenue()
         super(Sale, self).save(*args, **kwargs)
 

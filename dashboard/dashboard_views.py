@@ -344,8 +344,8 @@ def instructor_students(request):
         if "addclient" in request.POST:
             addform = ClientForm(request.POST)
             if addform.is_valid():
-                addform.save()
-                return redirect(reverse('dashboard:instructor-students')+ "?added")
+                newclient = addform.save()
+                return redirect('dashboard:editclient', id=newclient.id)
             else:
                 return HttpResponse("hacked from las except else form")      
     
@@ -356,6 +356,40 @@ def instructor_students(request):
         "page_title":"Clients"
     }
     return render(request,'dashboard/instructor/instructor-students.html',context)
+
+
+@login_required(login_url='dashboard:login')
+def allclients(request):
+    clients = Client.objects.all()
+      
+    total_rr = 0
+    for client in clients:
+        if client.cancelled == "Active":
+            for sale in client.sales.all():
+                if sale.cancelled == "Active":
+                    if sale.revenue == "RR":
+                        total_rr += sale.price
+                        
+        
+    addform=ClientForm()
+    if request.method == 'GET':
+        addform = ClientForm()
+    if request.method == 'POST':
+        if "addclient" in request.POST:
+            addform = ClientForm(request.POST)
+            if addform.is_valid():
+                newclient = addform.save()
+                return redirect('dashboard:editclient', id=newclient.id)
+            else:
+                return HttpResponse("hacked from las except else form")      
+    
+    context={
+        "total_rr": total_rr,
+        "clients" : clients,
+        "addform": addform,
+        "page_title":"All Clients"
+    }
+    return render(request,'dashboard/instructor/allclients.html',context)
 
 
 @login_required(login_url='dashboard:login')
@@ -383,9 +417,12 @@ def editclient(request, id):
 
     
     if request.method == 'POST':
-        editform = ClientForm(request.POST, instance=editclient)
+        editform = EditClientForm(request.POST, instance=editclient)
+        print("form antes de validar:")
+        print(editform)
         if editform.is_valid():
-            editform.save()
+            clientedit = editform.save(commit=False)
+            clientedit.save()
             return redirect(reverse('dashboard:instructor-students')+ "?ok")
         else: return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
         

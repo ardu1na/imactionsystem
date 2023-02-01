@@ -162,6 +162,7 @@ class EditClientForm(ModelForm):
             'id':"fail_can",
             'placeholder':"Do we fail?",}),
             
+            
             'comment_can' : Textarea(attrs={
                 'class':"form-control",
                 'id':"comment_can",
