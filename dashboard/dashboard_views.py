@@ -325,7 +325,7 @@ def courses(request):
 
 
 @login_required(login_url='dashboard:login')
-def instructor_students(request):
+def clients(request):
     clients = Client.objects.filter(cancelled="Active")
       
     total_rr = 0
@@ -922,7 +922,7 @@ def table_bootstrap_basic(request):
 
 
 @login_required(login_url='dashboard:login')
-def table_datatable_basic(request):
+def sales(request):
     
     sales = Sale.objects.all()
     

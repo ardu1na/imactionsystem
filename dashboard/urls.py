@@ -10,6 +10,29 @@ app_name='dashboard'
 urlpatterns = [
     
     
+    
+    
+    path('clients/',dashboard_views.clients, name="clients"),
+    path('clients/deleteclient/<int:id>/', dashboard_views.deleteclient, name="deleteclient"),
+    path('clients/editclient/<int:id>/', dashboard_views.editclient, name="editclient"),
+    path('clients/addclientsale/<int:id>/', dashboard_views.addclientsale, name="addclientsale"),
+    
+    path('clients/bankdata/<int:id>/', dashboard_views.bankdata, name="bankdata"),
+    path('clients/editbankdata/<int:id>/', dashboard_views.editbankdata, name="editbankdata"),
+    path('clients/deletebankdata/<int:id>/', dashboard_views.deletebankdata, name="deletebankdata"),
+
+    path('allclients/', dashboard_views.allclients, name="allclients"),
+
+    path('cancellations/', dashboard_views.cancellations, name="cancellations"),
+
+    path('sales/',dashboard_views.sales, name="sales"),
+    path('sales/deletesale/<int:id>/', dashboard_views.deletesale, name="deletesale"),
+    path('sales/editsale/<int:id>/', dashboard_views.editsale, name="editsale"),
+
+
+
+
+    
 	path('users/',users_views.users,name="users"),
 	path('user-details/<int:id>/',users_views.user_details,name="user-details"),
 	path('add-user/',users_views.add_user,name="add-user"),
@@ -65,23 +88,6 @@ urlpatterns = [
     path('instructor-dashboard/',dashboard_views.instructor_dashboard,name="instructor-dashboard"),
     path('instructor-courses/',dashboard_views.instructor_courses,name="instructor-courses"),
     path('instructor-schedule/',dashboard_views.instructor_schedule,name="instructor-schedule"),
-    
-    
-    
-    path('clients/',dashboard_views.instructor_students,name="clients"),
-    path('clients/deleteclient/<int:id>/', dashboard_views.deleteclient, name="deleteclient"),
-    path('clients/editclient/<int:id>/', dashboard_views.editclient, name="editclient"),
-    path('clients/addclientsale/<int:id>/', dashboard_views.addclientsale, name="addclientsale"),
-    path('clients/bankdata/<int:id>/', dashboard_views.bankdata, name="bankdata"),
-    path('clients/editbankdata/<int:id>/', dashboard_views.editbankdata, name="editbankdata"),
-    path('clients/deletebankdata/<int:id>/', dashboard_views.deletebankdata, name="deletebankdata"),
-
-    path('allclients/', dashboard_views.allclients, name="allclients"),
-
-    path('cancellations/', dashboard_views.cancellations, name="cancellations"),
-
-
-
     path('instructor-resources/',dashboard_views.instructor_resources,name="instructor-resources"),
     path('instructor-transactions/',dashboard_views.instructor_transactions,name="instructor-transactions"),
     path('instructor-liveclass/',dashboard_views.instructor_liveclass,name="instructor-liveclass"),
@@ -140,10 +146,6 @@ urlpatterns = [
     path('form-validation/',dashboard_views.form_validation,name="form-validation"),
 
     path('table-bootstrap-basic/',dashboard_views.table_bootstrap_basic,name="table-bootstrap-basic"),
-    path('sales/',dashboard_views.table_datatable_basic,name="sales"),
-    path('sales/deletesale/<int:id>/', dashboard_views.deletesale, name="deletesale"),
-    path('sales/editsale/<int:id>/', dashboard_views.editsale, name="editsale"),
-
 
     path('page-lock-screen/',dashboard_views.page_lock_screen,name="page-lock-screen"),
     path('page-error-400/',dashboard_views.page_error_400,name="page-error-400"),

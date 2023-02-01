@@ -214,7 +214,10 @@ dz_array = {
                                 "instructor_schedule":[
                                     f"{foldername_d}/vendor/fullcalendar/css/main.min.css",
                                 ],
-                                "instructor_students":[
+                                "clients":[
+                                    f"{foldername_d}/vendor/datatables/css/jquery.dataTables.min.css",
+                                ],
+                                "allclients":[
                                     f"{foldername_d}/vendor/datatables/css/jquery.dataTables.min.css",
                                 ],
                                 "instructor_resources":[],
@@ -301,7 +304,10 @@ dz_array = {
                                 ],
                                 "form_validation":[],
                                 "table_bootstrap_basic":[],
-                                "table_datatable_basic":[
+                                "sales":[
+                                    f"{foldername_d}/vendor/datatables/css/jquery.dataTables.min.css",
+                                ],
+                                "cancellations":[
                                     f"{foldername_d}/vendor/datatables/css/jquery.dataTables.min.css",
                                 ],
                                 "page_login":[],
@@ -509,7 +515,15 @@ dz_array = {
                                     f"{foldername_d}/vendor/fullcalendar/js/main.min.js",
                                     f"{foldername_d}/js/plugins-init/fullcalendar-init.js"
                                 ],
-                                "instructor_students":[
+                                "clients":[
+                                    f"{foldername_d}/vendor/chart.js/Chart.bundle.min.js",
+                                    f"{foldername_d}/vendor/apexchart/apexchart.js",
+                                    f"{foldername_d}/vendor/datatables/js/jquery.dataTables.min.js",
+                                    f"{foldername_d}/js/plugins-init/datatables.init.js",
+                                    f"{foldername_d}/vendor/owl-carousel/owl.carousel.js",
+                                    f"{foldername_d}/js/dashboard/instructor-student.js",
+                                ],
+                                "allclients":[
                                     f"{foldername_d}/vendor/chart.js/Chart.bundle.min.js",
                                     f"{foldername_d}/vendor/apexchart/apexchart.js",
                                     f"{foldername_d}/vendor/datatables/js/jquery.dataTables.min.js",
@@ -682,7 +696,13 @@ dz_array = {
                             ],
                             "form_validation":[],
                             "table_bootstrap_basic":[],
-                            "table_datatable_basic":[
+                            "sales":[
+                                f"{foldername_d}/vendor/chart.js/Chart.bundle.min.js",
+                                f"{foldername_d}/vendor/apexchart/apexchart.js",
+                                f"{foldername_d}/vendor/datatables/js/jquery.dataTables.min.js",
+                                f"{foldername_d}/js/plugins-init/datatables.init.js",
+                            ],
+                            "cancellations":[
                                 f"{foldername_d}/vendor/chart.js/Chart.bundle.min.js",
                                 f"{foldername_d}/vendor/apexchart/apexchart.js",
                                 f"{foldername_d}/vendor/datatables/js/jquery.dataTables.min.js",
