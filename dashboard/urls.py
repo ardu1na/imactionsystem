@@ -68,13 +68,13 @@ urlpatterns = [
     
     
     
-    path('instructor-students/',dashboard_views.instructor_students,name="instructor-students"),
-    path('instructor-students/deleteclient/<int:id>/', dashboard_views.deleteclient, name="deleteclient"),
-    path('instructor-students/editclient/<int:id>/', dashboard_views.editclient, name="editclient"),
-    path('instructor-students/addclientsale/<int:id>/', dashboard_views.addclientsale, name="addclientsale"),
-    path('instructor-students/bankdata/<int:id>/', dashboard_views.bankdata, name="bankdata"),
-    path('instructor-students/editbankdata/<int:id>/', dashboard_views.editbankdata, name="editbankdata"),
-    path('instructor-students/deletebankdata/<int:id>/', dashboard_views.deletebankdata, name="deletebankdata"),
+    path('clients/',dashboard_views.instructor_students,name="clients"),
+    path('clients/deleteclient/<int:id>/', dashboard_views.deleteclient, name="deleteclient"),
+    path('clients/editclient/<int:id>/', dashboard_views.editclient, name="editclient"),
+    path('clients/addclientsale/<int:id>/', dashboard_views.addclientsale, name="addclientsale"),
+    path('clients/bankdata/<int:id>/', dashboard_views.bankdata, name="bankdata"),
+    path('clients/editbankdata/<int:id>/', dashboard_views.editbankdata, name="editbankdata"),
+    path('clients/deletebankdata/<int:id>/', dashboard_views.deletebankdata, name="deletebankdata"),
 
     path('allclients/', dashboard_views.allclients, name="allclients"),
 
@@ -140,9 +140,9 @@ urlpatterns = [
     path('form-validation/',dashboard_views.form_validation,name="form-validation"),
 
     path('table-bootstrap-basic/',dashboard_views.table_bootstrap_basic,name="table-bootstrap-basic"),
-    path('table-datatable-basic/',dashboard_views.table_datatable_basic,name="table-datatable-basic"),
-    path('table-datatable-basic/deletesale/<int:id>/', dashboard_views.deletesale, name="deletesale"),
-    path('table-datatable-basic/editsale/<int:id>/', dashboard_views.editsale, name="editsale"),
+    path('sales/',dashboard_views.table_datatable_basic,name="sales"),
+    path('sales/deletesale/<int:id>/', dashboard_views.deletesale, name="deletesale"),
+    path('sales/editsale/<int:id>/', dashboard_views.editsale, name="editsale"),
 
 
     path('page-lock-screen/',dashboard_views.page_lock_screen,name="page-lock-screen"),

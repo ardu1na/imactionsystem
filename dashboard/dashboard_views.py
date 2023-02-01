@@ -355,7 +355,7 @@ def instructor_students(request):
         "addform": addform,
         "page_title":"Clients RR"
     }
-    return render(request,'dashboard/instructor/instructor-students.html',context)
+    return render(request,'dashboard/instructor/clients.html',context)
 
 
 @login_required(login_url='dashboard:login')
@@ -413,7 +413,7 @@ def cancellations(request):
 def deleteclient(request, id):
     client = Client.objects.get(id=id)
     client.delete()
-    return redirect(reverse('dashboard:instructor-students')+ "?deleted")
+    return redirect(reverse('dashboard:clients')+ "?deleted")
 
 
 
@@ -440,7 +440,7 @@ def editclient(request, id):
         if editform.is_valid():
             clientedit = editform.save(commit=False)
             clientedit.save()
-            return redirect(reverse('dashboard:instructor-students')+ "?ok")
+            return redirect(reverse('dashboard:clients')+ "?ok")
         else: return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
         
         
@@ -470,7 +470,7 @@ def addclientsale(request, id):
             instance.client=client
             instance.save()
            
-            return HttpResponseRedirect('/dashboard/instructor-students/')
+            return HttpResponseRedirect('/dashboard/clients/')
 
         else:
 
@@ -503,7 +503,7 @@ def bankdata(request, id):
             nbk.account = client
             nbk.save()
             
-            return HttpResponseRedirect('/dashboard/instructor-students/')
+            return HttpResponseRedirect('/dashboard/clients/')
 
         else:
 
@@ -531,7 +531,7 @@ def editbankdata(request, id):
         form = BankDataForm(request.POST, instance=editbankdata)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/dashboard/instructor-students/')
+            return HttpResponseRedirect('/dashboard/clients/')
         else: return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
 
         
@@ -540,7 +540,7 @@ def editbankdata(request, id):
 def deletebankdata(request, id):
     bank = BankData.objects.get(id=id)
     bank.delete()
-    return HttpResponseRedirect('/dashboard/instructor-students/')
+    return HttpResponseRedirect('/dashboard/clients/')
 
 
 
@@ -934,7 +934,7 @@ def table_datatable_basic(request):
             addform = SaleForm(request.POST)
             if addform.is_valid():
                 addform.save()
-                return redirect(reverse('dashboard:table-datatable-basic')+ "?added")
+                return redirect(reverse('dashboard:sales')+ "?added")
             else:
                 return HttpResponse("hacked from las except else form")
                 
@@ -943,14 +943,14 @@ def table_datatable_basic(request):
         "sales" : sales,
         "addform" : addform
     }
-    return render(request,'dashboard/table/table-datatable-basic.html',context)
+    return render(request,'dashboard/table/sales.html',context)
 
 
 @login_required(login_url='dashboard:login')
 def deletesale(request, id):
     sale = Sale.objects.get(id=id)
     sale.delete()
-    return redirect(reverse('dashboard:table-datatable-basic')+ "?deleted")
+    return redirect(reverse('dashboard:sales')+ "?deleted")
 
 
 @login_required(login_url='dashboard:login')
@@ -973,7 +973,7 @@ def editsale(request, id):
         editform = EditSaleForm(request.POST, instance=editsale)
         if editform.is_valid():
             editform.save()
-            return redirect(reverse('dashboard:table-datatable-basic')+ "?ok")
+            return redirect(reverse('dashboard:sales')+ "?ok")
         else: return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
 
 
