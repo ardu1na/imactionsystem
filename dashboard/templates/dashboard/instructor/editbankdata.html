@@ -8,10 +8,31 @@
 {% block content %}
 
 
+<!-- delete bank modal -->
+<div class="modal" id="deletebankdata{{editbankdata.id}}">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+                   
+                <div class="modal-body text-center py-5">
+                    <p class="fs-2 my-2">Deleting {{editbankdata.payment}} account of {{editbankdata.account}} permanently...</p>
+                    <h4 class="fs-2 my-2">¿Are you sure?</h4>
+    
+                    <div class="form-floating mt-5">
+                        <a href="./" class="btn fs-7 mx-2">
+                            <i class="fa-solid fa-arrow-left me-2 fs-7"></i> Nop, go back.
+                        </a>
+                        <a href="{% url 'dashboard:deletebankdata' id=editbankdata.id %}" class="shadow-sm btn btn-danger fs-6 p-3">
+                            <i class="fa-regular fa-trash-can fs-5 me-1"></i> Yes!
+                        </a>
+                    </div>
+                </div>
+    
+        </div>
+    </div>
+    
+</div>
 
 <!-- MAIN -->
-
-
         <div class="row page-titles">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item active"><a href="./">{{editbankdata.account}}</a></li>
@@ -25,8 +46,15 @@
                     <div class="card-header">
                         <h4 class="card-title">Change</h4>
                         
-                        
+                        <div class="form-floating pt-4 my-3 d-flex flex-row-reverse">
+                                                
+                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deletebankdata{{editbankdata.id}}">Delete<span class="btn-icon-end">
+                                <i class="fa-solid fa-trash fs-7"></i></span></button>
+                        </div>
+
                     </div>
+
+
                     <div class="card-body mt-0 pt-0">
                         <div class="basic-form">
                             <form method="post">
@@ -92,5 +120,8 @@
 
 {% block additional_js %}
 
-
+ <!-- NEWMODAL -->
+ <script>
+    const deletebankdata = new bootstrap.Modal('#deletebankdata',   {keyboard: true}    )
+</script>
 {% endblock %}

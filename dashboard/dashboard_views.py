@@ -520,7 +520,11 @@ def editbankdata(request, id):
 
         
 
-
+@login_required(login_url='dashboard:login')
+def deletebankdata(request, id):
+    bank = BankData.objects.get(id=id)
+    bank.delete()
+    return HttpResponseRedirect('/dashboard/instructor-students/')
 
 
 
