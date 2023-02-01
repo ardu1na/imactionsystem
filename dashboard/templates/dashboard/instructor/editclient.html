@@ -219,9 +219,22 @@
                                                     {% for sale in editclient.sales.all %}
 
                                                     <li class="list-group-item">
-                                                        <h4>{{sale.service}}  </h4>
-                                                        <p> ${{sale.price}}</p>
-                                                        <p> {{sale.date|date:"d/m/Y"}}</p>
+                                                        <a class="mb-4 d-flex flex-row-reverse"> {{sale.date|date:"d/m/Y"}}</a>
+                                                        <h4><a href="{% url 'dashboard:editsale' id=sale.id %}">{{sale.service}}  </a></h4> 
+                                                        <p class="fs-4">{% if sale.status == "FC" %}
+                                                            <span class="badge light badge-danger">
+                                                                {{sale.status}}
+                                                            </span> 
+                                                        {% elif sale.status == "P" %}
+                                                           <span class="badge light badge-success">
+                                                                {{sale.status}}
+                                                            </span> 
+                                                        {% else %} 
+                                                            <span class="badge light badge-warning">
+                                                                {{sale.status|default_if_none:"?"}}
+                                                            </span> 
+                                                        {% endif %} ${{sale.price}} </p>
+                                                        
                                                         {% if sale.note %}
                                                         <p> {{sale.note}}
                                                         {% endif %}

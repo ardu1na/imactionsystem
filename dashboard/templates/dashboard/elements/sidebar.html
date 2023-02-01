@@ -16,14 +16,18 @@
                 </ul>
 
             </li>
-            <li><a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
+            <li><a href="{% url 'dashboard:table-datatable-basic' %}">
                     <i class="bi bi-file-earmark-spreadsheet"></i>
                     <span class="nav-text">SALES</span>
                 </a>
-                <ul aria-expanded="false">
-                    <li><a href="{% url 'dashboard:table-datatable-basic' %}">All sales</a></li>
-                </ul>
             </li>
+
+            <li><a href="{% url 'dashboard:cancellations' %}">
+                <i class="bi bi-x-square"></i>
+
+                <span class="nav-text">CANCELLATIONS</span>
+            </a>
+        </li>
         </ul>
 
     </div>

@@ -76,7 +76,22 @@
                                     <td>{{client.website}}</td>
                                     <td>{{client.email}}</td>
                                     <td>{{client.phone_number}}</td>
-                                    <td>{{client.cancelled}}</td>
+
+                                    
+
+                                    {% if client.cancelled == "Cancelled" %}
+                                    <td> <div class="d-flex align-items-center">
+                                        <span class="badge light badge-danger">
+                                        cancelled
+                                    </span>  </div> </td>
+                                    {% else %}
+                                    <td> <div class="d-flex align-items-center">
+                                        <span class="badge light badge-success">
+                                       active
+                                    </span> </div> </td>
+                                    {% endif %}
+                               
+
                                     <td>{{client.rr}}</td>                                    
                                     <td>
                                         <div class="dropdown">

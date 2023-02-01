@@ -52,7 +52,6 @@ class Client(models.Model):
     phone_2 = models.CharField(max_length=25, blank=True, null=True)
     landing_page = models.URLField(blank=True, null=True)
     cancelled = models.CharField(default='Active', max_length=51, choices=CANCELLED_CHOICES)
-    #rr_tabla = models.CharField(max_length=20, null=True, blank= True)
 
     objects = models.Manager()
     YES = 'YES'

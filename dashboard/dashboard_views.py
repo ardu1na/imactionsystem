@@ -353,7 +353,7 @@ def instructor_students(request):
         "total_rr": total_rr,
         "clients" : clients,
         "addform": addform,
-        "page_title":"Clients"
+        "page_title":"Clients RR"
     }
     return render(request,'dashboard/instructor/instructor-students.html',context)
 
