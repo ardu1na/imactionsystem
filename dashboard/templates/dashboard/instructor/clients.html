@@ -134,11 +134,66 @@
                 <form  method="post">
                 {% csrf_token %}
                 <div class="modal-body">
-                    {% for field in addform %}
-                        <div class="my-3">
-                            {{ field }}
+                  
+                    <div class="form-group my-3">
+                        <label class="form-label">Date</label>
+                        {{ addform.date}}
+                    </div>
+
+                    <div class="form-group my-3">
+                        {{addform.name}}
+                    </div>
+
+                    <div class="form-group my-3">
+                        {{addform.business_name}}
+                    </div>
+                    <div class="form-group my-3">
+                        <div class="fs-5 ml-4">
+                            Source
                         </div>
-                    {% endfor %}
+                        {{addform.source}}
+                    </div>
+                    <div class="form-group my-3">
+                        {{addform.website}}
+                    </div>
+
+                    <div class="accordion accordion-rounded-stylish" id="accordion-twelve">
+                        <div class="accordion-item">
+                            <div class="accordion-header  rounded-lg" id="accord-12One" data-bs-toggle="collapse" data-bs-target="#collapse12One" aria-controls="collapse12One"   aria-expanded="true"  role="button">
+                                <span class="accordion-header-icon"></span>
+                                <span class="accordion-header-text">Contact Data</span>
+                                <span class="accordion-header-indicator"></span>
+                            </div>
+
+                            <div id="collapse12One" class="collapse accordion__body hidden" aria-labelledby="accord-12One" data-bs-parent="#accordion-twelve">
+                                <div class="accordion-body-text">
+                                
+                                    <div class="form-group my-3 d-flex justify-content-between">
+                                        <div class="me-3">
+                                            {{addform.email}} </div>
+                                        {{addform.email_2}} 
+                                        
+                                    </div>
+                                    <div class="form-group my-3">
+                                        {{addform.email_admin}}
+                                    </div>
+                                    <div class="form-group my-3 d-flex justify-content-between">
+                                        <div class="me-3">
+                                    {{addform.phone_number}}</div>
+                                    {{addform.phone_2}}
+                                    </div>
+                                    
+                                    <div class="form-group my-3">
+                                        {{addform.landing_page}}
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+
+
                     <div class="form-floating my-3 text-center">
                         <button type="submit" class="shadow-sm btn btn-secondary" name="addclient"><i class="fa-solid fa-check me-2"></i> Submit</button>
                     </div>
