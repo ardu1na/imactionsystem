@@ -9,8 +9,10 @@
 
         <div class="row page-titles">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item active"><a href="/dashboard/sales/">Sales</a></li>
-                <li class="breadcrumb-item"><a> Edit sale: {{editsale.client}} - {{editsale.service}} ({{editsale.date}})</a></li>
+                <li class="breadcrumb-item"><a href="/dashboard/sales/">Sales</a></li>
+                <li class="breadcrumb-item"><a href="/dashboard/clients/editclient/{{editsale.client.id}}"> {{editsale.client}} </a>  </li>
+                <li class="breadcrumb-item active"> {{editsale.service}} </li>
+
             </ol>
         </div>
        
@@ -18,7 +20,7 @@
             <div class="col-xl-12 col-lg-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title">Change</h4>
+                        <h4 class="card-title"> Edit {{editsale.service}} ({{editsale.date}})  </h4>
                     </div>
                     <div class="card-body mt-0 pt-0">
                         <div class="basic-form">
@@ -59,7 +61,8 @@
                                                 </div>
                                                 <div class="form-group my-3">
                                                     <div class="fs-5 ml-4">
-                                                            Cost                                                    </div>
+                                                        Cost
+                                                    </div>
                                                     {{editform.cost}}
                                                 </div>
                                                 <div class="form-group my-3">

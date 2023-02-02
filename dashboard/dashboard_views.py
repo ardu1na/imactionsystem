@@ -361,7 +361,17 @@ def clients(request):
 @login_required(login_url='dashboard:login')
 def allclients(request):
     clients = Client.objects.all()
-      
+    
+    clients_rr = []
+    for client in clients.filter(cancelled="Active"):
+        if client.get_rr_client == True:
+            clients_rr.append(client.id)
+        """for sale in client.sales.all():
+            if sale.revenue == "RR" and sale.cancelled == "Active":
+                clients_rr.append(sale.client.id)       
+    #c_rr = Client.objects.filter(id__in=clients_rr)"""
+    c_rr_total = len(clients_rr)
+
     total_rr = 0
     for client in clients:
         if client.cancelled == "Active":
@@ -387,8 +397,10 @@ def allclients(request):
         "total_rr": total_rr,
         "clients" : clients,
         "addform": addform,
+        "c_rr_total" : c_rr_total,
         "page_title":"All Clients"
     }
+
     return render(request,'dashboard/instructor/allclients.html',context)
 
 
