@@ -29,32 +29,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {% if clients_cancelled %}
-                                    {% for client in clients_cancelled %}
-                                    <tr>
-                                        <td> {% if client.date_can %} {{client.date_can}}
-                                            {% else %} add date !! {% endif %}</td>
-                                        <td>
-                                            <div class="d-flex align-items-center">
-                                                <a class="mb-0 fs-16 font-w500" href="{% url 'dashboard:editclient' id=client.id %}">{{client.name}}</a>
-                                            </div>
-                                        </td>
-                                        
-                                        <td> ACCOUNT </td>
-                                        <td>
-                                            {% for sale in client.sales.all|slice:":3"%}
-                                            {% if sale.revenue == "RR" %}
-                                            {{sale.service}}/
-                                            {% endif %} 
-                                            {% endfor %}
-                                        </td>
-                                        <td>${{client.total_rr}}</td>
-                                        <td>{{client.fail_can}}</td>
-                                        <td> <div class="d-flex align-items-center">
-                                            {{client.comment_can}} </div>
-                                        </td>    
-                                    {% endfor %}
-                                {%endif%}
+                                
                                 {% if sales_cancelled %}
                                     {% for sale in sales_cancelled %}
                                     <tr>
@@ -67,7 +42,9 @@
                                                 <a class="mb-0 fs-16 font-w500"  href="{% url 'dashboard:editclient' id=sale.client.id %}">{{sale.client}}</a>
                                             </div>
                                         </td>
-                                        <td> SERVICE </td>
+                                        <td> {% if sale.client.cancelled == "Cancelled" %} ACCOUNT 
+                                              {% else %} SERVICE {% endif %}
+                                        </td>
                                         <td>
                                             {% if sale.revenue == "RR" %}
                                            <a href="{% url 'dashboard:editsale' id=sale.id %}"> {{sale.service}} </a>

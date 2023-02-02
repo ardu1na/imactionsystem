@@ -396,7 +396,7 @@ def allclients(request):
 @login_required(login_url='dashboard:login')
 def cancellations(request):
     clients_cancelled = Client.objects.filter(cancelled="Cancelled")
-    sales_cancelled = Sale.objects.filter(cancelled="Cancelled")
+    sales_cancelled = Sale.objects.filter(cancelled="Cancelled").filter(revenue="RR")
     
     
     context={
@@ -435,10 +435,15 @@ def editclient(request, id):
     
     if request.method == 'POST':
         editform = EditClientForm(request.POST, instance=editclient)
-        print("form antes de validar:")
-        print(editform)
         if editform.is_valid():
             clientedit = editform.save(commit=False)
+            if clientedit.cancelled == "Cancelled":
+                for sale in clientedit.sales.all():
+                    sale.cancelled = "Cancelled"
+                    sale.comment_can = clientedit.comment_can
+                    sale.fail_can = clientedit.fail_can
+                    sale.date_can = clientedit.date_can
+                    sale.save()
             clientedit.save()
             return redirect(reverse('dashboard:clients')+ "?ok")
         else: return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")

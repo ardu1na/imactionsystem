@@ -72,6 +72,15 @@ class Client(models.Model):
     def __str__(self):
        return str(self.name)
 
+
+
+    """def save(self, *args, **kwargs):
+        if self.cancelled == "Cancelled":
+            for sale in self.sales:
+                sale.cancelled = "Cancelled"
+        super('Sale', self).save(*args, **kwargs)"""
+        
+        
     
     @property
     def get_rr_client(self):
