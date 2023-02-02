@@ -5,30 +5,34 @@
         <ul class="metismenu" id="menu">
             
             <li><a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
-                    <i class="bi bi-people"></i>
-
-                    <span class="nav-text">CLIENTS</span>
-                </a>
-                <ul aria-expanded="false">
-                    <li><a href="{% url 'dashboard:clients' %}">Clients RR</a></li>
-                    <li><a href="{% url 'dashboard:allclients' %}">All Clients</a></li>
-
-                </ul>
-
+                    <i class="bi bi-people"></i> 
+                    <span class="nav-text">CLIENTS</span></a>
+                    <ul aria-expanded="false">
+                        <li><a href="{% url 'dashboard:clients' %}">Clients RR</a></li>
+                        <li><a href="{% url 'dashboard:allclients' %}">All Clients</a></li>
+                    </ul>
             </li>
+
             <li><a href="{% url 'dashboard:sales' %}">
-                    <i class="bi bi-file-earmark-spreadsheet"></i>
-                    <span class="nav-text">SALES</span>
+                <i class="bi bi-file-earmark-spreadsheet"></i>
+                <span class="nav-text">SALES</span></a>
+            </li>
+
+            <li>
+                <a href="{% url 'dashboard:cancellations' %}">
+                    <i class="bi bi-dash-circle"></i>
+                    <span class="nav-text">CANCELLATIONS</span>
                 </a>
             </li>
 
-            <li><a href="{% url 'dashboard:cancellations' %}">
-                <i class="bi bi-x-square"></i>
-
-                <span class="nav-text">CANCELLATIONS</span>
-            </a>
-        </li>
+            <li><a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
+                <i class="bi bi-file-arrow-up"></i>
+                <span class="nav-text">EXPENSES</span></a>
+                <ul aria-expanded="false">
+                    <li><a href="#"> All Expenses </a></li>
+                    <li><a href="#"> Wages </a></li>
+                </ul>
+            </li>
         </ul>
-
     </div>
 </div>
