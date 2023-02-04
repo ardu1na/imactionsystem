@@ -94,7 +94,6 @@ class Sale(models.Model):
     cost = models.IntegerField(default=0, verbose_name="COST")
     status = models.CharField(max_length=5, choices=S_CHOICES, null=True, blank=True, verbose_name="STATUS $")
     cancelled = models.CharField(default='Active', max_length=50, choices=CANCELLED_CHOICES)
-    objects = models.Manager()
     
     YES = 'YES'
     NO = 'NO'

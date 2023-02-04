@@ -22,10 +22,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
    
     #Dashboard
-    path('dashboard/', include('dashboard.urls', namespace='dashboard')),
+    path('', include('dashboard.urls', namespace='dashboard')),
 
     #Frontend
-    path('', include('frontend.urls', namespace='frontend')),
+    path('f', include('frontend.urls', namespace='frontend')),
     path('ckeditor/', include('ckeditor_uploader.urls')),
     
 ]

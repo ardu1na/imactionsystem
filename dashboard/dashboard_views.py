@@ -18,6 +18,186 @@ from customers.forms import *
 from sales.models import *
 from sales.forms import *
 
+import csv
+
+
+@login_required(login_url='dashboard:login')
+def backup_clients(request):
+        
+    # query
+    queryset = Client.objects.all()
+    
+    # get fields of model
+    options = Client._meta
+    fields = [field.name for field in options.fields]
+    # ['id', 'name', 'last_name']...
+    # build response
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'atachment; filename="backupclients.csv"'
+
+    # writer
+    writer = csv.writer(response)
+    # writing header
+    writer.writerow([options.get_field(field).verbose_name for field in fields])
+
+    # writing data
+    for obj in queryset:
+        writer.writerow([getattr(obj, field) for field in fields])
+    
+    return response
+
+
+@login_required(login_url='dashboard:login')
+def import_clients(request):
+
+    clients = []
+    with open("backupclients.csv", "r") as csv_file:
+        data = list(csv.reader(csv_file, delimiter=","))
+        for row in data[1:]:
+            clients.append(
+                Client(
+                    id=row[0],
+                    name=row[1],
+                    business_name=row[2],
+                    source=row[3],
+                    date=row[4],
+                    website=row[5],
+                    email=row[6],
+                    email_2=row[7],
+                    email_admin=row[8],
+                    phone_number=row[9],
+                    phone_2=row[10],
+                    landing_page=row[11],
+                    cancelled=row[12],
+                    comment_can=row[13],
+                    date_can=row[14],
+                    fail_can=row[15]             
+                )
+            )
+    if len(clients) > 0:
+        Client.objects.bulk_create(clients)
+    
+    return HttpResponse("Successfully imported")
+
+
+@login_required(login_url='dashboard:login')
+def backup_sales(request):
+        
+    # query
+    queryset = Sale.objects.all()
+    
+    # get fields of model
+    options = Sale._meta
+    fields = [field.name for field in options.fields]
+    # ['id', 'name', 'last_name']...
+    # build response
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'atachment; filename="backupsales.csv"'
+
+    # writer
+    writer = csv.writer(response)
+    # writing header
+    writer.writerow([options.get_field(field).verbose_name for field in fields])
+
+    # writing data
+    for obj in queryset:
+        writer.writerow([getattr(obj, field) for field in fields])
+    
+    return response
+
+
+@login_required(login_url='dashboard:login')
+def import_sales(request):
+
+    sales = []
+    with open("backupsales.csv", "r") as csv_file:
+        data = list(csv.reader(csv_file, delimiter=","))
+        for row in data[1:]:
+            sales.append(
+                Sale(
+                    id=row[0],
+                    client=row[1],
+                    kind=row[2],
+                    date=row[3],
+                    total=row[4],
+                    comments=row[5],
+                    revenue=row[6],
+                    service=row[7],
+                    price=row[8],
+                    note=row[9],
+                    cost=row[10],
+                    status=row[11],
+                    cancelled=row[12],
+                    comment_can=row[13],
+                    date_can=row[14],
+                    fail_can=row[15]             
+                )
+            )
+    if len(sales) > 0:
+        Sale.objects.bulk_create(sales)
+    
+    return HttpResponse("Successfully imported")
+
+
+
+
+@login_required(login_url='dashboard:login')
+def backup_bankdata(request):
+        
+    # query
+    queryset = BankData.objects.all()
+    
+    # get fields of model
+    options = BankData._meta
+    fields = [field.name for field in options.fields]
+    # ['id', 'name', 'last_name']...
+    # build response
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'atachment; filename="backupbankdata.csv"'
+
+    # writer
+    writer = csv.writer(response)
+    # writing header
+    writer.writerow([options.get_field(field).verbose_name for field in fields])
+
+    # writing data
+    for obj in queryset:
+        writer.writerow([getattr(obj, field) for field in fields])
+    
+    return response
+
+
+@login_required(login_url='dashboard:login')
+def import_bankdata(request):
+
+    accounts = []
+    with open("backupbankdata.csv", "r") as csv_file:
+        data = list(csv.reader(csv_file, delimiter=","))
+        for row in data[1:]:
+            accounts.append(
+                BankData(
+                    id=row[0],
+                    payment=row[1],
+                    cbu=row[2],
+                    alias=row[3],
+                    cuit=row[4],
+                    detail=row[5],
+                    account=row[6],        
+                )
+            )
+    if len(accounts) > 0:
+        BankData.objects.bulk_create(accounts)
+    
+    return HttpResponse("Successfully imported")
+
+
+
+
+
+
+
+
+
 @login_required(login_url='dashboard:login')
 @permission_required({'dashboard.view_configurations'}, raise_exception=True)
 def all_config(request):
@@ -558,6 +738,8 @@ def deletebankdata(request, id):
     bank = BankData.objects.get(id=id)
     bank.delete()
     return HttpResponseRedirect('/dashboard/clients/')
+
+
 
 
 

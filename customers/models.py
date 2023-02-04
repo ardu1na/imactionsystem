@@ -53,7 +53,6 @@ class Client(models.Model):
     landing_page = models.URLField(blank=True, null=True)
     cancelled = models.CharField(default='Active', max_length=51, choices=CANCELLED_CHOICES)
 
-    objects = models.Manager()
     YES = 'YES'
     NO = 'NO'
     DEBATIBLE = 'DEBATIBLE'
