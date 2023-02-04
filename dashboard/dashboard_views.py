@@ -341,10 +341,11 @@ def backup_clients(request):
     return response
 
 
-def handle_uploaded_file(*args, **kwargs):
+def handle_uploaded_file(file):
     clients = []
-    with open("backupclients.csv", "r") as csv_file:
+    with open(file, "r") as csv_file:
         data = list(csv.reader(csv_file, delimiter=","))
+        print("from function")
         for row in data[1:]:
             clients.append(
                 Client(
@@ -377,7 +378,9 @@ def import_clients(request):
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
             handle_uploaded_file(request.FILES['file'])
-            return HttpResponseRedirect('./')
+            return HttpResponse('uploaded')
+        else:
+            print (form.errors)
     else:
         form = UploadFileForm()
     return render(request, 'dashboard/instructor/uploadbackup.html', {'form': form})

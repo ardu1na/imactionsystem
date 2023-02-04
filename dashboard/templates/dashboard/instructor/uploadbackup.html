@@ -30,7 +30,7 @@
                                         <form method="post">
                                             {% csrf_token %}
                                             <div class="fallback">
-                                                {% for field in form %} {{field}} {% endfor %}
+                                                {{form.file}}
                                             </div>
                                             <div class="text-start mt-4 mb-3">
                                                 <button class="btn btn-primary btn-sl-sm me-2" type="submit"><span class="me-2"><i class="fa fa-paper-plane"></i></span>Send</button>

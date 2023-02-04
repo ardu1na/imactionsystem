@@ -58,6 +58,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     
+    'import_export',
+
     'widget_tweaks',
     'dashboard',
     'dashboard.users',
