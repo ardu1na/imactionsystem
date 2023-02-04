@@ -19,6 +19,300 @@ from sales.models import *
 from sales.forms import *
 
 import csv
+from dashboard.forms import UploadFileForm
+
+
+@login_required(login_url='dashboard:login')
+def sales(request):
+    
+    sales = Sale.objects.all()
+    
+    if request.method == 'GET':
+        addform = SaleForm()
+        
+    if request.method == 'POST':
+        if "addsale" in request.POST:
+            addform = SaleForm(request.POST)
+            if addform.is_valid():
+                addform.save()
+                return redirect(reverse('dashboard:sales')+ "?added")
+            else:
+                return HttpResponse("hacked from las except else form")
+                
+    context={
+        "page_title":"Sales",
+        "sales" : sales,
+        "addform" : addform
+    }
+    return render(request,'dashboard/table/sales.html',context)
+
+
+@login_required(login_url='dashboard:login')
+def deletesale(request, id):
+    sale = Sale.objects.get(id=id)
+    sale.delete()
+    return redirect(reverse('dashboard:sales')+ "?deleted")
+
+
+@login_required(login_url='dashboard:login')
+def editsale(request, id):
+    
+    editsale = Sale.objects.get(id=id)
+
+    if request.method == "GET":
+        
+        editform = EditSaleForm(instance=editsale)
+        context = {
+            'editform': editform,
+            'editsale': editsale,
+            'id': id,
+            }
+        return render (request, 'dashboard/table/editsale.html', context)
+
+    
+    if request.method == 'POST':
+        editform = EditSaleForm(request.POST, instance=editsale)
+        if editform.is_valid():
+            editform.save()
+            return redirect(reverse('dashboard:sales')+ "?ok")
+        else: return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
+
+@login_required(login_url='dashboard:login')
+def clients(request):
+    clients = Client.objects.filter(cancelled="Active")
+      
+    total_rr = 0
+    for client in clients:
+        if client.cancelled == "Active":
+            for sale in client.sales.all():
+                if sale.cancelled == "Active":
+                    if sale.revenue == "RR":
+                        total_rr += sale.price
+                        
+        
+    addform=ClientForm()
+    if request.method == 'GET':
+        addform = ClientForm()
+    if request.method == 'POST':
+        if "addclient" in request.POST:
+            addform = ClientForm(request.POST)
+            if addform.is_valid():
+                newclient = addform.save()
+                return redirect('dashboard:editclient', id=newclient.id)
+            else:
+                return HttpResponse("hacked from las except else form")      
+    
+    context={
+        "total_rr": total_rr,
+        "clients" : clients,
+        "addform": addform,
+        "page_title":"Clients RR"
+    }
+    return render(request,'dashboard/instructor/clients.html',context)
+
+
+@login_required(login_url='dashboard:login')
+def allclients(request):
+    clients = Client.objects.all()
+    
+    clients_rr = []
+    for client in clients.filter(cancelled="Active"):
+        if client.get_rr_client == True:
+            clients_rr.append(client.id)
+        """for sale in client.sales.all():
+            if sale.revenue == "RR" and sale.cancelled == "Active":
+                clients_rr.append(sale.client.id)       
+    #c_rr = Client.objects.filter(id__in=clients_rr)"""
+    c_rr_total = len(clients_rr)
+
+    total_rr = 0
+    for client in clients:
+        if client.cancelled == "Active":
+            for sale in client.sales.all():
+                if sale.cancelled == "Active":
+                    if sale.revenue == "RR":
+                        total_rr += sale.price
+                        
+        
+    addform=ClientForm()
+    if request.method == 'GET':
+        addform = ClientForm()
+    if request.method == 'POST':
+        if "addclient" in request.POST:
+            addform = ClientForm(request.POST)
+            if addform.is_valid():
+                newclient = addform.save()
+                return redirect('dashboard:editclient', id=newclient.id)
+            else:
+                return HttpResponse("hacked from las except else form")      
+    
+    context={
+        "total_rr": total_rr,
+        "clients" : clients,
+        "addform": addform,
+        "c_rr_total" : c_rr_total,
+        "page_title":"All Clients"
+    }
+
+    return render(request,'dashboard/instructor/allclients.html',context)
+
+
+
+@login_required(login_url='dashboard:login')
+def cancellations(request):
+    clients_cancelled = Client.objects.filter(cancelled="Cancelled")
+    sales_cancelled = Sale.objects.filter(cancelled="Cancelled").filter(revenue="RR")
+    
+    
+    context={
+        "clients_cancelled": clients_cancelled,
+        "sales_cancelled" : sales_cancelled,
+       
+        "page_title":"Cancellations"
+    }   
+    
+    return render(request,'dashboard/instructor/cancellations.html',context)
+
+
+@login_required(login_url='dashboard:login')
+def deleteclient(request, id):
+    client = Client.objects.get(id=id)
+    client.delete()
+    return redirect(reverse('dashboard:clients')+ "?deleted")
+
+
+
+@login_required(login_url='dashboard:login')
+def editclient(request, id):
+    
+    editclient = Client.objects.get(id=id)
+
+    if request.method == "GET":
+        
+        editform = EditClientForm(instance=editclient)
+        context = {
+            'editform': editform,
+            'editclient': editclient,
+            'id': id
+            }
+        return render (request, 'dashboard/instructor/editclient.html', context)
+
+    
+    if request.method == 'POST':
+        editform = EditClientForm(request.POST, instance=editclient)
+        if editform.is_valid():
+            clientedit = editform.save(commit=False)
+            if clientedit.cancelled == "Cancelled":
+                for sale in clientedit.sales.all():
+                    sale.cancelled = "Cancelled"
+                    sale.comment_can = clientedit.comment_can
+                    sale.fail_can = clientedit.fail_can
+                    sale.date_can = clientedit.date_can
+                    sale.save()
+            clientedit.save()
+            return redirect(reverse('dashboard:clients')+ "?ok")
+        else: return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
+        
+        
+        
+        
+        
+@login_required(login_url='dashboard:login')
+def addclientsale(request, id):
+    
+    client = Client.objects.get(id=id)
+
+    if request.method == "GET":
+        
+        addclientsaleform = ClientSaleForm()
+        context = {
+            'addclientsaleform': addclientsaleform,
+            'client': client,
+            }
+        return render (request, 'dashboard/instructor/addclientsale.html', context)
+
+    
+    if request.method == 'POST':
+        addclientsaleform = ClientSaleForm(request.POST)
+              
+        if addclientsaleform.is_valid():
+            instance = addclientsaleform.save(commit=False)
+            instance.client=client
+            instance.save()
+           
+            return HttpResponseRedirect('/dashboard/clients/')
+
+        else:
+
+            print (addclientsaleform.errors) 
+            return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
+        
+        
+        
+    
+@login_required(login_url='dashboard:login')
+def bankdata(request, id):
+    
+    client = Client.objects.get(id=id)
+
+    if request.method == "GET":
+        
+        bankdataform = BankDataForm(instance=client)
+        context = {
+            'bankdataform': bankdataform,
+            'client': client,
+            }
+        return render (request, 'dashboard/instructor/bankdata.html', context)
+
+    
+    if request.method == 'POST':
+        bankdataform = BankDataForm(request.POST)
+              
+        if bankdataform.is_valid():
+            nbk = bankdataform.save(commit=False)
+            nbk.account = client
+            nbk.save()
+            
+            return HttpResponseRedirect('/dashboard/clients/')
+
+        else:
+
+            print (bankdataform.errors) 
+            return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
+        
+        
+@login_required(login_url='dashboard:login')
+def editbankdata(request, id):
+    editbankdata = BankData.objects.get(id=id)
+    
+    if request.method == "GET":
+    
+        form = BankDataForm(instance=editbankdata)
+        
+        context = {
+            'form': form,
+            'editbankdata': editbankdata,
+            'id': id
+            }
+        return render (request, 'dashboard/instructor/editbankdata.html', context)
+
+    
+    if request.method == 'POST':
+        form = BankDataForm(request.POST, instance=editbankdata)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/dashboard/clients/')
+        else: return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
+
+        
+
+@login_required(login_url='dashboard:login')
+def deletebankdata(request, id):
+    bank = BankData.objects.get(id=id)
+    bank.delete()
+    return HttpResponseRedirect('/dashboard/clients/')
+
+
 
 
 @login_required(login_url='dashboard:login')
@@ -47,9 +341,7 @@ def backup_clients(request):
     return response
 
 
-@login_required(login_url='dashboard:login')
-def import_clients(request):
-
+def handle_uploaded_file(*args, **kwargs):
     clients = []
     with open("backupclients.csv", "r") as csv_file:
         data = list(csv.reader(csv_file, delimiter=","))
@@ -77,7 +369,18 @@ def import_clients(request):
     if len(clients) > 0:
         Client.objects.bulk_create(clients)
     
-    return HttpResponse("Successfully imported")
+
+@login_required(login_url='dashboard:login')
+def import_clients(request):
+    
+    if request.method == 'POST':
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            handle_uploaded_file(request.FILES['file'])
+            return HttpResponseRedirect('./')
+    else:
+        form = UploadFileForm()
+    return render(request, 'dashboard/instructor/uploadbackup.html', {'form': form})
 
 
 @login_required(login_url='dashboard:login')
@@ -504,240 +807,6 @@ def courses(request):
     return render(request,'dashboard/courses/courses.html',context)
 
 
-@login_required(login_url='dashboard:login')
-def clients(request):
-    clients = Client.objects.filter(cancelled="Active")
-      
-    total_rr = 0
-    for client in clients:
-        if client.cancelled == "Active":
-            for sale in client.sales.all():
-                if sale.cancelled == "Active":
-                    if sale.revenue == "RR":
-                        total_rr += sale.price
-                        
-        
-    addform=ClientForm()
-    if request.method == 'GET':
-        addform = ClientForm()
-    if request.method == 'POST':
-        if "addclient" in request.POST:
-            addform = ClientForm(request.POST)
-            if addform.is_valid():
-                newclient = addform.save()
-                return redirect('dashboard:editclient', id=newclient.id)
-            else:
-                return HttpResponse("hacked from las except else form")      
-    
-    context={
-        "total_rr": total_rr,
-        "clients" : clients,
-        "addform": addform,
-        "page_title":"Clients RR"
-    }
-    return render(request,'dashboard/instructor/clients.html',context)
-
-
-@login_required(login_url='dashboard:login')
-def allclients(request):
-    clients = Client.objects.all()
-    
-    clients_rr = []
-    for client in clients.filter(cancelled="Active"):
-        if client.get_rr_client == True:
-            clients_rr.append(client.id)
-        """for sale in client.sales.all():
-            if sale.revenue == "RR" and sale.cancelled == "Active":
-                clients_rr.append(sale.client.id)       
-    #c_rr = Client.objects.filter(id__in=clients_rr)"""
-    c_rr_total = len(clients_rr)
-
-    total_rr = 0
-    for client in clients:
-        if client.cancelled == "Active":
-            for sale in client.sales.all():
-                if sale.cancelled == "Active":
-                    if sale.revenue == "RR":
-                        total_rr += sale.price
-                        
-        
-    addform=ClientForm()
-    if request.method == 'GET':
-        addform = ClientForm()
-    if request.method == 'POST':
-        if "addclient" in request.POST:
-            addform = ClientForm(request.POST)
-            if addform.is_valid():
-                newclient = addform.save()
-                return redirect('dashboard:editclient', id=newclient.id)
-            else:
-                return HttpResponse("hacked from las except else form")      
-    
-    context={
-        "total_rr": total_rr,
-        "clients" : clients,
-        "addform": addform,
-        "c_rr_total" : c_rr_total,
-        "page_title":"All Clients"
-    }
-
-    return render(request,'dashboard/instructor/allclients.html',context)
-
-
-
-@login_required(login_url='dashboard:login')
-def cancellations(request):
-    clients_cancelled = Client.objects.filter(cancelled="Cancelled")
-    sales_cancelled = Sale.objects.filter(cancelled="Cancelled").filter(revenue="RR")
-    
-    
-    context={
-        "clients_cancelled": clients_cancelled,
-        "sales_cancelled" : sales_cancelled,
-       
-        "page_title":"Cancellations"
-    }   
-    
-    return render(request,'dashboard/instructor/cancellations.html',context)
-
-
-@login_required(login_url='dashboard:login')
-def deleteclient(request, id):
-    client = Client.objects.get(id=id)
-    client.delete()
-    return redirect(reverse('dashboard:clients')+ "?deleted")
-
-
-
-@login_required(login_url='dashboard:login')
-def editclient(request, id):
-    
-    editclient = Client.objects.get(id=id)
-
-    if request.method == "GET":
-        
-        editform = EditClientForm(instance=editclient)
-        context = {
-            'editform': editform,
-            'editclient': editclient,
-            'id': id
-            }
-        return render (request, 'dashboard/instructor/editclient.html', context)
-
-    
-    if request.method == 'POST':
-        editform = EditClientForm(request.POST, instance=editclient)
-        if editform.is_valid():
-            clientedit = editform.save(commit=False)
-            if clientedit.cancelled == "Cancelled":
-                for sale in clientedit.sales.all():
-                    sale.cancelled = "Cancelled"
-                    sale.comment_can = clientedit.comment_can
-                    sale.fail_can = clientedit.fail_can
-                    sale.date_can = clientedit.date_can
-                    sale.save()
-            clientedit.save()
-            return redirect(reverse('dashboard:clients')+ "?ok")
-        else: return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
-        
-        
-        
-        
-        
-@login_required(login_url='dashboard:login')
-def addclientsale(request, id):
-    
-    client = Client.objects.get(id=id)
-
-    if request.method == "GET":
-        
-        addclientsaleform = ClientSaleForm()
-        context = {
-            'addclientsaleform': addclientsaleform,
-            'client': client,
-            }
-        return render (request, 'dashboard/instructor/addclientsale.html', context)
-
-    
-    if request.method == 'POST':
-        addclientsaleform = ClientSaleForm(request.POST)
-              
-        if addclientsaleform.is_valid():
-            instance = addclientsaleform.save(commit=False)
-            instance.client=client
-            instance.save()
-           
-            return HttpResponseRedirect('/dashboard/clients/')
-
-        else:
-
-            print (addclientsaleform.errors) 
-            return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
-        
-        
-        
-    
-@login_required(login_url='dashboard:login')
-def bankdata(request, id):
-    
-    client = Client.objects.get(id=id)
-
-    if request.method == "GET":
-        
-        bankdataform = BankDataForm(instance=client)
-        context = {
-            'bankdataform': bankdataform,
-            'client': client,
-            }
-        return render (request, 'dashboard/instructor/bankdata.html', context)
-
-    
-    if request.method == 'POST':
-        bankdataform = BankDataForm(request.POST)
-              
-        if bankdataform.is_valid():
-            nbk = bankdataform.save(commit=False)
-            nbk.account = client
-            nbk.save()
-            
-            return HttpResponseRedirect('/dashboard/clients/')
-
-        else:
-
-            print (bankdataform.errors) 
-            return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
-        
-        
-@login_required(login_url='dashboard:login')
-def editbankdata(request, id):
-    editbankdata = BankData.objects.get(id=id)
-    
-    if request.method == "GET":
-    
-        form = BankDataForm(instance=editbankdata)
-        
-        context = {
-            'form': form,
-            'editbankdata': editbankdata,
-            'id': id
-            }
-        return render (request, 'dashboard/instructor/editbankdata.html', context)
-
-    
-    if request.method == 'POST':
-        form = BankDataForm(request.POST, instance=editbankdata)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect('/dashboard/clients/')
-        else: return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
-
-        
-
-@login_required(login_url='dashboard:login')
-def deletebankdata(request, id):
-    bank = BankData.objects.get(id=id)
-    bank.delete()
-    return HttpResponseRedirect('/dashboard/clients/')
 
 
 
@@ -1120,60 +1189,6 @@ def table_bootstrap_basic(request):
 
 
 
-@login_required(login_url='dashboard:login')
-def sales(request):
-    
-    sales = Sale.objects.all()
-    
-    if request.method == 'GET':
-        addform = SaleForm()
-        
-    if request.method == 'POST':
-        if "addsale" in request.POST:
-            addform = SaleForm(request.POST)
-            if addform.is_valid():
-                addform.save()
-                return redirect(reverse('dashboard:sales')+ "?added")
-            else:
-                return HttpResponse("hacked from las except else form")
-                
-    context={
-        "page_title":"Sales",
-        "sales" : sales,
-        "addform" : addform
-    }
-    return render(request,'dashboard/table/sales.html',context)
-
-
-@login_required(login_url='dashboard:login')
-def deletesale(request, id):
-    sale = Sale.objects.get(id=id)
-    sale.delete()
-    return redirect(reverse('dashboard:sales')+ "?deleted")
-
-
-@login_required(login_url='dashboard:login')
-def editsale(request, id):
-    
-    editsale = Sale.objects.get(id=id)
-
-    if request.method == "GET":
-        
-        editform = EditSaleForm(instance=editsale)
-        context = {
-            'editform': editform,
-            'editsale': editsale,
-            'id': id,
-            }
-        return render (request, 'dashboard/table/editsale.html', context)
-
-    
-    if request.method == 'POST':
-        editform = EditSaleForm(request.POST, instance=editsale)
-        if editform.is_valid():
-            editform.save()
-            return redirect(reverse('dashboard:sales')+ "?ok")
-        else: return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
 
 
 

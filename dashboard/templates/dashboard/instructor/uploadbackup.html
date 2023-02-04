@@ -10,8 +10,8 @@
         
         <div class="row page-titles">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item active"><a href="javascript:void(0)">Email</a></li>
-                <li class="breadcrumb-item"><a href="javascript:void(0)">Compose</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'dashboard:allclients' %}">Clients</a></li>
+                <li class="breadcrumb-item active">BackUp</li>
             </ol>
         </div>
         
@@ -27,17 +27,18 @@
                                     <div class="compose-content">
                                         
                                         <h5 class="mb-4"><i class="fa fa-paperclip me-2"></i> Upload BackUp</h5>
-                                        <form action="#" class="dropzone">
+                                        <form method="post">
                                             {% csrf_token %}
                                             <div class="fallback">
-                                                <input name="file" type="file"/>
+                                                {% for field in form %} {{field}} {% endfor %}
+                                            </div>
+                                            <div class="text-start mt-4 mb-3">
+                                                <button class="btn btn-primary btn-sl-sm me-2" type="submit"><span class="me-2"><i class="fa fa-paper-plane"></i></span>Send</button>
+                                                <a href="../" class="btn btn-danger light btn-sl-sm" type="button"><span class="me-2"><i class="fa fa-times"></i></span>Discard</a>
                                             </div>
                                         </form>
                                     </div>
-                                    <div class="text-start mt-4 mb-3">
-                                        <button class="btn btn-primary btn-sl-sm me-2" name="form" type="submit"><span class="me-2"><i class="fa fa-paper-plane"></i></span>Send</button>
-                                        <a href="../" class="btn btn-danger light btn-sl-sm" type="button"><span class="me-2"><i class="fa fa-times"></i></span>Discard</a>
-                                    </div>
+                                    
                                 </div>
                             </div>
                         </div>

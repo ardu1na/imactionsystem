@@ -53,7 +53,7 @@
                             </svg>
                         </span>
                         <h4>{{c_rr_total}}</h4>
-                        <span class="pb-3 d-block">Clients RR</span>
+                        <span class="pb-3 d-block">RR ACCOUNTS</span>
                     </div>
                     <div id="NewCustomers"></div>
                 </div>
@@ -64,10 +64,20 @@
 
 
 
-
 <!-- MAIN all CLIENTS -->
         <div class="col-xl-12">            
             <div class="card students-list py-3">
+
+                <div class="d-flex flex-row-reverse mx-4">
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn tp-btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Back Up</button>
+                        <div class="dropdown-menu" style="margin: 0px;">
+                            <a class="dropdown-item" href="{% url 'dashboard:exportclients' %}">Create BACKUP</a>
+                            <a class="dropdown-item" href="{% url 'dashboard:importclients' %}">Import BACKUP</a>
+                        </div>
+                    </div>
+                </div>
+
                            
                 <!-- TABLE CLIENTS -->
                 <div class="card-body py-0 my-3">

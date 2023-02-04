@@ -22,7 +22,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
    
     #Dashboard
-    path('', include('dashboard.urls', namespace='dashboard')),
+    path('dashboard/', include('dashboard.urls', namespace='dashboard')),
 
     #Frontend
     path('f', include('frontend.urls', namespace='frontend')),

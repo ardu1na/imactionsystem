@@ -3,6 +3,8 @@ from dashboard.models import Configurations
 
 
 
+class UploadFileForm(forms.Form):
+    file = forms.FileField()
 
 
 
