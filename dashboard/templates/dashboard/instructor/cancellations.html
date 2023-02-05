@@ -34,7 +34,7 @@
                                 {% if sales_cancelled %}
                                     {% for sale in sales_cancelled %}
                                     <tr>
-                                        <td> {% if sale.date_can %} {{sale.date_can}}
+                                        <td> {% if sale.date_can %} {{sale.date_can|date:"d/m/Y"}}
                                             {% else %} add date !! {% endif %}</td>
                                         
 

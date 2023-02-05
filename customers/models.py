@@ -71,6 +71,15 @@ class Client(models.Model):
     def __str__(self):
        return str(self.name)
 
+    @property
+    def get_date(self):
+        formatdate = self.date.strftime('%d/%m/%Y')
+        return formatdate
+    
+    @property
+    def get_date_can(self):
+        formatdate = self.date_can.strftime('%d/%m/%Y')
+        return formatdate
 
 
     """def save(self, *args, **kwargs):

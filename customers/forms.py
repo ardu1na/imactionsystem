@@ -4,8 +4,9 @@ TextInput, URLInput, EmailInput, Select, Textarea
 from customers.models import Client, BankData
 
 
-class ClientForm(ModelForm):
+class ClientForm(ModelForm): 
     
+   
     class Meta:
         model = Client
         
@@ -16,7 +17,7 @@ class ClientForm(ModelForm):
             'date' : TextInput(attrs={'class':"datetimepicker form-control",
             'id':"PublishDateTimeTextbox",
             'type':"date",
-            'placeholder':"Date",}),
+            'placeholder':"Date"}),
 
             'name' : TextInput(attrs={'class':"form-control",
             'id':"name",

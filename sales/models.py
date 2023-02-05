@@ -138,7 +138,15 @@ class Sale(models.Model):
         return "$%s" % self.cost if self.cost else "$0"
 
    
-
+    @property
+    def get_date(self):
+        formatdate = self.date.strftime('%d/%m/%Y')
+        return formatdate
+    
+    @property
+    def get_date_can(self):
+        formatdate = self.date_can.strftime('%d/%m/%Y')
+        return formatdate
 
 
    
