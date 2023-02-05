@@ -21,7 +21,7 @@ from sales.forms import *
 import csv
 from dashboard.forms import UploadFileForm
 
-
+# https://stackoverflow.com/questions/69772662/return-monthly-sales-value-in-django
 @login_required(login_url='dashboard:login')
 def sales(request):
     
@@ -88,6 +88,13 @@ def clients(request):
                 if sale.cancelled == "Active":
                     if sale.revenue == "RR":
                         total_rr += sale.price
+    total_rr_k = total_rr/1000
+    
+    clients_rr = []
+    for client in clients.filter(cancelled="Active"):
+        if client.get_rr_client == True:
+            clients_rr.append(client.id)
+    c_rr_total = len(clients_rr)
                         
         
     addform=ClientForm()
@@ -100,13 +107,69 @@ def clients(request):
                 newclient = addform.save()
                 return redirect('dashboard:editclient', id=newclient.id)
             else:
-                return HttpResponse("hacked from las except else form")      
+                return HttpResponse("hacked from las except else form")
+    
+    
+    sales_rr=Sale.objects.filter(cancelled="Active").filter(revenue="RR")
+
+    s_seo = 0
+    s_gads= 0
+    s_fads= 0
+    s_lin= 0
+    s_cm = 0
+    s_combo = 0
+    s_webp = 0
+    
+
+    for sale in sales_rr:
+        if sale.service == "SEO":
+            s_seo += sale.price
+        elif sale.service == "Google Ads":
+            s_gads += sale.price
+        elif sale.service == "Facebook Ads":
+            s_fads += sale.price
+        elif sale.service == "LinkedIn":
+            s_lin  += sale.price
+        elif sale.service == "Community Management":
+            s_cm  += sale.price
+        elif sale.service == "COMBO":
+            s_combo  += sale.price
+        elif sale.service == "Web Plan":
+            s_webp += sale.price
+        else: pass
+
+    get_incomes_by_service = [s_seo, s_gads, s_fads, s_lin, s_cm, s_combo, s_webp]
+    
+    t1=0
+    t2=0
+    t3=0
+    t4=0
+    t5=0
+
+    for sale in sales_rr:
+        if sale.client.tier == "I":
+            t1 += sale.price
+        elif sale.client.tier == "II":
+            t2 += sale.price
+        elif sale.client.tier == "III":
+            t3 += sale.price
+        elif sale.client.tier == "IV":
+            t4 += sale.price
+        elif sale.client.tier == "V":
+            t5 += sale.price
+        else: pass
+    get_incomes_by_tier = [t1, t2, t3, t4, t5]      
     
     context={
         "total_rr": total_rr,
         "clients" : clients,
         "addform": addform,
-        "page_title":"Clients RR"
+        "c_rr_total":c_rr_total,
+        "total_rr_k":total_rr_k,
+        'get_incomes_by_service' : get_incomes_by_service,
+        'get_incomes_by_tier' : get_incomes_by_tier,       
+
+        "page_title":"Clients RR",
     }
     return render(request,'dashboard/instructor/clients.html',context)
 
@@ -119,10 +182,6 @@ def allclients(request):
     for client in clients.filter(cancelled="Active"):
         if client.get_rr_client == True:
             clients_rr.append(client.id)
-        """for sale in client.sales.all():
-            if sale.revenue == "RR" and sale.cancelled == "Active":
-                clients_rr.append(sale.client.id)       
-    #c_rr = Client.objects.filter(id__in=clients_rr)"""
     c_rr_total = len(clients_rr)
 
     total_rr = 0

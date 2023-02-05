@@ -39,13 +39,131 @@
 
 
 <!-- MAIN CLIENTS -->
-    <div class="row page-titles">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item active"><a href="/dashboard/sales/">Clients RR</a></li>
-        </ol>
-    </div>
+    
 
     <div class="row">
+
+        <div class="col-xl-3 col-xxl-6 col-lg-6 col-sm-6">
+            <div class="widget-stat card">
+                <div class="card-body  p-4">
+                    <div class="media ai-icon">
+                        <span class="me-3 bgl-danger text-danger">
+                            <svg id="icon-revenue" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-dollar-sign">
+                                <line x1="12" y1="1" x2="12" y2="23"></line>
+                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                            </svg>
+                        </span>
+                        <div class="media-body">
+                            <p class="mb-1">Revenue</p>
+                            <h4 class="mb-0">{{total_rr_k}}K</h4>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Incomes by Tier</h5>
+        
+              <!-- Doughnut Chart -->
+              <canvas id="doughnutChart" style="max-height: 400px;"></canvas>
+              <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                  new Chart(document.querySelector('#doughnutChart'), {
+                    type: 'doughnut',
+                    data: {
+                      labels: [
+                        'Tier I',
+                        'Tier II',
+                        'Tier III',
+                        'Tier IV',
+                        'Tier V',
+                      ],
+                      datasets: [{
+                        label: 'My First Dataset',
+                        data: {{get_incomes_by_tier}},
+                        backgroundColor: [
+                          'rgb(255, 99, 132)',
+                          'rgb(54, 162, 235)',
+                          'rgb(255, 205, 86)',
+                          'rgb(50, 205, 50)',
+                          'rgb(80, 75, 50)',
+
+                        ],
+                        hoverOffset: 5
+                      }]
+                    }
+                  });
+                });
+              </script>
+              <!-- End Doughnut CHart -->
+        
+            </div>
+          </div>
+
+
+
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Incomes by Service</h5>
+
+              <!-- Pie Chart -->
+              <canvas id="pieChart" style="max-height: 400px;"></canvas>
+              <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                  new Chart(document.querySelector('#pieChart'), {
+                    type: 'pie',
+                    data: {
+                      labels: ['SEO', 'Google Ads', 'Facebook Ads', 'LinkedIn',
+                      'Community Management', 'COMBO', 'Web Plan'],
+                       
+                      datasets: [{
+                        label: 'My First Dataset',
+                        data: {{get_incomes_by_service}},
+                        backgroundColor: [
+                          'rgba(255, 99, 132, 0.2)',
+                          'rgba(255, 159, 64, 0.2)',
+                          'rgba(255, 205, 86, 0.2)',
+                          'rgba(173, 255, 72, 0.2)',
+                          'rgba(75, 192, 192, 0.2)',
+                          'rgba(54, 162, 235, 0.2)',
+                          'rgba(153, 102, 255, 0.2)',
+                        ],
+                        hoverOffset: 7
+                      }]
+                    }
+                  });
+                });
+              </script>
+              <!-- End Pie CHart -->
+
+            </div>
+
+
+        <div class="col-xl-3 col-sm-6">
+            <div class="card bg-secondary">
+                <div class="card-body">
+                    <div class="student-box d-flex justify-content-between align-items-center flex-wrap">
+                        <div>
+                            <span class="student-icon">
+                                <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M14.1665 19.1666C17.8331 19.1666 20.8331 16.1666 20.8331 12.4999C20.8331 8.83325 17.8331 5.83325 14.1665 5.83325C10.4998 5.83325 7.49981 8.83325 7.49981 12.4999C7.49981 16.1666 10.4998 19.1666 14.1665 19.1666ZM21.6665 17.6666C24.4998 19.9999 28.6665 19.4999 30.9998 16.6666C33.3331 13.8333 32.8331 9.66659 29.9998 7.33325C28.8331 6.33325 27.3331 5.83325 25.8331 5.83325C24.3331 5.83325 22.8331 6.33325 21.6665 7.33325C24.4998 9.66659 24.9998 13.6666 22.6665 16.6666C22.4998 16.9999 21.9998 17.3333 21.6665 17.6666ZM38.1665 32.3333C37.1665 26.1666 31.9998 21.6666 25.8331 21.6666C24.3331 21.6666 22.9998 21.8333 21.6665 22.3333C25.9998 23.8333 29.1665 27.6666 29.8331 32.1666C29.9998 32.9999 29.3331 33.9999 28.3331 33.9999H28.1665H36.4998C37.4998 33.9999 38.1665 33.3333 38.1665 32.3333C38.1665 32.4999 38.1665 32.3333 38.1665 32.3333ZM14.1665 21.6666C7.99981 21.6666 2.66647 26.1666 1.83314 32.3333C1.66647 33.1666 2.33314 34.1666 3.33314 34.1666H3.49981H24.8331C25.8331 34.1666 26.4998 33.4999 26.4998 32.4999V32.3333C25.6665 26.1666 20.3331 21.6666 14.1665 21.6666Z" fill="var(--secondary)"/>
+                                </svg>
+                            </span>
+                            <h4>{{c_rr_total}}</h4>
+                            <span class="pb-3 d-block">RR ACCOUNTS</span>
+                        </div>
+                        <div id="NewCustomers"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        
+
+
         <div class="col-xl-12">            
             <div class="card students-list">
                 <div class="card-header border-0 flex-wrap pb-0 mb-5">
@@ -217,4 +335,9 @@
         <script>
             const deleteclient = new bootstrap.Modal('#deleteclient',   {keyboard: true}    )
         </script>
+
+    <!-- charts -->
+    <script src="{% static 'dashboard/vendor/apexcharts/apexcharts.min.js' %}"></script>
+    <script src="{% static 'dashboard/vendor/chart.js/chart.min.js' %}"></script>
+    <script src="{% static 'dashboard/vendor/echarts/echarts.min.js' %}"></script>
 {% endblock %}
