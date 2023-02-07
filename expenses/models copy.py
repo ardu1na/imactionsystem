@@ -11,6 +11,7 @@ class Expense(models.Model):
     OTHER = 'Other'
     TAX = 'Tax'
     WAGES = "Wages"
+    NIGGA = 'Nigga'
 
     EXP_CHOICES = (
         (EMPRESA, ('Empresa')),
@@ -19,6 +20,7 @@ class Expense(models.Model):
         (OTHER, ('Other')),
         (TAX, ('Tax')),
         (WAGES, ('Wages')),
+        (NIGGA, ('Nigga')),
         )
 
 
