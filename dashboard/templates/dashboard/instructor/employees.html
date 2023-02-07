@@ -1,0 +1,198 @@
+{% extends 'dashboard/elements/layouts/admin.html' %}
+
+{% load static %}
+
+{% block additional_css %}
+{% endblock %}
+
+{% block content %}
+
+<!-- ALERTS -->
+    <!-- ADDEMPLOYEE CONFIRMATION -->
+    <div class="my-3">
+        {% if 'added' in request.GET %}
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            ☑ Employee added successfully!
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endif %}
+    </div>
+    <!-- editEMPLOYEE CONFIRMATION -->
+    <div class="my-3">
+        {% if 'ok' in request.GET %}
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            ☑ Employee changed successfully!
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endif %}
+    </div>
+    <!-- DELETEEMPLOYEE CONFIRMATION -->
+    <div class="my-3">
+        {% if 'deleted' in request.GET %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fa-regular fa-circle-xmark me-2"></i> Employee deleted!
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endif %}
+    </div>
+<!-- END ALERTS -->
+
+
+<!-- MAIN EMPLOYEES -->
+    
+
+    <div class="row">           
+
+        <div class="col-xl-12">            
+            <div class="card students-list">
+                <div class="card-header border-0 flex-wrap pb-0 mb-5">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">ADD Employee<span class="btn-icon-end">
+                        <i class="fa fa-plus"></i></span>
+                </div>                
+                <!-- TABLE EMPLOYEES -->
+                <div class="card-body py-0">
+                    <div class="table-responsive">
+                        <table id="example4" class="display mb-4" style="min-width: 845px">
+                            <thead>
+                                <tr>
+                                    <th>NAME</th>
+                                    <th>ROL</th>
+                                    <th>WHITE</th>
+                                    <th>SOCIAL</th>
+                                    <th>NIGGA</th>
+                                    <th>MONTHLY BONUS</th>
+                                    <th>ANNUAL BONUS</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>{% if employees %}
+                                {% for employee in employees %}
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <a class="mb-0 fs-16 font-w500" href="#">{{employee.name}}</a>
+                                        </div>
+                                    </td>
+                                    <td>{{employee.rol}}</td>
+                                    <td>$ {{employee.white|floatformat:2}}</td>
+                                    <td>$ {{employee.get_social|floatformat:2}}</td>
+                                    <td>$ {{employee.nigga|floatformat:2}}</td>
+
+                                    <td>$ {{employee.get_aguinaldo_mensual|floatformat:2}}</td>
+                                    <td>$ {{employee.get_aguinaldo|floatformat:2}}</td>
+                                    <td>
+                                        <div class="dropdown">
+                                            <a href="javascript:void(0);" class="btn-link btn sharp tp-btn-light btn-dark" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M12.0012 9.86C11.6544 9.86 11.3109 9.92832 10.9905 10.061C10.67 10.1938 10.3789 10.3883 10.1336 10.6336C9.88835 10.8788 9.6938 11.17 9.56107 11.4905C9.42834 11.8109 9.36002 12.1544 9.36002 12.5012C9.36002 12.848 9.42834 13.1915 9.56107 13.5119C9.6938 13.8324 9.88835 14.1236 10.1336 14.3688C10.3789 14.6141 10.67 14.8086 10.9905 14.9413C11.3109 15.0741 11.6544 15.1424 12.0012 15.1424C12.7017 15.1422 13.3734 14.8638 13.8687 14.3684C14.3639 13.873 14.642 13.2011 14.6418 12.5006C14.6417 11.8001 14.3632 11.1284 13.8678 10.6332C13.3724 10.138 12.7005 9.85984 12 9.86H12.0012ZM3.60122 9.86C3.25437 9.86 2.91092 9.92832 2.59048 10.061C2.27003 10.1938 1.97887 10.3883 1.73361 10.6336C1.48835 10.8788 1.2938 11.17 1.16107 11.4905C1.02834 11.8109 0.960022 12.1544 0.960022 12.5012C0.960022 12.848 1.02834 13.1915 1.16107 13.5119C1.2938 13.8324 1.48835 14.1236 1.73361 14.3688C1.97887 14.6141 2.27003 14.8086 2.59048 14.9413C2.91092 15.0741 3.25437 15.1424 3.60122 15.1424C4.30171 15.1422 4.97345 14.8638 5.46866 14.3684C5.96387 13.873 6.24198 13.2011 6.24182 12.5006C6.24166 11.8001 5.96324 11.1284 5.46781 10.6332C4.97237 10.138 4.30051 9.85984 3.60002 9.86H3.60122ZM20.4012 9.86C20.0544 9.86 19.7109 9.92832 19.3905 10.061C19.07 10.1938 18.7789 10.3883 18.5336 10.6336C18.2884 10.8788 18.0938 11.17 17.9611 11.4905C17.8283 11.8109 17.76 12.1544 17.76 12.5012C17.76 12.848 17.8283 13.1915 17.9611 13.5119C18.0938 13.8324 18.2884 14.1236 18.5336 14.3688C18.7789 14.6141 19.07 14.8086 19.3905 14.9413C19.7109 15.0741 20.0544 15.1424 20.4012 15.1424C21.1017 15.1422 21.7734 14.8638 22.2687 14.3684C22.7639 13.873 23.042 13.2011 23.0418 12.5006C23.0417 11.8001 22.7632 11.1284 22.2678 10.6332C21.7724 10.138 21.1005 9.85984 20.4 9.86H20.4012Z" fill="#A098AE"/>
+                                                </svg>
+                                            </a>
+                                            <div class="dropdown-menu dropdown-menu-start">
+                                                <!-- delete BUTTON -->
+                                                    <button type="button" class="shadow-sm btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteemployee{{employee.id}}">
+                                                    <i class="fa-solid fa-trash fs-7"></i>
+                                                    </button>                                                                                  
+                                                <!-- edit BUTTON -->
+                                                    <a href="#" class="shadow-sm btn btn-secondary mx-1">
+                                                        <i class="fa-solid fa-pen-to-square"></i>
+                                                    </a>                                                
+                                            </div>
+                                        </div>                                        
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                {%endif%}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- end MAIN employees -->
+
+
+<!-- modals delete employees -->
+    {% for employee in employees %}
+        <div class="modal" id="deleteemployee{{employee.id}}">
+            {% include 'dashboard/instructor/deleteemployee.html' %}
+        </div>
+    {% endfor %}
+
+
+<!-- START modal add employee -->
+    <div class="modal fade " id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Add a new Employee</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>           
+                <form  method="post">
+                {% csrf_token %}
+                <div class="modal-body">
+                  
+                    <div class="form-group my-3">
+                        <label class="form-label">Date</label>
+                        {{ addform.date_join}}
+                    </div>
+
+                    <div class="form-group my-3">
+                        {{addform.name}}
+                    </div>
+                    
+
+                    <div class="accordion accordion-rounded-stylish" id="accordion-twelve">
+                        <div class="accordion-item">
+                            <div class="accordion-header  rounded-lg" id="accord-12One" data-bs-toggle="collapse" data-bs-target="#collapse12One" aria-controls="collapse12One"   aria-expanded="true"  role="button">
+                                <span class="accordion-header-icon"></span>
+                                <span class="accordion-header-text">Contact Data</span>
+                                <span class="accordion-header-indicator"></span>
+                            </div>
+
+                            <div id="collapse12One" class="collapse accordion__body hidden" aria-labelledby="accord-12One" data-bs-parent="#accordion-twelve">
+                                <div class="accordion-body-text">
+                                
+                                    <div class="form-group my-3 d-flex justify-content-between">
+                                        <div class="me-3">
+                                            {{addform.email}} </div>
+                                        
+                                    </div>
+                                    <div class="form-group my-3">
+                                        {{addform.tel}}
+                                    </div>
+                                    
+                                    <div class="form-group my-3">
+                                        {{addform.address}}
+                                    </div>
+                                    
+                                </div>
+                            </div>
+
+                            <div class="form-group my-3">
+                                {{addform.rol}}
+                            </div>
+                        </div>
+                        
+                    </div>
+
+
+                    <div class="form-floating my-3 text-center">
+                        <button type="submit" class="shadow-sm btn btn-secondary" name="addemployee"><i class="fa-solid fa-check me-2"></i> Submit</button>
+                    </div>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+<!-- END modal add employee -->
+{% endblock %}
+
+
+{% block additional_js %}
+    <!-- NEWMODAL -->
+        <script>
+            const deleteemployee = new bootstrap.Modal('#deleteemployee',   {keyboard: true}    )
+        </script>
+
+{% endblock %}

@@ -21,12 +21,12 @@ class Employee(models.Model):
     active = models.BooleanField(default=True, verbose_name="ACTIVE?")
     date_gone = models.DateField(null=True, blank=True, verbose_name="GONE")
     
-    white = models.DecimalField(max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="SALARY")
-    nigga = models.DecimalField(max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="NIGGA")
+    white = models.DecimalField(default= 0, max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="SALARY")
+    nigga = models.DecimalField(default= 0, max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="NIGGA")
     
-    mp = models.DecimalField(max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="MP")
-    tc = models.DecimalField(max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="TC")
-    atm_cash = models.DecimalField(max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="ATM CASH")
+    mp = models.DecimalField(default= 0, max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="MP")
+    tc = models.DecimalField(default= 0, max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="TC")
+    atm_cash = models.DecimalField(default= 0, max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="ATM CASH")
     
     
 

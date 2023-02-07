@@ -9,7 +9,8 @@ app_name='dashboard'
 
 urlpatterns = [
     
-    
+    path('employees/',dashboard_views.employees, name="employees"),
+
     
     
     path('clients/',dashboard_views.clients, name="clients"),

@@ -17,9 +17,46 @@ from customers.models import *
 from customers.forms import *
 from sales.models import *
 from sales.forms import *
+from expenses.models import *
+from expenses.forms import * 
+
 
 import csv
 from dashboard.forms import UploadFileForm
+
+
+
+
+@login_required(login_url='dashboard:login')
+def employees(request):
+    staff = Employee.objects.filter(rol="Staff")
+    ceo = Employee.objects.filter(rol="CEO")        
+    employees  = Employee.objects.filter(active=True)
+    
+    if request.method == 'GET':
+        addform = EmployeeForm()
+        
+    if request.method == 'POST':
+        if "addemployee" in request.POST:
+            addform = EmployeeForm(request.POST)
+            if addform.is_valid():
+                addform.save()
+                return redirect(reverse('dashboard:employees')+ "?added")
+            else:
+                return HttpResponse("hacked from las except else form")                            
+          
+    context={
+        "staff": staff,
+        "ceo": ceo,
+        "employees": employees,
+        "addform": addform,        
+        "page_title":"Team",
+    }
+    return render(request,'dashboard/instructor/employees.html',context)
+
+
+
+
 
 # https://stackoverflow.com/questions/69772662/return-monthly-sales-value-in-django
 @login_required(login_url='dashboard:login')
