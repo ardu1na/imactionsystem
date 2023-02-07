@@ -68,7 +68,7 @@ class EditEmployeeForm(ModelForm):
             'placeholder':"Date"}),     
             
             
-            'date_GONE' : TextInput(attrs={'class':"datetimepicker form-control",
+            'date_gone' : TextInput(attrs={'class':"datetimepicker form-control",
             'id':"PublishDateTimeTextbox",
             'type':"date",
             'placeholder':"Date Gone"}),     

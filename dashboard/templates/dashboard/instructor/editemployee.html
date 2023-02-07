@@ -1,0 +1,278 @@
+{% extends 'dashboard/elements/layouts/admin.html' %}
+
+{% load static %}
+
+{% block additional_css %}
+{% endblock %}
+
+{% block content %}
+
+<!-- modal delete employees -->
+<div class="modal" id="deleteemployee{{editemployee.id}}">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center py-5">
+                <h4 class="fs-2 my-2">Deleting {{editemployee.name}} permanently...</h4>
+                <h4 class="fs-2 my-2">¿Are you sure?</h4>
+
+                <div class="form-floating mt-5">
+                    <a href="{% url 'dashboard:deleteemployee' id=editemployee.id %}" class="shadow-sm btn btn-danger fs-6 p-3">
+                        <i class="fa-regular fa-trash-can fs-5 me-1"></i> Yes!
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- MAIN -->
+
+
+        <div class="row page-titles">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item active"><a href="/dashboard/employees/">Employees</a></li>
+                <li class="breadcrumb-item"><a> {{editemployee.name}} </a> </li>
+            </ol>
+        </div>
+       
+        <div class="row">
+            <div class="col-xl-12 col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">{{editemployee.name}}</h4>
+                        
+                                               
+                    </div>
+                    <div class="card-body">
+
+                        <div class="default-tab">
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" data-bs-toggle="tab" href="#home"><i class="la la-user me-2"></i> INFO </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-bs-toggle="tab" href="#contact"><i class="las la-comment-dollar me-2"></i> WAGES </a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane fade show active" id="home" role="tabpanel">
+                                    <div class="pt-4">
+                                        <div class="basic-form">
+                                            <form method="post">
+                                                {% csrf_token %}
+                                                    <div class="pt-1 pb-4">
+                                                        <div class="formcontrol">         
+
+                                                            <div class="form-floating mb-3">
+
+                                                                <div class="form-group my-3">
+                                                                    <label class="form-label">Date</label>
+                                                                    {{ editform.date_join}}
+                                                                </div>
+                                            
+                                                                <div class="form-group my-3">
+                                                                    {{editform.name}}
+                                                                </div>
+
+                                                                                                                               
+                                            
+                                                                <div class="accordion accordion-rounded-stylish" id="accordion-twelve">
+                                                                    <div class="accordion-item">
+                                                                        <div class="accordion-header  rounded-lg" id="accord-12One" data-bs-toggle="collapse" data-bs-target="#collapse12One" aria-controls="collapse12One"   aria-expanded="true"  role="button">
+                                                                            <span class="accordion-header-icon"></span>
+                                                                            <span class="accordion-header-text">Contact Data</span>
+                                                                            <span class="accordion-header-indicator"></span>
+                                                                        </div>
+                                            
+                                                                        <div id="collapse12One" class="collapse accordion__body hidden" aria-labelledby="accord-12One" data-bs-parent="#accordion-twelve">
+                                                                            <div class="accordion-body-text">
+                                                                            
+                                                                                <div class="form-group my-3 d-flex justify-content-between">
+                                                                                    <div class="me-3">
+                                                                                        {{editform.email}} </div>
+                                                                                    
+                                                                                </div>
+                                                                                <div class="form-group my-3">
+                                                                                    {{editform.tel}}
+                                                                                </div>
+                                                                                
+                                                                                <div class="form-group my-3">
+                                                                                    {{editform.address}}
+                                                                                </div>
+                                                                                
+                                                                            </div>
+                                                                        </div>
+                                            
+                                                                        <div class="form-group my-3">
+                                                                            {{editform.rol}}
+                                                                        </div>
+                                                                    </div>
+                                                                    
+                                                                </div>
+                                                                    </div>
+                                                                    
+                                                                </div>
+                
+                                                                <div class="form-group my-5 d-flex flex-row">
+                                                                    <div class="fs-4 ml-4">
+                                                                        Active? 
+                                                                        {{editform.active}}
+                                                                    </div>                                                           </div>
+                
+                                                                <div class="my-4" id="cancelation">
+                                                                    <div class="form-group mb-5 d-flex flex-row">
+                                                                        {{editform.date_gone}}
+                                                                    </div>
+                                                                </div>
+                                                                
+                                                            </div>
+                                                        </div>       
+                
+                                                        <div class="form-floating pt-4 my-3 d-flex flex-row-reverse">
+                                                            <button type="submit" class="shadow-sm btn btn-secondary fs-3 " name="editemployee"><i class="fa-solid fa-check"></i> Save </button>
+                                                            <a href="/dashboard/employees/" class="btn fs-7 mx-2">
+                                                                <i class="fa-solid fa-arrow-left me-2 fs-7"></i> Cancel
+                                                            </a>
+                                                        </div>
+                
+                                                    </div>
+                                            </form>
+                                            <div class="form-floating pt-4 my-3 d-flex flex-row-reverse">
+                                                
+                                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteemployee{{editemployee.id}}">Delete employee<span class="btn-icon-end">
+                                                    <i class="fa-solid fa-trash fs-7"></i></span></button>
+                                            </div>
+                
+                                           
+                
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="tab-pane fade" id="contact">
+                                    <div class="pt-4">
+                                        {% if editemployee.rol == "Staff" %}
+                    
+                                        <div>
+                                            <div class="basic-list-group m-3">
+                                                <form method="post">
+                                                    {% csrf_token %}                                                
+                                                    <ul class="list-group">
+                                                        
+                                                        
+                                                        <li class="list-group-item">
+                                                            <h4>WHITE</h4> 
+                                                            <p class="fs-4">
+                                                                <span class="form-control">
+                                                                    ${{editform.white}}
+                                                                </span>
+                                                            </p>
+                                                        </li>
+
+                                                        {% if editemployee.white > 0 %}
+                                                        <li class="list-group-item">
+                                                            <h4>SOCIAL</h4> 
+                                                            <p class="fs-4">
+                                                                <span class="badge light badge-success">
+                                                                    ${{editemployee.get_social}}
+                                                                </span>
+                                                            </p>
+                                                        </li>
+
+                                                        <li class="list-group-item">
+                                                            <h4>MONTHLY BONUS</h4> 
+                                                            <p class="fs-4">
+                                                                <span class="badge light badge-success">
+                                                                    ${{editemployee.get_aguinaldo_mensual}}
+                                                                </span>
+                                                            </p>
+                                                        </li>
+
+                                                        <li class="list-group-item">
+                                                            <h4>ANNUAL BONUS</h4> 
+                                                            <p class="fs-4">
+                                                                <span class="badge light badge-success">
+                                                                    ${{editemployee.get_aguinaldo}}
+                                                                </span>
+                                                            </p>
+                                                        </li>
+                                                        {% endif %}
+
+                                                        <li class="list-group-item">
+                                                            <h4>NIGGA</h4> 
+                                                            <p class="fs-4">
+                                                                <span class="form-control">
+                                                                    ${{editform.nigga}}
+                                                                </span>
+                                                            </p>
+                                                        </li>
+
+                                                    </ul>
+
+                                                    <div class="form-floating pt-4 my-3 d-flex flex-row-reverse">
+                                                        <button type="submit" class="shadow-sm btn btn-secondary fs-3 " name="editemployee"><i class="fa-solid fa-check"></i> Save </button>
+                                                        <a href="/dashboard/employees/" class="btn fs-7 mx-2">
+                                                            <i class="fa-solid fa-arrow-left me-2 fs-7"></i> Cancel
+                                                        </a>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                       
+                    </div>
+
+
+                    
+
+                    
+
+                    
+                </div>
+                
+            </div>
+        </div>
+
+
+
+
+
+
+
+{% endblock %}
+
+
+
+
+
+{% block additional_js %}
+
+<script>
+    var can = document.getElementById("cancelled");
+    var coso = document.getElementById("cancelation");
+    coso.style.display="none"
+    can.onchange=function(){
+    
+        if(this.value=="Active"){
+            coso.style.display="none";  
+        }else{
+            coso.style.display="block";
+        }
+    }        
+</script>
+
+
+<!-- NEWMODAL -->
+<script>
+    const deleteemployee = new bootstrap.Modal('#deleteemployee',   {keyboard: true}    )
+</script>
+
+{% endblock %}
