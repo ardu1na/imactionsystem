@@ -1,32 +1,27 @@
 from django.forms import ModelForm, \
-TextInput, URLInput, EmailInput, Select, Textarea
+TextInput, EmailInput, Select, BooleanField
 
 from expenses.models import Employee
 
 
 class EmployeeForm(ModelForm): 
     
-   
-    class Meta:
+       class Meta:
         model = Employee
-        
         exclude = ['id', 'active', 'date_gone', 'white', 'nigga', 'mp', 'tc', 'atm_cash']
         
         widgets = {
-
+            
             'date_join' : TextInput(attrs={'class':"datetimepicker form-control",
             'id':"PublishDateTimeTextbox",
             'type':"date",
-            'placeholder':"Date"}),
-            
+            'placeholder':"Date"}),            
             
             'rol' : Select(attrs={
                 'class':"form-select",
                 'id':"rol",
                 'placeholder' : "Rol",
-                }
-            ),
-
+                }),
 
             'name' : TextInput(attrs={'class':"form-control",
             'id':"name",
@@ -41,20 +36,14 @@ class EmployeeForm(ModelForm):
                 'class':"form-control",
                 'id':"email",
                 'placeholder' : "Email"
-                }
-            ),
+                }),
 
             'tel' : TextInput(attrs={
                 'class':"form-control",
                 'id':"tel",
                 'placeholder' : "Phone Number"
-                }
-            ),
+                }),
         }
-
-
-
-"""
 
 
 class EditEmployeeForm(ModelForm):
@@ -65,103 +54,102 @@ class EditEmployeeForm(ModelForm):
         exclude = ['id',]
         
         widgets = {
+            
+            'active' : TextInput(attrs={
+                'class':"form-check-input",
+                'type':"checkbox",
+                'id':"active",
+                'placeholder' : "IS ACTIVE?"
+                }),
 
-            'date' : TextInput(attrs={'class':"datetimepicker form-control",
+            'date_join' : TextInput(attrs={'class':"datetimepicker form-control",
             'id':"PublishDateTimeTextbox",
             'type':"date",
-            'placeholder':"Date",}),
+            'placeholder':"Date"}),     
+            
+            
+            'date_GONE' : TextInput(attrs={'class':"datetimepicker form-control",
+            'id':"PublishDateTimeTextbox",
+            'type':"date",
+            'placeholder':"Date Gone"}),     
 
+
+
+            'rol' : Select(attrs={
+                'class':"form-select",
+                'id':"rol",
+                'placeholder' : "Rol",
+                }),
 
             'name' : TextInput(attrs={'class':"form-control",
             'id':"name",
-            'placeholder':"Employee",}),
+            'placeholder':"Name",}),
 
-            'website' : URLInput(attrs={'class':"form-control",
-            'id':"website",
-            'placeholder':"Website",}),
-
-            'business_name' : TextInput(attrs={'class':"form-control",
-            'id':"business_name",
-            'placeholder':"Business name",}),
-
-            'source' : Select(attrs={
-                'class':"form-select",
-                'id':"source",
-                'placeholder' : "Source",
-                'empty_label':"Select the source",
-                }
-            ),
+            'address' : TextInput(attrs={'class':"form-control",
+            'id':"address",
+            'placeholder':"Address",}),
 
 
             'email' : EmailInput(attrs={
                 'class':"form-control",
                 'id':"email",
                 'placeholder' : "Email"
-                }
-            ),
+                }),
 
-            'phone_number' : TextInput(attrs={
+            'tel' : TextInput(attrs={
                 'class':"form-control",
-                'id':"phone_number",
+                'id':"tel",
                 'placeholder' : "Phone Number"
-                }
-            ),
+                }),
+            
+            
 
-            'phone_2' : TextInput(attrs={
+            'white' : TextInput(attrs={
                 'class':"form-control",
-                'id':"phone_2",
-                'placeholder' : "Other Phone Number"
+                'id':"white",
+                'placeholder' : "WHITE"
                 }
             ),
+            
+            
 
-            'email_2' : EmailInput(attrs={
+            'nigga' : TextInput(attrs={
                 'class':"form-control",
-                'id':"email_2",
-                'placeholder' : "Other Email"
+                'id':"nigga",
+                'placeholder' : "NIGGA"
                 }
             ),
+            
+            
 
-            'email_admin' : EmailInput(attrs={
+            'mp' : TextInput(attrs={
                 'class':"form-control",
-                'id':"email_admin",
-                'placeholder' : "Email Admin"
+                'id':"mp",
+                'placeholder' : "MP"
                 }
             ),
+            
+            
 
-            'landing_page' : URLInput(attrs={'class':"form-control",
-            'id':"landing_page",
-            'placeholder':"Landing Page",}),
-            
-            
-            'cancelled' : Select(attrs={
-                'class':"form-select",
-            'id':"cancelled",
-            'placeholder':"Cancelled?",}),
-            
-            'date_can' : TextInput(attrs={'class':"datetimepicker form-control",
-            'id':"PublishDateTimeTextbox",
-            'type':"date",
-            'placeholder':"Cancellation date",}),
-            
-            
-            'fail_can' : Select(attrs={
-                'class':"form-select",
-            'id':"fail_can",
-            'placeholder':"Do we fail?",}),
-            
-            
-            'comment_can' : Textarea(attrs={
+            'tc' : TextInput(attrs={
                 'class':"form-control",
-                'id':"comment_can",
-                'placeholder' : "Comment"
+                'id':"tc",
+                'placeholder' : "TC"
                 }
             ),
+            
+            
 
+            'atm_cash' : TextInput(attrs={
+                'class':"form-control",
+                'id':"atm_cash",
+                'placeholder' : "ATM CASH"
+                }
+            ),
 
         }
 
-
-
+"""
 
 class BankDataForm(ModelForm):
     

@@ -24,7 +24,28 @@ from expenses.forms import *
 import csv
 from dashboard.forms import UploadFileForm
 
+@login_required(login_url='dashboard:login')
+def editemployee(request, id):
+    
+    editemployee = Employee.objects.get(id=id)
 
+    if request.method == "GET":
+        
+        editform = EditEmployeeForm(instance=editemployee)
+        context = {
+            'editform': editform,
+            'editemployee': editemployee,
+            'id': id
+            }
+        return render (request, 'dashboard/instructor/editemployee.html', context)
+
+    
+    if request.method == 'POST':
+        editform = EditEmployeeForm(request.POST, instance=editemployee)
+        if editform.is_valid():
+            editform.save()
+            return redirect(reverse('dashboard:employees')+ "?ok")
+        else: return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
 
 
 @login_required(login_url='dashboard:login')
@@ -50,9 +71,15 @@ def employees(request):
         "ceo": ceo,
         "employees": employees,
         "addform": addform,        
-        "page_title":"Team",
+        "page_title":"WAGES/EMPLOYEES",
     }
     return render(request,'dashboard/instructor/employees.html',context)
+
+@login_required(login_url='dashboard:login')
+def deleteemployee(request, id):
+    employee = Employee.objects.get(id=id)
+    employee.delete()
+    return redirect(reverse('dashboard:employees')+ "?deleted")
 
 
 
@@ -77,7 +104,7 @@ def sales(request):
                 return HttpResponse("hacked from las except else form")
                 
     context={
-        "page_title":"Sales",
+        "page_title":"SALES",
         "sales" : sales,
         "addform" : addform
     }
@@ -206,7 +233,7 @@ def clients(request):
         'get_incomes_by_service' : get_incomes_by_service,
         'get_incomes_by_tier' : get_incomes_by_tier,       
 
-        "page_title":"Clients RR",
+        "page_title":"RR ACCOUNTS",
     }
     return render(request,'dashboard/instructor/clients.html',context)
 
