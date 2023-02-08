@@ -59,7 +59,8 @@ class EditEmployeeForm(ModelForm):
                 'class':"form-check-input",
                 'type':"checkbox",
                 'id':"active",
-                'placeholder' : "IS ACTIVE?"
+                'placeholder' : "IS ACTIVE?",
+                'checked': "checked"
                 }),
 
             'date_join' : TextInput(attrs={'class':"datetimepicker form-control",
@@ -80,6 +81,7 @@ class EditEmployeeForm(ModelForm):
                 'id':"rol",
                 'placeholder' : "Rol",
                 }),
+            
 
             'name' : TextInput(attrs={'class':"form-control",
             'id':"name",

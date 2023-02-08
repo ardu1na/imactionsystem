@@ -52,7 +52,7 @@ def editemployee(request, id):
 def employees(request):
     staff = Employee.objects.filter(rol="Staff")
     ceo = Employee.objects.filter(rol="CEO")        
-    employees  = Employee.objects.filter(active=True)
+    employees  = Employee.objects.all()
     
     if request.method == 'GET':
         addform = EmployeeForm()
