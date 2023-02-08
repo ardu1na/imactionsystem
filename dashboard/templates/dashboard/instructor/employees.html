@@ -43,13 +43,11 @@
 
     <div class="row">     
         <div class="col-xl-12">
+            <div class="d-flex flex-row-reverse my-2">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">ADD Employee<span class="btn-icon-end">
+                    <i class="fa fa-plus"></i></span>     
+            </div>
             <div class="card">
-                <div class="card-header">
-                    <div class="flex-row-reverse">
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">ADD Employee<span class="btn-icon-end">
-                            <i class="fa fa-plus"></i></span>     
-                    </div>
-                </div>
                 <div class="card-body">
                     <ul class="nav nav-pills mb-4 light">
                         <li class=" nav-item">
@@ -62,16 +60,13 @@
                     <div class="tab-content">
                         <div id="navpills-1" class="tab-pane active">
                             <div class="row">
-                                <div class="card students-list py-4">
-                         
+                        
                                     <!-- TABLE EMPLOYEES -->
-                                    <div class="card-body py-0">
-                                        <div class="table-responsive">
+                                        <div class="table-responsive py-4">
                                             <table id="example4" class="display mb-4" style="min-width: 845px">
                                                 <thead>
                                                     <tr>
                                                         <th>NAME</th>
-                                                        <th>ROL</th>
                                                         <th>WHITE</th>
                                                         <th>SOCIAL</th>
                                                         <th>NIGGA</th>
@@ -88,7 +83,6 @@
                                                                 <a class="mb-0 fs-16 font-w500" href="{% url 'dashboard:editemployee' id=employee.id %}">{{employee.name}}</a>
                                                             </div>
                                                         </td>
-                                                        <td>{{employee.rol}}</td>
                                                         <td>$ {{employee.white|floatformat:2}}</td>
                                                         <td>$ {{employee.get_social|floatformat:2}}</td>
                                                         <td>$ {{employee.nigga|floatformat:2}}</td>
@@ -119,18 +113,14 @@
                                                     {%endif%}
                                                 </tbody>
                                             </table>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
                         <div id="navpills-2" class="tab-pane">
                             <div class="row">
-                                <div class="card students-list py-4">
-                         
+                        
                                     <!-- TABLE EMPLOYEES -->
-                                    <div class="card-body py-0">
-                                        <div class="table-responsive">
+                                        <div class="table-responsive py-4">
                                             <table id="example4" class="display mb-4" style="min-width: 845px">
                                                 <thead>
                                                     <tr>
@@ -183,9 +173,7 @@
                                                     {%endif%}
                                                 </tbody>
                                             </table>
-                                        </div>
                                     </div>
-                                </div>
                             </div>
                         </div>
                     </div>
