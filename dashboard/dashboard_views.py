@@ -47,11 +47,15 @@ def editemployee(request, id):
     if request.method == 'POST':
         if "editemployee" in request.POST:
             editform = EditEmployeeForm(request.POST, instance=editemployee)
-            print(editform.errors)
+            print (editform)
             if editform.is_valid():
                 editform.save()
                 return redirect(reverse('dashboard:employees')+ "?ok")
-            else: return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
+            else:
+                print (editform)
+
+                print(editform.errors)
+                return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
         else:
             editwageform=EditWageForm(request.POST, instance=editemployee)          
             editwageform.white = request.POST['white']
@@ -71,7 +75,8 @@ def editemployee(request, id):
 def employees(request):
     staff = Employee.objects.filter(rol="Staff")
     ceo = Employee.objects.filter(rol="CEO")        
-    employees  = Employee.objects.all()
+    employees  = Employee.objects.filter(active="Yes")
+    all = Employee.objects.all()
     
     if request.method == 'GET':
         addform = EmployeeForm()
@@ -89,6 +94,7 @@ def employees(request):
         "staff": staff,
         "ceo": ceo,
         "employees": employees,
+        "all": all,
         "addform": addform,        
         "page_title":"WAGES/EMPLOYEES",
     }

@@ -109,18 +109,13 @@
                                                 </div>
                                             </div>
                                             <div class="mb-3">
-                                                <div class="form-check">
-                                                    {{ editform.active }}
-                                                    <label class="form-check-label">
-                                                        active
-                                                    </label>
-                                                </div>
+                                                <label class="form-label">Active?</label>
+                                                {{ editform.active }}
                                             </div>
 
                                             <div class="mb-3" id="cancellation">
                                                 <label class="form-label">Gone</label>
                                                 {{ editform.date_gone }}
-                                                </div>
                                             </div>
 
 
@@ -209,7 +204,7 @@
     coso.style.display="none"
     can.onchange=function(){
     
-        if(this.value==true){
+        if(this.value=="Yes"){
             coso.style.display="none";  
         }else{
             coso.style.display="block";

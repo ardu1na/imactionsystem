@@ -9,6 +9,15 @@ class Employee(models.Model):
     ROL_CHOICES = (
         (STAFF, ('Staff')),
         (CEO, ('CEO')),)
+    
+    
+    ACTIVE = 'Yes'
+    GONE = 'No'
+    ACT_CHOICES = (
+        (ACTIVE, ('Yes')),
+        (GONE, ('No')),)
+    
+    
     rol = models.CharField(max_length=15, choices=ROL_CHOICES, verbose_name="ROL", default="Staff")
     
     name = models.CharField(max_length=150, verbose_name="NAME")
@@ -18,7 +27,7 @@ class Employee(models.Model):
     tel = models.CharField(max_length=40, blank=True, null=True, verbose_name="PHONE")
     
     date_join = models.DateField(default=date.today, verbose_name="JOIN")
-    active = models.BooleanField(default=True, verbose_name="ACTIVE?")
+    active = models.CharField(max_length=15, choices=ACT_CHOICES, verbose_name="ACTIVE?", default="Yes")
     date_gone = models.DateField(null=True, blank=True, verbose_name="GONE")
     
     white = models.DecimalField(default= 0, max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="SALARY")

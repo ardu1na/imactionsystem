@@ -55,13 +55,12 @@ class EditEmployeeForm(ModelForm):
         
         widgets = {
             
-            'active' : TextInput(attrs={
-                'class':"form-check-input",
-                'type':"checkbox",
+            'active' :     Select(attrs={
+                'class':"form-select",
                 'id':"active",
-                'placeholder' : "IS ACTIVE?",
-                'checked': "checked"
+                'placeholder' : "Active?",
                 }),
+
 
             'date_join' : TextInput(attrs={'class':"datetimepicker form-control",
             'id':"PublishDateTimeTextbox",
