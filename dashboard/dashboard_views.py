@@ -32,19 +32,31 @@ def editemployee(request, id):
     if request.method == "GET":
         
         editform = EditEmployeeForm(instance=editemployee)
+        editwageform = EditWageForm(instance=editemployee)
+
         context = {
             'editform': editform,
+            'editwageform': editform,
             'editemployee': editemployee,
             'id': id
             }
+        
         return render (request, 'dashboard/instructor/editemployee.html', context)
 
     
     if request.method == 'POST':
-        editform = EditEmployeeForm(request.POST, instance=editemployee)
-        if editform.is_valid():
-            editform.save()
-            return redirect(reverse('dashboard:employees')+ "?ok")
+        if "editemployee" in request.POST:
+            editform = EditEmployeeForm(request.POST, instance=editemployee)
+            print(editform.errors)
+            if editform.is_valid():
+                editform.save()
+                return redirect(reverse('dashboard:employees')+ "?ok")
+        elif "editwage" in request.POST:
+            editwageform = EditWageForm(request.POST, instance=editemployee)
+            print(editwageform.errors)
+            if editwageform.is_valid():
+                editwageform.save()
+                return redirect(reverse('dashboard:employees')+ "?ok")
         else: return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
 
 

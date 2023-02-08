@@ -3,6 +3,39 @@
 
 {% block content %}
 
+
+<!-- modal edit wages -->
+<div class="modal" id="editwage{{editemployee.id}}">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center py-5">
+                <h4 class="fs-2 my-2">{{editemployee.name}} PAY</h4>
+                <form  method="post">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                      
+                        <div class="form-group my-3">
+                            <label class="form-label">WHITE</label>
+                            {{ editwageform.white}}
+                        </div>
+    
+                        <div class="form-group my-3">
+                            {{editwageform.nigga}}
+                        </div>
+                        
+    
+                        <div class="form-floating my-3 text-center">
+                            <button type="submit" class="shadow-sm btn btn-secondary" name="editwage"><i class="fa-solid fa-check me-2"></i> Submit</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
         <div class="page-titles">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{% url 'dashboard:employees' %}">Employees</a></li>
@@ -22,22 +55,15 @@
                             <li class="nav-item">
                                 <a class="nav-link active" data-bs-toggle="tab" href="#home8">
                                     <span>
-                                        <i class="ti-user fs-4"></i>
-                                    </span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" data-bs-toggle="tab" href="#profile8">
-                                    <span>
-                                        <i class="ti-home fs-4"></i>
-                                    </span>
+                                        <i class="ti-user fs-4 me-2"></i>
+                                    </span> Personal
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" data-bs-toggle="tab" href="#messages8">
-                                    <span>
-                                        <i class="ti-wallet fs-4"></i>
-                                    </span>
+                                    <span> 
+                                        <i class="ti-wallet fs-4 me-2"></i>
+                                    </span> Pay
                                 </a>
                             </li>
                         </ul>
@@ -47,7 +73,6 @@
 
                             <div class="tab-pane fade show active" id="home8" role="tabpanel">
                                 <div class="pt-4">
-                                    <h4>Personal details</h4>
 
                                     <div class="basic-form">
                                         <form method="post">
@@ -90,7 +115,7 @@
                                                     </label>
                                                 </div>
                                             </div>
-                                            <button type="submit" class="btn btn-primary">Save</button>
+                                            <button type="submit" name="editemployee" class="btn btn-primary">Save</button>
                                         </form>
                                     </div>
 
@@ -98,23 +123,63 @@
                             </div>
 
 
-
-                            <div class="tab-pane fade" id="profile8" role="tabpanel">
-                                <div class="pt-4">
-                                    <h4>This is icon title</h4>
-                                    <p>Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor.
-                                    </p>
-                                    <p>Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor.
-                                    </p>
-                                </div>
-                            </div>
                             <div class="tab-pane fade" id="messages8" role="tabpanel">
                                 <div class="pt-4">
-                                    <h4>This is icon title</h4>
-                                    <p>Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor.
-                                    </p>
-                                    <p>Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor.
-                                    </p>
+                                    <div class="form-floating pt-4 my-3 d-flex flex-row-reverse">                                                
+                                        <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#editwage{{editemployee.id}}">Edit PAY
+                                        </button>
+                                    </div>
+                                    <div class="basic-list-group m-3">
+                                                
+                                        <ul class="list-group">
+                                                    <li class="list-group-item">
+                                                        <h4>WHITE</h4> 
+                                                        <p class="fs-4">
+                                                            <span class="badge light badge-info">
+                                                                $ {{editemployee.white}}
+                                                            </span>
+                                                        </p>
+                                                    </li>
+
+                                                    <li class="list-group-item">
+                                                        <h4>NIGGA</h4> 
+                                                        <p class="fs-4">
+                                                            <span class="badge light badge-danger">
+                                                                $ {{editemployee.nigga}}
+                                                            </span>
+                                                        </p>
+                                                    </li>
+
+                                                    <li class="list-group-item">
+                                                        <h4>Social</h4> 
+                                                        <p class="fs-4">
+                                                            <span class="badge light badge-success">
+                                                                $  {{editemployee.get_social|floatformat:2}}
+                                                            </span>
+                                                        </p>
+                                                    </li>
+
+                                                    <li class="list-group-item">
+                                                        <h4>MONTHLY BONUS</h4> 
+                                                        <p class="fs-4">
+                                                            <span class="badge light badge-light">
+                                                                $  {{editemployee.get_aguinaldo_mensual|floatformat:2}}
+                                                            </span>
+                                                        </p>
+                                                    </li>
+
+                                                    <li class="list-group-item">
+                                                        <h4>ANNUAL BONUS</h4> 
+                                                        <p class="fs-4">
+                                                            <span class="badge light badge-dark">
+                                                                $  {{editemployee.get_aguinaldo|floatformat:2}}
+                                                            </span>
+                                                        </p>
+                                                    </li>
+
+
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>

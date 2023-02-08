@@ -103,101 +103,49 @@ class EditEmployeeForm(ModelForm):
                 'id':"tel",
                 'placeholder' : "Phone Number"
                 }),
-            
-            
+            }        
+        
+        
+class EditWageForm(ModelForm):
+    
+    class Meta:
+        model = Employee
+        
+        fields = ['white', 'nigga', 'mp', 'tc', 'atm_cash']
+        
+        widgets = {           
 
             'white' : TextInput(attrs={
                 'class':"form-control",
                 'id':"white",
                 'placeholder' : "WHITE"
                 }
-            ),
-            
-            
+            ),          
 
             'nigga' : TextInput(attrs={
                 'class':"form-control",
                 'id':"nigga",
                 'placeholder' : "NIGGA"
                 }
-            ),
+            ),        
             
-            
-
             'mp' : TextInput(attrs={
                 'class':"form-control",
                 'id':"mp",
                 'placeholder' : "MP"
                 }
-            ),
-            
-            
+            ),                      
 
             'tc' : TextInput(attrs={
                 'class':"form-control",
                 'id':"tc",
                 'placeholder' : "TC"
                 }
-            ),
+            ),          
             
-            
-
             'atm_cash' : TextInput(attrs={
                 'class':"form-control",
                 'id':"atm_cash",
                 'placeholder' : "ATM CASH"
                 }
-            ),
-
-        }
-
-"""
-
-class BankDataForm(ModelForm):
-    
-    
-    
-    
-    class Meta:
-        model = BankData
-        
-        exclude = ['id', 'account',]
-        
-        
-        
-        widgets = {
-            
-            
-            
-
-            'payment' : Select(attrs={'class':"form-select",
-            'id':"payment",
-            'placeholder':"Payment",}),
-
-            'cbu' : TextInput(attrs={'class':"form-control",
-            'id':"cbu",
-            'placeholder':"CBU",}),
-
-            'alias' : TextInput(attrs={
-                'class':"form-control",
-                'id':"alias",
-                'placeholder' : "Alias",
-                }
-            ),
-
-
-            'cuit' : TextInput(attrs={
-                'class':"form-control",
-                'id':"cuit",
-                'placeholder' : "CUIT"
-                }
-            ),
-
-            'detail' : TextInput(attrs={
-                'class':"form-control",
-                'id':"detail",
-                'placeholder' : "Detail"
-                }
-            ),
-
-        }"""
+            ),}
