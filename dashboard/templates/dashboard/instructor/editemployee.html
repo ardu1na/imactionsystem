@@ -4,35 +4,36 @@
 {% block content %}
 
 
-<!-- modal edit wages -->
-<div class="modal" id="editwage{{editemployee.id}}">
+<!-- START modal edit wages -->
+<div class="modal fade " id="editwage{{editemployee.id}}" tabindex="-1" aria-labelledby="editwage{{editemployee.id}}Label" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-body text-center py-5">
-                <h4 class="fs-2 my-2">{{editemployee.name}} PAY</h4>
-                <form  method="post">
-                    {% csrf_token %}
-                    <div class="modal-body">
-                      
-                        <div class="form-group my-3">
-                            <label class="form-label">WHITE</label>
-                            {{ editwageform.white}}
-                        </div>
-    
-                        <div class="form-group my-3">
-                            {{editwageform.nigga}}
-                        </div>
-                        
-    
-                        <div class="form-floating my-3 text-center">
-                            <button type="submit" class="shadow-sm btn btn-secondary" name="editwage"><i class="fa-solid fa-check me-2"></i> Submit</button>
-                        </div>
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="editwage{{editemployee.id}}Label">{{editemployee.name}} WAGES</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>           
+            <form  method="post" class="basic-form" >
+            {% csrf_token %}
+                <div class="modal-body">
+                
+                    <div class="form-group my-3">
+                        <label class="form-label me-3">WHITE</label>
+                        ${{editwageform.white}}
                     </div>
-                </form>
-            </div>
+                    <div class="form-group my-3">
+                        <label class="form-label me-3">NIGGA</label>
+                        ${{editwageform.nigga}}
+                    </div>
+
+                    <div class="form-floating my-3 text-center">
+                        <button type="submit" class="shadow-sm btn btn-secondary" name="editwage"><i class="fa-solid fa-check me-2"></i> Submit</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>
+<!-- END modal edit wages -->
 
 
 
@@ -125,12 +126,12 @@
 
                             <div class="tab-pane fade" id="messages8" role="tabpanel">
                                 <div class="pt-4">
-                                    <div class="form-floating pt-4 my-3 d-flex flex-row-reverse">                                                
-                                        <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#editwage{{editemployee.id}}">Edit PAY
-                                        </button>
-                                    </div>
+                                    
                                     <div class="basic-list-group m-3">
-                                                
+                                        <div class="form-floating my-2 d-flex flex-row-reverse">                                                
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editwage{{editemployee.id}}">CHANGE
+                                            </button>
+                                        </div>
                                         <ul class="list-group">
                                                     <li class="list-group-item">
                                                         <h4>WHITE</h4> 

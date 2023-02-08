@@ -111,7 +111,7 @@ class EditWageForm(ModelForm):
     class Meta:
         model = Employee
         
-        fields = ['white', 'nigga', 'mp', 'tc', 'atm_cash']
+        exclude = ['id', 'rol', 'name', 'address', 'email', 'tel', 'date_join', 'active','date_gone']
         
         widgets = {           
 
@@ -123,6 +123,8 @@ class EditWageForm(ModelForm):
             ),          
 
             'nigga' : TextInput(attrs={
+                'role':"textbox",
+
                 'class':"form-control",
                 'id':"nigga",
                 'placeholder' : "NIGGA"

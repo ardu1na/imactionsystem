@@ -51,13 +51,20 @@ def editemployee(request, id):
             if editform.is_valid():
                 editform.save()
                 return redirect(reverse('dashboard:employees')+ "?ok")
-        elif "editwage" in request.POST:
-            editwageform = EditWageForm(request.POST, instance=editemployee)
-            print(editwageform.errors)
+            else: return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
+        else:
+            editwageform=EditWageForm(request.POST, instance=editemployee)          
+            editwageform.white = request.POST['white']
+            editwageform.nigga = request.POST['nigga']
             if editwageform.is_valid():
                 editwageform.save()
                 return redirect(reverse('dashboard:employees')+ "?ok")
-        else: return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
+
+            else: 
+                print (editwageform)
+                print(editwageform.errors)
+                return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
+        
 
 
 @login_required(login_url='dashboard:login')
