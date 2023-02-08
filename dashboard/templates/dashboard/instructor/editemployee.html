@@ -116,6 +116,14 @@
                                                     </label>
                                                 </div>
                                             </div>
+
+                                            <div class="mb-3" id="cancellation">
+                                                <label class="form-label">Gone</label>
+                                                {{ editform.date_gone }}
+                                                </div>
+                                            </div>
+
+
                                             <button type="submit" name="editemployee" class="btn btn-primary">Save</button>
                                         </form>
                                     </div>
@@ -192,3 +200,20 @@
 
 {% endblock %}
 
+
+{% block additional_js %}
+<!-- change active select date_gone -->
+<script>
+    var can = document.getElementById("active");
+    var coso = document.getElementById("cancellation");
+    coso.style.display="none"
+    can.onchange=function(){
+    
+        if(this.value==true){
+            coso.style.display="none";  
+        }else{
+            coso.style.display="block";
+        }
+    }        
+</script>
+{% endblock %}
