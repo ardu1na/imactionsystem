@@ -55,6 +55,11 @@ class Employee(models.Model):
     def get_aguinaldo_mensual(self):
         aguinaldo = self.white + self.nigga + self.get_social
         return aguinaldo/12
+    @property
+    def get_wage_ceo(self):
+        wage = self.white + self.nigga + self.mp + self.tc + self.atm_cash
+        return wage
+    
     
     
 

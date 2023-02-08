@@ -24,6 +24,52 @@ from expenses.forms import *
 import csv
 from dashboard.forms import UploadFileForm
 
+
+@login_required(login_url='dashboard:login')
+def expenses(request):
+    
+    expenses = Expense.objects.all()
+    employees = Employee.objects.filter(active="Yes")
+    all_bonus = 0
+    for employee in employees:
+        all_bonus += employee.get_aguinaldo_mensual
+  
+    
+    if request.method == 'GET':
+        addform = ExpenseForm()
+        
+    if request.method == 'POST':
+        if "addexpense" in request.POST:
+            addform = ExpenseForm(request.POST)
+            if addform.is_valid():
+                addform.save()
+                return redirect(reverse('dashboard:expenses')+ "?added")
+            else:
+                return HttpResponse("hacked from las except else form")
+                
+    context={
+        "page_title": "Expenses",
+        "expenses" : expenses,
+        "employees": employees,
+        "addform" : addform,
+        "all_bonus": all_bonus
+    }
+    return render(request,'dashboard/table/expenses.html', context)
+
+
+
+
+@login_required(login_url='dashboard:login')
+def deleteexpense(request, id):
+    expense = Expense.objects.get(id=id)
+    expense.delete()
+    return redirect(reverse('dashboard:expenses')+ "?deleted")
+
+
+
+
+
+
 @login_required(login_url='dashboard:login')
 def editemployee(request, id):
     

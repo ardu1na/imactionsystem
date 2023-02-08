@@ -1,7 +1,47 @@
 from django.forms import ModelForm, \
 TextInput, EmailInput, Select, BooleanField
 
-from expenses.models import Employee
+from expenses.models import Employee, Expense
+
+
+
+class ExpenseForm(ModelForm):  
+    class Meta:
+        model = Expense
+        
+        exclude = ['id',]
+        
+        
+        
+        widgets = {
+            
+            'date' : TextInput(attrs={'class':"datetimepicker form-control",
+            'id':"PublishDateTimeTextbox",
+            'type':"date",
+            'placeholder':"Date",}),
+
+            'category' : Select(attrs={'class':"form-select",
+            'id':"category",
+            'placeholder':"Category",}),
+
+            'concept' : TextInput(attrs={'class':"form-control",
+            'id':"concept",
+            'placeholder':"Concept",}),
+
+            'wop' : Select(attrs={
+                'class':"form-select",
+                'id':"wop",
+                'placeholder' : "WOP",
+                }),
+            
+            'value' : TextInput(attrs={
+                'class':"form-control",
+                'id':"value",
+                'placeholder' : "Value"
+                }),
+
+        }
+
 
 
 class EmployeeForm(ModelForm): 
