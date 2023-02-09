@@ -62,26 +62,6 @@ urlpatterns = [
 	path('activate/<uidb64>/<token>/',users_views.activate, name='activate'),
 
 
-    #CMS_Start-------------------
-
-    path('pages/', include('dashboard.cms.pages.urls', namespace='pages')),
-    path('blogs/', include('dashboard.cms.blog.urls', namespace='blog')),
-    path('menus/', include('dashboard.cms.menu.urls', namespace='menu')),
-    path('subscribe/', include('dashboard.cms.subscribe.urls', namespace='subscribe')),
-    path('contact-us/', include('dashboard.cms.contactus.urls', namespace='contactus')),
-
-
-    path('configurations/',dashboard_views.all_config,name='all-config'),
-    path('configurations/reset/',dashboard_views.reset_config,name='reset-config'),
-    path('configurations/download/',dashboard_views.download_config,name='download-config'),
-
-    
-    path('configurations/prefix/<str:prefix>/',dashboard_views.filter_config,name='filter-config'),
-    path('add-configurations/',dashboard_views.add_config,name='add-config'),
-    path('edit-configurations/<int:id>/',dashboard_views.edit_config,name='edit-config'),
-    path('delete-configurations/<int:id>/',dashboard_views.delete_config,name='delete-config'),
-    #CMS_End-----------------
-
     path('',dashboard_views.index,name="index"),
     path('index/',dashboard_views.index,name="index"),
     path('index-2/',dashboard_views.index2,name="index-2"),

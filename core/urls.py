@@ -25,7 +25,6 @@ urlpatterns = [
     path('dashboard/', include('dashboard.urls', namespace='dashboard')),
 
     #Frontend
-    path('f', include('frontend.urls', namespace='frontend')),
     path('ckeditor/', include('ckeditor_uploader.urls')),
     
 ]

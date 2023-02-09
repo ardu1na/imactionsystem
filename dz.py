@@ -138,63 +138,7 @@ dz_array = {
                                     f"{foldername_d}/vendor/bootstrap-duallistbox/src/bootstrap-duallistbox.css",
                                     f"{foldername_d}/vendor/bootstrap-duallistbox/dist/bootstrap-duallistbox.css",
                                 ],
-                                "cms_page_list":[
-                                    f"{foldername_d}/vendor/sweetalert2/dist/sweetalert2.min.css",
-                                ],
-        
-                                "cms_page_create":[
-                                ],
-                                "cms_page_edit":[
-
-                                ],
-
-                                "cms_blog_list":[
-                                    f"{foldername_d}/vendor/sweetalert2/dist/sweetalert2.min.css",
-                                ],
-                                "cms_blog_create":[
-                                f"{foldername_d}/vendor/select2/css/select2.min.css",
-                                "cms/blog/css/bootstrap-tagsinput.css",
-
-                                ],
-                                "cms_blog_edit":[
-                                f"{foldername_d}/vendor/select2/css/select2.min.css",
-                                "cms/blog/css/bootstrap-tagsinput.css",
-                                "cms/blog/css/content-styles.css",
-                                ],
-                                "blogCategory":[
-                                  f"{foldername_d}/vendor/sweetalert2/dist/sweetalert2.min.css"  
-                                ],
-                                "blogCategoryEdit":[
-                                  f"{foldername_d}/vendor/sweetalert2/dist/sweetalert2.min.css"  
-                                ],
-                                "blogTag":[
-                                  f"{foldername_d}/vendor/sweetalert2/dist/sweetalert2.min.css"  
-                                ],
-                                "blogTagEdit":[
-                                f"{foldername_d}/vendor/sweetalert2/dist/sweetalert2.min.css"  
-                                ],
-
-
-                                "cms_menu_setup":[
-                                    f"{foldername_d}/vendor/nestable2/css/jquery.nestable.min.css",
-                                    f"{foldername_d}/vendor/sweetalert2/dist/sweetalert2.min.css",
-                                    "cms/menu/css/menu.css",
-                                ],
-                                "all_config":{
-                                    f"{foldername_d}/vendor/sweetalert2/dist/sweetalert2.min.css", 
-                                },
-                                "subscribe":{
-                                    f"{foldername_d}/vendor/sweetalert2/dist/sweetalert2.min.css", 
-                                },
-                                "edit_subscribe":{
-                                    f"{foldername_d}/vendor/sweetalert2/dist/sweetalert2.min.css", 
-                                },
-                                "contact_us":{
-                                    f"{foldername_d}/vendor/sweetalert2/dist/sweetalert2.min.css", 
-                                },
-                                "edit_contact_us":{
-                                    f"{foldername_d}/vendor/sweetalert2/dist/sweetalert2.min.css", 
-                                },
+                                
 
                                 "courses":[
                                     f"{foldername_d}/vendor/swiper/css/swiper-bundle.min.css"
@@ -402,92 +346,7 @@ dz_array = {
                                     f"{foldername_d}/vendor/bootstrap-duallistbox/ajax/libs/prettify/r298/run_prettify.js",
                                     f"{foldername_d}/vendor/bootstrap-duallistbox/dist/jquery.bootstrap-duallistbox.js",
                                 ],
-                                "cms_page_list":[
-                                    f"{foldername_d}/vendor/sweetalert2/dist/sweetalert2.min.js",
-                                    "cms/page/js/page_list.js"
-                                ],
-                                "cms_page_create":[
-                                    "ckeditor/ckeditor/config.js",
-                                    "cms/page/js/jquery.slug.js",
-                                    "cms/page/js/pages.js"
-
-                                ],
-                                "cms_page_edit":[
-                                    "ckeditor/ckeditor/config.js",
-                                    "cms/page/js/jquery.slug.js",
-                                    "cms/page/js/pages.js",
-                                ],
-                                "cms_blog_list":[
-                                    f"{foldername_d}/vendor/sweetalert2/dist/sweetalert2.min.js",
-                                    'cms/blog/js/blog_list.js'
-                                ],
-
-                                "cms_blog_create":[
-                                    f"{foldername_d}/vendor/select2/js/select2.full.min.js",
-                                    f"{foldername_d}/js/plugins-init/select2-init.js",
-                                    "ckeditor/ckeditor/config.js",
-                                    "cms/blog/js/bootstrap-tagsinput.js",
-                                    "cms/blog/js/jquery.slug.js",
-                                    "cms/blog/js/cookie.js",
-                                    
-                                    "cms/blog/js/blogs.js",
-                                ],
                                 
-                                "cms_blog_edit":[
-                                    f"{foldername_d}/vendor/select2/js/select2.full.min.js",
-                                    f"{foldername_d}/js/plugins-init/select2-init.js",
-                                    "ckeditor/ckeditor/config.js",
-                                    "cms/blog/js/bootstrap-tagsinput.js",
-                                    "cms/blog/js/jquery.slug.js",
-                                    "cms/blog/js/cookie.js",
-                                    "cms/blog/js/blogs.js",
-                                ],
-                                "blogCategory":[
-                                    f"{foldername_d}/vendor/sweetalert2/dist/sweetalert2.min.js",
-                                    "cms/blog/js/category.js"
-                                ],
-                                "blogCategoryEdit":[
-                                   f"{foldername_d}/vendor/sweetalert2/dist/sweetalert2.min.js",
-                                    "cms/blog/js/category.js"
-                                ],
-                                "blogTag":[
-                                    f"{foldername_d}/vendor/sweetalert2/dist/sweetalert2.min.js",
-                                    "cms/blog/js/tag.js"
-                                ],
-                                "blogTagEdit":[
-                                    f"{foldername_d}/vendor/sweetalert2/dist/sweetalert2.min.js",
-                                    "cms/blog/js/tag.js"
-                                ],
-                                "cms_menu_setup":[
-                                    f"{foldername_d}/vendor/nestable2/js/jquery.nestable.min.js",
-                                    f"{foldername_d}/js/plugins-init/nestable-init.js",
-                                    f"{foldername_d}/vendor/sweetalert2/dist/sweetalert2.min.js",
-                                    # f"{foldername_d}/js/plugins-init/sweetalert.init.js",
-                                    f"cms/menu/js/menu.js"
-                                    # f"cms/menu/js/jquery.nestable.min.js"
-                                    
-                                ],
-                                "all_config":{
-                                    f"{foldername_d}/vendor/sweetalert2/dist/sweetalert2.min.js",
-                                },
-
-                                "subscribe":{
-                                    f"{foldername_d}/vendor/sweetalert2/dist/sweetalert2.min.js",
-                                    "cms/subscribe/subscribe.js"
-                                },
-                                "edit_subscribe":{
-                                   f"{foldername_d}/vendor/sweetalert2/dist/sweetalert2.min.js",
-                                   "cms/subscribe/subscribe.js"
-                                },
-                                
-                                "contact_us":{
-                                    f"{foldername_d}/vendor/sweetalert2/dist/sweetalert2.min.js",
-                                    "cms/contactus/contact-us.js"
-                                },
-                                "edit_contact_us":{
-                                  f"{foldername_d}/vendor/sweetalert2/dist/sweetalert2.min.js",
-                                    "cms/contactus/contact-us.js"
-                                },
 
                                 "courses":[
                                     f"{foldername_d}/vendor/swiper/js/swiper-bundle.min.js",

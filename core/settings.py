@@ -91,11 +91,6 @@ TEMPLATES = [
         'DIRS': [
                     BASE_DIR / 'frontend' / 'templates',
                     BASE_DIR / 'dashboard' / 'templates',
-                    BASE_DIR / 'dashboard' / 'cms' / 'pages' / 'templates',
-                    BASE_DIR / 'dashboard' / 'cms' / 'blog' / 'templates',
-                    BASE_DIR / 'dashboard' / 'cms' / 'menu' / 'templates',
-                    BASE_DIR / 'dashboard' / 'cms' / 'subscribe' / 'templates',
-                    BASE_DIR / 'dashboard' / 'cms' / 'contactus' / 'templates',
                     
                     ],
         'APP_DIRS': True,
@@ -177,12 +172,6 @@ STATIC_URL = 'static/'
 
 STATICFILES_DIRS = [
     BASE_DIR / 'dashboard' /'static',
-    BASE_DIR / 'frontend' /'static',
-    BASE_DIR / 'dashboard' / 'cms' / 'pages' / 'static',
-    BASE_DIR / 'dashboard' / 'cms' / 'blog' / 'static',
-    BASE_DIR / 'dashboard' / 'cms' / 'menu' / 'static',
-    BASE_DIR / 'dashboard' / 'cms' / 'subscribe' / 'static',
-    BASE_DIR / 'dashboard' / 'cms' / 'contactus' / 'static',
     ]  
 
 STATIC_ROOT = STATIC_ROOT = BASE_DIR / "static" 
