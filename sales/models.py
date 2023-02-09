@@ -81,6 +81,13 @@ class Sale(models.Model):
         (ACTIVE, ('Active'))
     )
 
+    ARS = "ARS"
+    USD = "USD"
+
+    COIN_CHOICES = (
+        (ARS, ('ARS')),
+        (USD, ('USD'))
+    )
 
     client = models.ForeignKey(Client, related_name='sales', null=True, blank=True, on_delete=models.CASCADE, verbose_name="ACCOUNT")
     kind = models.CharField(max_length=50, choices=KIND_CHOICES, null=True, blank=True, verbose_name="KIND")
@@ -90,6 +97,7 @@ class Sale(models.Model):
     revenue = models.CharField(max_length=20, null=True, blank=True, choices=REVENUE_CHOICES, help_text="Leave blank to automatically fill", verbose_name="REVENUE")
     service = models.CharField(max_length=50, choices=SERVICE_CHOICES, verbose_name="SERVICE")
     price = models.DecimalField(default=0, verbose_name="PRICE", decimal_places=2, max_digits=12)
+    currency = models.CharField(max_length=50, default="ARS", choices=COIN_CHOICES, null=True, blank=True, verbose_name="CURRENCY")
     note = models.CharField(max_length=400, null=True, blank=True, verbose_name="NOTES")
     cost = models.IntegerField(default=0, verbose_name="COST")
     status = models.CharField(max_length=5, choices=S_CHOICES, null=True, blank=True, verbose_name="STATUS $")

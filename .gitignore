@@ -7,7 +7,6 @@ db.sqlite3
 db.sqlite3-journal
 migrations/
 env/
-configurations/
 .env
 frontend/
 .vscode

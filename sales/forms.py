@@ -48,6 +48,10 @@ class SaleForm(ModelForm):
                 'placeholder' : "Price"
                 }
             ),
+            
+            'currency' : Select(attrs={'class':"form-select",
+            'id':"currency",
+            'placeholder':"Currency",}),
 
             'note' : TextInput(attrs={
                 'class':"form-control",
@@ -116,6 +120,12 @@ class ClientSaleForm(ModelForm):
                 'placeholder' : "Price"
                 }
             ),
+            
+            
+            'currency' : Select(attrs={'class':"form-select",
+            'id':"currency",
+            'placeholder':"Currency",}),
+            
 
             'note' : TextInput(attrs={
                 'class':"form-control",
@@ -180,6 +190,11 @@ class EditSaleForm(ModelForm):
                 'placeholder' : "Price"
                 }
             ),
+            
+            
+            'currency' : Select(attrs={'class':"form-select",
+            'id':"currency",
+            'placeholder':"Currency",}),
 
             'note' : TextInput(attrs={
                 'class':"form-control",
