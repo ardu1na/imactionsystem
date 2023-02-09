@@ -24,6 +24,29 @@ from expenses.forms import *
 import csv
 from dashboard.forms import UploadFileForm
 
+@login_required(login_url='dashboard:login')
+def editexpense(request, id):
+    editexpense = Expense.objects.get(id=id)
+    
+    if request.method == "GET":
+    
+        form = ExpenseForm(instance=editexpense)
+        
+        context = {
+            'form': form,
+            'editexpense': editexpense,
+            'id': id
+            }
+        return render (request, 'dashboard/table/editexpense.html', context)
+
+    
+    if request.method == 'POST':
+        form = ExpenseForm(request.POST, instance=editexpense)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/expenses/')
+        else: return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
+        
 
 @login_required(login_url='dashboard:login')
 def expenses(request):
