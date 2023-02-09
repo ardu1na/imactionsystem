@@ -3,9 +3,6 @@ from django.db import models
 from django.contrib import admin
 
 
-"""class ClientManager(models.Manager):
-    def get_queryset(self):
-        return super().get_queryset().filter(sales__kind='RR')"""
 
 
 
@@ -81,12 +78,6 @@ class Client(models.Model):
         formatdate = self.date_can.strftime('%d/%m/%Y')
         return formatdate
 
-
-    """def save(self, *args, **kwargs):
-        if self.cancelled == "Cancelled":
-            for sale in self.sales:
-                sale.cancelled = "Cancelled"
-        super('Sale', self).save(*args, **kwargs)"""
         
         
     

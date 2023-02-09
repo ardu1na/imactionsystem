@@ -80,45 +80,5 @@ class SaleAdmin(ModelAdmin):
         return '${:,}'.format(obj.price)
 
 
-
-    """
-
-    def client_link(self, book):
-        url = reverse("admin:customers_client_change", args=[customers.client.id])
-        link = '<a href="%s">%s</a>' % (url, customers.client.id)
-        return mark_safe(link)
-    client_link.short_description = 'client'"""   
-    
-
-
-    """def get_queryset(self, request):
-        queryset = Sale.objects.filter(date__month=date.today().month)
-        return queryset
-    """
-
-    """def dos_total(self, *args, **kwargs):
-        #functions to calculate whatever you want...
-        total = Sale.objects.filter(date__month=date.today().month).aggregate(tot=Sum('price'))['tot']
-        return total
-
-    def changelist_view(self, request, extra_context=None):
-        my_context = {
-            'total': self.dos_total(),
-        }
-        return super(SaleAdmin, self).changelist_view(request,
-            extra_context=my_context)
-            
-            
-            
-         
-
-    def dos_total(cl, *args, **kwargs):
-        dos_total=0
-        for item in items_for_result:
-            dos_total += item.price
-        return cl.dos_total(*args, **kwargs)"""
-
-
-
 admin.site.register(Sale, SaleAdmin)
 

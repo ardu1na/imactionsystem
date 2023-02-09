@@ -46,11 +46,6 @@ class ClientAdmin(ModelAdmin):
     list_per_page = 500
     list_display_links = ('name', 'business_name', 'website')
 
-    """def get_queryset(self, request):
-        
-        return super(ClientAdmin, self).get_queryset(request).filter(cancelled="Active")
-"""
-
     fieldsets = (
         ('CLIENT', {
             'fields': ('name', 'date')
