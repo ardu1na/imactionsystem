@@ -8,7 +8,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
    
     #Dashboard
-    path('dashboard/', include('dashboard.urls', namespace='dashboard')),
+    path('', include('dashboard.urls', namespace='dashboard')),
 
     #Frontend
     path('ckeditor/', include('ckeditor_uploader.urls')),

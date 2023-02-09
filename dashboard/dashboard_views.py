@@ -434,7 +434,7 @@ def addclientsale(request, id):
             instance.client=client
             instance.save()
            
-            return HttpResponseRedirect('/dashboard/clients/')
+            return HttpResponseRedirect('/clients/')
 
         else:
 
@@ -467,7 +467,7 @@ def bankdata(request, id):
             nbk.account = client
             nbk.save()
             
-            return HttpResponseRedirect('/dashboard/clients/')
+            return HttpResponseRedirect('/clients/')
 
         else:
 
@@ -495,7 +495,7 @@ def editbankdata(request, id):
         form = BankDataForm(request.POST, instance=editbankdata)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/dashboard/clients/')
+            return HttpResponseRedirect('/clients/')
         else: return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
 
         
@@ -504,7 +504,7 @@ def editbankdata(request, id):
 def deletebankdata(request, id):
     bank = BankData.objects.get(id=id)
     bank.delete()
-    return HttpResponseRedirect('/dashboard/clients/')
+    return HttpResponseRedirect('/clients/')
 
 
 
