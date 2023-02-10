@@ -1,10 +1,11 @@
 
 from django.contrib import admin
-from django.contrib.admin.models import LogEntry
 #from django.db.models import Sum
 
 from unfold.admin import ModelAdmin
 from sales.models import Sale
+
+from django.contrib.admin.models import LogEntry
 
 @admin.register(LogEntry)
 class LogEntryAdmin(ModelAdmin):

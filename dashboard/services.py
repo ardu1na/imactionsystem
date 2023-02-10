@@ -1,13 +1,21 @@
-import requests
+from urllib.request import urlopen
+import json
+from pprint import pprint
 
-def generate_request(url, params={}):
-    response = requests.get(url, params=params)
 
-    if response.status_code == 200:
-        return response.json()
+url = "https://www.dolarsi.com/api/api.php?type=dolar"
+response = urlopen(url)
+data = json.loads(response.read())
 
-def get_blue(params={}):
-    response = generate_request('https://www.dolarsi.com/api/api.php?type=dolar', params)
-    if response:
-       blue = response.get('casa')[3]
-       return blue.get('nombre').get('Blue')
+casa = data[1]
+blue = casa["casa"]
+promedio = (float(blue["compra"]) + float(blue["venta"]))/2   
+print(promedio)
+
+
+
+#desinstalar esta librería y quitarla de inestalled apps y de rerquirements
+"""import requests
+api_url = "https://www.dolarsi.com/api/api.php?type=dolar"
+response = requests.get(api_url)
+print (response)"""
