@@ -2,6 +2,8 @@ from datetime import date
 from django.db import models
 from django.contrib import admin
 from customers.models import Client
+from dashboard.services import promedio as blue
+from decimal import Decimal
 
 
 class Sale(models.Model):
@@ -103,6 +105,15 @@ class Sale(models.Model):
     status = models.CharField(max_length=5, choices=S_CHOICES, null=True, blank=True, verbose_name="STATUS $")
     cancelled = models.CharField(default='Active', max_length=50, choices=CANCELLED_CHOICES)
     
+    @property
+    def get_change(self):
+        change = 0
+        if self.currency == "USD":
+            change = self.price*Decimal(blue)
+            return change
+        else:
+            return self.price
+        
     YES = 'YES'
     NO = 'NO'
     DEBATIBLE = 'DEBATIBLE'

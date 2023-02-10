@@ -78,7 +78,7 @@
                                             </td>
                                             <td> <a class="mb-0 fs-16 font-w500" href="{% url 'dashboard:editsale' id=sale.id %}"> {{sale.service}} </a> </td>
                                             <td>{{sale.note|default_if_none:"-"}}</td>
-                                            <td>{{sale.total}}</td>
+                                            <td>{{sale.get_change}}</td>
                                             <td>{{sale.kind|default_if_none:"-"}}</td>
                                             {% if sale.status == "FC" %}
                                                 <td> <span class="badge light badge-danger">

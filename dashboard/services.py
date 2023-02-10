@@ -12,4 +12,3 @@ blue = casa["casa"]
 compra = float(blue["compra"].replace(',', '.'))
 venta = float(blue["venta"].replace(',', '.'))
 promedio = (compra + venta)/ 2
-print (promedio)

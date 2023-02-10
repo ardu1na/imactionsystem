@@ -13,6 +13,9 @@ from django.contrib.auth.decorators import login_required, permission_required
 import pickle
 import mimetypes
 
+
+
+
 from customers.models import *
 from customers.forms import *
 from sales.models import *
@@ -23,7 +26,7 @@ from expenses.forms import *
 
 import csv
 from dashboard.forms import UploadFileForm
-
+from .services import promedio as blue
 
 
 
@@ -249,7 +252,7 @@ def clients(request):
             for sale in client.sales.all():
                 if sale.cancelled == "Active":
                     if sale.revenue == "RR":
-                        total_rr += sale.price
+                        total_rr += sale.get_change
     total_rr_k = total_rr/1000
     
     clients_rr = []
@@ -285,19 +288,19 @@ def clients(request):
 
     for sale in sales_rr:
         if sale.service == "SEO":
-            s_seo += sale.price
+            s_seo += sale.get_change
         elif sale.service == "Google Ads":
-            s_gads += sale.price
+            s_gads += sale.get_change
         elif sale.service == "Facebook Ads":
-            s_fads += sale.price
+            s_fads += sale.get_change
         elif sale.service == "LinkedIn":
-            s_lin  += sale.price
+            s_lin  += sale.get_change
         elif sale.service == "Community Management":
-            s_cm  += sale.price
+            s_cm  += sale.get_change
         elif sale.service == "COMBO":
-            s_combo  += sale.price
+            s_combo  += sale.get_change
         elif sale.service == "Web Plan":
-            s_webp += sale.price
+            s_webp += sale.get_change
         else: pass
 
     get_incomes_by_service = [s_seo, s_gads, s_fads, s_lin, s_cm, s_combo, s_webp]
@@ -310,15 +313,15 @@ def clients(request):
 
     for sale in sales_rr:
         if sale.client.tier == "I":
-            t1 += sale.price
+            t1 += sale.get_change
         elif sale.client.tier == "II":
-            t2 += sale.price
+            t2 += sale.get_change
         elif sale.client.tier == "III":
-            t3 += sale.price
+            t3 += sale.get_change
         elif sale.client.tier == "IV":
-            t4 += sale.price
+            t4 += sale.get_change
         elif sale.client.tier == "V":
-            t5 += sale.price
+            t5 += sale.get_change
         else: pass
     get_incomes_by_tier = [t1, t2, t3, t4, t5]      
     
@@ -352,7 +355,7 @@ def allclients(request):
             for sale in client.sales.all():
                 if sale.cancelled == "Active":
                     if sale.revenue == "RR":
-                        total_rr += sale.price
+                        total_rr += sale.get_change
                         
         
     addform=ClientForm()
@@ -716,6 +719,7 @@ def import_bankdata(request):
         BankData.objects.bulk_create(accounts)
     
     return HttpResponse("Successfully imported")
+
 @login_required(login_url='dashboard:login')
 @permission_required({'dashboard.view_configurations','dashboard.delete_configurations'}, raise_exception=True)
 def delete_config(request,id):
@@ -802,8 +806,10 @@ def download_config(request):
 
 @login_required(login_url='dashboard:login')
 def index(request):
+    
     context={
-        "page_title":"Dashboard"
+        "page_title":"Dashboard",
+        "blue": blue
     }
     return render(request,'dashboard/index.html',context)
 

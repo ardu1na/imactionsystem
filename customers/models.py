@@ -97,7 +97,7 @@ class Client(models.Model):
         total = 0
         for sale in self.sales.all():
             if sale.revenue == "RR":
-                total += sale.price
+                total += sale.get_change
         return total
 
     @property
@@ -108,7 +108,7 @@ class Client(models.Model):
             for sale in self.sales.all():
                 if sale.cancelled == "Active":
                     if sale.revenue == "RR":
-                        total += sale.price
+                        total += sale.get_change
         return '${}'.format(total)
 
     
@@ -120,7 +120,7 @@ class Client(models.Model):
             for sale in self.sales.all():
                 if sale.service == "SEO":
                     if sale.cancelled == "Active":
-                        seo_total += sale.price
+                        seo_total += sale.get_change
         return '${:,}'.format(seo_total)
 
     @property
@@ -130,7 +130,7 @@ class Client(models.Model):
             if self.cancelled == "Active":
                 if sale.service == "Google Ads":
                    if sale.cancelled == "Active":
-                        gads_total += sale.price
+                        gads_total += sale.get_change
         return '${:,}'.format(gads_total)
 
     @property
@@ -140,7 +140,7 @@ class Client(models.Model):
             if self.cancelled == "Active":
                 if sale.service == "COMBO":
                     if sale.cancelled == "Active":
-                        combo_total += sale.price
+                        combo_total += sale.get_change
         return '${:,}'.format(combo_total)
 
 
@@ -152,7 +152,7 @@ class Client(models.Model):
             if self.cancelled == "Active":
                 if sale.service == "Facebook Ads":
                     if sale.cancelled == "Active":
-                        fads_total += sale.price
+                        fads_total += sale.get_change
         return '${:,}'.format(fads_total)
 
 
@@ -164,7 +164,7 @@ class Client(models.Model):
             if self.cancelled == "Active":
                 if sale.service == "LinkedIn":
                     if sale.cancelled == "Active":
-                        lnkd_total += sale.price
+                        lnkd_total += sale.get_change
         return '${:,}'.format(lnkd_total)
 
 
@@ -176,7 +176,7 @@ class Client(models.Model):
             if self.cancelled == "Active":
                 if sale.service == "Community Management":
                     if sale.cancelled == "Active":
-                        cm_total += sale.price
+                        cm_total += sale.get_change
         return '${:,}'.format(cm_total)
 
 
@@ -187,7 +187,7 @@ class Client(models.Model):
             if self.cancelled == "Active":
                 if sale.service == "Web Plan":
                     if sale.cancelled == "Active":
-                        wp_total += sale.price
+                        wp_total += sale.get_change
         return '${:,}'.format(wp_total)
 
     @property
@@ -197,7 +197,7 @@ class Client(models.Model):
             if self.cancelled == "Active":
                 if sale.service == "COMBO":
                     if sale.cancelled == "Active":
-                        combo_total += sale.price
+                        combo_total += sale.get_change
         return '${:,}'.format(combo_total)
 
 
