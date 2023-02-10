@@ -9,13 +9,7 @@ data = json.loads(response.read())
 
 casa = data[1]
 blue = casa["casa"]
-promedio = (float(blue["compra"]) + float(blue["venta"]))/2   
-print(promedio)
-
-
-
-#desinstalar esta librería y quitarla de inestalled apps y de rerquirements
-"""import requests
-api_url = "https://www.dolarsi.com/api/api.php?type=dolar"
-response = requests.get(api_url)
-print (response)"""
+compra = float(blue["compra"].replace(',', '.'))
+venta = float(blue["venta"].replace(',', '.'))
+promedio = (compra + venta)/ 2
+print (promedio)
