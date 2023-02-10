@@ -1,7 +1,5 @@
 from urllib.request import urlopen
 import json
-from pprint import pprint
-
 
 url = "https://www.dolarsi.com/api/api.php?type=dolar"
 response = urlopen(url)
