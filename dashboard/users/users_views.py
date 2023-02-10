@@ -234,7 +234,7 @@ def activate(request, uidb64, token):
 
 
 @login_required(login_url='dashboard:login')
-@permission_required({'users.view_customuser','users.change_customuser'}, raise_exception=True)
+#@permission_required({'users.view_customuser','users.change_customuser'}, raise_exception=True)
 def edit_user(request,id):
 	user_obj = get_object_or_404(CustomUser,id=id)
 	if request.method == 'POST':
@@ -245,8 +245,10 @@ def edit_user(request,id):
 			user_obj.groups.clear()
 			for i in form.cleaned_data['groups']:
 				user_obj.groups.add(i)
-
-			return redirect('dashboard:users')
+			if user_obj.is_superuser:
+				return redirect('dashboard:users')
+			else:
+				return redirect('dashboard:index')
 		
 	else:
 		form = EditUserForm(instance=user_obj)
@@ -262,7 +264,7 @@ def login_user(request):
 			if user is not None and user.is_active:
 				login(request, user)
 				usergroup = ','.join(request.user.groups.values_list('name',flat = True))
-				messages.success(request,f'Welcome To {usergroup} Dashborad')
+				messages.success(request,f'Welcome back, {user.username}!')
 				next_url = request.GET.get('next')
 				if next_url:
 					return HttpResponseRedirect(next_url)

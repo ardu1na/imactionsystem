@@ -24,8 +24,8 @@
                             <div class="card-body">
                                 <div class="dlab-media d-flex justify-content-between">
                                     <div class="dlab-content">
-                                        <h4> The hero is scared</h4>
-                                        <p>... but he doesn't allow the fear to stops him</p>
+                                        <h4> {{hour}}</h4>
+                                        <p> Blue: ${{blue}}</p>
                                     </div>	
                                     <div class="dlab-icon">
                                         <img src="{% static 'dashboard/images/vector/calpng.png' %}" alt="" class="cal-img">
@@ -46,8 +46,8 @@
                                             </svg>
                                         </span>	
                                         <div class="ms-2">
-                                            <h4 class="mb-0">U$D {{blue}} </h4>
-                                            <span>Blue today</span>
+                                            <h4 class="mb-0">$ {{total_rr}}</h4>
+                                            <span>RR</span>
                                         </div>
                                     </div>
                                     <img src="{% static 'dashboard/images/vector/check.png' %}" alt="">
@@ -63,8 +63,8 @@
                                             </svg>
                                         </span>	
                                         <div class="ms-2">
-                                            <h4 class="mb-0">1.112</h4>
-                                            <span>Upcoming</span>
+                                            <h4 class="mb-0">{{c_rr_total}}</h4>
+                                            <span>RR ACCOUNTS</span>
                                         </div>
                                     </div>
                                     <img src="{% static 'dashboard/images/vector/bookmarks.png' %}" class="bookmarks" alt="">

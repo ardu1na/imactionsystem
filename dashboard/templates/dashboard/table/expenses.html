@@ -44,10 +44,84 @@
         
     <!-- main -->
         <div class="row">
+
+            <div class="col-xl-3 col-xxl-6 col-lg-6 col-sm-6">
+                <div class="widget-stat card">
+                    <div class="card-body  p-4">
+                        <div class="media ai-icon">
+                            <span class="me-3 bgl-info text-info">
+                               
+                            </span>
+                            <div class="media-body">
+                                <p class="mb-1">Total without wages</p>
+                                <h4 class="mb-0">$ {{without_wages}} </h4>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-xxl-6 col-lg-6 col-sm-6">
+                <div class="widget-stat card">
+                    <div class="card-body  p-4">
+                        <div class="media ai-icon">
+                            <span class="me-3 bgl-secondary text-secondary">
+                               
+                            </span>
+                            <div class="media-body">
+                                <p class="mb-1">Total with wages</p>
+                                <h4 class="mb-0">$ {{with_wages|floatformat:2}} </h4>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-xl-3 col-xxl-6 col-lg-6 col-sm-6">
+                <div class="widget-stat card">
+                    <div class="card-body  p-4">
+                        <div class="media ai-icon">
+                            <span class="me-3 bgl-primary text-primary">
+                               
+                            </span>
+                            <div class="media-body">
+                                <p class="mb-1">Wages staff</p>
+                                <h4 class="mb-0">$ {{staff|floatformat:2}} </h4>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-xl-3 col-xxl-6 col-lg-6 col-sm-6">
+                <div class="widget-stat card">
+                    <div class="card-body  p-4">
+                        <div class="media ai-icon">
+                            <span class="me-3 bgl-danger text-danger">
+                               
+                            </span>
+                            <div class="media-body">
+                                <p class="mb-1">Wages CEO</p>
+                                <h4 class="mb-0">$ {{ceo|floatformat:2}} </h4>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+
+           
+
+
             <div class="col-12">
                 <div class="card">
                     <div class="card-header border-0 flex-wrap pb-0 mb-3">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addexpense">ADD Expense<span class="btn-icon-end">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addexpense">NEW<span class="btn-icon-end">
                         <i class="fa fa-plus"></i></span>
                 </div> 
                     <div class="card-body">

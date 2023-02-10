@@ -13,7 +13,8 @@ from django.contrib.auth.decorators import login_required, permission_required
 import pickle
 import mimetypes
 
-
+from datetime import datetime
+from datetime import date
 
 
 from customers.models import *
@@ -66,6 +67,7 @@ def expenses(request):
   
     
     if request.method == 'GET':
+        
         addform = ExpenseForm()
         
     if request.method == 'POST':
@@ -76,15 +78,50 @@ def expenses(request):
                 return redirect(reverse('dashboard:expenses')+ "?added")
             else:
                 return HttpResponse("hacked from las except else form")
+            
+    without_wages = 0
+    for expense in expenses:
+        without_wages += expense.value
+        
+        
+    with_wages = without_wages + all_bonus
+    for employee in employees:
+        with_wages += employee.white
+        with_wages += employee.nigga
+        
+        
+    ceo = 0
+    for employee in employees.filter(rol="CEO"):
+        ceo += employee.white
+        ceo += employee.nigga
+        ceo += employee.mp
+        ceo += employee.tc
+        ceo += employee.atm_cash
+        ceo += employee.get_aguinaldo_mensual
+
+        
+    staff = 0
+    for employee in employees.filter(rol="Staff"):
+        staff += employee.white
+        staff += employee.nigga
+        staff += employee.get_aguinaldo_mensual
+   
                 
     context={
         "page_title": "Expenses",
         "expenses" : expenses,
         "employees": employees,
         "addform" : addform,
-        "all_bonus": all_bonus
+        "all_bonus": all_bonus, 
+        "without_wages" : without_wages,
+        "with_wages": with_wages,
+        "ceo": ceo,
+        "staff": staff
     }
+    print(without_wages)
+
     return render(request,'dashboard/table/expenses.html', context)
+
 
 
 
@@ -807,9 +844,28 @@ def download_config(request):
 @login_required(login_url='dashboard:login')
 def index(request):
     
+    clients = Client.objects.all()
+    
+    clients_rr = []
+    for client in clients.filter(cancelled="Active"):
+        if client.get_rr_client == True:
+            clients_rr.append(client.id)
+    c_rr_total = len(clients_rr)
+
+    total_rr = 0
+    for client in clients:
+        if client.cancelled == "Active":
+            for sale in client.sales.all():
+                if sale.cancelled == "Active":
+                    if sale.revenue == "RR":
+                        total_rr += sale.get_change
+    
     context={
         "page_title":"Dashboard",
-        "blue": blue
+        "blue": blue,
+        "hour": datetime.now(),
+        "c_rr_total": c_rr_total,
+        "total_rr":total_rr
     }
     return render(request,'dashboard/index.html',context)
 

@@ -87,8 +87,6 @@ class Expense(models.Model):
     OFFICE = 'Office'
     OTHER = 'Other'
     TAX = 'Tax'
-    WAGES = "Wages"
-    NIGGA = "Nigga"
 
     EXP_CHOICES = (
         (EMPRESA, ('Empresa')),
@@ -96,8 +94,6 @@ class Expense(models.Model):
         (OFFICE, ('Office')),
         (OTHER, ('Other')),
         (TAX, ('Tax')),
-        (WAGES, ('Wages')),
-        (NIGGA, ('Nigga'))
         )
     
     date = models.DateField(default=date.today)
