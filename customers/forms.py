@@ -1,7 +1,12 @@
 from django.forms import ModelForm, \
-TextInput, URLInput, EmailInput, Select, Textarea
-
+TextInput, URLInput, EmailInput, Select, Textarea, forms, IntegerField
 from customers.models import Client, BankData
+
+
+
+class TierConf(forms.Form):
+    tier_v = IntegerField()
+
 
 
 class ClientForm(ModelForm): 
@@ -241,3 +246,5 @@ class BankDataForm(ModelForm):
             ),
 
         }
+        
+        

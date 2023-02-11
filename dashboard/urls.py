@@ -9,7 +9,8 @@ app_name='dashboard'
 
 urlpatterns = [
     
-    
+    path('conf/',dashboard_views.conf, name="conf"),
+
 
     path('employees/',dashboard_views.employees, name="employees"),
     path('employees/delete/<int:id>/', dashboard_views.deleteemployee, name="deleteemployee"), 

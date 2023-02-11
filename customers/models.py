@@ -2,6 +2,10 @@ from datetime import date
 from django.db import models
 from django.contrib import admin
 
+     
+from .conf import Conf 
+
+        
 
 
 
@@ -113,6 +117,12 @@ class Client(models.Model):
 
     
 
+
+
+    ##########
+    ### in the func below we get
+    ### the total sales of each rr service
+    
     @property
     def get_seo(self, *args, **kwargs):
         seo_total=0
@@ -202,26 +212,20 @@ class Client(models.Model):
 
 
 
-    
+    # get the TIER in base of range of RR sales
     @property
     def tier(self):
-        if self.total_rr <= 30000:
+        if self.total_rr <= Conf.tier_v:
             return "V"
-        elif self.total_rr > 30000 and self.total_rr <= 65000:
+        elif self.total_rr <= Conf.tier_iv:
             return "IV"
-        elif self.total_rr > 65000 and self.total_rr <= 110000:
+        elif self.total_rr <= Conf.tier_iii:
             return "III"
-        elif self.total_rr > 110000 and self.total_rr <= 200000:
+        elif self.total_rr <= Conf.tier_ii:
             return "II"
-        elif self.total_rr > 200000:
+        elif self.total_rr > Conf.tier_i:
             return "I"
-        
-        
-        
-        
-        
-        
-        
+   
         
         
         

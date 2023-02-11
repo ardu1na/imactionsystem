@@ -29,6 +29,42 @@ import csv
 from dashboard.forms import UploadFileForm
 from .services import promedio as blue
 
+from customers.conf import Conf 
+
+@login_required(login_url='dashboard:login')
+def conf(request):
+   
+    if request.method == "GET":
+
+        form = TierConf()
+        
+        context = {
+            'form': form,
+            }
+        return render (request, 'dashboard/table/conf.html', context)
+
+    
+    if request.method == 'POST':
+        form = TierConf(request.POST)
+        if form.is_valid():
+            
+            form.save()
+            
+            Conf.tier_i = form.tier_i
+            Conf.tier_ii = form.tier_ii
+            Conf.tier_iii = form.tier_iii
+            Conf.tier_iv = form.tier_iv
+            Conf.tier_v = form.tier_v
+            
+            Conf.save()
+            
+            return HttpResponseRedirect('/conf/')
+        else: return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
+        
+
+
+
+
 
 
 
