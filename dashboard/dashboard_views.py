@@ -27,7 +27,7 @@ from expenses.forms import *
 
 import csv
 from dashboard.forms import UploadFileForm
-from .services import promedio as blue
+from .services import promedio as api_blue
 from .services import venta as b_venta
 from .services import compra as b_compra
 
@@ -889,11 +889,13 @@ def index(request):
                         total_rr += sale.get_change
 
     last_blue = LastBlue.objects.get(pk=1)
-    if blue:
+    if api_blue:
         last_blue.venta = b_venta
         last_blue.compra = b_compra
         last_blue.save()
-        
+        blue = (last_blue.venta+last_blue.compra)/2    
+    else:
+        blue = (last_blue.venta+last_blue.compra)/2    
     
     context={
         "page_title":"Dashboard",

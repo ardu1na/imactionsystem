@@ -82,5 +82,3 @@ class SaleAdmin(ModelAdmin):
 
 
 admin.site.register(Sale, SaleAdmin)
-admin.site.register(LastBlue)
-

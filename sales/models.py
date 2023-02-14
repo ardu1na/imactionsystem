@@ -9,6 +9,10 @@ class LastBlue (models.Model):
     compra = models.DecimalField(max_digits=15, decimal_places=2)
     venta = models.DecimalField(max_digits=15, decimal_places=2)
     date_updated = models.DateTimeField(auto_now=True)
+    
+    @property
+    def get_blue(self):
+        return ((self.venta+self.compra)/2)
 
 
 last_blue = LastBlue.objects.get(pk=1)
