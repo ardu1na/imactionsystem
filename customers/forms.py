@@ -1,11 +1,13 @@
 from django.forms import ModelForm, \
 TextInput, URLInput, EmailInput, Select, Textarea, forms, IntegerField
-from customers.models import Client, BankData
+from customers.models import Client, BankData, ConfTier
 
 
 
-class TierConf(forms.Form):
-    tier_v = IntegerField()
+class TierConf(ModelForm):
+    class Meta:
+        model = ConfTier
+        exclude = ['id',]
 
 
 

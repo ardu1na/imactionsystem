@@ -3,11 +3,14 @@ from django.db import models
 from django.contrib import admin
 
      
-from .conf import Conf 
+       
 
-        
-
-
+class ConfTier(models.Model):
+    tier_v = models.IntegerField(default=30000)
+    tier_iv = models.IntegerField(default=65000)
+    tier_iii = models.IntegerField(default=110000)
+    tier_ii = models.IntegerField(default=200000)
+    tier_i = models.IntegerField(default=200000)
 
 
 class Client(models.Model):
@@ -215,15 +218,15 @@ class Client(models.Model):
     # get the TIER in base of range of RR sales
     @property
     def tier(self):
-        if self.total_rr <= Conf.tier_v:
+        if self.total_rr <= ConfTier.objects.get(pk=1).tier_v:
             return "V"
-        elif self.total_rr <= Conf.tier_iv:
+        elif self.total_rr <= ConfTier.objects.get(pk=1).tier_iv:
             return "IV"
-        elif self.total_rr <= Conf.tier_iii:
+        elif self.total_rr <= ConfTier.objects.get(pk=1).tier_iii:
             return "III"
-        elif self.total_rr <= Conf.tier_ii:
+        elif self.total_rr <= ConfTier.objects.get(pk=1).tier_ii:
             return "II"
-        elif self.total_rr > Conf.tier_i:
+        elif self.total_rr > ConfTier.objects.get(pk=1).tier_i:
             return "I"
    
         
@@ -235,21 +238,21 @@ class Client(models.Model):
         
         
         
-        
-
-
+### This manager is for the admin panel, clients list view. in order to just show active clients
 class AbstractClientManager(models.Manager):
     def get_queryset(self):
       # sale.revenue="RR"
         return super(AbstractClientManager, self).get_queryset().filter(cancelled="Active")
-
-
 class AbstractClient(Client):
     objects = AbstractClientManager()
     class Meta:
         proxy = True
         verbose_name = "CLIENT"
         verbose_name_plural = "CLIENTS"
+        
+        
+        
+        
 
 
 class BankData(models.Model):
@@ -278,5 +281,4 @@ class BankData(models.Model):
 
     class Meta:
         verbose_name_plural = "bank data"
-
 

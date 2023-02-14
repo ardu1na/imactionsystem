@@ -29,7 +29,6 @@ import csv
 from dashboard.forms import UploadFileForm
 from .services import promedio as blue
 
-from customers.conf import Conf 
 
 @login_required(login_url='dashboard:login')
 def conf(request):

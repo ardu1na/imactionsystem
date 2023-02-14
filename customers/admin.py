@@ -1,7 +1,7 @@
 from django.contrib import admin
 from unfold.admin import ModelAdmin
 from sales.models import Sale
-from customers.models import  BankData, AbstractClient
+from customers.models import  BankData, AbstractClient, ConfTier
 
 admin.site.site_header = 'IMACTIONS'
 admin.site.index_title = 'Home'
@@ -161,3 +161,6 @@ class ClientAdmin(ModelAdmin):
 
 
 admin.site.register(AbstractClient, ClientAdmin)
+
+
+admin.site.register(ConfTier)
