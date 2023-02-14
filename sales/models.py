@@ -2,7 +2,6 @@ from datetime import date
 from django.db import models
 from django.contrib import admin
 from customers.models import Client
-from dashboard.services import promedio as blue
 from decimal import Decimal
 
 
@@ -12,7 +11,8 @@ class LastBlue (models.Model):
     date_updated = models.DateTimeField(auto_now=True)
 
 
-
+last_blue = LastBlue.objects.get(pk=1)
+blue = (last_blue.venta+last_blue.compra)/2
 
 class Sale(models.Model):
 
