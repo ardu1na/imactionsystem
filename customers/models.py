@@ -4,13 +4,16 @@ from django.contrib import admin
 
      
        
-
+# SETTINGS
+# # let the user change variables of model method definitions
 class ConfTier(models.Model):
     tier_v = models.IntegerField(default=30000)
     tier_iv = models.IntegerField(default=65000)
     tier_iii = models.IntegerField(default=110000)
     tier_ii = models.IntegerField(default=200000)
     tier_i = models.IntegerField(default=200000)
+
+
 
 
 class Client(models.Model):
@@ -71,9 +74,25 @@ class Client(models.Model):
     date_can = models.DateField(null=True, blank=True, verbose_name="DATE")
     fail_can = models.CharField(max_length=50, choices=FAIL_CHOICES, blank=True, null=True, verbose_name="DO WE FAIL?")
     
-
     def __str__(self):
        return str(self.name)
+
+
+    # get the TIER in base of range of RR sales
+    # the params comes from ConfTier Model defined above
+    @property
+    def tier(self):
+        if self.total_rr <= ConfTier.objects.get(pk=1).tier_v:
+            return "V"
+        elif self.total_rr <= ConfTier.objects.get(pk=1).tier_iv:
+            return "IV"
+        elif self.total_rr <= ConfTier.objects.get(pk=1).tier_iii:
+            return "III"
+        elif self.total_rr <= ConfTier.objects.get(pk=1).tier_ii:
+            return "II"
+        elif self.total_rr > ConfTier.objects.get(pk=1).tier_i:
+            return "I"
+   
 
     @property
     def get_date(self):
@@ -83,11 +102,8 @@ class Client(models.Model):
     @property
     def get_date_can(self):
         formatdate = self.date_can.strftime('%d/%m/%Y')
-        return formatdate
-
-        
-        
-    
+        return formatdate       
+  
     @property
     def get_rr_client(self):
         rr_client = False
@@ -96,8 +112,6 @@ class Client(models.Model):
                 if sale.revenue == "RR" and sale.cancelled == "Active":
                     rr_client = True
         return rr_client
-
-
 
     @property
     def total_rr(self):
@@ -125,7 +139,7 @@ class Client(models.Model):
     ##########
     ### in the func below we get
     ### the total sales of each rr service
-    
+    ### it should be MORE DRY i know
     @property
     def get_seo(self, *args, **kwargs):
         seo_total=0
@@ -135,7 +149,6 @@ class Client(models.Model):
                     if sale.cancelled == "Active":
                         seo_total += sale.get_change
         return '${:,}'.format(seo_total)
-
     @property
     def get_gads(self, *args, **kwargs):
         gads_total=0
@@ -145,7 +158,6 @@ class Client(models.Model):
                    if sale.cancelled == "Active":
                         gads_total += sale.get_change
         return '${:,}'.format(gads_total)
-
     @property
     def get_combo(self, *args, **kwargs):
         combo_total=0
@@ -155,9 +167,6 @@ class Client(models.Model):
                     if sale.cancelled == "Active":
                         combo_total += sale.get_change
         return '${:,}'.format(combo_total)
-
-
-
     @property
     def get_fads(self, *args, **kwargs):
         fads_total=0
@@ -167,9 +176,6 @@ class Client(models.Model):
                     if sale.cancelled == "Active":
                         fads_total += sale.get_change
         return '${:,}'.format(fads_total)
-
-
-
     @property
     def get_lnkd(self, *args, **kwargs):
         lnkd_total=0
@@ -179,9 +185,6 @@ class Client(models.Model):
                     if sale.cancelled == "Active":
                         lnkd_total += sale.get_change
         return '${:,}'.format(lnkd_total)
-
-
-
     @property
     def get_cm(self, *args, **kwargs):
         cm_total=0
@@ -191,8 +194,6 @@ class Client(models.Model):
                     if sale.cancelled == "Active":
                         cm_total += sale.get_change
         return '${:,}'.format(cm_total)
-
-
     @property
     def get_wp(self, *args, **kwargs):
         wp_total=0
@@ -202,7 +203,6 @@ class Client(models.Model):
                     if sale.cancelled == "Active":
                         wp_total += sale.get_change
         return '${:,}'.format(wp_total)
-
     @property
     def get_combo(self, *args, **kwargs):
         combo_total=0
@@ -212,43 +212,10 @@ class Client(models.Model):
                     if sale.cancelled == "Active":
                         combo_total += sale.get_change
         return '${:,}'.format(combo_total)
+    ##########
 
 
-
-    # get the TIER in base of range of RR sales
-    @property
-    def tier(self):
-        if self.total_rr <= ConfTier.objects.get(pk=1).tier_v:
-            return "V"
-        elif self.total_rr <= ConfTier.objects.get(pk=1).tier_iv:
-            return "IV"
-        elif self.total_rr <= ConfTier.objects.get(pk=1).tier_iii:
-            return "III"
-        elif self.total_rr <= ConfTier.objects.get(pk=1).tier_ii:
-            return "II"
-        elif self.total_rr > ConfTier.objects.get(pk=1).tier_i:
-            return "I"
-   
-        
-        
-        
-        
-        
-        
-        
-        
-        
-### This manager is for the admin panel, clients list view. in order to just show active clients
-class AbstractClientManager(models.Manager):
-    def get_queryset(self):
-      # sale.revenue="RR"
-        return super(AbstractClientManager, self).get_queryset().filter(cancelled="Active")
-class AbstractClient(Client):
-    objects = AbstractClientManager()
-    class Meta:
-        proxy = True
-        verbose_name = "CLIENT"
-        verbose_name_plural = "CLIENTS"
+    
         
         
         
@@ -280,5 +247,33 @@ class BankData(models.Model):
         return 'Bank account {} of {}'.format(self.payment, self.account)
 
     class Meta:
-        verbose_name_plural = "bank data"
+        verbose_name_plural = "bank data"        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+### This manager is for the admin panel, clients list view.
+# # in order to just show active clients
+class AbstractClientManager(models.Manager):
+    def get_queryset(self):
+      # sale.revenue="RR"
+        return super(AbstractClientManager, self).get_queryset().filter(cancelled="Active")
+class AbstractClient(Client):
+    objects = AbstractClientManager()
+    class Meta:
+        proxy = True
+        verbose_name = "CLIENT"
+        verbose_name_plural = "CLIENTS"
+        
+        
+        
+        
+
 
