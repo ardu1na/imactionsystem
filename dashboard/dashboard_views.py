@@ -28,7 +28,8 @@ from expenses.forms import *
 import csv
 from dashboard.forms import UploadFileForm
 from .services import promedio as blue
-
+from .services import venta as b_venta
+from .services import compra as b_compra
 
 @login_required(login_url='dashboard:login')
 def conf(request):
@@ -48,15 +49,7 @@ def conf(request):
         if form.is_valid():
             
             form.save()
-            
-            Conf.tier_i = form.tier_i
-            Conf.tier_ii = form.tier_ii
-            Conf.tier_iii = form.tier_iii
-            Conf.tier_iv = form.tier_iv
-            Conf.tier_v = form.tier_v
-            
-            Conf.save()
-            
+                      
             return HttpResponseRedirect('/conf/')
         else: return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
         
@@ -894,6 +887,13 @@ def index(request):
                 if sale.cancelled == "Active":
                     if sale.revenue == "RR":
                         total_rr += sale.get_change
+
+    last_blue = LastBlue.objects.get(pk=1)
+    if blue:
+        last_blue.venta = b_venta
+        last_blue.compra = b_compra
+        last_blue.save()
+        
     
     context={
         "page_title":"Dashboard",

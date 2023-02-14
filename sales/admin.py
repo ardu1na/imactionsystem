@@ -3,7 +3,7 @@ from django.contrib import admin
 #from django.db.models import Sum
 
 from unfold.admin import ModelAdmin
-from sales.models import Sale
+from sales.models import Sale, LastBlue
 
 from django.contrib.admin.models import LogEntry
 
@@ -82,4 +82,5 @@ class SaleAdmin(ModelAdmin):
 
 
 admin.site.register(Sale, SaleAdmin)
+admin.site.register(LastBlue)
 

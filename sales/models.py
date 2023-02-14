@@ -6,32 +6,31 @@ from dashboard.services import promedio as blue
 from decimal import Decimal
 
 
-class Sale(models.Model):
+class LastBlue (models.Model):
+    compra = models.DecimalField(max_digits=15, decimal_places=2)
+    venta = models.DecimalField(max_digits=15, decimal_places=2)
+    date_updated = models.DateTimeField(auto_now=True)
 
+
+
+
+class Sale(models.Model):
 
     UPSELL='Upsell'
     NEW_CLIENT='New Client'
     CROSSSELL = 'Cross Sell'
-
     KIND_CHOICES = (
         (UPSELL, ('Upsell')),
         (NEW_CLIENT, ('New Client')),
-        (CROSSSELL, ('Cross Sell'))
-    )
-
-
+        (CROSSSELL, ('Cross Sell')))
 
     P = "P"
     FCD = "FCD"
     FC = "FC"
-
     S_CHOICES=(
         (P, ("P")),
         (FCD, ("FCD")),
-        (FC, ("FC")),
-    )
-
-
+        (FC, ("FC")),)
 
     SEO ='SEO'
     GADS = 'Google Ads'
@@ -45,7 +44,6 @@ class Sale(models.Model):
     CM = 'Community Management'
     EMKTG = 'Email Marketing'
     OTHER = 'Other'
-
     SERVICE_CHOICES = (
         (SEO, ('SEO')),
         (GADS, ('Google Ads')),
@@ -72,24 +70,19 @@ class Sale(models.Model):
     OneOff = 'OneOff'
     REVENUE_CHOICES=(
         (RR, ("RR")),
-        (OneOff, ("OneOff")),
-    )
+        (OneOff, ("OneOff")),)
 
     CANCELLED = "Cancelled"
     ACTIVE = "Active"
-
     CANCELLED_CHOICES = (
         (CANCELLED, ('Cancelled')),
-        (ACTIVE, ('Active'))
-    )
-
+        (ACTIVE, ('Active')))
+    
     ARS = "ARS"
     USD = "USD"
-
     COIN_CHOICES = (
         (ARS, ('ARS')),
-        (USD, ('USD'))
-    )
+        (USD, ('USD')))
 
     client = models.ForeignKey(Client, related_name='sales', null=True, blank=True, on_delete=models.CASCADE, verbose_name="ACCOUNT")
     kind = models.CharField(max_length=50, choices=KIND_CHOICES, null=True, blank=True, verbose_name="KIND")
