@@ -1009,7 +1009,7 @@ def index(request):
     
     """
     
-    # GRAPHS    
+    # GRAPHS rr   
     sales_rr_current_year = Sale.objects.filter(revenue="RR").filter(cancelled="Active")\
                                         .filter(date__year=datetime.now().date().year)
     total_rr_this_year = 0
@@ -1102,6 +1102,102 @@ def index(request):
         else:
             diciembre_l +=sale.get_change
             
+            
+            
+            
+    # GRAPHS ONEOFF   
+    sales_one_current_year = Sale.objects.filter(revenue="OneOff").filter(cancelled="Active")\
+                                        .filter(date__year=datetime.now().date().year)
+    total_one_this_year = 0
+    for s in sales_one_current_year:
+        total_one_this_year += s.get_change
+    
+    enero_o = 0
+    febrero_o = 0
+    marzo_o = 0
+    abril_o = 0
+    mayo_o = 0
+    junio_o = 0
+    julio_o = 0
+    agosto_o = 0
+    septiembre_o = 0
+    octubre_o = 0
+    noviembre_o = 0
+    diciembre_o = 0
+    
+    for sale in sales_one_current_year:
+        if sale.date.month == 1:
+            enero_o +=sale.get_change
+            
+        elif sale.date.month == 2:
+            febrero_o +=sale.get_change
+        elif sale.date.month == 3:
+            marzo_o +=sale.get_change
+        elif sale.date.month == 4:
+            abril_o +=sale.get_change
+        elif sale.date.month == 5:
+            mayo_o +=sale.get_change
+        elif sale.date.month == 6:
+            junio_o +=sale.get_change
+        elif sale.date.month == 7:
+            julio_o +=sale.get_change
+        elif sale.date.month == 8:
+            agosto_o +=sale.get_change
+        elif sale.date.month == 9:
+            septiembre_o +=sale.get_change
+        elif sale.date.month == 10:
+            octubre_o +=sale.get_change
+        elif sale.date.month == 11:
+            noviembre_o +=sale.get_change
+        else:
+            diciembre_o +=sale.get_change
+            
+            
+    sales_one_last_year = Sale.objects.filter(revenue="OneOff").filter(cancelled="Active")\
+                                        .filter(date__year=datetime.now().date().year-1)
+    total_one_last_year = 0
+    for s in sales_one_last_year:
+        total_one_last_year += s.get_change
+    
+    enero_l_o = 0
+    febrero_l_o = 0
+    marzo_l_o = 0
+    abril_l_o = 0
+    mayo_l_o = 0
+    junio_l_o = 0
+    julio_l_o = 0
+    agosto_l_o = 0
+    septiembre_l_o = 0
+    octubre_l_o = 0
+    noviembre_l_o = 0
+    diciembre_l_o = 0
+    
+    for sale in sales_one_last_year:
+        if sale.date.month == 1:
+            enero_l_o +=sale.get_change            
+        elif sale.date.month == 2:
+            febrero_l_o +=sale.get_change
+        elif sale.date.month == 3:
+            marzo_l_o +=sale.get_change
+        elif sale.date.month == 4:
+            abril_l_o +=sale.get_change
+        elif sale.date.month == 5:
+            mayo_l_o +=sale.get_change
+        elif sale.date.month == 6:
+            junio_l_o +=sale.get_change
+        elif sale.date.month == 7:
+            julio_l_o +=sale.get_change
+        elif sale.date.month == 8:
+            agosto_l_o +=sale.get_change
+        elif sale.date.month == 9:
+            septiembre_l_o +=sale.get_change
+        elif sale.date.month == 10:
+            octubre_l_o +=sale.get_change
+        elif sale.date.month == 11:
+            noviembre_l_o +=sale.get_change
+        else:
+            diciembre_l_o +=sale.get_change
+            
     
     context={
         "page_title":"Dashboard",
@@ -1134,6 +1230,30 @@ def index(request):
         "octubre_l": round(octubre_l),
         "noviembre_l": round(noviembre_l),
         "diciembre_l": round(diciembre_l),
+        "enero_o" : round(enero_o),
+        "febrero_o": round(febrero_o),
+        "marzo_o": round(marzo_o),
+        "abril_o": round(abril_o),
+        "mayo_o": round(mayo_o),
+        "junio_o": round(junio_o),
+        "julio_o": round(julio_o),
+        "agosto_o": round(agosto_o),
+        "septiembre_o": round(septiembre_o),
+        "octubre_o": round(octubre_o),
+        "noviembre_o": round(noviembre_o),
+        "diciembre_o": round(diciembre_o),
+        "enero_l_o" : round(enero_l_o),
+        "febrero_l_o": round(febrero_l_o),
+        "marzo_l_o": round(marzo_l_o),
+        "abril_l_o": round(abril_l_o),
+        "mayo_l_o": round(mayo_l_o),
+        "junio_l_o": round(junio_l_o),
+        "julio_l_o": round(julio_l_o),
+        "agosto_l_o": round(agosto_l_o),
+        "septiembre_l_o": round(septiembre_l_o),
+        "octubre_l_o": round(octubre_l_o),
+        "noviembre_l_o": round(noviembre_l_o),
+        "diciembre_l_o": round(diciembre_l_o),
         
         
     }
