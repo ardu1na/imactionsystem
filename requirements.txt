@@ -10,7 +10,8 @@ django-mptt==0.13.4
 django-unfold==0.4.5
 django-widget-tweaks==1.4.12
 et-xmlfile==1.1.0
-gunicorn==20.1.0
+gunicorn==20.1.
+django-qsstats-magic==1.1.0
 loguru==0.6.0
 MarkupPy==1.14
 odfpy==1.4.1

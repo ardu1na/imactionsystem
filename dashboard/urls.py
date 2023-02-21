@@ -40,6 +40,7 @@ urlpatterns = [
     path('sales/',dashboard_views.sales, name="sales"),
     path('sales/deletesale/<int:id>/', dashboard_views.deletesale, name="deletesale"),
     path('sales/editsale/<int:id>/', dashboard_views.editsale, name="editsale"),
+    path('salesdata/',dashboard_views.salesdata, name="salesdata"),
 
 
 

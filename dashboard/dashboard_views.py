@@ -14,7 +14,6 @@ import pickle
 import mimetypes
 
 from datetime import datetime
-from datetime import date
 
 
 from customers.models import *
@@ -27,9 +26,10 @@ from expenses.forms import *
 
 import csv
 from dashboard.forms import UploadFileForm
-from .services import promedio as api_blue
-from .services import venta as b_venta
-from .services import compra as b_compra
+try: 
+    from .services import venta as b_venta
+    from .services import compra as b_compra
+except: pass
 
 @login_required(login_url='dashboard:login')
 def conf(request):
@@ -275,6 +275,100 @@ def sales(request):
         "addform" : addform
     }
     return render(request,'dashboard/table/sales.html',context)
+
+
+
+@login_required(login_url='dashboard:login')
+def salesdata(request):
+    sales_rr_current_year = Sale.objects.filter(revenue="RR").filter(cancelled="Active")\
+                                        .filter(date__year=datetime.now().date().year)
+    total_rr_this_year = 0
+    for s in sales_rr_current_year:
+        total_rr_this_year += s.get_change
+        
+
+    """from django.db.models.functions import ExtractYear
+    dates = Sale.objects.filter(revenue="RR").filter(cancelled="Active")\
+                       .annotate(year=ExtractYear('date'))\
+                       .values('year').distinct()"""
+
+    """q = Sale.objects.filter(revenue="RR").filter(cancelled="Active").values_list('date__year', flat=True).distinct()
+    years = list(q)
+    
+    
+    q2 = Sale.objects.filter(revenue="RR").filter(cancelled="Active").values_list('date__month', flat=True).distinct()
+    months = list(q2)
+    
+    
+    """
+    
+    enero = 0
+    febrero = 0
+    marzo = 0
+    abril = 0
+    mayo = 0
+    junio = 0
+    julio = 0
+    agosto = 0
+    septiembre = 0
+    octubre = 0
+    noviembre = 0
+    diciembre = 0
+    
+    for sale in sales_rr_current_year:
+        if sale.date.month == 1:
+            enero +=sale.get_change
+            
+        elif sale.date.month == 2:
+            febrero +=sale.get_change
+        elif sale.date.month == 3:
+            marzo +=sale.get_change
+        elif sale.date.month == 4:
+            abril +=sale.get_change
+        elif sale.date.month == 5:
+            mayo +=sale.get_change
+        elif sale.date.month == 6:
+            junio +=sale.get_change
+        elif sale.date.month == 7:
+            julio +=sale.get_change
+        elif sale.date.month == 8:
+            agosto +=sale.get_change
+        elif sale.date.month == 9:
+            septiembre +=sale.get_change
+        elif sale.date.month == 10:
+            octubre +=sale.get_change
+        elif sale.date.month == 11:
+            noviembre +=sale.get_change
+        else:
+            diciembre +=sale.get_change
+            
+            
+    context={
+        "total_rr_this_year": total_rr_this_year,
+        "enero" : enero,
+        "febrero": febrero,
+        "marzo": marzo,
+        "abril": abril,
+        "mayo": mayo,
+        "junio": junio,
+        "julio": julio,
+        "agosto": agosto,
+        "septiembre": septiembre,
+        "octubre": octubre,
+        "noviembre": noviembre,
+        "diciembre": diciembre
+    }
+    
+    "SALES RR Y 1OFF BY YEAR AND MONTH"
+    "SERVICES BY YEAR AND MONTH"
+    "KIND AND SOURCE BY YEAR AND MONTH"
+    
+    return render(request,'dashboard/table/salesdata.html', context)
+
+
+
+
+
 
 
 @login_required(login_url='dashboard:login')
@@ -869,6 +963,7 @@ def download_config(request):
 #######################################################################################
 
 
+
 @login_required(login_url='dashboard:login')
 def index(request):
     
@@ -889,22 +984,168 @@ def index(request):
                         total_rr += sale.get_change
 
     last_blue = LastBlue.objects.get(pk=1)
-    if api_blue:
-        last_blue.venta = b_venta
-        last_blue.compra = b_compra
-        last_blue.save()
-        blue = (last_blue.venta+last_blue.compra)/2    
-    else:
-        blue = (last_blue.venta+last_blue.compra)/2    
+    try:
+            last_blue.venta = b_venta
+            last_blue.compra = b_compra
+            last_blue.save()
+    except:
+        pass
+
+    blue = (last_blue.venta+last_blue.compra)/2
+    
+    
+    """from django.db.models.functions import ExtractYear
+    dates = Sale.objects.filter(revenue="RR").filter(cancelled="Active")\
+                       .annotate(year=ExtractYear('date'))\
+                       .values('year').distinct()"""
+
+    """q = Sale.objects.filter(revenue="RR").filter(cancelled="Active").values_list('date__year', flat=True).distinct()
+    years = list(q)
+    
+    
+    q2 = Sale.objects.filter(revenue="RR").filter(cancelled="Active").values_list('date__month', flat=True).distinct()
+    months = list(q2)
+    
+    
+    """
+    
+    # GRAPHS    
+    sales_rr_current_year = Sale.objects.filter(revenue="RR").filter(cancelled="Active")\
+                                        .filter(date__year=datetime.now().date().year)
+    total_rr_this_year = 0
+    for s in sales_rr_current_year:
+        total_rr_this_year += s.get_change
+    
+    enero = 0
+    febrero = 0
+    marzo = 0
+    abril = 0
+    mayo = 0
+    junio = 0
+    julio = 0
+    agosto = 0
+    septiembre = 0
+    octubre = 0
+    noviembre = 0
+    diciembre = 0
+    
+    for sale in sales_rr_current_year:
+        if sale.date.month == 1:
+            enero +=sale.get_change
+            
+        elif sale.date.month == 2:
+            febrero +=sale.get_change
+        elif sale.date.month == 3:
+            marzo +=sale.get_change
+        elif sale.date.month == 4:
+            abril +=sale.get_change
+        elif sale.date.month == 5:
+            mayo +=sale.get_change
+        elif sale.date.month == 6:
+            junio +=sale.get_change
+        elif sale.date.month == 7:
+            julio +=sale.get_change
+        elif sale.date.month == 8:
+            agosto +=sale.get_change
+        elif sale.date.month == 9:
+            septiembre +=sale.get_change
+        elif sale.date.month == 10:
+            octubre +=sale.get_change
+        elif sale.date.month == 11:
+            noviembre +=sale.get_change
+        else:
+            diciembre +=sale.get_change
+            
+            
+    sales_rr_last_year = Sale.objects.filter(revenue="RR").filter(cancelled="Active")\
+                                        .filter(date__year=datetime.now().date().year-1)
+    total_rr_last_year = 0
+    for s in sales_rr_last_year:
+        total_rr_last_year += s.get_change
+    
+    enero_l = 0
+    febrero_l = 0
+    marzo_l = 0
+    abril_l = 0
+    mayo_l = 0
+    junio_l = 0
+    julio_l = 0
+    agosto_l = 0
+    septiembre_l = 0
+    octubre_l = 0
+    noviembre_l = 0
+    diciembre_l = 0
+    
+    for sale in sales_rr_last_year:
+        if sale.date.month == 1:
+            enero_l +=sale.get_change            
+        elif sale.date.month == 2:
+            febrero_l +=sale.get_change
+        elif sale.date.month == 3:
+            marzo_l +=sale.get_change
+        elif sale.date.month == 4:
+            abril_l +=sale.get_change
+        elif sale.date.month == 5:
+            mayo_l +=sale.get_change
+        elif sale.date.month == 6:
+            junio_l +=sale.get_change
+        elif sale.date.month == 7:
+            julio_l +=sale.get_change
+        elif sale.date.month == 8:
+            agosto_l +=sale.get_change
+        elif sale.date.month == 9:
+            septiembre_l +=sale.get_change
+        elif sale.date.month == 10:
+            octubre_l +=sale.get_change
+        elif sale.date.month == 11:
+            noviembre_l +=sale.get_change
+        else:
+            diciembre_l +=sale.get_change
+            
     
     context={
         "page_title":"Dashboard",
         "blue": blue,
         "hour": datetime.now(),
         "c_rr_total": c_rr_total,
-        "total_rr":total_rr
+        "total_rr":total_rr,
+        "total_rr_this_year": round(total_rr_this_year),
+        "enero" : round(enero),
+        "febrero": round(febrero),
+        "marzo": round(marzo),
+        "abril": round(abril),
+        "mayo": round(mayo),
+        "junio": round(junio),
+        "julio": round(julio),
+        "agosto": round(agosto),
+        "septiembre": round(septiembre),
+        "octubre": round(octubre),
+        "noviembre": round(noviembre),
+        "diciembre": round(diciembre),
+        "enero_l" : round(enero_l),
+        "febrero_l": round(febrero_l),
+        "marzo_l": round(marzo_l),
+        "abril_l": round(abril_l),
+        "mayo_l": round(mayo_l),
+        "junio_l": round(junio_l),
+        "julio_l": round(julio_l),
+        "agosto_l": round(agosto_l),
+        "septiembre_l": round(septiembre_l),
+        "octubre_l": round(octubre_l),
+        "noviembre_l": round(noviembre_l),
+        "diciembre_l": round(diciembre_l),
+        
+        
     }
     return render(request,'dashboard/index.html',context)
+
+
+
+
+
+
+
+
 
 @login_required(login_url='dashboard:login')
 def index2(request):
