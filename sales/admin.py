@@ -1,16 +1,13 @@
 
 from django.contrib import admin
-#from django.db.models import Sum
-
-from unfold.admin import ModelAdmin
-from sales.models import Sale, LastBlue
-
 from django.contrib.admin.models import LogEntry
 
+from unfold.admin import ModelAdmin
 from import_export.admin import ImportExportModelAdmin
 
-
 from dashboard.resources import SaleResource
+from sales.models import Sale
+
 
 
 
@@ -54,17 +51,12 @@ class LogEntryAdmin(ModelAdmin):
 class SaleAdmin(ModelAdmin, ImportExportModelAdmin):
     
     resource_class = SaleResource
-
-
-
-
     list_display = ('client',  'service', 'note', 'get_total', 'kind','status', 'date', 'comments')
     radio_fields = {'kind':admin.VERTICAL,}
     list_filter = ('kind', 'revenue', 'status')
     date_hierarchy = 'date'
     search_fields = ('client__name', 'note', 'service')
     empty_value_display = ''
-    #autocomplete_fields = ('client',)
     show_change_link = True
     list_display_links = ('client',  'service', 'kind','status', 'date', 'comments')
 

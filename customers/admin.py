@@ -3,6 +3,10 @@ from unfold.admin import ModelAdmin
 from sales.models import Sale
 from customers.models import  BankData, AbstractClient, ConfTier
 
+from import_export.admin import ImportExportModelAdmin
+
+from dashboard.resources import ClientResource, BankResource
+
 admin.site.site_header = 'IMACTIONS'
 admin.site.index_title = 'Home'
 admin.site.site_title = 'IMACTIONS'
@@ -38,7 +42,9 @@ class BankDataInstanceInline(admin.StackedInline):
         verbose_name_plural = "BANK DATA"
         verbose_name= "BANK DATA"
 
-class ClientAdmin(ModelAdmin): 
+class ClientAdmin(ModelAdmin, ImportExportModelAdmin):
+    resource_class = ClientResource
+ 
     inlines = [SaleInstanceInline, BankDataInstanceInline]
     list_display = ('tier', "name", 'get_seo', "get_gads", "get_fads", "get_lnkd", "get_cm", "get_wp", 'get_combo', 'rr')
     search_fields = ("name", "business_name")
@@ -164,3 +170,8 @@ admin.site.register(AbstractClient, ClientAdmin)
 
 
 admin.site.register(ConfTier)
+
+class BankAdmin (ModelAdmin, ImportExportModelAdmin):
+    resource_class = BankResource
+
+admin.site.register(BankData, BankAdmin)

@@ -11,7 +11,10 @@ urlpatterns = [
     
     path('conf/',dashboard_views.conf, name="conf"),
     path('exportsales/',dashboard_views.export_sales, name="exportsales"),
-
+    path('exportclients/',dashboard_views.export_clients, name="exportclients"),
+    path('exportbank/',dashboard_views.export_bank, name="exportbank"),
+    path('exportemployees/',dashboard_views.export_employees, name="exportemployees"),
+    path('exportexpenses/',dashboard_views.export_expenses, name="exportexpenses"),
 
 
     path('employees/',dashboard_views.employees, name="employees"),

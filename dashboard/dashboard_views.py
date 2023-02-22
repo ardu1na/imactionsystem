@@ -34,13 +34,51 @@ except: pass
 
 
 from django.http import HttpResponse
-from dashboard.resources import SaleResource
+from dashboard.resources import SaleResource, ClientResource, BankResource,\
+    EmployeeResource, ExpenseResource
 
 def export_sales(request):
     sale_resource = SaleResource()
     data = sale_resource.export() # Assuming this returns Excel file as bytes
     current_date = datetime.now().strftime('%Y-%m-%d')
     filename = f"sales_{current_date}.xlsx"
+    response = HttpResponse(data.xlsx, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    return response
+
+def export_clients(request):
+    client_resource = ClientResource()
+    data = client_resource.export() # Assuming this returns Excel file as bytes
+    current_date = datetime.now().strftime('%Y-%m-%d')
+    filename = f"clients_{current_date}.xlsx"
+    response = HttpResponse(data.xlsx, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    return response
+
+def export_bank (request):
+    bank_resource = BankResource()
+    data = bank_resource.export() # Assuming this returns Excel file as bytes
+    current_date = datetime.now().strftime('%Y-%m-%d')
+    filename = f"bankdata_{current_date}.xlsx"
+    response = HttpResponse(data.xlsx, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    return response
+
+
+def export_employees (request):
+    employee_resource = EmployeeResource()
+    data = employee_resource.export() # Assuming this returns Excel file as bytes
+    current_date = datetime.now().strftime('%Y-%m-%d')
+    filename = f"employees_{current_date}.xlsx"
+    response = HttpResponse(data.xlsx, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    return response
+
+def export_expenses (request):
+    expense_resource = ExpenseResource()
+    data = expense_resource.export() # Assuming this returns Excel file as bytes
+    current_date = datetime.now().strftime('%Y-%m-%d')
+    filename = f"expenses_{current_date}.xlsx"
     response = HttpResponse(data.xlsx, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     response['Content-Disposition'] = f'attachment; filename="{filename}"'
     return response
