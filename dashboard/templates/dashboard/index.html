@@ -130,20 +130,20 @@
                                 <h4>ONE OFF SALES</h4>
 
                                 <div class="d-flex">
-                                    <div class="round weekly d-flex" id="dzOldSeries">
+                                    <div class="round weekly d-flex" id="dzOldSeriess">
                                         <div>
-                                            <input type="checkbox" id="checkbox1" name="radio" value="weekly" />
-                                            <label for="checkbox1" class="checkmark"></label>
+                                            <input type="checkbox" id="checkbox3" name="radio" value="weekly" />
+                                            <label for="checkbox3" class="checkmark"></label>
                                         </div>
                                         <div>
                                             <span class="fs-14">This Year</span>
                                         </div>
                                     </div>
 
-                                    <div class="round d-flex" id="dzNewSeries">
+                                    <div class="round d-flex" id="dzNewSeriess">
                                         <div>
-                                            <input type="checkbox" id="checkbox2" name="radio" value="monthly" />
-                                            <label for="checkbox2" class="checkmark"></label>
+                                            <input type="checkbox" id="checkbox4" name="radio" value="monthly" />
+                                            <label for="checkbox4" class="checkmark"></label>
                                         </div>
                                         <div>
                                             <span class="fs-14">Last Year</span>
@@ -346,12 +346,12 @@
             var options = {
                   series: [
                     {
-                        name: 'This',
+                        name: 'Thiss',
                         data: [{{enero_o}}, {{febrero_o}}, {{marzo_o}}, {{abril_o}},{{mayo_o}}, {{junio_o}}, {{julio_o}}, {{agosto_o}},{{septiembre_o}}, {{octubre_o}},{{noviembre_o}}, {{diciembre_o}}],
                         //radius: 12,	
                     }, 
                     {
-                      name: 'Last',
+                      name: 'Lasts',
                       data: [{{enero_l_o}}, {{febrero_l_o}}, {{marzo_l_o}}, {{abril_l_o}},{{mayo_l_o}}, {{junio_l_o}}, {{julio_l_o}}, {{agosto_l_o}},{{septiembre_l_o}}, {{octubre_l_o}},{{noviembre_l_o}}, {{diciembre_l_o}}]
                     }, 
                     
@@ -465,14 +465,14 @@
                 var chart = new ApexCharts(document.querySelector("#chartLine"), options);
                     chart.render();
                 
-                jQuery('#dzNewSeries').on('change',function(){
+                jQuery('#dzNewSeriess').on('change',function(){
                     jQuery(this).toggleClass('disabled');
-                    chart.toggleSeries('This');
+                    chart.toggleSeries('Thiss');
                 });
                 
-                jQuery('#dzOldSeries').on('change',function(){
+                jQuery('#dzOldSeriess').on('change',function(){
                     jQuery(this).toggleClass('disabled');
-                    chart.toggleSeries('Last');
+                    chart.toggleSeries('Lasts');
                 });
             };
         }
