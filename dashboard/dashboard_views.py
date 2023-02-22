@@ -31,6 +31,23 @@ try:
     from .services import compra as b_compra
 except: pass
 
+
+
+from django.http import HttpResponse
+from dashboard.resources import SaleResource
+
+def export_sales(request):
+    sale_resource = SaleResource()
+    data = sale_resource.export() # Assuming this returns Excel file as bytes
+    current_date = datetime.now().strftime('%Y-%m-%d')
+    filename = f"sales_{current_date}.xlsx"
+    response = HttpResponse(data.xlsx, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    return response
+
+
+
+
 @login_required(login_url='dashboard:login')
 def conf(request):
    

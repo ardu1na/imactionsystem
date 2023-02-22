@@ -1,7 +1,7 @@
 from dashboard.users.forms import EmailValidationOnForgotPassword
 from django.contrib.auth import views as auth_views
 from django.urls import reverse_lazy
-from django.urls import path ,include
+from django.urls import path
 from dashboard import dashboard_views
 from dashboard.users import users_views
 
@@ -10,6 +10,8 @@ app_name='dashboard'
 urlpatterns = [
     
     path('conf/',dashboard_views.conf, name="conf"),
+    path('exportsales/',dashboard_views.export_sales, name="exportsales"),
+
 
 
     path('employees/',dashboard_views.employees, name="employees"),

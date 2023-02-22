@@ -7,6 +7,14 @@ from sales.models import Sale, LastBlue
 
 from django.contrib.admin.models import LogEntry
 
+from import_export.admin import ImportExportModelAdmin
+
+
+from dashboard.resources import SaleResource
+
+
+
+
 @admin.register(LogEntry)
 class LogEntryAdmin(ModelAdmin):
     # to have a date-based drilldown navigation in the admin page
@@ -43,7 +51,13 @@ class LogEntryAdmin(ModelAdmin):
 
     
 
-class SaleAdmin(ModelAdmin):
+class SaleAdmin(ModelAdmin, ImportExportModelAdmin):
+    
+    resource_class = SaleResource
+
+
+
+
     list_display = ('client',  'service', 'note', 'get_total', 'kind','status', 'date', 'comments')
     radio_fields = {'kind':admin.VERTICAL,}
     list_filter = ('kind', 'revenue', 'status')
