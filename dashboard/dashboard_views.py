@@ -22,6 +22,7 @@ from sales.models import *
 from sales.forms import *
 from expenses.models import *
 from expenses.forms import * 
+from dashboard.users.models import CustomUser
 
 
 import csv
@@ -48,9 +49,13 @@ from django.contrib.contenttypes.models import ContentType
 @login_required(login_url='dashboard:login')
 def activity(request):
     ct = ContentType.objects.get_for_model(LastBlue)
-    events = CRUDEvent.objects.exclude(content_type=ct)
-    logs = LoginEvent.objects.all()
+    ct2 = ContentType.objects.get_for_model(CustomUser)
 
+    events = CRUDEvent.objects.exclude(content_type=ct).exclude(content_type=ct2)
+    
+    logs = LoginEvent.objects.all()
+    
+    
     context={
         "page_title":"Activity",
         "events" : events,
