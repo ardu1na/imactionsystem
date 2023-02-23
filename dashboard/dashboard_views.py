@@ -38,7 +38,26 @@ from dashboard.resources import SaleResource, ClientResource, BankResource,\
     EmployeeResource, ExpenseResource
     
     
-from django.contrib.admin.models import LogEntry
+from easyaudit.models import CRUDEvent, LoginEvent
+
+from django.contrib.contenttypes.models import ContentType
+
+
+
+
+@login_required(login_url='dashboard:login')
+def activity(request):
+    ct = ContentType.objects.get_for_model(LastBlue)
+    events = CRUDEvent.objects.exclude(content_type=ct)
+    logs = LoginEvent.objects.all()
+
+    context={
+        "page_title":"Activity",
+        "events" : events,
+        "logs" : logs,
+
+    }
+    return render(request,'dashboard/activity.html',context)
 
 
 def export_sales(request):
@@ -114,17 +133,6 @@ def conf(request):
             return HttpResponseRedirect('/conf/')
         else: return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
         
-
-@login_required(login_url='dashboard:login')
-def activity(request):
-    logs = LogEntry.objects.all()
-
-    context={
-        "page_title":"Activity",
-        "logs": logs,
-
-    }
-    return render(request,'dashboard/activity.html',context)
 
 
 
