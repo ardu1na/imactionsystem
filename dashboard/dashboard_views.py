@@ -94,6 +94,8 @@ def conf(request):
         form = TierConf()
         
         context = {
+            "page_title": "SETTINGS",
+
             'form': form,
             }
         return render (request, 'dashboard/table/conf.html', context)
