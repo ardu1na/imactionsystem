@@ -36,6 +36,10 @@ except: pass
 from django.http import HttpResponse
 from dashboard.resources import SaleResource, ClientResource, BankResource,\
     EmployeeResource, ExpenseResource
+    
+    
+from django.contrib.admin.models import LogEntry
+
 
 def export_sales(request):
     sale_resource = SaleResource()
@@ -88,6 +92,7 @@ def export_expenses (request):
 
 @login_required(login_url='dashboard:login')
 def conf(request):
+    
    
     if request.method == "GET":
 
@@ -95,7 +100,6 @@ def conf(request):
         
         context = {
             "page_title": "SETTINGS",
-
             'form': form,
             }
         return render (request, 'dashboard/table/conf.html', context)
@@ -111,7 +115,16 @@ def conf(request):
         else: return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
         
 
+@login_required(login_url='dashboard:login')
+def activity(request):
+    logs = LogEntry.objects.all()
 
+    context={
+        "page_title":"Activity",
+        "logs": logs,
+
+    }
+    return render(request,'dashboard/activity.html',context)
 
 
 
@@ -1744,12 +1757,10 @@ def message(request):
     }
     return render(request,'dashboard/message.html',context)
 
-@login_required(login_url='dashboard:login')
-def activity(request):
-    context={
-        "page_title":"Activity"
-    }
-    return render(request,'dashboard/activity.html',context)
+
+
+
+
 
 @login_required(login_url='dashboard:login')
 def profile(request):

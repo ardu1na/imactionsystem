@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     'mptt',
     'ckeditor', 
     'ckeditor_uploader',
+    'easyaudit',
     
     'customers',
     'sales',
@@ -78,6 +79,7 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'easyaudit.middleware.easyaudit.EasyAuditMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -108,6 +110,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'core.wsgi.application'
+
+
 
 
 # Database
@@ -234,3 +238,8 @@ CKEDITOR_CONFIGS = {
         ]),
     }
 }
+
+
+
+
+DJANGO_EASY_AUDIT_WATCH_REQUEST_EVENTS = False
