@@ -43,7 +43,7 @@ from easyaudit.models import CRUDEvent, LoginEvent
 
 from django.contrib.contenttypes.models import ContentType
 
-
+from itertools import chain
 
 
 @login_required(login_url='dashboard:login')
@@ -55,11 +55,14 @@ def activity(request):
     
     logs = LoginEvent.objects.all()
     
-    
+    combined_list = list(chain(events, logs))
+
+    #sorted(chain(own_mx,his_mx), key=attrgetter('sent_at'))    
     context={
         "page_title":"Activity",
         "events" : events,
         "logs" : logs,
+        "list" : combined_list
 
     }
     return render(request,'dashboard/activity.html',context)
