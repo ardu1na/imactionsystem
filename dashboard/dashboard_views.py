@@ -1070,9 +1070,13 @@ def index(request):
                         total_rr += sale.get_change
 
     last_blue = LastBlue.objects.get(pk=1)
+    
+        
     try:
-            last_blue.venta = b_venta
-            last_blue.compra = b_compra
+            if last_blue.venta != b_venta:
+                last_blue.venta = b_venta
+            if last_blue.compra != b_compra:
+                last_blue.compra = b_compra
             last_blue.save()
     except:
         pass
