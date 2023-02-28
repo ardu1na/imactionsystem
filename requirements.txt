@@ -17,7 +17,6 @@ odfpy==1.4.1
 openpyxl==3.1.0
 pickles==0.1.1
 Pillow==9.2.0
-psycopg2==2.9.5
 python-dotenv==0.20.0
 PyYAML==6.0
 six==1.16.0
