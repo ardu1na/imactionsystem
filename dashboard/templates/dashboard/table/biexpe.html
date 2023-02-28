@@ -14,7 +14,7 @@
                         
                 <div class="card">
                     <div class="card-header border-0 pb-0">
-                        <h4>Popular Class</h4>
+                        <h4>EXPENSES BY CATEGORY</h4>
                         <div class="dropdown">
                             <a href="javascript:void(0);" class="btn-link btn sharp tp-btn-light btn-dark" data-bs-toggle="dropdown" aria-expanded="false">
                                 <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -89,7 +89,7 @@
 	
 	 var expchart = function() {
 		var options = {
-			series: [50, 25, 25],
+			series: [{{emp|floatformat:0}}, {{wage|floatformat:0}}, {{lead|floatformat:0}}, {{offic|floatformat:0}}, {{others|floatformat:0}}, {{taxes|floatformat:0}}, {{wage_ceo|floatformat:0}}],
 			chart: {
 				type: 'donut',
 				height: 250
@@ -111,7 +111,7 @@
 			stroke: {
 				width: 0,
 			},
-			colors: ['var(--primary)', '#4CBC9A', '#FEC64F'],
+			colors:['#FEC64F', '#e35b17', '#17e3e3', '#e31739', '#171ee3', '#c417e3', '#14b57d'],
 			legend: {
 				position: 'bottom',
 				show: false

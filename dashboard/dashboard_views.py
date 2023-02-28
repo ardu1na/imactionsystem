@@ -244,6 +244,7 @@ def biexp(request):
     employees = Employee.objects.filter(active="Yes")
     
     
+    
     empresa = 0
     lead_gen = 0
     office = 0
@@ -251,6 +252,7 @@ def biexp(request):
     tax = 0
     wages = 0
     wages_ceo = 0
+   
     
     for expense in expenses:
         if expense.category == "Empresa":
@@ -277,21 +279,32 @@ def biexp(request):
             wages_ceo += employee.get_aguinaldo_mensual
 
     
-            
-   
+    all = empresa + lead_gen + office + tax + other + wages + wages_ceo
+    
+    emp = (empresa*100)/all
+    lead = (lead_gen*100)/all
+    taxes = (tax*100)/all
+    wage = (wages*100)/all
+    others = (other*100)/all
+    offic= (office*100)/all
+    wage_ceo = (wages_ceo*100)/all
                 
     context={
         "page_title": "BUSINESS INTELLIGENCE",
         "expenses" : expenses,
         "employees": employees,
-        "empresa" : empresa,
-        "lead_gen" : lead_gen,
-        "office" : office,
-        "other": other,
-        "tax": tax,
-        "wages" : wages,
-        "wages_ceo": wages_ceo
+        
+        "emp": emp,
+        "lead" : lead,
+        "offic" : offic,
+        "others": others,
+        "taxes": taxes,
+        "wage" : wage,
+        "wage_ceo": wage_ceo,
+        
+        "all": all
     }
+    print(emp)
 
     return render(request,'dashboard/table/biexpe.html', context)
 
