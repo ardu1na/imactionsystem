@@ -232,11 +232,68 @@ def expenses(request):
         "ceo": ceo,
         "staff": staff
     }
-    print(without_wages)
 
     return render(request,'dashboard/table/expenses.html', context)
 
 
+
+@login_required(login_url='dashboard:login')
+def biexp(request):
+    
+    expenses = Expense.objects.all()
+    employees = Employee.objects.filter(active="Yes")
+    
+    
+    empresa = 0
+    lead_gen = 0
+    office = 0
+    other = 0
+    tax = 0
+    wages = 0
+    wages_ceo = 0
+    
+    for expense in expenses:
+        if expense.category == "Empresa":
+            empresa += expense.value
+        if expense.category == "Lead Gen":
+            lead_gen += expense.value
+        if expense.category == "Office":
+            office += expense.value
+        if expense.category == "Other":
+            other += expense.value
+        if expense.category == "Tax":
+            tax += expense.value
+    for employee in employees:
+        if employee.rol == "Staff":
+            wages += employee.white
+            wages += employee.nigga
+            wages += employee.get_aguinaldo_mensual
+        if employee.rol == "CEO":
+            wages_ceo += employee.white
+            wages_ceo += employee.nigga
+            wages_ceo += employee.mp
+            wages_ceo += employee.tc
+            wages_ceo += employee.atm_cash
+            wages_ceo += employee.get_aguinaldo_mensual
+
+    
+            
+   
+                
+    context={
+        "page_title": "BUSINESS INTELLIGENCE",
+        "expenses" : expenses,
+        "employees": employees,
+        "empresa" : empresa,
+        "lead_gen" : lead_gen,
+        "office" : office,
+        "other": other,
+        "tax": tax,
+        "wages" : wages,
+        "wages_ceo": wages_ceo
+    }
+
+    return render(request,'dashboard/table/biexpe.html', context)
 
 
 
