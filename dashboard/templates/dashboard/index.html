@@ -37,6 +37,18 @@
                         </div>
                     </div>
 
+
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">ACCOUNTS BY TIER </h4>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="pie_chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="col-xl-12 bt-order">
                         <div class="row">
                             <div class="col-xl-4 col-sm-6">
@@ -661,6 +673,53 @@
 		chart.render();
 	}
 	
+    var pieChart = function(){
+		//pie chart
+		if(jQuery('#pie_chart').length > 0 ){
+			//pie chart
+			const pie_chart = document.getElementById("pie_chart").getContext('2d');
+			// pie_chart.height = 100;
+			new Chart(pie_chart, {
+				type: 'pie',
+				data: {
+					defaultFontFamily: 'Poppins',
+					datasets: [{
+						data: [{{i}}, {{ii}}, {{iii}}, {{iv}}, {{v}}],
+						borderWidth: 0, 
+						backgroundColor: [
+							"rgba(235, 129, 83, .9)",
+							"rgba(235, 129, 83, .7)",
+							"rgba(235, 129, 83, .5)",
+                            
+							"rgba(0,0,0,0.07)"
+						],
+						hoverBackgroundColor: [
+							"rgba(235, 129, 83, .9)",
+							"rgba(235, 129, 83, .7)",
+							"rgba(235, 129, 83, .5)",
+							"rgba(0,0,0,0.07)"
+						]
+
+					}],
+					labels: [
+						"TIER I",
+						"TIER II",
+						"TIER III", 
+						"TIER IV",
+                        "TIER V"
+					]
+				},
+				options: {
+					plugins:{
+						legend: false, 
+					},	
+					responsive: true, 
+					
+					//maintainAspectRatio: false
+				}
+			});
+		}
+	}
 	
  
 	/* Function ============ */
@@ -671,6 +730,7 @@
 			
 			load:function(){
 				LineChart();
+                pieChart();
 				
 			},
 			
@@ -694,4 +754,7 @@
 })(jQuery);
 
 </script>
+
+
+
 {% endblock %}

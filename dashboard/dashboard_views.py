@@ -1193,16 +1193,31 @@ def index(request):
     c_rr_total = len(clients_rr)
 
     total_rr = 0
+    
+    i = 0
+    ii = 0
+    iii = 0
+    iv = 0
+    v = 0
+    
     for client in clients:
         if client.cancelled == "Active":
             for sale in client.sales.all():
                 if sale.cancelled == "Active":
                     if sale.revenue == "RR":
                         total_rr += sale.get_change
+            if client.tier == "I":
+                i += 1
+            elif client.tier == "II":
+                ii += 1
+            elif client.tier == "III":
+                iii += 1
+            elif client.tier == "IV":
+                iv += 1
+            elif client.tier == "V":
+                v += 1
 
-    last_blue = LastBlue.objects.get(pk=1)
-    
-        
+    last_blue = LastBlue.objects.get(pk=1) 
     try:
             if last_blue.venta != b_venta:
                 last_blue.venta = b_venta
@@ -1862,9 +1877,17 @@ def index(request):
         "octubre_lk": round(octubre_lk),
         "noviembre_lk": round(noviembre_lk),
         "diciembre_lk": round(diciembre_lk),
+        "i" : i,
+        "ii" : ii,
+        "iii" : iii,
+        "iv" : iv,
+        "v" : v,
         
         
     }
+    
+    
+    print (i, ii, iii, iv, v)
     return render(request,'dashboard/index.html',context)
 
 
