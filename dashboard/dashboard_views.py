@@ -239,56 +239,112 @@ def expenses(request):
 
 @login_required(login_url='dashboard:login')
 def biexp(request):
-    
-    expenses = Expense.objects.all()
-    employees = Employee.objects.filter(active="Yes")
-    
-    
-    
-    empresa = 0
-    lead_gen = 0
-    office = 0
-    other = 0
-    tax = 0
-    wages = 0
-    wages_ceo = 0
-   
-    
-    for expense in expenses:
-        if expense.category == "Empresa":
-            empresa += expense.value
-        if expense.category == "Lead Gen":
-            lead_gen += expense.value
-        if expense.category == "Office":
-            office += expense.value
-        if expense.category == "Other":
-            other += expense.value
-        if expense.category == "Tax":
-            tax += expense.value
-    for employee in employees:
-        if employee.rol == "Staff":
-            wages += employee.white
-            wages += employee.nigga
-            wages += employee.get_aguinaldo_mensual
-        if employee.rol == "CEO":
-            wages_ceo += employee.white
-            wages_ceo += employee.nigga
-            wages_ceo += employee.mp
-            wages_ceo += employee.tc
-            wages_ceo += employee.atm_cash
-            wages_ceo += employee.get_aguinaldo_mensual
+    if request.method == 'GET':
+        daterange_str = request.GET.get('daterange')
+        if daterange_str:
+            try:
+                start_date_str, end_date_str = daterange_str.split(' - ')
+                start_date = datetime.strptime(start_date_str, '%m/%d/%Y')
+                end_date = datetime.strptime(end_date_str, '%m/%d/%Y')
+            except ValueError:
+                return HttpResponse("Invalid date format")
+            expenses = Expense.objects.filter(date__range=(start_date, end_date))
+            employees = Employee.objects.filter(active="Yes")
+            
+            
+            empresa = 0
+            lead_gen = 0
+            office = 0
+            other = 0
+            tax = 0
+            wages = 0
+            wages_ceo = 0
+        
+            
+            for expense in expenses:
+                if expense.category == "Empresa":
+                    empresa += expense.value
+                if expense.category == "Lead Gen":
+                    lead_gen += expense.value
+                if expense.category == "Office":
+                    office += expense.value
+                if expense.category == "Other":
+                    other += expense.value
+                if expense.category == "Tax":
+                    tax += expense.value
+            for employee in employees:
+                if employee.rol == "Staff":
+                    wages += employee.white
+                    wages += employee.nigga
+                    wages += employee.get_aguinaldo_mensual
+                if employee.rol == "CEO":
+                    wages_ceo += employee.white
+                    wages_ceo += employee.nigga
+                    wages_ceo += employee.mp
+                    wages_ceo += employee.tc
+                    wages_ceo += employee.atm_cash
+                    wages_ceo += employee.get_aguinaldo_mensual
 
-    
-    all = empresa + lead_gen + office + tax + other + wages + wages_ceo
-    
-    emp = (empresa*100)/all
-    lead = (lead_gen*100)/all
-    taxes = (tax*100)/all
-    wage = (wages*100)/all
-    others = (other*100)/all
-    offic= (office*100)/all
-    wage_ceo = (wages_ceo*100)/all
-                
+            
+            all = empresa + lead_gen + office + tax + other + wages + wages_ceo
+            
+            emp = (empresa*100)/all
+            lead = (lead_gen*100)/all
+            taxes = (tax*100)/all
+            wage = (wages*100)/all
+            others = (other*100)/all
+            offic= (office*100)/all
+            wage_ceo = (wages_ceo*100)/all
+
+        else:
+            expenses = Expense.objects.all()
+            employees = Employee.objects.filter(active="Yes")
+            
+                    
+            empresa = 0
+            lead_gen = 0
+            office = 0
+            other = 0
+            tax = 0
+            wages = 0
+            wages_ceo = 0
+        
+            
+            for expense in expenses:
+                if expense.category == "Empresa":
+                    empresa += expense.value
+                if expense.category == "Lead Gen":
+                    lead_gen += expense.value
+                if expense.category == "Office":
+                    office += expense.value
+                if expense.category == "Other":
+                    other += expense.value
+                if expense.category == "Tax":
+                    tax += expense.value
+            for employee in employees:
+                if employee.rol == "Staff":
+                    wages += employee.white
+                    wages += employee.nigga
+                    wages += employee.get_aguinaldo_mensual
+                if employee.rol == "CEO":
+                    wages_ceo += employee.white
+                    wages_ceo += employee.nigga
+                    wages_ceo += employee.mp
+                    wages_ceo += employee.tc
+                    wages_ceo += employee.atm_cash
+                    wages_ceo += employee.get_aguinaldo_mensual
+
+            
+            all = empresa + lead_gen + office + tax + other + wages + wages_ceo
+            
+            emp = (empresa*100)/all
+            lead = (lead_gen*100)/all
+            taxes = (tax*100)/all
+            wage = (wages*100)/all
+            others = (other*100)/all
+            offic= (office*100)/all
+            wage_ceo = (wages_ceo*100)/all
+                    
     context={
         "page_title": "BUSINESS INTELLIGENCE",
         "expenses" : expenses,
@@ -304,7 +360,6 @@ def biexp(request):
         
         "all": all
     }
-    print(emp)
 
     return render(request,'dashboard/table/biexpe.html', context)
 
