@@ -380,7 +380,7 @@ dz_array = {
                                     f"{foldername_d}/vendor/apexchart/apexchart.js",
                                     f"{foldername_d}/vendor/peity/jquery.peity.min.js",
                                     f"{foldername_d}/vendor/owl-carousel/owl.carousel.js",
-                                    f"{foldername_d}/js/dashboard/instructor-courses.js",
+                                    #f"{foldername_d}/js/dashboard/instructor-courses.js",
                                     f"{foldername_d}/js/dlab.carousel.js",
                                 ],
                                 "instructor_schedule":[
