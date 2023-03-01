@@ -68,7 +68,7 @@ dz_array = {
                             f"{foldername_f}/js/dz.carousel.js",
                             f"{foldername_f}/js/dz.ajax.js",
                             f"{foldername_f}/js/custom.js",
-                            f"{foldername_f}/vendor/rangeslider/rangeslider.js",
+                            f"{foldername_f}/vendor/slider/rangeslider.js",
                             
                         },
                     }
@@ -110,6 +110,10 @@ dz_array = {
                                     f"{foldername_d}/vendor/sweetalert2/dist/sweetalert2.min.css",    
                                 ],
                                 "add_user":[
+                                    f"{foldername_d}/vendor/bootstrap-daterangepicker/daterangepicker.css",
+                                    f"{foldername_d}/vendor/select2/css/select2.min.css",
+                                ],
+                                "biexp":[
                                     f"{foldername_d}/vendor/bootstrap-daterangepicker/daterangepicker.css",
                                     f"{foldername_d}/vendor/select2/css/select2.min.css",
                                 ],
@@ -252,6 +256,14 @@ dz_array = {
                                     f"{foldername_d}/vendor/pickadate/themes/default.css",
                                     f"{foldername_d}/vendor/pickadate/themes/default.date.css",
                                 ],
+                                "biexp":[
+                                    f"{foldername_d}/vendor/bootstrap-daterangepicker/daterangepicker.css",
+                                    f"{foldername_d}/vendor/clockpicker/css/bootstrap-clockpicker.min.css",
+                                    f"{foldername_d}/vendor/jquery-asColorPicker/css/asColorPicker.min.css",
+                                    f"{foldername_d}/vendor/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css",
+                                    f"{foldername_d}/vendor/pickadate/themes/default.css",
+                                    f"{foldername_d}/vendor/pickadate/themes/default.date.css",
+                                ],
                                 "form_validation":[],
                                 "table_bootstrap_basic":[],
                                 "sales":[
@@ -373,6 +385,14 @@ dz_array = {
                                     f"{foldername_d}/vendor/peity/jquery.peity.min.js",
                                     f"{foldername_d}/vendor/owl-carousel/owl.carousel.js",
                                     f"{foldername_d}/js/dashboard/instructor-courses.js",
+                                    f"{foldername_d}/js/dlab.carousel.js",
+                                ],
+                                "biexp":[
+                                    f"{foldername_d}/vendor/chart.js/Chart.bundle.min.js",
+                                    f"{foldername_d}/vendor/apexchart/apexchart.js",
+                                    f"{foldername_d}/vendor/peity/jquery.peity.min.js",
+                                    f"{foldername_d}/vendor/owl-carousel/owl.carousel.js",
+                                    #f"{foldername_d}/js/dashboard/instructor-courses.js",
                                     f"{foldername_d}/js/dlab.carousel.js",
                                 ],
                                 "instructor_schedule":[
@@ -556,6 +576,26 @@ dz_array = {
                                 f"{foldername_d}/vendor/ckeditor/ckeditor.js"
                             ],
                             "form_pickers":[
+                                f"{foldername_d}/vendor/bootstrap-select/dist/js/bootstrap-select.min.js",
+                                f"{foldername_d}/vendor/chart.js/Chart.bundle.min.js",
+                                f"{foldername_d}/vendor/apexchart/apexchart.js",
+                                f"{foldername_d}/vendor/moment/moment.min.js",
+                                f"{foldername_d}/vendor/bootstrap-daterangepicker/daterangepicker.js",
+                                f"{foldername_d}/vendor/clockpicker/js/bootstrap-clockpicker.min.js",
+                                f"{foldername_d}/vendor/jquery-asColor/jquery-asColor.min.js",
+                                f"{foldername_d}/vendor/jquery-asGradient/jquery-asGradient.min.js",
+                                f"{foldername_d}/vendor/jquery-asColorPicker/js/jquery-asColorPicker.min.js",
+                                f"{foldername_d}/vendor/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js",
+                                f"{foldername_d}/vendor/pickadate/picker.js",
+                                f"{foldername_d}/vendor/pickadate/picker.time.js",
+                                f"{foldername_d}/vendor/pickadate/picker.date.js",
+                                f"{foldername_d}/js/plugins-init/bs-daterange-picker-init.js",
+                                f"{foldername_d}/js/plugins-init/clock-picker-init.js",
+                                f"{foldername_d}/js/plugins-init/jquery-asColorPicker.init.js",
+                                f"{foldername_d}/js/plugins-init/material-date-picker-init.js",
+                                f"{foldername_d}/js/plugins-init/pickadate-init.js",
+                            ],
+                            "biexp":[
                                 f"{foldername_d}/vendor/bootstrap-select/dist/js/bootstrap-select.min.js",
                                 f"{foldername_d}/vendor/chart.js/Chart.bundle.min.js",
                                 f"{foldername_d}/vendor/apexchart/apexchart.js",

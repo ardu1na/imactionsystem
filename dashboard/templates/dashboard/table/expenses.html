@@ -39,8 +39,6 @@
     </div>
 <!-- END ALERTS -->
 
-
-
         
     <!-- main -->
         <div class="row">
@@ -136,6 +134,7 @@
                                         <th>CONCEPT</th>
                                         <th>VALUE</th>
                                         <th>WOP</th>
+                                        <th>DATE</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -150,7 +149,9 @@
                                             </td>
                                             <td> {{expense.concept}} </td>
                                             <td>${{expense.value}}</td>
-                                            <td>{{expense.wop}}</td>                              
+                                            <td>{{expense.wop}}</td>   
+                                            <td>{{expense.date}}</td>   
+            
                                             <td>
                                                 <div class="d-flex flex-row">
                                                     
@@ -179,7 +180,9 @@
                                                     </td>
                                                     <td> {{employee.name}} </td>
                                                     <td>${{employee.white}}</td>
-                                                    <td>Bank Transfer</td>                              
+                                                    <td>Bank Transfer</td>    
+                                                    <td> - </td>   
+                          
                                                     <td>
                                                         <div class="d-flex flex-row">
                                                                                                                                                                                                            
@@ -198,7 +201,9 @@
                                                     </td>
                                                     <td> {{employee.name}} </td>
                                                     <td>${{employee.nigga}}</td>
-                                                    <td>Cash</td>                              
+                                                    <td>Cash</td>     
+                                                    <td> - </td>   
+                         
                                                     <td>
                                                         <div class="d-flex flex-row">
                                                             
@@ -221,7 +226,8 @@
                                                     <td> {{employee.name}} </td>
                                                     <td>${{employee.get_wage_ceo}}</td>
                                                     <td>Various</td>  
-                                                                                
+                                                    <td> - </td>   
+                     
                                                     <td>
                                                         <div class="d-flex flex-row">
                                                                                                                                                 
@@ -243,7 +249,9 @@
                                         </td>
                                         <td> MONTHLY BONUS </td>
                                         <td>${{all_bonus|floatformat:2}}</td>
-                                        <td>Various</td>                              
+                                        <td>Various</td>    
+                                        <td> - </td>   
+                          
                                         <td>
                                                                                
                                         </td>

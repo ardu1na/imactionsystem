@@ -19,8 +19,8 @@
     });
     $('.input-limit-datepicker').daterangepicker({
         format: 'DD/MM/YYYY',
-        minDate: '06/01/2015',
-        maxDate: '06/30/2015',
+        minDate: '06/01/2021',
+        maxDate: '06/30/2030',
         buttonClasses: ['btn', 'btn-sm'],
         applyClass: 'btn-danger',
         cancelClass: 'btn-inverse',
