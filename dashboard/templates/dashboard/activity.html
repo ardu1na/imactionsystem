@@ -3,6 +3,7 @@
 {% load static %}
 
 {% block additional_css %}
+
 {% endblock %}
 
 {% block content %}
@@ -10,29 +11,23 @@
         <div class="card">
             <div class="card-body pt-0">
                 <div class="widget-timeline style-3 ">
-                    <h3 class="mt-3">CHANGES</h3>
-
-                    <ul class="timeline-active">
+                    <h3 class="mt-3">LOGS</h3>
+                    <ul id="loglist" class="timeline-active list-group">
                         {% for e in list %}
-                        <li class="d-flex align-items-baseline">
+                        <li class="d-flex align-items-baseline list-group-item">
                             {% if e.get_event_type_display %}
                             <h4 class="font-w400 time">{{e.datetime}}</h4>
                             <div class="panel">
                                 <a class="timeline-panel text-muted d-flex align-items-center">
-
                                     {% if e.get_event_type_display == "Update" %} <div class="badge badge-xl badge-warning fs-6"> <i class="fa-solid fa-pen-to-square"></i> </div>
-                                       {% elif e.get_event_type_display == "Create" %} <div class="badge badge-xl badge-secondary fs-6"><i class="fa fa-plus"></i> </div>
-                                       {% elif e.get_event_type_display == "Delete" %} <div class="badge badge-xl badge-primary fs-6"> <i class="fa-solid fa-trash fs-7"></i> </div>
-                                       {% endif %}
-
-
+                                        {% elif e.get_event_type_display == "Create" %} <div class="badge badge-xl badge-secondary fs-6"><i class="fa fa-plus"></i> </div>
+                                        {% elif e.get_event_type_display == "Delete" %} <div class="badge badge-xl badge-primary fs-6"> <i class="fa-solid fa-trash fs-7"></i> </div>
+                                        {% endif %}
                                     <h4 class="mb-0"><strong> {{e.user}} </strong> {{e.get_event_type_display}} {{e.content_type.model}} 
-                                        
-                                       {% if e.get_event_type_display == "Update" %} <strong class="text-warning"> {{e.object_repr}}</strong>
-                                       {% elif e.get_event_type_display == "Create" %} <strong class="text-secondary"> {{e.object_repr}}</strong>
-                                       {% elif e.get_event_type_display == "Delete" %} <strong class="text-primary"> {{e.object_repr}}</strong>
-                                       {% endif %}
-                                        
+                                        {% if e.get_event_type_display == "Update" %} <strong class="text-warning"> {{e.object_repr}}</strong>
+                                        {% elif e.get_event_type_display == "Create" %} <strong class="text-secondary"> {{e.object_repr}}</strong>
+                                        {% elif e.get_event_type_display == "Delete" %} <strong class="text-primary"> {{e.object_repr}}</strong>
+                                        {% endif %}                                        
                                     </h4>
                                 </a>                                
                             </div>
@@ -40,16 +35,12 @@
                             <h4 class="font-w400 time">{{e.datetime}}</h4>
                             <div class="panel">
                                 <a class="timeline-panel text-muted d-flex align-items-center">
-
                                     {% if e.get_login_type_display == "Login" %} <div class="badge badge-xl badge-secondary fs-6"> <i class="fa-solid fa-right-to-bracket"></i></div>
                                     {% elif e.get_login_type_display == "Logout" %} <div class="badge badge-xl badge-primary fs-6"> <i class="fa-solid fa-right-to-bracket fa-flip-horizontal"></i> </div>
                                     {% endif %}
-
-
                                     <h4 class="mb-0"><strong> {{e.user}} </strong> {{e.get_login_type_display}}                             
                                     </h4>
-                                </a>
-                                
+                                </a>                                
                             </div>	
                             {%endif%}	
                         </li>
@@ -64,5 +55,6 @@
 {% endblock %}
 
 {% block additional_js %}
-
+    
+    
 {% endblock %}
