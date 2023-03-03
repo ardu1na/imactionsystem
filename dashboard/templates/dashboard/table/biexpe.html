@@ -43,9 +43,16 @@
 
 {% block additional_js %}
 
-
 <script>
+    // Get the query parameter from the URL
+    const queryParams = new URLSearchParams(window.location.search);
+    const dateRange = queryParams.get('daterange');
 
+    // Set the value of the input field
+    const inputField = document.querySelector('.input-daterange-datepicker');
+    if (dateRange) {
+        inputField.value = dateRange;
+    }
 </script>
 
 
