@@ -1887,7 +1887,6 @@ def index(request):
     }
     
     
-    print (i, ii, iii, iv, v)
     return render(request,'dashboard/index.html',context)
 
 

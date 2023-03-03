@@ -178,6 +178,27 @@
                 <div class="card">
                     <div class="card-header border-0 flex-wrap">
                         <h4>RR by Service</h4>
+                        <div class="d-flex">
+                            <div class="round weekly d-flex" id="currentYear">
+                                <div>
+                                    <input type="checkbox" id="checkbox1" name="radio" value="weekly" />
+                                    <label for="checkbox1" class="checkmark"></label>
+                                </div>
+                                <div>
+                                    <span class="fs-14">This Year</span>
+                                </div>
+                            </div>
+
+                            <div class="round d-flex" id="lastYear">
+                                <div>
+                                    <input type="checkbox" id="checkbox2" name="radio" value="monthly" />
+                                    <label for="checkbox2" class="checkmark"></label>
+                                </div>
+                                <div>
+                                    <span class="fs-14">Last Year</span>
+                                </div>	
+                            </div>
+                        </div>
                         
                     </div>
                     <div class="card-body">
@@ -565,6 +586,7 @@
 				name: 'LinkedIn',
 				data: [{{enero_lk}}, {{febrero_lk}}, {{marzo_lk}}, {{abril_lk}}, {{mayo_lk}}, {{junio_lk}}, {{julio_lk}}, {{agosto_lk}}, {{septiembre_lk}}, {{octubre_lk}}, {{noviembre_lk}}, {{diciembre_lk}},]
 			}],
+            
 			chart: {
 				type: 'bar',
 				height: 350,
