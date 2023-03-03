@@ -178,7 +178,14 @@
                 <div class="card">
                     <div class="card-header border-0 flex-wrap">
                         <h4>RR by Service</h4>
-                        
+                        <form method="get">
+                            <div class="d-flex flex-row-reverese">
+                                <select id='date-dropdown' name="year" class="form-control">
+                                </select>
+                                <span><input type="submit" class="btn btn-outline-dark ms-2"></span>
+                            </div>
+                        </form>
+
                     </div>
                     <div class="card-body">
                         <div id="LineChart"></div>
@@ -206,7 +213,19 @@
     
 </script>
 
-
+<script>
+    let dateDropdown = document.getElementById('date-dropdown'); 
+         
+    let currentYear = new Date().getFullYear();    
+    let earliestYear = 2010;     
+    while (currentYear >= earliestYear) {      
+      let dateOption = document.createElement('option');          
+      dateOption.text = currentYear;      
+      dateOption.value = currentYear;        
+      dateDropdown.add(dateOption);      
+      currentYear -= 1;    
+    }
+  </script>
 
 <script>
 
