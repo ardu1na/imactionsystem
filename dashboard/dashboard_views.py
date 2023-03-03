@@ -1436,7 +1436,7 @@ def index(request):
 
             
             
-    # GRAPHS SERVICES   
+    # GRAPHS SERVICES  current year
     sales_seo_current_year = Sale.objects.filter(service="SEO").filter(cancelled="Active")\
                                         .filter(date__year=datetime.now().date().year)
         
@@ -1467,7 +1467,7 @@ def index(request):
         elif sale.date.month == 6:
             junio_seo +=sale.get_change
         elif sale.date.month == 7:
-            julio +=sale.get_change
+            julio_seo +=sale.get_change
         elif sale.date.month == 8:
             agosto_seo +=sale.get_change
         elif sale.date.month == 9:
@@ -1510,7 +1510,7 @@ def index(request):
         elif sale.date.month == 6:
             junio_combo +=sale.get_change
         elif sale.date.month == 7:
-            julio +=sale.get_change
+            julio_combo +=sale.get_change
         elif sale.date.month == 8:
             agosto_combo +=sale.get_change
         elif sale.date.month == 9:
@@ -1553,7 +1553,7 @@ def index(request):
         elif sale.date.month == 6:
             junio_fads +=sale.get_change
         elif sale.date.month == 7:
-            julio +=sale.get_change
+            julio_fads +=sale.get_change
         elif sale.date.month == 8:
             agosto_fads +=sale.get_change
         elif sale.date.month == 9:
@@ -1596,7 +1596,7 @@ def index(request):
         elif sale.date.month == 6:
             junio_wp +=sale.get_change
         elif sale.date.month == 7:
-            julio +=sale.get_change
+            julio_wp +=sale.get_change
         elif sale.date.month == 8:
             agosto_wp +=sale.get_change
         elif sale.date.month == 9:
@@ -1639,7 +1639,7 @@ def index(request):
         elif sale.date.month == 6:
             junio_gads +=sale.get_change
         elif sale.date.month == 7:
-            julio +=sale.get_change
+            julio_gads +=sale.get_change
         elif sale.date.month == 8:
             agosto_gads +=sale.get_change
         elif sale.date.month == 9:
@@ -1682,7 +1682,7 @@ def index(request):
         elif sale.date.month == 6:
             junio_cm +=sale.get_change
         elif sale.date.month == 7:
-            julio +=sale.get_change
+            julio_cm +=sale.get_change
         elif sale.date.month == 8:
             agosto_cm +=sale.get_change
         elif sale.date.month == 9:
@@ -1726,7 +1726,7 @@ def index(request):
         elif sale.date.month == 6:
             junio_lk +=sale.get_change
         elif sale.date.month == 7:
-            julio +=sale.get_change
+            julio_lk +=sale.get_change
         elif sale.date.month == 8:
             agosto_lk +=sale.get_change
         elif sale.date.month == 9:
@@ -1736,7 +1736,311 @@ def index(request):
         elif sale.date.month == 11:
             noviembre_lk +=sale.get_change
         else:
-            diciembre_lk +=sale.get_change        
+            diciembre_lk +=sale.get_change      
+            
+            
+            
+    # GRAPHS SERVICES  last year
+    sales_seo_last_year = Sale.objects.filter(service="SEO").filter(cancelled="Active")\
+                                        .filter(date__year=datetime.now().date().year-1)
+        
+    enero_seo_l = 0
+    febrero_seo_l = 0
+    marzo_seo_l = 0
+    abril_seo_l = 0
+    mayo_seo_l = 0
+    junio_seo_l = 0
+    julio_seo_l = 0
+    agosto_seo_l = 0
+    septiembre_seo_l = 0
+    octubre_seo_l = 0
+    noviembre_seo_l = 0
+    diciembre_seo_l = 0
+    
+    for sale in sales_seo_last_year:
+        if sale.date.month == 1:
+            enero_seo_l +=sale.get_change            
+        elif sale.date.month == 2:
+            febrero_seo_l +=sale.get_change
+        elif sale.date.month == 3:
+            marzo_seo_l +=sale.get_change
+        elif sale.date.month == 4:
+            abril_seo_l +=sale.get_change
+        elif sale.date.month == 5:
+            mayo_seo_l +=sale.get_change
+        elif sale.date.month == 6:
+            junio_seo_l +=sale.get_change
+        elif sale.date.month == 7:
+            julio_seo_l +=sale.get_change
+        elif sale.date.month == 8:
+            agosto_seo_l +=sale.get_change
+        elif sale.date.month == 9:
+            septiembre_seo_l +=sale.get_change
+        elif sale.date.month == 10:
+            octubre_seo_l +=sale.get_change
+        elif sale.date.month == 11:
+            noviembre_seo_l +=sale.get_change
+        else:
+            diciembre_seo_l +=sale.get_change
+            
+            
+    sales_combo_last_year = Sale.objects.filter(service="COMBO").filter(cancelled="Active")\
+                                        .filter(date__year=datetime.now().date().year-1)
+        
+    enero_combo_l = 0
+    febrero_combo_l = 0
+    marzo_combo_l = 0
+    abril_combo_l = 0
+    mayo_combo_l = 0
+    junio_combo_l = 0
+    julio_combo_l = 0
+    agosto_combo_l = 0
+    septiembre_combo_l = 0
+    octubre_combo_l = 0
+    noviembre_combo_l = 0
+    diciembre_combo_l = 0
+    
+    for sale in sales_combo_last_year:
+        if sale.date.month == 1:
+            enero_combo_l +=sale.get_change            
+        elif sale.date.month == 2:
+            febrero_combo_l +=sale.get_change
+        elif sale.date.month == 3:
+            marzo_combo_l +=sale.get_change
+        elif sale.date.month == 4:
+            abril_combo_l +=sale.get_change
+        elif sale.date.month == 5:
+            mayo_combo_l +=sale.get_change
+        elif sale.date.month == 6:
+            junio_combo_l +=sale.get_change
+        elif sale.date.month == 7:
+            julio_combo_l +=sale.get_change
+        elif sale.date.month == 8:
+            agosto_combo_l +=sale.get_change
+        elif sale.date.month == 9:
+            septiembre_combo_l +=sale.get_change
+        elif sale.date.month == 10:
+            octubre_combo_l +=sale.get_change
+        elif sale.date.month == 11:
+            noviembre_combo_l +=sale.get_change
+        else:
+            diciembre_combo_l +=sale.get_change
+            
+            
+    sales_fads_last_year = Sale.objects.filter(service="Facebook Ads").filter(cancelled="Active")\
+                                        .filter(date__year=datetime.now().date().year-1)
+        
+    enero_fads_l = 0
+    febrero_fads_l = 0
+    marzo_fads_l = 0
+    abril_fads_l = 0
+    mayo_fads_l = 0
+    junio_fads_l = 0
+    julio_fads_l = 0
+    agosto_fads_l = 0
+    septiembre_fads_l = 0
+    octubre_fads_l = 0
+    noviembre_fads_l = 0
+    diciembre_fads_l = 0
+    
+    for sale in sales_fads_last_year:
+        if sale.date.month == 1:
+            enero_fads_l +=sale.get_change            
+        elif sale.date.month == 2:
+            febrero_fads_l +=sale.get_change
+        elif sale.date.month == 3:
+            marzo_fads_l +=sale.get_change
+        elif sale.date.month == 4:
+            abril_fads_l +=sale.get_change
+        elif sale.date.month == 5:
+            mayo_fads_l +=sale.get_change
+        elif sale.date.month == 6:
+            junio_fads_l +=sale.get_change
+        elif sale.date.month == 7:
+            julio_fads_l +=sale.get_change
+        elif sale.date.month == 8:
+            agosto_fads_l +=sale.get_change
+        elif sale.date.month == 9:
+            septiembre_fads_l +=sale.get_change
+        elif sale.date.month == 10:
+            octubre_fads_l +=sale.get_change
+        elif sale.date.month == 11:
+            noviembre_fads_l +=sale.get_change
+        else:
+            diciembre_fads_l +=sale.get_change
+            
+            
+    sales_wp_last_year = Sale.objects.filter(service="Web Plan").filter(cancelled="Active")\
+                                        .filter(date__year=datetime.now().date().year-1)
+        
+    enero_wp_l = 0
+    febrero_wp_l = 0
+    marzo_wp_l = 0
+    abril_wp_l = 0
+    mayo_wp_l = 0
+    junio_wp_l = 0
+    julio_wp_l = 0
+    agosto_wp_l = 0
+    septiembre_wp_l = 0
+    octubre_wp_l = 0
+    noviembre_wp_l = 0
+    diciembre_wp_l = 0
+    
+    for sale in sales_wp_last_year:
+        if sale.date.month == 1:
+            enero_wp_l +=sale.get_change            
+        elif sale.date.month == 2:
+            febrero_wp_l +=sale.get_change
+        elif sale.date.month == 3:
+            marzo_wp_l +=sale.get_change
+        elif sale.date.month == 4:
+            abril_wp_l +=sale.get_change
+        elif sale.date.month == 5:
+            mayo_wp_l +=sale.get_change
+        elif sale.date.month == 6:
+            junio_wp_l +=sale.get_change
+        elif sale.date.month == 7:
+            julio_wp_l +=sale.get_change
+        elif sale.date.month == 8:
+            agosto_wp_l +=sale.get_change
+        elif sale.date.month == 9:
+            septiembre_wp_l +=sale.get_change
+        elif sale.date.month == 10:
+            octubre_wp_l +=sale.get_change
+        elif sale.date.month == 11:
+            noviembre_wp_l +=sale.get_change
+        else:
+            diciembre_wp_l +=sale.get_change
+            
+                        
+    sales_gads_last_year = Sale.objects.filter(service="Google Ads").filter(cancelled="Active")\
+                                        .filter(date__year=datetime.now().date().year-1)
+        
+    enero_gads_l= 0
+    febrero_gads_l= 0
+    marzo_gads_l= 0
+    abril_gads_l= 0
+    mayo_gads_l= 0
+    junio_gads_l= 0
+    julio_gads_l= 0
+    agosto_gads_l= 0
+    septiembre_gads_l= 0
+    octubre_gads_l= 0
+    noviembre_gads_l= 0
+    diciembre_gads_l= 0
+    
+    for sale in sales_gads_last_year:
+        if sale.date.month == 1:
+            enero_gads_l+=sale.get_change            
+        elif sale.date.month == 2:
+            febrero_gads_l+=sale.get_change
+        elif sale.date.month == 3:
+            marzo_gads_l+=sale.get_change
+        elif sale.date.month == 4:
+            abril_gads_l+=sale.get_change
+        elif sale.date.month == 5:
+            mayo_gads_l+=sale.get_change
+        elif sale.date.month == 6:
+            junio_gads_l+=sale.get_change
+        elif sale.date.month == 7:
+            julio_gads_l +=sale.get_change
+        elif sale.date.month == 8:
+            agosto_gads_l+=sale.get_change
+        elif sale.date.month == 9:
+            septiembre_gads_l+=sale.get_change
+        elif sale.date.month == 10:
+            octubre_gads_l+=sale.get_change
+        elif sale.date.month == 11:
+            noviembre_gads_l+=sale.get_change
+        else:
+            diciembre_gads_l+=sale.get_change
+            
+            
+    sales_cm_last_year = Sale.objects.filter(service="Community Management").filter(cancelled="Active")\
+                                        .filter(date__year=datetime.now().date().year-1)
+        
+    enero_cm_l = 0
+    febrero_cm_l = 0
+    marzo_cm_l = 0
+    abril_cm_l = 0
+    mayo_cm_l = 0
+    junio_cm_l = 0
+    julio_cm_l = 0
+    agosto_cm_l = 0
+    septiembre_cm_l = 0
+    octubre_cm_l = 0
+    noviembre_cm_l = 0
+    diciembre_cm_l = 0
+    
+    for sale in sales_cm_last_year:
+        if sale.date.month == 1:
+            enero_cm_l +=sale.get_change            
+        elif sale.date.month == 2:
+            febrero_cm_l +=sale.get_change
+        elif sale.date.month == 3:
+            marzo_cm_l +=sale.get_change
+        elif sale.date.month == 4:
+            abril_cm_l +=sale.get_change
+        elif sale.date.month == 5:
+            mayo_cm_l +=sale.get_change
+        elif sale.date.month == 6:
+            junio_cm_l +=sale.get_change
+        elif sale.date.month == 7:
+            julio_cm_l +=sale.get_change
+        elif sale.date.month == 8:
+            agosto_cm_l +=sale.get_change
+        elif sale.date.month == 9:
+            septiembre_cm_l +=sale.get_change
+        elif sale.date.month == 10:
+            octubre_cm_l +=sale.get_change
+        elif sale.date.month == 11:
+            noviembre_cm_l +=sale.get_change
+        else:
+            diciembre_cm_l +=sale.get_change
+            
+    
+    
+    sales_lk_last_year = Sale.objects.filter(service="LinkedIn").filter(cancelled="Active")\
+                                        .filter(date__year=datetime.now().date().year-1)
+        
+    enero_lk_l = 0
+    febrero_lk_l = 0
+    marzo_lk_l = 0
+    abril_lk_l = 0
+    mayo_lk_l = 0
+    junio_lk_l = 0
+    julio_lk_l = 0
+    agosto_lk_l = 0
+    septiembre_lk_l = 0
+    octubre_lk_l = 0
+    noviembre_lk_l = 0
+    diciembre_lk_l = 0
+    
+    for sale in sales_lk_last_year:
+        if sale.date.month == 1:
+            enero_lk_l +=sale.get_change            
+        elif sale.date.month == 2:
+            febrero_lk_l +=sale.get_change
+        elif sale.date.month == 3:
+            marzo_lk_l +=sale.get_change
+        elif sale.date.month == 4:
+            abril_lk_l +=sale.get_change
+        elif sale.date.month == 5:
+            mayo_lk_l +=sale.get_change
+        elif sale.date.month == 6:
+            junio_lk_l +=sale.get_change
+        elif sale.date.month == 7:
+            julio_lk_l +=sale.get_change
+        elif sale.date.month == 8:
+            agosto_lk_l +=sale.get_change
+        elif sale.date.month == 9:
+            septiembre_lk_l +=sale.get_change
+        elif sale.date.month == 10:
+            octubre_lk_l +=sale.get_change
+        elif sale.date.month == 11:
+            noviembre_lk_l +=sale.get_change
+        else:
+            diciembre_lk_l +=sale.get_change        
     
     context={
         "page_title":"Dashboard",
@@ -1877,6 +2181,90 @@ def index(request):
         "octubre_lk": round(octubre_lk),
         "noviembre_lk": round(noviembre_lk),
         "diciembre_lk": round(diciembre_lk),
+        "enero_seo_l" : round(enero_seo_l),
+        "febrero_seo_l": round(febrero_seo_l),
+        "marzo_seo_l": round(marzo_seo_l),
+        "abril_seo_l": round(abril_seo_l),
+        "mayo_seo_l": round(mayo_seo_l),
+        "junio_seo_l": round(junio_seo_l),
+        "julio_seo_l": round(julio_seo_l),
+        "agosto_seo_l": round(agosto_seo_l),
+        "septiembre_seo_l": round(septiembre_seo_l),
+        "octubre_seo_l": round(octubre_seo_l),
+        "noviembre_seo_l": round(noviembre_seo_l),
+        "diciembre_seo_l": round(diciembre_seo_l),
+        "enero_combo_l" : round(enero_combo_l),
+        "febrero_combo_l": round(febrero_combo_l),
+        "marzo_combo_l": round(marzo_combo_l),
+        "abril_combo_l": round(abril_combo_l),
+        "mayo_combo_l": round(mayo_combo_l),
+        "junio_combo_l": round(junio_combo_l),
+        "julio_combo_l": round(julio_combo_l),
+        "agosto_combo_l": round(agosto_combo_l),
+        "septiembre_combo_l": round(septiembre_combo_l),
+        "octubre_combo_l": round(octubre_combo_l),
+        "noviembre_combo_l": round(noviembre_combo_l),
+        "diciembre_combo_l": round(diciembre_combo_l),
+        "enero_fads_l" : round(enero_fads_l),
+        "febrero_fads_l": round(febrero_fads_l),
+        "marzo_fads_l": round(marzo_fads_l),
+        "abril_fads_l": round(abril_fads_l),
+        "mayo_fads_l": round(mayo_fads_l),
+        "junio_fads_l": round(junio_fads_l),
+        "julio_fads_l": round(julio_fads_l),
+        "agosto_fads_l": round(agosto_fads_l),
+        "septiembre_fads_l": round(septiembre_fads_l),
+        "octubre_fads_l": round(octubre_fads_l),
+        "noviembre_fads_l": round(noviembre_fads_l),
+        "diciembre_fads_l": round(diciembre_fads_l),
+         "enero_wp_l" : round(enero_wp_l),
+        "febrero_wp_l": round(febrero_wp_l),
+        "marzo_wp_l": round(marzo_wp_l),
+        "abril_wp_l": round(abril_wp_l),
+        "mayo_wp_l": round(mayo_wp_l),
+        "junio_wp_l": round(junio_wp_l),
+        "julio_wp_l": round(julio_wp_l),
+        "agosto_wp_l": round(agosto_wp_l),
+        "septiembre_wp_l": round(septiembre_wp_l),
+        "octubre_wp_l": round(octubre_wp_l),
+        "noviembre_wp_l": round(noviembre_wp_l),
+        "diciembre_wp_l": round(diciembre_wp_l),
+        "enero_gads_l" : round(enero_gads_l),
+        "febrero_gads_l": round(febrero_gads_l),
+        "marzo_gads_l": round(marzo_gads_l),
+        "abril_gads_l": round(abril_gads_l),
+        "mayo_gads_l": round(mayo_gads_l),
+        "junio_gads_l": round(junio_gads_l),
+        "julio_gads_l": round(julio_gads_l),
+        "agosto_gads_l": round(agosto_gads_l),
+        "septiembre_gads_l": round(septiembre_gads_l),
+        "octubre_gads_l": round(octubre_gads_l),
+        "noviembre_gads_l": round(noviembre_gads_l),
+        "diciembre_gads_l": round(diciembre_gads_l),
+        "enero_cm_l" : round(enero_cm_l),
+        "febrero_cm_l": round(febrero_cm_l),
+        "marzo_cm_l": round(marzo_cm_l),
+        "abril_cm_l": round(abril_cm_l),
+        "mayo_cm_l": round(mayo_cm_l),
+        "junio_cm_l": round(junio_cm_l),
+        "julio_cm_l": round(julio_cm_l),
+        "agosto_cm_l": round(agosto_cm_l),
+        "septiembre_cm_l": round(septiembre_cm_l),
+        "octubre_cm_l": round(octubre_cm_l),
+        "noviembre_cm_l": round(noviembre_cm_l),
+        "diciembre_cm_l": round(diciembre_cm_l),
+        "enero_lk_l" : round(enero_lk_l),
+        "febrero_lk_l": round(febrero_lk_l),
+        "marzo_lk_l": round(marzo_lk_l),
+        "abril_lk_l": round(abril_lk_l),
+        "mayo_lk_l": round(mayo_lk_l),
+        "junio_lk_l": round(junio_lk_l),
+        "julio_lk_l": round(julio_lk_l),
+        "agosto_lk_l": round(agosto_lk_l),
+        "septiembre_lk_l": round(septiembre_lk_l),
+        "octubre_lk_l": round(octubre_lk_l),
+        "noviembre_lk_l": round(noviembre_lk_l),
+        "diciembre_lk_l": round(diciembre_lk_l),
         "i" : i,
         "ii" : ii,
         "iii" : iii,
