@@ -178,28 +178,14 @@
                 <div class="card">
                     <div class="card-header border-0 flex-wrap">
                         <h4>RR by Service</h4>
-                        <div class="d-flex">
-                            <div class="round weekly d-flex" id="currentYear">
-                                <div>
-                                    <input type="checkbox" id="checkbox1" name="radio" value="weekly" />
-                                    <label for="checkbox1" class="checkmark"></label>
-                                </div>
-                                <div>
-                                    <span class="fs-14">This Year</span>
-                                </div>
+                        <form method="get">
+                            <div class="d-flex flex-row-reverese">
+                                <select id='date-dropdown' name="year" class="form-control">
+                                </select>
+                                <span><input type="submit" class="btn btn-outline-dark ms-2"></span>
                             </div>
+                        </form>
 
-                            <div class="round d-flex" id="lastYear">
-                                <div>
-                                    <input type="checkbox" id="checkbox2" name="radio" value="monthly" />
-                                    <label for="checkbox2" class="checkmark"></label>
-                                </div>
-                                <div>
-                                    <span class="fs-14">Last Year</span>
-                                </div>	
-                            </div>
-                        </div>
-                        
                     </div>
                     <div class="card-body">
                         <div id="LineChart"></div>
@@ -227,7 +213,19 @@
     
 </script>
 
-
+<script>
+    let dateDropdown = document.getElementById('date-dropdown'); 
+         
+    let currentYear = new Date().getFullYear();    
+    let earliestYear = 2010;     
+    while (currentYear >= earliestYear) {      
+      let dateOption = document.createElement('option');          
+      dateOption.text = currentYear;      
+      dateOption.value = currentYear;        
+      dateDropdown.add(dateOption);      
+      currentYear -= 1;    
+    }
+  </script>
 
 <script>
 
@@ -585,32 +583,7 @@
              {
 				name: 'LinkedIn',
 				data: [{{enero_lk}}, {{febrero_lk}}, {{marzo_lk}}, {{abril_lk}}, {{mayo_lk}}, {{junio_lk}}, {{julio_lk}}, {{agosto_lk}}, {{septiembre_lk}}, {{octubre_lk}}, {{noviembre_lk}}, {{diciembre_lk}},]
-			},
-            {
-				name: 'SEO last',
-				data: [{{enero_seo_l}}, {{febrero_seo_l}}, {{marzo_seo_l}}, {{abril_seo_l}}, {{mayo_seo_l}}, {{junio_seo_l}}, {{julio_seo_l}}, {{agosto_seo_l}}, {{septiembre_seo_l}}, {{octubre_seo_l}}, {{noviembre_seo_l}}, {{diciembre_seo_l}},]
-			}, {
-				name: 'Google Ads last',
-				data: [{{enero_gads_l}}, {{febrero_gads_l}}, {{marzo_gads_l}}, {{abril_gads_l}}, {{mayo_gads_l}}, {{junio_gads_l}}, {{julio_gads_l}}, {{agosto_gads_l}}, {{septiembre_gads_l}}, {{octubre_gads_l}}, {{noviembre_gads_l}}, {{diciembre_gads_l}},]
-			}, {
-				name: 'Community Management last',
-				data: [{{enero_cm_l}}, {{febrero_cm_l}}, {{marzo_cm_l}}, {{abril_cm_l}}, {{mayo_cm_l}}, {{junio_cm_l}}, {{julio_cm_l}}, {{agosto_cm_l}}, {{septiembre_cm_l}}, {{octubre_cm_l}}, {{noviembre_cm_l}}, {{diciembre_cm_l}},]
-			}, {
-				name: 'Web Plan last',
-				data: [{{enero_wp_l}}, {{febrero_wp_l}}, {{marzo_wp_l}}, {{abril_wp_l}}, {{mayo_wp_l}}, {{junio_wp_l}}, {{julio_wp_l}}, {{agosto_wp_l}}, {{septiembre_wp_l}}, {{octubre_wp_l}}, {{noviembre_wp_l}}, {{diciembre_wp_l}},]
-			}, {
-				name: 'Facebook Ads last',
-				data: [{{enero_fads_l}}, {{febrero_fads_l}}, {{marzo_fads_l}}, {{abril_fads_l}}, {{mayo_fads_l}}, {{junio_fads_l}}, {{julio_fads_l}}, {{agosto_fads_l}}, {{septiembre_fads_l}}, {{octubre_fads_l}}, {{noviembre_fads_l}}, {{diciembre_fads_l}},]
-			}, 
-            {
-				name: 'combo_l last',
-				data: [{{enero_combo_l}}, {{febrero_combo_l}}, {{marzo_combo_l}}, {{abril_combo_l}}, {{mayo_combo_l}}, {{junio_combo_l}}, {{julio_combo_l}}, {{agosto_combo_l}}, {{septiembre_combo_l}}, {{octubre_combo_l}}, {{noviembre_combo_l}}, {{diciembre_combo_l}},]
-			},
-             {
-				name: 'LinkedIn last',
-				data: [{{enero_lk_l}}, {{febrero_lk_l}}, {{marzo_lk_l}}, {{abril_lk_l}}, {{mayo_lk_l}}, {{junio_lk_l}}, {{julio_lk_l}}, {{agosto_lk_l}}, {{septiembre_lk_l}}, {{octubre_lk_l}}, {{noviembre_lk_l}}, {{diciembre_lk_l}},]
 			}],
-            
 			chart: {
 				type: 'bar',
 				height: 350,
