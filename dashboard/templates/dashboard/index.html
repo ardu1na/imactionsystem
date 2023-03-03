@@ -185,7 +185,6 @@
                                 <span><input type="submit" class="btn btn-outline-dark ms-2"></span>
                             </div>
                         </form>
-
                     </div>
                     <div class="card-body">
                         <div id="LineChart"></div>
@@ -198,6 +197,10 @@
 {% endblock %}
 
 {% block additional_js %}
+
+
+
+
 <script>
     $(function () {
         $('#datetimepicker').datetimepicker({
@@ -775,5 +778,15 @@
 </script>
 
 
+<script>
+    // Get the query parameter from the URL
+    const queryParams = new URLSearchParams(window.location.search);
+    const selectedYear = queryParams.get('year');
 
+    // Set the value of the select field
+    const selectField = document.querySelector('#date-dropdown');
+    if (selectedYear) {
+        selectField.value = selectedYear;
+    }
+</script>
 {% endblock %}
