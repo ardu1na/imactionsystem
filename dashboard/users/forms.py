@@ -55,6 +55,7 @@ class CustomUserForm(forms.ModelForm):
                   'groups',
                   'about',
                   'is_active',
+                  'is_staff',
                   'facebook_url',
                   'twitter_url',
                   'linkedin_url',

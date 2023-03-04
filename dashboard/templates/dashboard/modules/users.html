@@ -48,17 +48,7 @@
 									</div>
                                 </div>
                                
-                                <div class="col-lg-6 col-xl-3">
-									<div class="mb-3">
-										<select name="filter-user-group" class="default-select form-control wide mb-3">
-										  
-											<option value="">Select Group</option>
-											{% for group in groups %}
-											<option value="{{group.id}}" {% if group.id == form_data.filter_group %}selected{% endif %}>{{ group.name }}</option>
-											{% endfor %}
-										</select>
-									</div>
-                                </div>
+                                
                                 <div class="col-lg-6 col-xl-3">
                                     <div class="row">
                                         <div class="col-md-6">
@@ -123,7 +113,6 @@
                                    
                                     <th>Full Name</th>
                                     <th>Email</th>
-z                                    <th>Groups</th>
                                     <th>Status</th>
                                     
 
@@ -157,11 +146,7 @@ z                                    <th>Groups</th>
                                     </td>
                                     <td><strong>{{ user.email }}</strong></td>
 
-                                    <td>	
-                                        {% for g in user.groups.all %}
-                                        <span class="label label-primary">{{ g.name }}</span>
-                                        {% endfor %}
-                                    </td>
+                                    
                                     <td>
                                         <div class="d-flex align-items-center">
                                             {% if user.is_active %}

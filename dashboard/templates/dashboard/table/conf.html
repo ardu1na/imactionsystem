@@ -13,6 +13,21 @@
 
     <div class="row">
         <div class="col-12">
+
+            {% if perms.users.add_customuser %}
+
+                <div class="d-flex  mb-4">
+
+                        <a href="{% url 'dashboard:users' %}" class="btn btn-primary fs-3"> CHANGE USERS  <span><i class="fa-solid fa-users-gear mx-3 fs-3"></i></span>
+                        </a>
+                </div>
+
+            {% endif %}
+
+
+
+
+
             <div class="card">
                 <div class="card-header border-0 flex-wrap pb-0 mb-3">
                     <h4>TIER PARAMETERS</h4>

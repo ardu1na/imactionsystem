@@ -66,59 +66,16 @@
                               is active
                               </label>
                            </div>
+                           <div class="form-check form-check-inline">
+                              {{ form.is_staff|attr:"class:form-check-input"|attr:"type:checkbox"|attr:"checked" }}
+                              <label class="form-check-label">
+                              is staff
+                              </label>
+                           </div>
                         </div>
 
-
-
-
-                            
                            
-                        
-                        <div class="row">
-                              <div class="mb-3 col-md-4 custom-user">
-                                 <label class="form-label">Role {% if form.groups.field.required %}<span class="text-danger">*</span>{% endif %}</label>
-                                 {{ form.groups|attr:"class:multi-select form-control"|attr:"name:groups[]" }}
-                                 <div class="text-danger w-100 d-block mt-1">
-                                 {{ form.groups.errors }}
-                                 </div>
-                              </div>
-                            
-
-                              <!--Social link-->
-
-                              <div class="mb-3 col-md-4 ">
-                                 <label class="form-label">Facebook Url {% if form.facebook_url.field.required %}<span class="text-danger">*</span>{% endif %}</label>
-                                 {{ form.facebook_url|attr:"class:form-control"|attr:"type:text"}} 
-                                 <div class="text-danger w-100 d-block mt-1">
-                                 {{ form.facebook_url.errors }}
-                                 </div>
-                              </div>
-                              <div class="mb-3 col-md-4 ">
-                                 <label class="form-label">Twitter Url {% if form.twitter_url.field.required %}<span class="text-danger">*</span>{% endif %}</label>
-                                 {{ form.twitter_url|attr:"class:form-control"|attr:"type:text"}} 
-                                 <div class="text-danger w-100 d-block mt-1">
-                                 {{ form.twitter_url.errors }}
-                                 </div>
-                              </div>
-                              <div class="mb-3 col-md-4 ">
-                                 <label class="form-label">Linkedin Url {% if form.linkedin_url.field.required %}<span class="text-danger">*</span>{% endif %}</label>
-                                 {{ form.linkedin_url|attr:"class:form-control"|attr:"type:text"}} 
-                                 <div class="text-danger w-100 d-block mt-1">
-                                 {{ form.linkedin_url.errors }}
-                                 </div>
-                              </div>
-                        </div>
-
-                           <div class="mb-3 col-md-12 ">
-                                <label class="form-label">About {% if form.about.field.required %}<span class="text-danger">*</span>{% endif %}</label>
-                                {{ form.about|attr:"class:form-control"|attr:"style:height: 144px;"|attr:"placeholder:Write About YourSelf..." }}
-                                <div class="text-danger w-100 d-block mt-1">
-                                {{ form.about.errors }}
-                                </div>
-                              </div>
-
-
-
+                      
                           
 
                      {% if form.password1 %}
