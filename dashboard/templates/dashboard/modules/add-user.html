@@ -25,23 +25,7 @@
                          <div class="row">
 
 
-                        <div class="mb-3 col-md-6">
-                                 <div class="avatar-upload">
-                                    <div class="avatar-edit">
-                                       {{ form.avatar|attr:"type:file" }}
-                                       <label for="id_avatar"><i class="fas fa-pencil-alt"></i></label>
-                                    </div>
-                                    <div class="avatar-preview">
-                                       <div id="imagePreview" style="background-image: url('{{ form.instance.avatar.url }}');">
-                                       </div>
-                                    </div>
-                              </div>
-                              <div class="text-danger w-100 d-block mt-1">
-                                 {{ form.avatar.errors }}     
-                             </div>
-
-                        </div>
-
+                       
                         <div class="row col-md-6">
                             <div class="mb-3 col-md-6">
                                <label class="form-label">First Name {% if form.first_name.field.required %}<span class="text-danger">*</span> {% endif %}</label>
@@ -88,14 +72,7 @@
 
 
                             
-                            <div class="mb-3 col-md-6">
-                               <label class="form-label">Phone Number {% if form.phone_number.field.required %}<span class="text-danger">*</span> {% endif %} </label>
-                               {{ form.phone_number|attr:"type:text"|attr:"class:form-control"|attr:"placeholder:Phone Number" }}
-                               <div class="text-danger w-100 d-block mt-1">
-                               {{ form.phone_number.errors }}
-                               </div>
-                            </div>
-
+                           
                         
                         <div class="row">
                               <div class="mb-3 col-md-4 custom-user">
@@ -105,21 +82,7 @@
                                  {{ form.groups.errors }}
                                  </div>
                               </div>
-                              <div class="mb-3 col-md-4 custom-user">
-                                 <label class="form-label">Gender {% if form.gender.field.required %}<span class="text-danger">*</span>{% endif %}</label>
-                                 {{ form.gender|attr:"class:form-control from-height-1 default-select wide" }}
-                                 <div class="text-danger w-100 d-block mt-1 ">
-                                 {{ form.gender.errors }}
-                                 </div>
-                              </div>
-                              <div class="mb-3 col-md-4 ">
-                                 <label class="form-label">Date of Birth {% if form.dob.field.required %}<span class="text-danger">*</span>{% endif %}</label>
-                              
-                                 {{ form.dob|attr:"class:form-control"|attr:"type:date"}} 
-                                 <div class="text-danger w-100 d-block mt-1">
-                                 {{ form.dob.errors }}
-                                 </div>
-                              </div>
+                            
 
                               <!--Social link-->
 
@@ -211,23 +174,7 @@
 
 
 
-<script>
-   function readURL(input) {
 
-      if (input.files && input.files[0]) {
-            var reader = new FileReader();
-            reader.onload = function(e) {
-               $('#imagePreview').css('background-image', 'url('+e.target.result +')');
-               $('#imagePreview').hide();
-               $('#imagePreview').fadeIn(650);
-            }
-            reader.readAsDataURL(input.files[0]);
-      }
-   }
-   $("#id_avatar").change(function() {
-      readURL(this);
-   });
-</script> 
 
 
 <script>

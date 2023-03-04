@@ -7,15 +7,14 @@ from django.forms import Textarea
 
 class UserAdminConfig(UserAdmin):
 	model = CustomUser
-	search_fields = ('email','first_name','last_name','gender')
-	list_filter = ('email','first_name','last_name','gender','is_active','is_staff')
-	ordering = ('-dob',)
-	list_display=('username','email','first_name','last_name','gender','is_active','is_staff')
+	search_fields = ('email','first_name','last_name',)
+	list_filter = ('email','first_name','last_name','is_active','is_staff')
+	list_display=('username','email','first_name','last_name','is_active','is_staff')
 
 	fieldsets=(
-			(None,{'fields':('username','email', 'first_name','last_name','gender','avatar','dob')}),
+			(None,{'fields':('username','email', 'first_name','last_name',)}),
 			('Permissions',{'fields':('is_staff','is_active','is_superuser','groups','user_permissions')}),
-			('Personal',{'fields':('phone_number','facebook_url','twitter_url','linkedin_url','about',)}),
+			('Personal',{'fields':('facebook_url','twitter_url','linkedin_url','about',)}),
 		)
 
 	formfield_overrides = {
@@ -25,7 +24,7 @@ class UserAdminConfig(UserAdmin):
 	add_fieldsets = (
 	(None,{
 		'classes':('wide',),
-		'fields':('username','email','phone_number','first_name','last_name','gender','avatar','dob','password1','password2','is_active','is_staff','groups','user_permissions')
+		'fields':('username','email','first_name','last_name','password1','password2','is_active','is_staff','groups','user_permissions')
 		}
 		),
 	)
