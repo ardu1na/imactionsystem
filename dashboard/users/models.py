@@ -36,21 +36,16 @@ def user_directory_path(instance, filename):
 	return f'users/{instance.email}/images/{filename}'
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-	GENDER_CHOICES = (
-		('','Choose gender'),
-		('Male', 'Male'),
-		('Female', 'Female'),
-		('Others', 'Others'),
-	)
+	
 	username = models.CharField(max_length=191,unique=True)
 	email = models.EmailField(_('email address'),unique=True)
-	first_name = models.CharField(max_length=255,blank=True)
-	last_name = models.CharField(max_length=255,blank=True)
-	gender = models.CharField(max_length=255, choices=GENDER_CHOICES,blank=True)
-	avatar = models.ImageField(upload_to=user_directory_path, default="profile/image/default.jpg")
-	dob = models.CharField(max_length=255,blank=True,null=True,help_text="Pattern = dd-mm-yyyy")
-	phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
-	phone_number = models.CharField(validators=[phone_regex], max_length=17, blank=True)# Validators should be a list
+	first_name = models.CharField(max_length=255,blank=True, null=True)
+	last_name = models.CharField(max_length=255,blank=True, null=True)
+	#gender = models.CharField(max_length=255, choices=GENDER_CHOICES,blank=True, null=True)
+	#avatar = models.ImageField(upload_to=user_directory_path, default="profile/image/default.jpg")
+	#dob = models.CharField(max_length=255,blank=True,null=True,help_text="Pattern = dd-mm-yyyy")
+	#phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.", null=True, blank=True)
+	#phone_number = models.CharField(validators=[phone_regex], max_length=17, blank=True, null=True)# Validators should be a list
 	groups = models.ManyToManyField(Group,blank=True)
 	about = models.TextField(_('about'),max_length=500,blank=True)
 
@@ -58,13 +53,12 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 	twitter_url = models.URLField(max_length = 255, null=True, blank=True)
 	linkedin_url = models.URLField(max_length = 255, null=True, blank=True)
 	
-	is_staff = models.BooleanField(default=False)
-	is_active = models.BooleanField(default=False)
+	is_staff = models.BooleanField(default=True)
+	is_active = models.BooleanField(default=True)
 	
 	objects = CustomAccountManager()
 
 	USERNAME_FIELD = 'email'  
-	REQUIRED_FIELDS = ['username','first_name','last_name']
 	
 
 	def __str__(self):

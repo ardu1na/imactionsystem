@@ -123,10 +123,10 @@ let dataSet = [
 	});
 	// dataTable4
 	var table = $('#dataTable4').DataTable({
-		searching: false,
+		searching: true,
 		paging:true,
-		select: false,         
-		lengthChange:false,
+		select: true,         
+		lengthChange:true,
 		
 	});
    

@@ -43,17 +43,7 @@ class SignupForm(forms.ModelForm):
 class CustomUserForm(forms.ModelForm):
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
     password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput)
-    dob = forms.CharField(required=True)
-    phone_number = forms.CharField(required=True)
     
-    GENDER_CHOICES = (
-        ('','Choose gender'),
-        ('Male', 'Male'),
-        ('Female', 'Female'),
-        ('Others', 'Others'),
-    )
-    gender = forms.ChoiceField(choices=GENDER_CHOICES, required=True)
-
 
     class Meta:
         model = CustomUser
@@ -62,22 +52,17 @@ class CustomUserForm(forms.ModelForm):
                   'email',
                   'first_name',
                   'last_name',
-                  'gender',
-                  'avatar',
-                  'dob',
-                  'phone_number',
                   'groups',
                   'about',
                   'is_active',
+                  'is_staff',
                   'facebook_url',
                   'twitter_url',
                   'linkedin_url',
                   'password1',
                   'password2',
                 )
-        widgets = {
-            'avatar': forms.FileInput(),
-        }
+       
     def clean_password2(self):
         # Check that the two password entries match
         password1 = self.cleaned_data.get("password1")
@@ -99,18 +84,9 @@ class CustomUserForm(forms.ModelForm):
 class EditUserForm(forms.ModelForm):
     first_name = forms.CharField(required=True)
     last_name = forms.CharField(required=True)
-    dob = forms.CharField(required=True)
-    phone_number = forms.CharField(required=True)
 
     groups = forms.ModelMultipleChoiceField(queryset=Group.objects.all(),required=False)
    
-    GENDER_CHOICES = (
-        ('','Choose gender'),
-        ('Male', 'Male'),
-        ('Female', 'Female'),
-        ('Others', 'Others'),
-    )
-    gender = forms.ChoiceField(choices=GENDER_CHOICES, required=True)
 
     class Meta:
         model = CustomUser
@@ -119,10 +95,7 @@ class EditUserForm(forms.ModelForm):
                   'email',
                   'first_name',
                   'last_name',
-                  'gender',
-                  'avatar',
-                  'dob',
-                  'phone_number',
+                  
                   'groups',
                   'about',
                   'is_active',
@@ -130,10 +103,6 @@ class EditUserForm(forms.ModelForm):
                   'twitter_url',
                   'linkedin_url',
                 )
-
-        widgets = {
-            'avatar': forms.FileInput(),
-        }
 
     def save(self, commit=True):
         # Save the provided password in hashed format
