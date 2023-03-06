@@ -14,7 +14,8 @@ urlpatterns = [
     path('conf/',dashboard_views.conf, name="conf"),
     path('setting/',dashboard_views.setting, name="setting"),
 
-    
+    path('backups/',dashboard_views.backups, name="backups"),
+
     path('exportsales/',dashboard_views.export_sales, name="exportsales"),
     path('exportclients/',dashboard_views.export_clients, name="exportclients"),
     path('exportbank/',dashboard_views.export_bank, name="exportbank"),
