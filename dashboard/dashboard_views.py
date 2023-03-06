@@ -23,8 +23,7 @@ from sales.forms import *
 from expenses.models import *
 from expenses.forms import * 
 from dashboard.users.models import CustomUser
-
-
+from dashboard.utils import *
 import csv
 from dashboard.forms import UploadFileForm
 try: 
@@ -35,8 +34,6 @@ except: pass
 
 
 from django.http import HttpResponse
-from dashboard.resources import SaleResource, ClientResource, BankResource,\
-    EmployeeResource, ExpenseResource
     
     
 from easyaudit.models import CRUDEvent, LoginEvent
@@ -49,6 +46,9 @@ from itertools import chain
 from django.core.paginator import Paginator
 
 
+   
+    
+    
 @login_required(login_url='dashboard:login')
 def activity(request):
     ct = ContentType.objects.get_for_model(LastBlue)
@@ -73,51 +73,6 @@ def activity(request):
     return render(request,'dashboard/activity.html',context)
 
 
-def export_sales(request):
-    sale_resource = SaleResource()
-    data = sale_resource.export() # Assuming this returns Excel file as bytes
-    current_date = datetime.now().strftime('%Y-%m-%d')
-    filename = f"sales_{current_date}.xlsx"
-    response = HttpResponse(data.xlsx, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = f'attachment; filename="{filename}"'
-    return response
-
-def export_clients(request):
-    client_resource = ClientResource()
-    data = client_resource.export() # Assuming this returns Excel file as bytes
-    current_date = datetime.now().strftime('%Y-%m-%d')
-    filename = f"clients_{current_date}.xlsx"
-    response = HttpResponse(data.xlsx, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = f'attachment; filename="{filename}"'
-    return response
-
-def export_bank (request):
-    bank_resource = BankResource()
-    data = bank_resource.export() # Assuming this returns Excel file as bytes
-    current_date = datetime.now().strftime('%Y-%m-%d')
-    filename = f"bankdata_{current_date}.xlsx"
-    response = HttpResponse(data.xlsx, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = f'attachment; filename="{filename}"'
-    return response
-
-
-def export_employees (request):
-    employee_resource = EmployeeResource()
-    data = employee_resource.export() # Assuming this returns Excel file as bytes
-    current_date = datetime.now().strftime('%Y-%m-%d')
-    filename = f"employees_{current_date}.xlsx"
-    response = HttpResponse(data.xlsx, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = f'attachment; filename="{filename}"'
-    return response
-
-def export_expenses (request):
-    expense_resource = ExpenseResource()
-    data = expense_resource.export() # Assuming this returns Excel file as bytes
-    current_date = datetime.now().strftime('%Y-%m-%d')
-    filename = f"expenses_{current_date}.xlsx"
-    response = HttpResponse(data.xlsx, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = f'attachment; filename="{filename}"'
-    return response
 
 
 @login_required(login_url='dashboard:login')
@@ -481,7 +436,6 @@ def deleteemployee(request, id):
 
 
 
-# https://stackoverflow.com/questions/69772662/return-monthly-sales-value-in-django
 @login_required(login_url='dashboard:login')
 def sales(request):
     
@@ -515,23 +469,7 @@ def salesdata(request):
     total_rr_this_year = 0
     for s in sales_rr_current_year:
         total_rr_this_year += s.get_change
-        
-
-    """from django.db.models.functions import ExtractYear
-    dates = Sale.objects.filter(revenue="RR").filter(cancelled="Active")\
-                       .annotate(year=ExtractYear('date'))\
-                       .values('year').distinct()"""
-
-    """q = Sale.objects.filter(revenue="RR").filter(cancelled="Active").values_list('date__year', flat=True).distinct()
-    years = list(q)
-    
-    
-    q2 = Sale.objects.filter(revenue="RR").filter(cancelled="Active").values_list('date__month', flat=True).distinct()
-    months = list(q2)
-    
-    
-    """
-    
+            
     enero = 0
     febrero = 0
     marzo = 0
@@ -1196,7 +1134,19 @@ def download_config(request):
 
 @login_required(login_url='dashboard:login')
 def index(request):
-    
+    today = date.today()
+    last_backup = BackUps.objects.get(id=1)
+    if last_backup.date.month != today.month:
+        print("doing back up")
+        export_sales()
+        export_clients()
+        export_bank()
+        export_employees()
+        export_expenses()
+    else:
+        print("don't need to back up, allready updated")
+        
+        
     clients = Client.objects.all()
     
     clients_rr = []
@@ -1242,21 +1192,6 @@ def index(request):
 
     blue = (last_blue.venta+last_blue.compra)/2
     
-    
-    """from django.db.models.functions import ExtractYear
-    dates = Sale.objects.filter(revenue="RR").filter(cancelled="Active")\
-                       .annotate(year=ExtractYear('date'))\
-                       .values('year').distinct()"""
-
-    """q = Sale.objects.filter(revenue="RR").filter(cancelled="Active").values_list('date__year', flat=True).distinct()
-    years = list(q)
-    
-    
-    q2 = Sale.objects.filter(revenue="RR").filter(cancelled="Active").values_list('date__month', flat=True).distinct()
-    months = list(q2)
-    
-    
-    """
     
     # GRAPHS rr   
     sales_rr_current_year = Sale.objects.filter(revenue="RR").filter(cancelled="Active")\
