@@ -45,8 +45,8 @@ from django.contrib.contenttypes.models import ContentType
 
 from itertools import chain
 
-from django.contrib.auth.decorators import user_passes_test
 
+from django.core.paginator import Paginator
 
 
 @login_required(login_url='dashboard:login')
@@ -59,13 +59,15 @@ def activity(request):
     logs = LoginEvent.objects.all()
     
     combined_list = list(chain(events, logs))
+    
+    paginator = Paginator(combined_list, 20) # Show 20 elements per page.
+    elements = paginator.get_page(request.GET.get('page'))
 
-    #sorted(chain(own_mx,his_mx), key=attrgetter('sent_at'))    
     context={
         "page_title":"Activity",
         "events" : events,
         "logs" : logs,
-        "list" : combined_list
+        "list" : elements,
 
     }
     return render(request,'dashboard/activity.html',context)
