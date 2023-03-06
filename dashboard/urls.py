@@ -14,14 +14,6 @@ urlpatterns = [
     path('conf/',dashboard_views.conf, name="conf"),
     path('setting/',dashboard_views.setting, name="setting"),
 
-    path('backups/',dashboard_views.backups, name="backups"),
-
-    path('exportsales/',dashboard_views.export_sales, name="exportsales"),
-    path('exportclients/',dashboard_views.export_clients, name="exportclients"),
-    path('exportbank/',dashboard_views.export_bank, name="exportbank"),
-    path('exportemployees/',dashboard_views.export_employees, name="exportemployees"),
-    path('exportexpenses/',dashboard_views.export_expenses, name="exportexpenses"),
-
 
     path('employees/',dashboard_views.employees, name="employees"),
     path('employees/delete/<int:id>/', dashboard_views.deleteemployee, name="deleteemployee"), 
