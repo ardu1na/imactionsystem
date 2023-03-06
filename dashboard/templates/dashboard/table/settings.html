@@ -1,0 +1,50 @@
+{% extends 'dashboard/elements/layouts/admin.html' %}
+
+{% load static %}
+
+{% block additional_css %}
+{% endblock %}
+
+{% block content %}
+
+
+        
+<!-- TIER CONF -->
+
+    <div class="row">
+        <div class="col-12">
+
+           
+            <div class="card">
+
+                <div class="d-flex flex-row">
+
+                    {% if perms.users.add_customuser %}
+
+                    <div class="d-flex  m-4">
+
+                            <a href="{% url 'dashboard:users' %}" class="btn btn-primary fs-3"> CHANGE USERS  <span><i class="fa-solid fa-users-gear mx-3 fs-3"></i></span>
+                            </a>
+                    </div>
+
+                    {% endif %}
+
+                    <div class="d-flex  m-4">
+
+                        <a href="{% url 'dashboard:conf' %}" class="btn btn-secondary fs-3"> CHANGE TIER  <span><i class="fa-solid fa-gear mx-3"></i></span>
+                        </a>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>            
+    </div>
+<!-- END TIER CONF -->
+
+
+{% endblock %}
+
+{% block additional_js %}
+
+{% endblock %}

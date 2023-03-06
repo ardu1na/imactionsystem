@@ -45,6 +45,9 @@ from django.contrib.contenttypes.models import ContentType
 
 from itertools import chain
 
+from django.contrib.auth.decorators import user_passes_test
+
+
 
 @login_required(login_url='dashboard:login')
 def activity(request):
@@ -115,6 +118,14 @@ def export_expenses (request):
     return response
 
 
+@login_required(login_url='dashboard:login')
+def setting (request):
+    context = {
+            "page_title": "SETTINGS",
+            }
+    return render (request, 'dashboard/table/settings.html', context)
+
+
 
 
 @login_required(login_url='dashboard:login')
@@ -126,7 +137,7 @@ def conf(request):
         form = TierConf()
         
         context = {
-            "page_title": "SETTINGS",
+            "page_title": "TIER",
             'form': form,
             }
         return render (request, 'dashboard/table/conf.html', context)

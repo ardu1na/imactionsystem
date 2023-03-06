@@ -12,6 +12,8 @@ app_name='dashboard'
 urlpatterns = [
     
     path('conf/',dashboard_views.conf, name="conf"),
+    path('setting/',dashboard_views.setting, name="setting"),
+
     
     path('exportsales/',dashboard_views.export_sales, name="exportsales"),
     path('exportclients/',dashboard_views.export_clients, name="exportclients"),
