@@ -227,33 +227,6 @@ class Client(models.Model):
         
 
 
-class BankData(models.Model):
-    MercadoPago = 'MercadoPago'
-    Debit_CBU = 'Debit'
-    Wire_transfer = 'Wire transfer'
-    Cash = 'Cash'
-
-    PAYMENT_CHOICES = (
-        (MercadoPago,  ('MercadoPago')),
-        (Debit_CBU, ('Debit')),
-        (Wire_transfer, ('Wire transfer')),
-        (Cash, ('Cash')),
-        )
-
-    payment = models.CharField(max_length=50,choices=PAYMENT_CHOICES, blank=False, null=False)
-    cbu = models.CharField(null=True, blank=True, max_length=100)
-    alias = models.CharField(max_length=200, blank=True, null=True, default="")
-    cuit = models.CharField(max_length=50, blank=True, null=True, default="")
-    detail = models.CharField(max_length=500, default="", blank=True, null=True)
-    account = models.ForeignKey(Client, related_name= 'accounts', on_delete=models.CASCADE, blank=False, null=False)
-    
-
-    def __str__(self):
-        return 'Bank account {} of {}'.format(self.payment, self.account)
-
-    class Meta:
-        verbose_name_plural = "bank data"        
-        
         
         
         

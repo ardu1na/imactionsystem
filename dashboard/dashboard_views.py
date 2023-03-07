@@ -800,70 +800,6 @@ def addclientsale(request, id):
         
         
         
-    
-@login_required(login_url='dashboard:login')
-def bankdata(request, id):
-    
-    client = Client.objects.get(id=id)
-
-    if request.method == "GET":
-        
-        bankdataform = BankDataForm(instance=client)
-        context = {
-            'bankdataform': bankdataform,
-            'client': client,
-            }
-        return render (request, 'dashboard/instructor/bankdata.html', context)
-
-    
-    if request.method == 'POST':
-        bankdataform = BankDataForm(request.POST)
-              
-        if bankdataform.is_valid():
-            nbk = bankdataform.save(commit=False)
-            nbk.account = client
-            nbk.save()
-            
-            return HttpResponseRedirect('/clients/')
-
-        else:
-
-            print (bankdataform.errors) 
-            return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
-        
-        
-@login_required(login_url='dashboard:login')
-def editbankdata(request, id):
-    editbankdata = BankData.objects.get(id=id)
-    
-    if request.method == "GET":
-    
-        form = BankDataForm(instance=editbankdata)
-        
-        context = {
-            'form': form,
-            'editbankdata': editbankdata,
-            'id': id
-            }
-        return render (request, 'dashboard/instructor/editbankdata.html', context)
-
-    
-    if request.method == 'POST':
-        form = BankDataForm(request.POST, instance=editbankdata)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect('/clients/')
-        else: return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
-
-        
-
-@login_required(login_url='dashboard:login')
-def deletebankdata(request, id):
-    bank = BankData.objects.get(id=id)
-    bank.delete()
-    return HttpResponseRedirect('/clients/')
-
-
 
 
 @login_required(login_url='dashboard:login')
@@ -999,55 +935,6 @@ def import_sales(request):
 
 
 @login_required(login_url='dashboard:login')
-def backup_bankdata(request):
-        
-    # query
-    queryset = BankData.objects.all()
-    
-    # get fields of model
-    options = BankData._meta
-    fields = [field.name for field in options.fields]
-    # ['id', 'name', 'last_name']...
-    # build response
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'atachment; filename="backupbankdata.csv"'
-
-    # writer
-    writer = csv.writer(response)
-    # writing header
-    writer.writerow([options.get_field(field).verbose_name for field in fields])
-
-    # writing data
-    for obj in queryset:
-        writer.writerow([getattr(obj, field) for field in fields])
-    
-    return response
-
-
-@login_required(login_url='dashboard:login')
-def import_bankdata(request):
-
-    accounts = []
-    with open("backupbankdata.csv", "r") as csv_file:
-        data = list(csv.reader(csv_file, delimiter=","))
-        for row in data[1:]:
-            accounts.append(
-                BankData(
-                    id=row[0],
-                    payment=row[1],
-                    cbu=row[2],
-                    alias=row[3],
-                    cuit=row[4],
-                    detail=row[5],
-                    account=row[6],        
-                )
-            )
-    if len(accounts) > 0:
-        BankData.objects.bulk_create(accounts)
-    
-    return HttpResponse("Successfully imported")
-
-@login_required(login_url='dashboard:login')
 @permission_required({'dashboard.view_configurations','dashboard.delete_configurations'}, raise_exception=True)
 def delete_config(request,id):
     config_obj = Configurations.objects.get(id=id)
@@ -1140,7 +1027,6 @@ def index(request):
         print("doing back up")
         export_sales()
         export_clients()
-        export_bank()
         export_employees()
         export_expenses()
         last_backup.date = today

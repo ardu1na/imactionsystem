@@ -62,9 +62,7 @@
                                 <li class="nav-item">
                                     <a class="nav-link active" data-bs-toggle="tab" href="#home"><i class="la la-user me-2"></i> ACCOUNT</a>
                                 </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" data-bs-toggle="tab" href="#profile"><i class="la la-home me-2"></i> BANK DATA</a>
-                                </li>
+                                
                                 <li class="nav-item">
                                     <a class="nav-link" data-bs-toggle="tab" href="#contact"><i class="las la-comment-dollar me-2"></i>SALES</a>
                                 </li>
@@ -184,41 +182,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="tab-pane fade" id="profile">
-                                    <div class="pt-4">
-                                        <div>
-                                            
-                                            {% if editclient.accounts %}
-                    
-                                            <div>
-                                                {% for account in editclient.accounts.all %}
-                                                <div class="basic-list-group m-3">
-                                                    
-                                                    <ul class="list-group">
-                                                       
-                                                        <li class="list-group-item"><h4>{{account.payment}}</h4>                                                           
-                                                        </li>
-                                                        <li class="list-group-item">CBU: {{account.cbu}}</li>
-                                                        <li class="list-group-item">ALIAS: {{account.alias}}</li>
-                                                        <li class="list-group-item">CUIT: {{account.cuit}}</li>
-                                                        <li class="list-group-item">DETAIL: {{account.detail}}</li>
-                                                        <li class="list-group-item centered"><a href="{% url 'dashboard:editbankdata' id=account.id %}" class="btn btn-info">Change</a></li>
-                                                    </ul>
-                                                </div>
-                                                
-                                                {% endfor %}
-                                            </div>
-                                            {% endif %}
-
-
-                                            <div class="form-floating pt-4 my-3 d-flex flex-row-reverse">
-                                                <a href="{% url 'dashboard:bankdata' id=editclient.id %}" class="btn btn-success mx-3">ADD BankData<span class="btn-icon-end">
-                                                    <i class="fa fa-plus"></i></span></a>
-                                            </div>  
-                    
-                                        </div>
-                                    </div>
-                                </div>
+                                
                                 <div class="tab-pane fade" id="contact">
                                     <div class="pt-4">
                                         {% if editclient.sales %}
