@@ -88,23 +88,25 @@ def setting (request):
 @login_required(login_url='dashboard:login')
 def conf(request):
     
-   
+    tier = ConfTier.objects.get(id=1)
+
     if request.method == "GET":
 
-        form = TierConf()
+        form = TierConf(instance=tier)
         
         context = {
             "page_title": "TIER",
             'form': form,
+            'id': id
             }
         return render (request, 'dashboard/table/conf.html', context)
 
     
     if request.method == 'POST':
-        form = TierConf(request.POST)
+        form = TierConf(request.POST, instance=tier)
+        
         if form.is_valid():
-            
-            form.save()
+            tier = form.save()
                       
             return HttpResponseRedirect('/conf/')
         else: return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
