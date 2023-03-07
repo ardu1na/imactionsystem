@@ -23,6 +23,7 @@ urlpatterns = [
     path('expenses/delete/<int:id>/', dashboard_views.deleteexpense, name="deleteexpense"), 
     path('expenses/edit/<int:id>/', dashboard_views.editexpense, name="editexpense"), 
     path('expenses/bi/',dashboard_views.biexp, name="biexp"),
+    path('expenses/deleteexpenses/', dashboard_views.delete_expenses, name="deleteexpenses"),
 
     
     path('clients/',dashboard_views.clients, name="clients"),
