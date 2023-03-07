@@ -29,6 +29,9 @@ urlpatterns = [
     path('clients/deleteclient/<int:id>/', dashboard_views.deleteclient, name="deleteclient"),
     path('clients/editclient/<int:id>/', dashboard_views.editclient, name="editclient"),
     path('clients/addclientsale/<int:id>/', dashboard_views.addclientsale, name="addclientsale"),
+    path('clients/deleteclients/', dashboard_views.delete_clients, name="deleteclients"),
+
+
 
     path('allclients/', dashboard_views.allclients, name="allclients"),
     path('allclients/import/', dashboard_views.import_clients, name="importclients"),

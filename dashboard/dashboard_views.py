@@ -8,7 +8,7 @@ import json
 from dashboard import setup_config
 import os
 from django.conf import settings
-from django.http import HttpResponse, Http404, HttpResponseRedirect
+from django.http import HttpResponse, Http404, HttpResponseRedirect, HttpResponseBadRequest
 from django.contrib.auth.decorators import login_required, permission_required 
 import pickle
 import mimetypes
@@ -730,6 +730,18 @@ def deleteclient(request, id):
     client = Client.objects.get(id=id)
     client.delete()
     return redirect(reverse('dashboard:clients')+ "?deleted")
+
+
+
+@login_required(login_url='dashboard:login')
+def delete_clients(request):
+    if request.method == 'POST' and 'delete' in request.POST:
+        selected_ids = request.POST.getlist('selected_clients')
+        Client.objects.filter(id__in=selected_ids).delete()
+        return redirect('dashboard:clients')
+    else:
+        return HttpResponseBadRequest('Invalid request')
+
 
 
 
