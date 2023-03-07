@@ -7,35 +7,6 @@
 
 {% block content %}
 
-<!-- ALERTS -->
-    <!-- ADDEMPLOYEE CONFIRMATION -->
-    <div class="my-3">
-        {% if 'added' in request.GET %}
-        <div class="alert alert-info alert-dismissible fade show" role="alert">
-            ☑ Employee added successfully!
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        {% endif %}
-    </div>
-    <!-- editEMPLOYEE CONFIRMATION -->
-    <div class="my-3">
-        {% if 'ok' in request.GET %}
-        <div class="alert alert-info alert-dismissible fade show" role="alert">
-            ☑ Employee changed successfully!
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        {% endif %}
-    </div>
-    <!-- DELETEEMPLOYEE CONFIRMATION -->
-    <div class="my-3">
-        {% if 'deleted' in request.GET %}
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <i class="fa-regular fa-circle-xmark me-2"></i> Employee deleted!
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        {% endif %}
-    </div>
-<!-- END ALERTS -->
 
 
 <!-- MAIN EMPLOYEES -->
