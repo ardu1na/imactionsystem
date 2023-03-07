@@ -70,25 +70,41 @@ class Client(models.Model):
     source = models.CharField(max_length=50, choices=CANAL_CHOICES, null=True, blank=True)
     date = models.DateField(editable=True, default=date.today)
     website = models.URLField(blank=True, null=True)
-    email = models.EmailField(blank=True, null=True)
-    email_2 = models.EmailField(blank=True, null=True)
-    email_admin = models.EmailField(blank=True, null=True)
-    phone_number = models.CharField(max_length=25, blank=True, null=True)
-    phone_2 = models.CharField(max_length=25, blank=True, null=True)
-    landing_page = models.URLField(blank=True, null=True)
+    
     wop = models.CharField(max_length=30, choices=WOP_CHOICES, null=True, blank=True, verbose_name='WOP')
-    cancelled = models.CharField(default='Active', max_length=51, choices=CANCELLED_CHOICES)
+    
+    
+    # new contact data
+    c1_name = models.CharField(max_length=30, blank=True, null=True)
+    c1_email = models.EmailField(blank=True, null=True)
+    c1_email2 = models.EmailField(blank=True, null=True)
+    c1_tel = models.CharField(max_length=25, blank=True, null=True)
+    c1_tel2 = models.CharField(max_length=25, blank=True, null=True)
+    
+    c2_name = models.CharField(max_length=30, blank=True, null=True)
+    c2_email = models.EmailField(blank=True, null=True)
+    c2_email2 = models.EmailField(blank=True, null=True)
+    c2_tel = models.CharField(max_length=25, blank=True, null=True)
+    c2_tel2 = models.CharField(max_length=25, blank=True, null=True)
+    admin_name = models.CharField(max_length=30, blank=True, null=True)
+    admin_email = models.EmailField(blank=True, null=True)
+    admin_email2 = models.EmailField(blank=True, null=True)
+    admin_tel = models.CharField(max_length=25, blank=True, null=True)
+    admin_tel2 = models.CharField(max_length=25, blank=True, null=True)
+    
+    landing_page = models.URLField(blank=True, null=True)
 
+
+
+    cancelled = models.CharField(default='Active', max_length=51, choices=CANCELLED_CHOICES)
     YES = 'YES'
     NO = 'NO'
     DEBATIBLE = 'DEBATIBLE'
-
     FAIL_CHOICES = (
         (YES, ('YES')),
         (NO, ('NO')),
         (DEBATIBLE, ('DEBATIBLE')),
-        )
-    
+        )  
     comment_can = models.CharField(max_length=500, blank=True, null=True, verbose_name="COMMENT")
     date_can = models.DateField(null=True, blank=True, verbose_name="DATE")
     fail_can = models.CharField(max_length=50, choices=FAIL_CHOICES, blank=True, null=True, verbose_name="DO WE FAIL?")
