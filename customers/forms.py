@@ -73,41 +73,114 @@ class ClientForm(ModelForm):
             'id':"wop",
             'placeholder':"WOP",}),
 
-            'email' : EmailInput(attrs={
-                'class':"form-control",
-                'id':"email",
-                'placeholder' : "Email"
-                }
-            ),
 
-            'phone_number' : TextInput(attrs={
+
+            'c1_name' : TextInput(attrs={'class':"form-control",
+            'id':"c1_name",
+            'placeholder':"Full name",}),
+            
+            'c1_tel' : TextInput(attrs={
                 'class':"form-control",
-                'id':"phone_number",
+                'id':"c1_tel",
                 'placeholder' : "Phone Number"
                 }
             ),
-
-            'phone_2' : TextInput(attrs={
+            
+            'c1_tel2' : TextInput(attrs={
                 'class':"form-control",
-                'id':"phone_2",
-                'placeholder' : "Other Phone Number"
+                'id':"c1_tel2",
+                'placeholder' : "Phone 2"
                 }
             ),
 
-            'email_2' : EmailInput(attrs={
+
+            'c1_email' : EmailInput(attrs={
                 'class':"form-control",
-                'id':"email_2",
-                'placeholder' : "Other Email"
+                'id':"c1_email",
+                'placeholder' : "Email"
+                }
+            ),
+            
+            
+            'c1_email2' : EmailInput(attrs={
+                'class':"form-control",
+                'id':"c1_email2",
+                'placeholder' : "Email 2"
+                }
+            ),
+            
+            
+            
+            'c2_name' : TextInput(attrs={'class':"form-control",
+            'id':"c2_name",
+            'placeholder':"Full name",}),
+            
+            'c2_tel' : TextInput(attrs={
+                'class':"form-control",
+                'id':"c2_tel",
+                'placeholder' : "Phone Number"
+                }
+            ),
+            
+            'c2_tel2' : TextInput(attrs={
+                'class':"form-control",
+                'id':"c2_tel2",
+                'placeholder' : "Phone 2"
                 }
             ),
 
-            'email_admin' : EmailInput(attrs={
+
+            'c2_email' : EmailInput(attrs={
                 'class':"form-control",
-                'id':"email_admin",
-                'placeholder' : "Email Admin"
+                'id':"c2_email",
+                'placeholder' : "Email"
+                }
+            ),
+            
+            
+            'c2_email2' : EmailInput(attrs={
+                'class':"form-control",
+                'id':"c2_email2",
+                'placeholder' : "Email 2"
+                }
+            ),
+            
+            
+            'admin_name' : TextInput(attrs={'class':"form-control",
+            'id':"admin_name",
+            'placeholder':"Full name",}),
+            
+            'admin_tel' : TextInput(attrs={
+                'class':"form-control",
+                'id':"admin_tel",
+                'placeholder' : "Phone Number"
+                }
+            ),
+            
+            'admin_tel2' : TextInput(attrs={
+                'class':"form-control",
+                'id':"admin_tel2",
+                'placeholder' : "Phone 2"
                 }
             ),
 
+
+            'admin_email' : EmailInput(attrs={
+                'class':"form-control",
+                'id':"admin_email",
+                'placeholder' : "Email"
+                }
+            ),
+            
+            
+            'admin_email2' : EmailInput(attrs={
+                'class':"form-control",
+                'id':"admin_email2",
+                'placeholder' : "Email 2"
+                }
+            ),
+            
+            
             'landing_page' : URLInput(attrs={'class':"form-control",
             'id':"landing_page",
             'placeholder':"Landing Page",}),
@@ -160,38 +233,109 @@ class EditClientForm(ModelForm):
             'id':"wop",
             'placeholder':"WOP",}),
 
-            'email' : EmailInput(attrs={
+            
+            'c1_name' : TextInput(attrs={'class':"form-control",
+            'id':"c1_name",
+            'placeholder':"Full name",}),
+            
+            'c1_tel' : TextInput(attrs={
                 'class':"form-control",
-                'id':"email",
-                'placeholder' : "Email"
-                }
-            ),
-
-            'phone_number' : TextInput(attrs={
-                'class':"form-control",
-                'id':"phone_number",
+                'id':"c1_tel",
                 'placeholder' : "Phone Number"
                 }
             ),
-
-            'phone_2' : TextInput(attrs={
+            
+            'c1_tel2' : TextInput(attrs={
                 'class':"form-control",
-                'id':"phone_2",
-                'placeholder' : "Other Phone Number"
+                'id':"c1_tel2",
+                'placeholder' : "Phone 2"
                 }
             ),
 
-            'email_2' : EmailInput(attrs={
+
+            'c1_email' : EmailInput(attrs={
                 'class':"form-control",
-                'id':"email_2",
-                'placeholder' : "Other Email"
+                'id':"c1_email",
+                'placeholder' : "Email"
+                }
+            ),
+            
+            
+            'c1_email2' : EmailInput(attrs={
+                'class':"form-control",
+                'id':"c1_email2",
+                'placeholder' : "Email 2"
+                }
+            ),
+            
+            
+            
+            'c2_name' : TextInput(attrs={'class':"form-control",
+            'id':"c2_name",
+            'placeholder':"Full name",}),
+            
+            'c2_tel' : TextInput(attrs={
+                'class':"form-control",
+                'id':"c2_tel",
+                'placeholder' : "Phone Number"
+                }
+            ),
+            
+            'c2_tel2' : TextInput(attrs={
+                'class':"form-control",
+                'id':"c2_tel2",
+                'placeholder' : "Phone 2"
                 }
             ),
 
-            'email_admin' : EmailInput(attrs={
+
+            'c2_email' : EmailInput(attrs={
                 'class':"form-control",
-                'id':"email_admin",
-                'placeholder' : "Email Admin"
+                'id':"c2_email",
+                'placeholder' : "Email"
+                }
+            ),
+            
+            
+            'c2_email2' : EmailInput(attrs={
+                'class':"form-control",
+                'id':"c2_email2",
+                'placeholder' : "Email 2"
+                }
+            ),
+            
+            
+            'admin_name' : TextInput(attrs={'class':"form-control",
+            'id':"admin_name",
+            'placeholder':"Full name",}),
+            
+            'admin_tel' : TextInput(attrs={
+                'class':"form-control",
+                'id':"admin_tel",
+                'placeholder' : "Phone Number"
+                }
+            ),
+            
+            'admin_tel2' : TextInput(attrs={
+                'class':"form-control",
+                'id':"admin_tel2",
+                'placeholder' : "Phone 2"
+                }
+            ),
+
+
+            'admin_email' : EmailInput(attrs={
+                'class':"form-control",
+                'id':"admin_email",
+                'placeholder' : "Email"
+                }
+            ),
+            
+            
+            'admin_email2' : EmailInput(attrs={
+                'class':"form-control",
+                'id':"admin_email2",
+                'placeholder' : "Email 2"
                 }
             ),
 
