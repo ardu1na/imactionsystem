@@ -588,7 +588,8 @@ def clients(request):
             clients_rr.append(client.id)
     c_rr_total = len(clients_rr)
                         
-        
+    formula = total_rr/c_rr_total
+       
     addform=ClientForm()
     if request.method == 'GET':
         addform = ClientForm()
@@ -660,8 +661,14 @@ def clients(request):
         "total_rr_k":total_rr_k,
         'get_incomes_by_service' : get_incomes_by_service,
         'get_incomes_by_tier' : get_incomes_by_tier,
-        'seo' : s_seo,       
-
+        'seo' : s_seo/1000,       
+        'gads': s_gads/1000,
+        'fads' : s_fads/1000,
+        'lin' : s_lin/1000 ,
+        'cm' : s_cm/1000 ,
+        'combo' : s_combo/1000,
+        'web' : s_webp/1000,
+        'formula': formula/1000,
         "page_title":"RR ACCOUNTS",
     }
     return render(request,'dashboard/instructor/clients.html',context)
