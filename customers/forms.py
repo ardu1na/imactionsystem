@@ -1,5 +1,5 @@
 from django.forms import ModelForm, \
-TextInput, URLInput, EmailInput, Select, Textarea, forms, IntegerField
+TextInput, URLInput, EmailInput, Select, Textarea
 from customers.models import Client,  ConfTier
 
 
@@ -68,6 +68,10 @@ class ClientForm(ModelForm):
                 }
             ),
 
+            'wop' : Select(attrs={
+                'class':"form-select",
+            'id':"wop",
+            'placeholder':"WOP",}),
 
             'email' : EmailInput(attrs={
                 'class':"form-control",
@@ -151,6 +155,10 @@ class EditClientForm(ModelForm):
                 }
             ),
 
+            'wop' : Select(attrs={
+                'class':"form-select",
+            'id':"wop",
+            'placeholder':"WOP",}),
 
             'email' : EmailInput(attrs={
                 'class':"form-control",

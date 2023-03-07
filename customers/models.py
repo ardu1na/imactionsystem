@@ -22,7 +22,6 @@ class ConfTier(models.Model):
 
 
 class Client(models.Model):
-    #objects = ClientManager()
     GOOGLE_ADS='Google Ads'
     FACEBOOK_ADS='Facebook Ads'
     SEO='SEO'
@@ -52,6 +51,20 @@ class Client(models.Model):
     )
 
 
+    CASH='Cash'
+    CBU='CBU'
+    MP_IM='MP Imactions'
+    MP_P='MP Personal'
+    BANK_TRANSFER='Bank Transfer'
+
+    WOP_CHOICES=(
+        (CASH, ('Cash')),
+        (CBU, ('CBU')),
+        (MP_IM, ('MP Imactions')),
+        (MP_P, ('MP Personal')),
+        (BANK_TRANSFER, ('Bank Transfer')),
+    )
+
     name = models.CharField(max_length=30)
     business_name = models.CharField(max_length=30, blank=True, null=True)
     source = models.CharField(max_length=50, choices=CANAL_CHOICES, null=True, blank=True)
@@ -63,6 +76,7 @@ class Client(models.Model):
     phone_number = models.CharField(max_length=25, blank=True, null=True)
     phone_2 = models.CharField(max_length=25, blank=True, null=True)
     landing_page = models.URLField(blank=True, null=True)
+    wop = models.CharField(max_length=30, choices=WOP_CHOICES, null=True, blank=True, verbose_name='WOP')
     cancelled = models.CharField(default='Active', max_length=51, choices=CANCELLED_CHOICES)
 
     YES = 'YES'
