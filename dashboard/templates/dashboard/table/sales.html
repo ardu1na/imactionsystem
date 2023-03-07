@@ -22,66 +22,75 @@
                         <i class="fa fa-plus"></i></span>
                 </div> 
                     <div class="card-body">
-                        <div class="table-responsive">
-                            <table id="example4" class="display" style="min-width: 845px">
-                                <thead>
-                                    <tr>
-                                        <th>ACCOUNT</th>
-                                        <th>SERVICE</th>
-                                        <th>NOTES</th>
-                                        <th>TOTAL</th>
-                                        <th>KIND</th>
-                                        <th>STATUS $</th>
-                                        <th>DATE</th>
-                                        <th>COMMENTS</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for sale in sales %}
+                        <form action="{% url 'dashboard:deletesales' %}" method="POST">
+                            {% csrf_token %}
+                            <div class="table-responsive">
+                                <table id="example4" class="display" style="min-width: 845px">
+                                    <thead>
                                         <tr>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <a class="mb-0 fs-16 font-w500" href="{% url 'dashboard:editclient' id=sale.client.id %}">{{sale.client}}</a>
-                                                </div>
-                                            </td>
-                                            <td> <a class="mb-0 fs-16 font-w500" href="{% url 'dashboard:editsale' id=sale.id %}"> {{sale.service}} </a> </td>
-                                            <td>{{sale.note|default_if_none:"-"}}</td>
-                                            <td>$ {{sale.get_change}}</td>
-                                            <td>{{sale.kind|default_if_none:"-"}}</td>
-                                            {% if sale.status == "FC" %}
-                                                <td> <span class="badge light badge-danger">
-                                                    {{sale.status}}
-                                                </span> </td>
-                                            {% elif sale.status == "P" %}
-                                                <td> <span class="badge light badge-success">
-                                                    {{sale.status}}
-                                                </span> </td>
-                                            {% else %} 
-                                                <td> <span class="badge light badge-warning">
-                                                    {{sale.status|default_if_none:"?"}}
-                                                </span> </td>
-                                            {% endif %}
-
-                                            <td>{{sale.date|date:"m/d/Y"}}</td>
-                                            <td>{{sale.comments|default_if_none:"-"}}</td>                                    
-                                            <td>
-                                                <div class="d-flex flex-row">
-                                                        <!-- delete BUTTON -->
-                                                            <button type="button" class="shadow-sm btn btn-danger px-3 py-1 mx-1" data-bs-toggle="modal" data-bs-target="#deletesale{{sale.id}}">
-                                                            <i class="fa-solid fa-trash fs-7"></i>
-                                                            </button>                                                                                  
-                                                        <span><!-- edit BUTTON -->
-                                                        <a href="{% url 'dashboard:editsale' id=sale.id %}" class="shadow-sm btn btn-secondary px-3">
-                                                            <i class="fa-solid fa-pen-to-square"></i>
-                                                        </a>                     </span>                            
-                                                </div>                                        
-                                            </td>
+                                            <th></th>
+                                            <th>ACCOUNT</th>
+                                            <th>SERVICE</th>
+                                            <th>NOTES</th>
+                                            <th>TOTAL</th>
+                                            <th>KIND</th>
+                                            <th>STATUS $</th>
+                                            <th>DATE</th>
+                                            <th>COMMENTS</th>
+                                            <th></th>
                                         </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
+                                    </thead>
+                                    <tbody>
+                                        {% for sale in sales %}
+                                            <tr>
+                                                <td><input type="checkbox" name="selected_sales" value="{{ sale.id }}"></td>
+
+                                                <td>
+                                                    <div class="d-flex align-items-center">
+                                                        <a class="mb-0 fs-16 font-w500" href="{% url 'dashboard:editclient' id=sale.client.id %}">{{sale.client}}</a>
+                                                    </div>
+                                                </td>
+                                                <td> <a class="mb-0 fs-16 font-w500" href="{% url 'dashboard:editsale' id=sale.id %}"> {{sale.service}} </a> </td>
+                                                <td>{{sale.note|default_if_none:"-"}}</td>
+                                                <td>$ {{sale.get_change}}</td>
+                                                <td>{{sale.kind|default_if_none:"-"}}</td>
+                                                {% if sale.status == "FC" %}
+                                                    <td> <span class="badge light badge-danger">
+                                                        {{sale.status}}
+                                                    </span> </td>
+                                                {% elif sale.status == "P" %}
+                                                    <td> <span class="badge light badge-success">
+                                                        {{sale.status}}
+                                                    </span> </td>
+                                                {% else %} 
+                                                    <td> <span class="badge light badge-warning">
+                                                        {{sale.status|default_if_none:"?"}}
+                                                    </span> </td>
+                                                {% endif %}
+
+                                                <td>{{sale.date|date:"m/d/Y"}}</td>
+                                                <td>{{sale.comments|default_if_none:"-"}}</td>                                    
+                                                <td>
+                                                    <div class="d-flex flex-row">
+                                                            <!-- delete BUTTON -->
+                                                                <button type="button" class="shadow-sm btn btn-danger px-3 py-1 mx-1" data-bs-toggle="modal" data-bs-target="#deletesale{{sale.id}}">
+                                                                <i class="fa-solid fa-trash fs-7"></i>
+                                                                </button>                                                                                  
+                                                            <span><!-- edit BUTTON -->
+                                                            <a href="{% url 'dashboard:editsale' id=sale.id %}" class="shadow-sm btn btn-secondary px-3">
+                                                                <i class="fa-solid fa-pen-to-square"></i>
+                                                            </a>                     </span>                            
+                                                    </div>                                        
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="d-flex flex-row-reverse">
+                                <button type="submit" name="delete" class="btn btn-danger my-4">DELETE SELECTED<i class="fa-solid fa-trash fs-7 px-3"></i></button>
+                            </div>
+                        </form>  
                     </div>
                 </div>
             </div>

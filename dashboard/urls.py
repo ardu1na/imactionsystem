@@ -29,6 +29,9 @@ urlpatterns = [
     path('clients/deleteclient/<int:id>/', dashboard_views.deleteclient, name="deleteclient"),
     path('clients/editclient/<int:id>/', dashboard_views.editclient, name="editclient"),
     path('clients/addclientsale/<int:id>/', dashboard_views.addclientsale, name="addclientsale"),
+    path('clients/deleteclients/', dashboard_views.delete_clients, name="deleteclients"),
+
+
 
     path('allclients/', dashboard_views.allclients, name="allclients"),
     path('allclients/import/', dashboard_views.import_clients, name="importclients"),
@@ -41,6 +44,7 @@ urlpatterns = [
     path('sales/deletesale/<int:id>/', dashboard_views.deletesale, name="deletesale"),
     path('sales/editsale/<int:id>/', dashboard_views.editsale, name="editsale"),
     path('salesdata/',dashboard_views.salesdata, name="salesdata"),
+    path('sales/deletesales/', dashboard_views.delete_sales, name="deletesales"),
 
 
 

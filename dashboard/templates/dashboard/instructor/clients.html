@@ -38,67 +38,79 @@
         <div class="col-xl-12">            
             <div class="card students-list">
                 <div class="card-header border-0 flex-wrap pb-0 mb-5">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">ADD Client<span class="btn-icon-end">
+                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal">ADD Client<span class="btn-icon-end">
                         <i class="fa fa-plus"></i></span>
                 </div>                
                 <!-- TABLE CLIENTS -->
                 <div class="card-body py-0">
-                    <div class="table-responsive">
-                        <table id="example4" style="min-width: 845px">
-                            <thead>
-                                <tr>
-                                    <th>ACCOUNT</th>
-                                    <th>TIER</th>
-                                    <th>SEO</th>
-                                    <th>GADS</th>
-                                    <th>FADS</th>
-                                    <th>LinkedIn</th>
-                                    <th>CM</th>
-                                    <th>WP</th>
-                                    <th>COMBO</th>
-                                    <th>RR</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>{% if clients %}
-                                {% for client in clients %}
-                                {% if client.get_rr_client %}
-                                <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <a class="mb-0 fs-16 font-w500" href="{% url 'dashboard:editclient' id=client.id %}">{{client.name}}</a>
-                                        </div>
-                                    </td>
-                                    <td>{{client.tier}}</td>
-                                    <td>{{client.get_seo}}</td>
-                                    <td>{{client.get_gads}}</td>
-                                    <td>{{client.get_fads}}</td>
-                                    <td>{{client.get_lnkd}}</td>
-                                    <td>{{client.get_cm}}</td>
-                                    <td>{{client.get_wp}}</td>
-                                    <td>{{client.get_combo}}</td>
-                                    <td>{{client.rr}}</td>                                    
-                                    <td>
-                                        <div class="d-flex flex-row">
-                                            
-                                                <!-- delete BUTTON -->
-                                                    <button type="button" class="shadow-sm btn btn-danger px-3 mx-1" data-bs-toggle="modal" data-bs-target="#deleteclient{{client.id}}">
-                                                    <i class="fa-solid fa-trash fs-7"></i>
-                                                    </button>                                                                                  
-                                                <!-- edit BUTTON -->
-                                                    <a href="{% url 'dashboard:editclient' id=client.id %}" class="px-3 shadow-sm btn btn-secondary mx-1">
-                                                        <i class="fa-solid fa-pen-to-square "></i>
-                                                    </a>                                                
-                                        </div>                                        
-                                    </td>f
-                                </tr>
-                                {% endif %}
-                                {% endfor %}
-                                {%endif%}
-                            </tbody>
-                        </table>
-                    </div>
+                    <form action="{% url 'dashboard:deleteclients' %}" method="POST">
+                        {% csrf_token %}
+                            <div class="table-responsive">
+                                <table id="example4" style="min-width: 845px">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>ACCOUNT</th>
+                                            <th>TIER</th>
+                                            <th>SEO</th>
+                                            <th>GADS</th>
+                                            <th>FADS</th>
+                                            <th>LinkedIn</th>
+                                            <th>CM</th>
+                                            <th>WP</th>
+                                            <th>COMBO</th>
+                                            <th>RR</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>{% if clients %}
+                                        {% for client in clients %}
+                                        {% if client.get_rr_client %}
+                                        <tr>
+                                                <td><input type="checkbox" name="selected_clients" value="{{ client.id }}"></td>
+
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <a class="mb-0 fs-16 font-w500" href="{% url 'dashboard:editclient' id=client.id %}">{{client.name}}</a>
+                                                </div>
+                                            </td>
+                                            <td>{{client.tier}}</td>
+                                            <td>{{client.get_seo}}</td>
+                                            <td>{{client.get_gads}}</td>
+                                            <td>{{client.get_fads}}</td>
+                                            <td>{{client.get_lnkd}}</td>
+                                            <td>{{client.get_cm}}</td>
+                                            <td>{{client.get_wp}}</td>
+                                            <td>{{client.get_combo}}</td>
+                                            <td>{{client.rr}}</td>                                    
+                                            <td>
+                                                <div class="d-flex flex-row">
+                                                    
+                                                        <!-- delete BUTTON -->
+                                                            <button type="button" class="shadow-sm btn btn-danger px-3 mx-1" data-bs-toggle="modal" data-bs-target="#deleteclient{{client.id}}">
+                                                            <i class="fa-solid fa-trash fs-7"></i>
+                                                            </button>                                                                                  
+                                                        <!-- edit BUTTON -->
+                                                            <a href="{% url 'dashboard:editclient' id=client.id %}" class="px-3 shadow-sm btn btn-secondary mx-1">
+                                                                <i class="fa-solid fa-pen-to-square "></i>
+                                                            </a>                                                
+                                                </div>                                        
+                                            </td>f
+                                        </tr>
+                                        {% endif %}
+                                        {% endfor %}
+                                        {%endif%}
+                                    </tbody>
+                                </table>
+
+                                <div class="d-flex flex-row-reverse">
+                                    <button type="submit" name="delete" class="btn btn-danger my-4">DELETE SELECTED<i class="fa-solid fa-trash fs-7 px-3"></i></button>
+                                </div>  
+                            </div>
+                    </form>
+
                 </div>
+
             </div>
         </div>
     </div>
