@@ -44,6 +44,7 @@ urlpatterns = [
     path('sales/deletesale/<int:id>/', dashboard_views.deletesale, name="deletesale"),
     path('sales/editsale/<int:id>/', dashboard_views.editsale, name="editsale"),
     path('salesdata/',dashboard_views.salesdata, name="salesdata"),
+    path('sales/deletesales/', dashboard_views.delete_sales, name="deletesales"),
 
 
 

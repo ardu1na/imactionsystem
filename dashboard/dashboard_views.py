@@ -742,7 +742,14 @@ def delete_clients(request):
     else:
         return HttpResponseBadRequest('Invalid request')
 
-
+@login_required(login_url='dashboard:login')
+def delete_sales(request):
+    if request.method == 'POST' and 'delete' in request.POST:
+        selected_ids = request.POST.getlist('selected_sales')
+        Sale.objects.filter(id__in=selected_ids).delete()
+        return redirect('dashboard:sales')
+    else:
+        return HttpResponseBadRequest('Invalid request')
 
 
 @login_required(login_url='dashboard:login')
