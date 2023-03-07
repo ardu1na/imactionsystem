@@ -750,6 +750,16 @@ def delete_sales(request):
         return redirect('dashboard:sales')
     else:
         return HttpResponseBadRequest('Invalid request')
+    
+    
+@login_required(login_url='dashboard:login')
+def delete_expenses(request):
+    if request.method == 'POST' and 'delete' in request.POST:
+        selected_ids = request.POST.getlist('selected_expenses')
+        Expense.objects.filter(id__in=selected_ids).delete()
+        return redirect('dashboard:expenses')
+    else:
+        return HttpResponseBadRequest('Invalid request')    
 
 
 @login_required(login_url='dashboard:login')

@@ -95,139 +95,157 @@
                         <i class="fa fa-plus"></i></span>
                 </div> 
                     <div class="card-body">
-                        <div class="table-responsive">
-                            <table id="example4" class="display" style="min-width: 845px">
-                                <thead>
-                                    <tr>
-                                        <th>CATEGORY</th>
-                                        <th>CONCEPT</th>
-                                        <th>VALUE</th>
-                                        <th>WOP</th>
-                                        <th>DATE</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% if expenses %}
-                                    {% for expense in expenses %}
+                        <form action="{% url 'dashboard:deleteexpenses' %}" method="POST">
+                            {% csrf_token %}
+
+                            <div class="table-responsive">
+                                <table id="example4" class="display" style="min-width: 845px">
+                                    <thead>
                                         <tr>
+                                            <th></th>
+                                            <th>CATEGORY</th>
+                                            <th>CONCEPT</th>
+                                            <th>VALUE</th>
+                                            <th>WOP</th>
+                                            <th>DATE</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% if expenses %}
+                                        {% for expense in expenses %}
+                                            <tr>
+                                                <td><input type="checkbox" name="selected_expenses" value="{{ expense.id }}"></td>
+                                                <td>
+                                                    <a class="mb-0 fs-16 font-w500" href="{% url 'dashboard:editexpense' id=expense.id %}">{{expense.category}}</a>
+                                                </td>
+                                                <td> {{expense.concept}} </td>
+                                                <td>${{expense.value}}</td>
+                                                <td>{{expense.wop}}</td>   
+                                                <td>{{expense.date}}</td>   
+                
+                                                <td>
+                                                    <div class="d-flex flex-row">
+                                                        
+                                                            <!-- delete BUTTON -->
+                                                                <button type="button" class="shadow-sm btn btn-danger px-3 mx-1" data-bs-toggle="modal" data-bs-target="#deleteexpense{{expense.id}}">
+                                                                <i class="fa-solid fa-trash fs-7 "></i>
+                                                                </button>                                                                                  
+                                                            <!-- edit BUTTON -->
+                                                            <a href="{% url 'dashboard:editexpense' id=expense.id %}" class="px-3 shadow-sm btn btn-secondary mx-1">
+                                                                <i class="fa-solid fa-pen-to-square "></i>
+                                                            </a>                                                 
+                                                    </div>                                        
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                        {% endif %}
+
+                                        {% if employees %}
+                                            {% for employee in employees %}
+                                                {% if employee.rol == "Staff" %}
+                                                    <tr>
+                                                        <td> - </td>   
+
+                                                        <td>
+                                                            <div class="d-flex align-items-center">
+                                                                <a class="mb-0 fs-16 font-w500" href="{% url 'dashboard:editemployee' id=employee.id %}">Wages</a>
+                                                            </div>
+                                                        </td>
+                                                        <td> {{employee.name}} </td>
+                                                        <td>${{employee.white}}</td>
+                                                        <td>Bank Transfer</td>    
+                                                        <td> - </td>   
+                            
+                                                        <td>
+                                                            <div class="d-flex flex-row">
+                                                                                                                                                                                                            
+                                                                    <!-- edit BUTTON -->
+                                                                    <a href="{% url 'dashboard:editemployee' id=employee.id %}" class="shadow-sm btn btn-secondary mx-1 px-3">
+                                                                        <i class="fa-solid fa-pen-to-square"></i>
+                                                                    </a>                                                 
+                                                            </div>                                        
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td> - </td>   
+
+                                                        <td>
+                                                            <div class="d-flex align-items-center">
+                                                                <a class="mb-0 fs-16 font-w500" href="{% url 'dashboard:editemployee' id=employee.id %}">WAGES/Nigga</a>
+                                                            </div>
+                                                        </td>
+                                                        <td> {{employee.name}} </td>
+                                                        <td>${{employee.nigga}}</td>
+                                                        <td>Cash</td>     
+                                                        <td> - </td>   
+                            
+                                                        <td>
+                                                            <div class="d-flex flex-row">
+                                                                
+                                                                                                                                                    
+                                                                    <!-- edit BUTTON -->
+                                                                    <a href="{% url 'dashboard:editemployee' id=employee.id %}" class="shadow-sm btn btn-secondary mx-1 px-3">
+                                                                        <i class="fa-solid fa-pen-to-square"></i>
+                                                                    </a>                                                 
+                                                            </div>                                         
+                                                        </td>
+                                                    </tr>
+                                                {% endif %}
+                                                {% if employee.rol == "CEO" %}
+                                                    <tr>
+                                                        <td> - </td>   
+
+
+                                                        <td>
+                                                            <div class="d-flex align-items-center">
+                                                                <a class="mb-0 fs-16 font-w500" href="{% url 'dashboard:editemployee' id=employee.id %}">Wages</a>
+                                                            </div>
+                                                        </td>
+                                                        <td> {{employee.name}} </td>
+                                                        <td>${{employee.get_wage_ceo}}</td>
+                                                        <td>Various</td>  
+                                                        <td> - </td>   
+                        
+                                                        <td>
+                                                            <div class="d-flex flex-row">
+                                                                                                                                                    
+                                                                    <!-- edit BUTTON -->
+                                                                    <a href="{% url 'dashboard:editemployee' id=employee.id %}" class="shadow-sm btn btn-secondary mx-1 px-3">
+                                                                        <i class="fa-solid fa-pen-to-square"></i>
+                                                                    </a>                                                 
+                                                            </div>                                        
+                                                        </td>
+                                                    </tr>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endif %}
+                                        <tr>
+                                            <td> - </td>   
+
                                             <td>
                                                 <div class="d-flex align-items-center">
-                                                    <a class="mb-0 fs-16 font-w500" href="{% url 'dashboard:editexpense' id=expense.id %}">{{expense.category}}</a>
+                                                    <a class="mb-0 fs-16 font-w500">Wages/BONUS</a>
                                                 </div>
                                             </td>
-                                            <td> {{expense.concept}} </td>
-                                            <td>${{expense.value}}</td>
-                                            <td>{{expense.wop}}</td>   
-                                            <td>{{expense.date}}</td>   
-            
+                                            <td> MONTHLY BONUS </td>
+                                            <td>${{all_bonus|floatformat:2}}</td>
+                                            <td>Various</td>    
+                                            <td> - </td>   
+                            
                                             <td>
-                                                <div class="d-flex flex-row">
-                                                    
-                                                        <!-- delete BUTTON -->
-                                                            <button type="button" class="shadow-sm btn btn-danger px-3 mx-1" data-bs-toggle="modal" data-bs-target="#deleteexpense{{expense.id}}">
-                                                            <i class="fa-solid fa-trash fs-7 "></i>
-                                                            </button>                                                                                  
-                                                        <!-- edit BUTTON -->
-                                                        <a href="{% url 'dashboard:editexpense' id=expense.id %}" class="px-3 shadow-sm btn btn-secondary mx-1">
-                                                            <i class="fa-solid fa-pen-to-square "></i>
-                                                        </a>                                                 
-                                                </div>                                        
+                                                                                
                                             </td>
                                         </tr>
-                                    {% endfor %}
-                                    {% endif %}
+                                    </tbody>
+                                </table>
+                            </div>
 
-                                    {% if employees %}
-                                        {% for employee in employees %}
-                                            {% if employee.rol == "Staff" %}
-                                                <tr>
-                                                    <td>
-                                                        <div class="d-flex align-items-center">
-                                                            <a class="mb-0 fs-16 font-w500" href="{% url 'dashboard:editemployee' id=employee.id %}">Wages</a>
-                                                        </div>
-                                                    </td>
-                                                    <td> {{employee.name}} </td>
-                                                    <td>${{employee.white}}</td>
-                                                    <td>Bank Transfer</td>    
-                                                    <td> - </td>   
-                          
-                                                    <td>
-                                                        <div class="d-flex flex-row">
-                                                                                                                                                                                                           
-                                                                <!-- edit BUTTON -->
-                                                                <a href="{% url 'dashboard:editemployee' id=employee.id %}" class="shadow-sm btn btn-secondary mx-1 px-3">
-                                                                    <i class="fa-solid fa-pen-to-square"></i>
-                                                                </a>                                                 
-                                                        </div>                                        
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <div class="d-flex align-items-center">
-                                                            <a class="mb-0 fs-16 font-w500" href="{% url 'dashboard:editemployee' id=employee.id %}">WAGES/Nigga</a>
-                                                        </div>
-                                                    </td>
-                                                    <td> {{employee.name}} </td>
-                                                    <td>${{employee.nigga}}</td>
-                                                    <td>Cash</td>     
-                                                    <td> - </td>   
-                         
-                                                    <td>
-                                                        <div class="d-flex flex-row">
-                                                            
-                                                                                                                                                
-                                                                <!-- edit BUTTON -->
-                                                                <a href="{% url 'dashboard:editemployee' id=employee.id %}" class="shadow-sm btn btn-secondary mx-1 px-3">
-                                                                    <i class="fa-solid fa-pen-to-square"></i>
-                                                                </a>                                                 
-                                                        </div>                                         
-                                                    </td>
-                                                </tr>
-                                            {% endif %}
-                                            {% if employee.rol == "CEO" %}
-                                                <tr>
-                                                    <td>
-                                                        <div class="d-flex align-items-center">
-                                                            <a class="mb-0 fs-16 font-w500" href="{% url 'dashboard:editemployee' id=employee.id %}">Wages</a>
-                                                        </div>
-                                                    </td>
-                                                    <td> {{employee.name}} </td>
-                                                    <td>${{employee.get_wage_ceo}}</td>
-                                                    <td>Various</td>  
-                                                    <td> - </td>   
-                     
-                                                    <td>
-                                                        <div class="d-flex flex-row">
-                                                                                                                                                
-                                                                <!-- edit BUTTON -->
-                                                                <a href="{% url 'dashboard:editemployee' id=employee.id %}" class="shadow-sm btn btn-secondary mx-1 px-3">
-                                                                    <i class="fa-solid fa-pen-to-square"></i>
-                                                                </a>                                                 
-                                                        </div>                                        
-                                                    </td>
-                                                </tr>
-                                            {% endif %}
-                                        {% endfor %}
-                                    {% endif %}
-                                    <tr>
-                                        <td>
-                                            <div class="d-flex align-items-center">
-                                                <a class="mb-0 fs-16 font-w500">Wages/BONUS</a>
-                                            </div>
-                                        </td>
-                                        <td> MONTHLY BONUS </td>
-                                        <td>${{all_bonus|floatformat:2}}</td>
-                                        <td>Various</td>    
-                                        <td> - </td>   
-                          
-                                        <td>
-                                                                               
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <div class="d-flex flex-row-reverse">
+                            <button type="submit" name="delete" class="btn btn-danger my-4">DELETE SELECTED<i class="fa-solid fa-trash fs-7 px-3"></i></button>
                         </div>
+                    </form>  
+
                     </div>
                 </div>
             </div>
