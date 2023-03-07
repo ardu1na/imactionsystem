@@ -666,47 +666,6 @@ def clients(request):
     return render(request,'dashboard/instructor/clients.html',context)
 
 
-@login_required(login_url='dashboard:login')
-def allclients(request):
-    clients = Client.objects.all()
-    
-    clients_rr = []
-    for client in clients.filter(cancelled="Active"):
-        if client.get_rr_client == True:
-            clients_rr.append(client.id)
-    c_rr_total = len(clients_rr)
-
-    total_rr = 0
-    for client in clients:
-        if client.cancelled == "Active":
-            for sale in client.sales.all():
-                if sale.cancelled == "Active":
-                    if sale.revenue == "RR":
-                        total_rr += sale.get_change
-                        
-        
-    addform=ClientForm()
-    if request.method == 'GET':
-        addform = ClientForm()
-    if request.method == 'POST':
-        if "addclient" in request.POST:
-            addform = ClientForm(request.POST)
-            if addform.is_valid():
-                newclient = addform.save()
-                return redirect('dashboard:editclient', id=newclient.id)
-            else:
-                return HttpResponse("hacked from las except else form")      
-    
-    context={
-        "total_rr": total_rr,
-        "clients" : clients,
-        "addform": addform,
-        "c_rr_total" : c_rr_total,
-        "page_title":"All Clients"
-    }
-
-    return render(request,'dashboard/instructor/allclients.html',context)
-
 
 
 @login_required(login_url='dashboard:login')
