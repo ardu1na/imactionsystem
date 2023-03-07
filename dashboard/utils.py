@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.core.mail import EmailMessage
 from tablib import Dataset
 
-from dashboard.resources import SaleResource, ClientResource, BankResource,\
+from dashboard.resources import SaleResource, ClientResource, \
     EmployeeResource, ExpenseResource
 
 def export_sales():
@@ -46,24 +46,6 @@ def export_clients():
     email.send()
     
     
-    
-def export_bank ():
-    bank_resource = BankResource()
-    data = bank_resource.export()
-    current_date = datetime.now().strftime('%Y-%m-%d')
-    filename = f"bankdata_{current_date}.xlsx"
-    response = HttpResponse(data.xlsx, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = f'attachment; filename="{filename}"'
-
-    email_subject = 'banck accounts backup'
-    email_body = 'Please find attached the latest backaccounts data.'
-    email = EmailMessage(
-        subject=email_subject,
-        body=email_body,
-        to=["hola@imactions.com"]
-    )
-    email.attach(filename, response.getvalue(), 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    email.send()
     
 
 def export_employees ():

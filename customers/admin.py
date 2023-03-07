@@ -1,11 +1,11 @@
 from django.contrib import admin
 from unfold.admin import ModelAdmin
 from sales.models import Sale
-from customers.models import  BankData, AbstractClient, ConfTier, BackUps
+from customers.models import   AbstractClient, ConfTier, BackUps
 
 from import_export.admin import ImportExportModelAdmin
 
-from dashboard.resources import ClientResource, BankResource
+from dashboard.resources import ClientResource
 
 admin.site.site_header = 'IMACTIONS'
 admin.site.index_title = 'Home'
@@ -36,17 +36,10 @@ class SaleInstanceInline(admin.TabularInline):
         verbose_name= "SALE"
 
 
-class BankDataInstanceInline(admin.StackedInline):
-    model = BankData
-    extra = 0
-    class Meta:
-        verbose_name_plural = "BANK DATA"
-        verbose_name= "BANK DATA"
-
 class ClientAdmin(ModelAdmin, ImportExportModelAdmin):
     resource_class = ClientResource
  
-    inlines = [SaleInstanceInline, BankDataInstanceInline]
+    inlines = [SaleInstanceInline]
     list_display = ('tier', "name", 'get_seo', "get_gads", "get_fads", "get_lnkd", "get_cm", "get_wp", 'get_combo', 'rr')
     search_fields = ("name", "business_name")
     date_hierarchy = 'date'
@@ -171,8 +164,3 @@ admin.site.register(AbstractClient, ClientAdmin)
 
 
 admin.site.register(ConfTier)
-
-class BankAdmin (ModelAdmin, ImportExportModelAdmin):
-    resource_class = BankResource
-
-admin.site.register(BankData, BankAdmin)
