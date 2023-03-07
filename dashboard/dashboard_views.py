@@ -659,7 +659,8 @@ def clients(request):
         "c_rr_total":c_rr_total,
         "total_rr_k":total_rr_k,
         'get_incomes_by_service' : get_incomes_by_service,
-        'get_incomes_by_tier' : get_incomes_by_tier,       
+        'get_incomes_by_tier' : get_incomes_by_tier,
+        'seo' : s_seo,       
 
         "page_title":"RR ACCOUNTS",
     }
