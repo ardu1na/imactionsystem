@@ -6,16 +6,12 @@
             
             <hr>
 
-
-            <li><a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
-                    <i class="bi bi-people"></i> 
-                    <span class="nav-text">CLIENTS</span></a>
-                    <ul aria-expanded="false">
-                        <li><a href="{% url 'dashboard:clients' %}">RR ACCOUNTS</a></li>
-                        <li><a href="{% url 'dashboard:allclients' %}">ALL</a></li>
-                    </ul>
+            <li><a href="{% url 'dashboard:clients' %}">
+                <i class="bi bi-people"></i> 
+                <span class="nav-text">CLIENTS</span></a>
             </li>
 
+           
             <li><a href="{% url 'dashboard:sales' %}">
                 <i class="bi bi-file-earmark-spreadsheet"></i>
                 <span class="nav-text">SALES</span></a>

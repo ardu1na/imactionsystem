@@ -34,10 +34,6 @@ urlpatterns = [
 
 
 
-    path('allclients/', dashboard_views.allclients, name="allclients"),
-    path('allclients/import/', dashboard_views.import_clients, name="importclients"),
-    path('allclients/export/', dashboard_views.backup_clients, name="exportclients"),
-
 
     path('cancellations/', dashboard_views.cancellations, name="cancellations"),
 
