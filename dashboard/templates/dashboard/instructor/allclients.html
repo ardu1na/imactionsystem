@@ -7,37 +7,6 @@ z{% extends 'dashboard/elements/layouts/admin.html' %}
 
 {% block content %}
 
-<!-- ALERTS -->
-    <!-- ADDCLIENT CONFIRMATION -->
-    <div class="my-3">
-        {% if 'added' in request.GET %}
-        <div class="alert alert-info alert-dismissible fade show" role="alert">
-            ☑ Client added successfully!
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        {% endif %}
-    </div>
-    <!-- editCLIENT CONFIRMATION -->
-    <div class="my-3">
-        {% if 'ok' in request.GET %}
-        <div class="alert alert-info alert-dismissible fade show" role="alert">
-            ☑ Client changed successfully!
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        {% endif %}
-    </div>
-    <!-- DELETECLIENT CONFIRMATION -->
-    <div class="my-3">
-        {% if 'deleted' in request.GET %}
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <i class="fa-regular fa-circle-xmark me-2"></i> Client deleted!
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        {% endif %}
-    </div>
-<!-- END ALERTS -->
-
-
 
 <!-- GRAPHS -->
 <div class="row">
