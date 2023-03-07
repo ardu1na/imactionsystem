@@ -1143,6 +1143,8 @@ def index(request):
         export_bank()
         export_employees()
         export_expenses()
+        last_backup.date = today
+        last_backup.save()
     else:
         print("don't need to back up, allready updated")
         
