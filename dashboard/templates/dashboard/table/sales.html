@@ -41,7 +41,7 @@
                 <div class="widget-stat card">
                     <div class="card-body  p-4">
                         <div class="media ai-icon">
-                            <span class="me-3 bgl-light text-ligth">
+                            <span class="me-3 bgl-info text-info">
                                 <svg id="icon-revenue" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-dollar-sign">
                                     <line x1="12" y1="1" x2="12" y2="23"></line>
                                     <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
@@ -61,7 +61,7 @@
                 <div class="widget-stat card">
                     <div class="card-body p-4">
                         <div class="media ai-icon">
-                            <span class="me-3 bgl-dark text-dark">
+                            <span class="me-3 bgl-primary text-primary">
                                 <svg id="icon-customers" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user">
                                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                                     <circle cx="12" cy="7" r="4"></circle>
@@ -112,15 +112,29 @@
                 <div class="widget-stat card">
                     <div class="card-body p-4">
                         <div class="media ai-icon">
-                            <span class="me-3 bgl-primary text-primary">
+                            <span class="me-3 bgl-success text-success">
                                 <svg id="icon-revenue" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-dollar-sign">
                                     <line x1="12" y1="1" x2="12" y2="23"></line>
                                     <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
                                 </svg>
                             </span>
                             <div class="media-body">
-                                <p class="mb-1">Sales this month by service </p>
-                                <h4 class="mb-0">here dropdown</h4>
+                                <p class="mb-1"> {{this_month|capfirst}} sales of  
+                                    <div class="basic-dropdown">
+                                        <div class="dropdown">
+                                            <button type="button" class="btn btn-outline-light dropdown-toggle fs-4 px-2 py-1 btn-sm" data-bs-toggle="dropdown">
+                                                service
+                                            </button>
+                                            <div class="dropdown-menu" id="dropdown-menu">
+                                                {% for service in services %}
+                                                <a class="dropdown-item" id="{{service|cut:" "|lower}}" onclick="updateTotal('{{service}}')">{{service}}</a>
+
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </p>
+                                <h4 class="mb-0" id="total-amount">0</h4> 
                             </div>
                         </div>
                     </div>
@@ -309,8 +323,72 @@
 {% endblock %}
 
 {% block additional_js %}
+ <!-- dropdown sales by service -->
+<script>
+    $(document).ready(function() {
+        $('.basic-dropdown .dropdown-menu a').click(function() {
+            var selected = $(this).text();
+            $(this).parents('.basic-dropdown').find('.dropdown-toggle').html(selected);
+        });
+    });
+</script>
+   
+<script>
+    function updateTotal(selectedService) {
+        // Get a reference to the total amount element
+        var totalamount = document.getElementById('total-amount');
+
+        // Update the total amount with the selected service's total sales
+        switch(selectedService) {
+            case 'SEO':
+                totalamount.textContent = "{{total_seo}}";
+                break;
+            case 'Google Ads':
+                totalamount.textContent = "{{total_googleads}}";
+                break;
+            case 'Facebook Ads':
+                totalamount.textContent = "{{total_facebookads}}";
+                break;
+            case 'LinkedIn':
+                totalamount.textContent = "{{total_linkedin}}";
+                break;
+            case 'Community Management':
+                totalamount.textContent = "{{total_communitymanagement}}";
+                break;
+            case 'COMBO':
+                totalamount.textContent = "{{total_combo}}";
+                break;
+            case 'Web Plan':
+                totalamount.textContent = "{{total_webplan}}";
+                break;
+            case 'Other RR':
+                totalamount.textContent = "{{total_otherrr}}";
+                break;
+            case 'Web Design':
+                totalamount.textContent = "{{total_webdesign}}";
+                break;
+            case 'Hosting':
+                totalamount.textContent = "{{total_hosting}}";
+                break;
+            case 'SSL certificate':
+                totalamount.textContent = "{{total_sslcertificate}}";
+                break;
+            case 'Email Marketing':
+                totalamount.textContent = "{{total_emailmarketing}}";
+                break;
+            case 'Other':
+                totalamount.textContent = "{{total_other}}";
+                break;
+            default:
+                totalamount.textContent = "0";
+                break;
+        }
+    }
+</script>
+
  <!-- NEWMODALS -->
  <script>
+    
     const addsale = new bootstrap.Modal('#addsale',   {keyboard: true}    )
 </script>
 <script>

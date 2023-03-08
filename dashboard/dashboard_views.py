@@ -441,6 +441,7 @@ def deleteemployee(request, id):
 @login_required(login_url='dashboard:login')
 def sales(request):
     
+    services = ['SEO','Google Ads','Facebook Ads','Web Design', 'Hosting', 'LinkedIn', 'SSL certificate','Web Plan','COMBO', 'Community Management', 'Email Marketing', 'Other', 'Other RR']
     today = date.today()
     this_month = date.today().month
     month_name = date(1900, this_month, 1).strftime('%B')
@@ -486,7 +487,52 @@ def sales(request):
     
 
     
+    sales_by_service =Sale.objects.filter(cancelled="Active", date__month=today.month)
 
+    s_seo = 0
+    s_gads= 0
+    s_fads= 0
+    s_lin= 0
+    s_cm = 0
+    s_combo = 0
+    s_webp = 0
+    s_other = 0
+    s_web = 0
+    s_hos = 0
+    s_ssl = 0
+    s_em = 0
+    s_other1 = 0
+    
+
+    for sale in sales_by_service:
+        if sale.service == "SEO":
+            s_seo += sale.get_change
+        elif sale.service == "Google Ads":
+            s_gads += sale.get_change
+        elif sale.service == "Facebook Ads":
+            s_fads += sale.get_change
+        elif sale.service == "LinkedIn":
+            s_lin  += sale.get_change
+        elif sale.service == "Community Management":
+            s_cm  += sale.get_change
+        elif sale.service == "COMBO":
+            s_combo  += sale.get_change
+        elif sale.service == "Web Plan":
+            s_webp += sale.get_change
+        elif sale.service == "Other RR":
+            s_other += sale.get_change
+        elif sale.service == "Web Design":
+            s_web += sale.get_change
+        elif sale.service == "Hosting":
+            s_hos += sale.get_change
+        elif sale.service == "SSL certificate":
+            s_ssl += sale.get_change
+        elif sale.service == "Email Marketing":
+            s_em += sale.get_change
+        elif sale.service == "Other":
+            s_other1 += sale.get_change
+            
+        else: pass
 
                 
     context={
@@ -498,12 +544,23 @@ def sales(request):
         "this_month": month_name,
         'upsell': total_upsell_this_month,
         'cross': total_crosssell_this_month,
-
-        "addform" : addform
+        'services': services,
+        "addform" : addform,
+        "total_seo" : '{:,.0f}'.format(s_seo),
+        "total_googleads" : '{:,.0f}'.format(s_gads),
+        "total_facebookads" : '{:,.0f}'.format(s_fads),
+        "total_linkedin" : '{:,.0f}'.format(s_lin),
+        "total_communitymanagement" : '{:,.0f}'.format(s_cm),
+        "total_combo" :'{:,.0f}'.format(s_combo),
+        "total_webplan" :'{:,.0f}'.format(s_webp), 
+        "total_otherrr" : '{:,.0f}'.format(s_other),
+        "total_webdesign" :'{:,.0f}'.format(s_web),
+        "total_hosting":'{:,.0f}'.format(s_hos),
+        "total_sslcertificate": '{:,.0f}'.format(s_ssl),
+        "total_emailmarketing" :'{:,.0f}'.format(s_em),
+        "total_other" : '{:,.0f}'.format(s_other1)
     }
     return render(request,'dashboard/table/sales.html',context)
-
-
 
 @login_required(login_url='dashboard:login')
 def salesdata(request):
