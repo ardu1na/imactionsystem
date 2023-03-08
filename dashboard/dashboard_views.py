@@ -104,7 +104,7 @@ def conf(request):
     
     if request.method == 'POST':
         form = TierConf(request.POST, instance=tier)
-        
+        print(form.errors)
         if form.is_valid():
             tier = form.save()
                       
