@@ -462,6 +462,10 @@ def sales(request):
     clients_this_month = Client.objects.filter(date__month=today.month, cancelled="Active")
     total_clients = clients_this_month.count()
     
+    
+    upsell_this_month = Sale.objects.filter(date__month=today.month, kind="Upsell", cancelled="Active")
+    total_upsell_this_month = upsell_this_month.count()
+    
     sales = Sale.objects.all()
     
     if request.method == 'GET':
@@ -489,6 +493,7 @@ def sales(request):
         "sales1_this_month" : get_total1_format,
         "clients_this_month" : total_clients,
         "this_month": month_name,
+        'upsell': total_upsell_this_month,
 
         "addform" : addform
     }
