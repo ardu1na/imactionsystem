@@ -442,6 +442,9 @@ def deleteemployee(request, id):
 def sales(request):
     
     today = date.today()
+    this_month = date.today().month
+    month_name = date(1900, this_month, 1).strftime('%B')
+
     sales = Sale.objects.all()
     
     if request.method == 'GET':
@@ -477,6 +480,7 @@ def sales(request):
         "sales" : sales,
         "sales_this_month" : get_total_format,
         "sales1_this_month" : get_total1_format,
+        "this_month": month_name,
 
         "addform" : addform
     }
