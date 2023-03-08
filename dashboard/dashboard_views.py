@@ -444,7 +444,24 @@ def sales(request):
     today = date.today()
     this_month = date.today().month
     month_name = date(1900, this_month, 1).strftime('%B')
+    
+    sales_this_month = Sale.objects.filter(date__month=today.month, revenue="RR", cancelled="Active")
+    total_amount = sales_this_month.aggregate(Sum('change'))['change__sum']
+    def get_total_format():
+        try:
+            return '{:,.0f}'.format(total_amount)
+        except: return 0
 
+    sales1_this_month = Sale.objects.filter(date__month=today.month, revenue="OneOff", cancelled="Active")
+    total1_amount = sales1_this_month.aggregate(Sum('change'))['change__sum']
+    def get_total1_format():
+        try:
+            return '{:,.0f}'.format(total1_amount)
+        except: return 0
+        
+    clients_this_month = Client.objects.filter(date__month=today.month, cancelled="Active")
+    total_clients = clients_this_month.count()
+    
     sales = Sale.objects.all()
     
     if request.method == 'GET':
@@ -461,17 +478,7 @@ def sales(request):
                 return HttpResponse("hacked from las except else form")
     
 
-    sales_this_month = Sale.objects.filter(date__month=today.month, revenue="RR", cancelled="Active")
-    total_amount = sales_this_month.aggregate(Sum('change'))['change__sum']
-    def get_total_format():
-        return '{:,.0f}'.format(total_amount)
     
-    sales1_this_month = Sale.objects.filter(date__month=today.month, revenue="OneOff", cancelled="Active")
-    total1_amount = sales1_this_month.aggregate(Sum('change'))['change__sum']
-    def get_total1_format():
-        try:
-            return '{:,.0f}'.format(total1_amount)
-        except: return 0
 
 
                 
@@ -480,6 +487,7 @@ def sales(request):
         "sales" : sales,
         "sales_this_month" : get_total_format,
         "sales1_this_month" : get_total1_format,
+        "clients_this_month" : total_clients,
         "this_month": month_name,
 
         "addform" : addform
