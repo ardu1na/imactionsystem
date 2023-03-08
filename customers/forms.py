@@ -7,7 +7,7 @@ from customers.models import Client,  ConfTier
 class TierConf(ModelForm):
     class Meta:
         model = ConfTier
-        exclude = ['id',]
+        exclude = ['id', 'tier_v']
         
         widgets = {
             'tier_i' : TextInput(attrs={'class':"form-control",
