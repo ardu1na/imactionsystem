@@ -65,32 +65,32 @@ class Client(models.Model):
         (BANK_TRANSFER, ('Bank Transfer')),
     )
 
-    name = models.CharField(max_length=30)
-    business_name = models.CharField(max_length=30, blank=True, null=True)
+    name = models.CharField(max_length=150)
+    business_name = models.CharField(max_length=150, blank=True, null=True)
     source = models.CharField(max_length=50, choices=CANAL_CHOICES, null=True, blank=True)
     date = models.DateField(editable=True, default=date.today)
     website = models.URLField(blank=True, null=True)
     
-    wop = models.CharField(max_length=30, choices=WOP_CHOICES, null=True, blank=True, verbose_name='WOP')
+    wop = models.CharField(max_length=150, choices=WOP_CHOICES, null=True, blank=True, verbose_name='WOP')
     
     
     # new contact data
-    c1_name = models.CharField(max_length=30, blank=True, null=True)
+    c1_name = models.CharField(max_length=150, blank=True, null=True)
     c1_email = models.EmailField(blank=True, null=True)
     c1_email2 = models.EmailField(blank=True, null=True)
-    c1_tel = models.CharField(max_length=25, blank=True, null=True)
-    c1_tel2 = models.CharField(max_length=25, blank=True, null=True)
+    c1_tel = models.CharField(max_length=150, blank=True, null=True)
+    c1_tel2 = models.CharField(max_length=150, blank=True, null=True)
     
-    c2_name = models.CharField(max_length=30, blank=True, null=True)
+    c2_name = models.CharField(max_length=150, blank=True, null=True)
     c2_email = models.EmailField(blank=True, null=True)
     c2_email2 = models.EmailField(blank=True, null=True)
-    c2_tel = models.CharField(max_length=25, blank=True, null=True)
-    c2_tel2 = models.CharField(max_length=25, blank=True, null=True)
-    admin_name = models.CharField(max_length=30, blank=True, null=True)
+    c2_tel = models.CharField(max_length=150, blank=True, null=True)
+    c2_tel2 = models.CharField(max_length=150, blank=True, null=True)
+    admin_name = models.CharField(max_length=150, blank=True, null=True)
     admin_email = models.EmailField(blank=True, null=True)
     admin_email2 = models.EmailField(blank=True, null=True)
-    admin_tel = models.CharField(max_length=25, blank=True, null=True)
-    admin_tel2 = models.CharField(max_length=25, blank=True, null=True)
+    admin_tel = models.CharField(max_length=150, blank=True, null=True)
+    admin_tel2 = models.CharField(max_length=150, blank=True, null=True)
     
     landing_page = models.URLField(blank=True, null=True)
 
