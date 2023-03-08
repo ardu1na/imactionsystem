@@ -534,7 +534,6 @@ def sales(request):
             
         else: pass
 
-    print(s_gads)
                 
     context={
         "page_title":"SALES",
@@ -547,19 +546,19 @@ def sales(request):
         'cross': total_crosssell_this_month,
         'services': services,
         "addform" : addform,
-        "total_seo" : s_seo,
-        "total_googleads" : s_gads,
-        "total_facebookads" : s_fads,
-        "total_linkedin" : s_lin,
-        "total_communitymanagement" : s_cm,
-        "total_combo" :s_combo ,
-        "total_webplan" :s_webp, 
-        "total_otherrr" : s_other ,
-        "total_webdesign" :s_web,
-        "total_hosting":s_hos ,
-        "total_sslcertificate": s_ssl,
-        "total_emailmarketing" :s_em,
-        "total_other" : s_other1 ,
+        "total_seo" : '{:,.0f}'.format(s_seo),
+        "total_googleads" : '{:,.0f}'.format(s_gads),
+        "total_facebookads" : '{:,.0f}'.format(s_fads),
+        "total_linkedin" : '{:,.0f}'.format(s_lin),
+        "total_communitymanagement" : '{:,.0f}'.format(s_cm),
+        "total_combo" :'{:,.0f}'.format(s_combo),
+        "total_webplan" :'{:,.0f}'.format(s_webp), 
+        "total_otherrr" : '{:,.0f}'.format(s_other),
+        "total_webdesign" :'{:,.0f}'.format(s_web),
+        "total_hosting":'{:,.0f}'.format(s_hos),
+        "total_sslcertificate": '{:,.0f}'.format(s_ssl),
+        "total_emailmarketing" :'{:,.0f}'.format(s_em),
+        "total_other" : '{:,.0f}'.format(s_other1)
     }
     return render(request,'dashboard/table/sales.html',context)
 
