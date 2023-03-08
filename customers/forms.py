@@ -26,9 +26,7 @@ class TierConf(ModelForm):
             'id':"tier_iv",
             'placeholder':"Tier IV"}),
             
-            'tier_v' : TextInput(attrs={'class':"form-control",
-            'id':"tier_v",
-            'placeholder':"Tier V"}),
+            
         }
 
 
