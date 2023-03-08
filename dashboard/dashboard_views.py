@@ -614,6 +614,7 @@ def clients(request):
     s_cm = 0
     s_combo = 0
     s_webp = 0
+    s_other = 0
     
 
     for sale in sales_rr:
@@ -631,9 +632,11 @@ def clients(request):
             s_combo  += sale.get_change
         elif sale.service == "Web Plan":
             s_webp += sale.get_change
+        elif sale.service == "Others":
+            s_webp += sale.get_change
         else: pass
 
-    get_incomes_by_service = [s_seo, s_gads, s_fads, s_lin, s_cm, s_combo, s_webp]
+    get_incomes_by_service = [s_seo, s_gads, s_fads, s_lin, s_cm, s_combo, s_webp, s_other]
     
     t1=0
     t2=0

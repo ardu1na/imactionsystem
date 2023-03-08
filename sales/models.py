@@ -48,6 +48,7 @@ class Sale(models.Model):
     CM = 'Community Management'
     EMKTG = 'Email Marketing'
     OTHER = 'Other'
+    OTHER_RR = 'Other RR'
     SERVICE_CHOICES = (
         (SEO, ('SEO')),
         (GADS, ('Google Ads')),
@@ -60,12 +61,14 @@ class Sale(models.Model):
         (HO, ('Hosting')),
         (SSL, ('SSL certificate')),
         (OTHER, ('Other')),
+        (OTHER_RR, ('Other RR')),
+
     )
 
     def get_revenue(self):
         if self.service == 'SEO' or self.service == 'Google Ads' or self.service == 'Community Management' \
         or self.service == 'Facebook Ads' or self.service == 'Web Plan' or self.service == 'LinkedIn' \
-        or self.service == 'COMBO':
+        or self.service == 'COMBO' or self.service == 'Other RR':
             return ("RR")
         else:
             return ("OneOff")
