@@ -165,7 +165,7 @@ class Client(models.Model):
                 if sale.cancelled == "Active":
                     if sale.revenue == "RR":
                         total += sale.get_change
-        return '${}'.format(total)
+        return '${:,}'.format(total)
 
     
 
