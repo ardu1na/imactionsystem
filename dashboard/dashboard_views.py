@@ -462,6 +462,13 @@ def sales(request):
     total_amount = sales_this_month.aggregate(Sum('change'))['change__sum']
     def get_total_format():
         return '{:,.0f}'.format(total_amount)
+    
+    sales1_this_month = Sale.objects.filter(date__month=today.month, revenue="OneOff", cancelled="Active")
+    total1_amount = sales1_this_month.aggregate(Sum('change'))['change__sum']
+    def get_total1_format():
+        try:
+            return '{:,.0f}'.format(total1_amount)
+        except: return 0
 
 
                 
@@ -469,6 +476,8 @@ def sales(request):
         "page_title":"SALES",
         "sales" : sales,
         "sales_this_month" : get_total_format,
+        "sales1_this_month" : get_total1_format,
+
         "addform" : addform
     }
     return render(request,'dashboard/table/sales.html',context)
