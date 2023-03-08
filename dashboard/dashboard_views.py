@@ -466,6 +466,9 @@ def sales(request):
     upsell_this_month = Sale.objects.filter(date__month=today.month, kind="Upsell", cancelled="Active")
     total_upsell_this_month = upsell_this_month.count()
     
+    crosssell_this_month = Sale.objects.filter(date__month=today.month, kind="Cross Sell", cancelled="Active")
+    total_crosssell_this_month = crosssell_this_month.count()
+    
     sales = Sale.objects.all()
     
     if request.method == 'GET':
@@ -494,6 +497,7 @@ def sales(request):
         "clients_this_month" : total_clients,
         "this_month": month_name,
         'upsell': total_upsell_this_month,
+        'cross': total_crosssell_this_month,
 
         "addform" : addform
     }
