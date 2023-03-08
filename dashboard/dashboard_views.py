@@ -108,7 +108,7 @@ def conf(request):
         if form.is_valid():
             tier = form.save()
                       
-            return HttpResponseRedirect('/conf/')
+            return redirect(reverse('dashboard:index')+ "?changed")
         else: return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
         
 
