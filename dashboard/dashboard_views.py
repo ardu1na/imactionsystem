@@ -440,9 +440,7 @@ def deleteemployee(request, id):
 
 @login_required(login_url='dashboard:login')
 def sales(request):
-    sales = Sale.objects.all()
-    for sale in sales:
-        sale.save()
+    
     today = date.today()
     sales = Sale.objects.all()
     
@@ -462,7 +460,9 @@ def sales(request):
     sales_this_month = Sale.objects.filter(date__month=today.month, revenue="RR", cancelled="Active")
     total_amount = sales_this_month.aggregate(Sum('change'))['change__sum']
     def get_total_format():
-        return '{:,}'.format(total_amount)
+        return '{:,.0f}'.format(total_amount)
+
+
                 
     context={
         "page_title":"SALES",
