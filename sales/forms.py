@@ -15,7 +15,7 @@ class SaleForm(ModelForm):
     class Meta:
         model = Sale
         
-        exclude = ['sale_id', 'cancelled', 'comment_can', 'date_can', 'fail_can', 'revenue']
+        exclude = ['sale_id', 'cancelled', 'comment_can', 'date_can', 'fail_can', 'revenue', 'change']
         
         
         
@@ -86,7 +86,7 @@ class ClientSaleForm(ModelForm):
     class Meta:
         model = Sale
         
-        exclude = ['id', 'cancelled', 'comment_can', 'date_can', 'fail_can', 'revenue', 'client']
+        exclude = ['id', 'cancelled', 'comment_can', 'date_can', 'fail_can', 'revenue', 'client', 'change']
         
         
         
@@ -157,7 +157,7 @@ class EditSaleForm(ModelForm):
     class Meta:
         model = Sale
         
-        exclude = ['id', 'revenue', 'client']
+        exclude = ['id', 'revenue', 'client', 'change']
         
         
         

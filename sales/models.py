@@ -104,7 +104,7 @@ class Sale(models.Model):
     cost = models.IntegerField(default=0, verbose_name="COST")
     status = models.CharField(max_length=5, choices=S_CHOICES, null=True, blank=True, verbose_name="STATUS $")
     cancelled = models.CharField(default='Active', max_length=50, choices=CANCELLED_CHOICES)
-    change = models.DecimalField(default=0, verbose_name="PRICE", decimal_places=2, max_digits=12)
+    change = models.DecimalField(default=0, verbose_name="PRICE", decimal_places=2, max_digits=12, null=True, blank=True)
     
     @property
     def get_change(self):
