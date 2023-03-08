@@ -459,7 +459,7 @@ def sales(request):
             return '{:,.0f}'.format(total1_amount)
         except: return 0
         
-    clients_this_month = Client.objects.filter(date__month=today.month, cancelled="Active")
+    clients_this_month = Sale.objects.filter(date__month=today.month, kind="New Client", cancelled="Active")
     total_clients = clients_this_month.count()
     
     
