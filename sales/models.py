@@ -104,6 +104,7 @@ class Sale(models.Model):
     cost = models.IntegerField(default=0, verbose_name="COST")
     status = models.CharField(max_length=5, choices=S_CHOICES, null=True, blank=True, verbose_name="STATUS $")
     cancelled = models.CharField(default='Active', max_length=50, choices=CANCELLED_CHOICES)
+    change = models.DecimalField(default=0, verbose_name="PRICE", decimal_places=2, max_digits=12)
     
     @property
     def get_change(self):
@@ -130,7 +131,7 @@ class Sale(models.Model):
         
     
     def save(self, *args, **kwargs):
-        
+        self.change = self.get_change
         self.revenue = self.get_revenue()
         super(Sale, self).save(*args, **kwargs)
 
