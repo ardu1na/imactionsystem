@@ -12,7 +12,7 @@ from django.http import HttpResponse, Http404, HttpResponseRedirect, HttpRespons
 from django.contrib.auth.decorators import login_required, permission_required 
 import pickle
 import mimetypes
-
+from django.db.models import Sum
 from datetime import datetime
 
 
@@ -440,7 +440,10 @@ def deleteemployee(request, id):
 
 @login_required(login_url='dashboard:login')
 def sales(request):
-    
+    sales = Sale.objects.all()
+    for sale in sales:
+        sale.save()
+    today = date.today()
     sales = Sale.objects.all()
     
     if request.method == 'GET':
@@ -454,10 +457,17 @@ def sales(request):
                 return redirect(reverse('dashboard:sales')+ "?added")
             else:
                 return HttpResponse("hacked from las except else form")
+    
+
+    sales_this_month = Sale.objects.filter(date__month=today.month, revenue="RR", cancelled="Active")
+    total_amount = sales_this_month.aggregate(Sum('change'))['change__sum']
+    def get_total_format():
+        return '{:,}'.format(total_amount)
                 
     context={
         "page_title":"SALES",
         "sales" : sales,
+        "sales_this_month" : get_total_format,
         "addform" : addform
     }
     return render(request,'dashboard/table/sales.html',context)
