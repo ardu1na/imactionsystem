@@ -450,6 +450,7 @@ def sales(request):
     if request.method == 'POST':
         if "addsale" in request.POST:
             addform = SaleForm(request.POST)
+            print(addform.errors)
             if addform.is_valid():
                 addform.save()
                 return redirect(reverse('dashboard:sales')+ "?added")
@@ -608,6 +609,7 @@ def clients(request):
     if request.method == 'POST':
         if "addclient" in request.POST:
             addform = ClientForm(request.POST)
+            print(addform.errors)
             if addform.is_valid():
                 newclient = addform.save()
                 return redirect('dashboard:editclient', id=newclient.id)
