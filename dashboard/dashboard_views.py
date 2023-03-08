@@ -95,7 +95,7 @@ def conf(request):
         form = TierConf(instance=tier)
         
         context = {
-            "page_title": "TIER",
+            "page_title": "CHANGE TIER PARAMETERS",
             'form': form,
             'id': id
             }
