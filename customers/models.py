@@ -152,7 +152,7 @@ class Client(models.Model):
     def total_rr(self):
         total = 0
         for sale in self.sales.all():
-            if sale.revenue == "RR":
+            if sale.revenue == "RR" and sale.cancelled == "Active":
                 total += sale.get_change
         return total
 
@@ -175,6 +175,17 @@ class Client(models.Model):
     ### in the func below we get
     ### the total sales of each rr service
     ### it should be MORE DRY i know
+    
+    @property
+    def get_other(self, *args, **kwargs):
+        other_total=0
+        if self.cancelled == "Active":
+            for sale in self.sales.all():
+                if sale.service == "Other RR":
+                    if sale.cancelled == "Active":
+                        other_total += sale.get_change
+        return '${:,}'.format(other_total)
+    
     @property
     def get_seo(self, *args, **kwargs):
         seo_total=0
