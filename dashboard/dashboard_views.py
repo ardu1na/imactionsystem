@@ -582,7 +582,7 @@ def clients(request):
                 if sale.cancelled == "Active":
                     if sale.revenue == "RR":
                         total_rr += sale.get_change
-    total_rr_k = total_rr/1000
+    total_rr_k = total_rr
     
     clients_rr = []
     for client in clients.filter(cancelled="Active"):
@@ -666,14 +666,14 @@ def clients(request):
         "total_rr_k":total_rr_k,
         'get_incomes_by_service' : get_incomes_by_service,
         'get_incomes_by_tier' : get_incomes_by_tier,
-        'seo' : s_seo/1000,       
-        'gads': s_gads/1000,
-        'fads' : s_fads/1000,
-        'lin' : s_lin/1000 ,
-        'cm' : s_cm/1000 ,
-        'combo' : s_combo/1000,
-        'web' : s_webp/1000,
-        'formula': formula/1000,
+        'seo' : s_seo,       
+        'gads': s_gads,
+        'fads' : s_fads,
+        'lin' : s_lin ,
+        'cm' : s_cm ,
+        'combo' : s_combo,
+        'web' : s_webp,
+        'formula': formula,
         "page_title":"RR ACCOUNTS",
     }
     return render(request,'dashboard/instructor/clients.html',context)
