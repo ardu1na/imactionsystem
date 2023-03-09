@@ -213,7 +213,7 @@ class Client(models.Model):
         combo_total=0
         for sale in self.sales.all():
             if self.cancelled == "Active":
-                if sale.service == "COMBO":
+                if sale.service == "Combo":
                     if sale.cancelled == "Active":
                         combo_total += sale.get_change
         return '${:.2f}'.format(combo_total)
@@ -258,7 +258,7 @@ class Client(models.Model):
         combo_total=0
         for sale in self.sales.all():
             if self.cancelled == "Active":
-                if sale.service == "COMBO":
+                if sale.service == "Combo":
                     if sale.cancelled == "Active":
                         combo_total += sale.get_change
         return '${:.2f}'.format(combo_total)
