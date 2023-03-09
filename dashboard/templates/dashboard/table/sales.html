@@ -200,7 +200,7 @@
                         <form action="{% url 'dashboard:deletesales' %}" method="POST">
                             {% csrf_token %}
                             <div class="table-responsive">
-                                <table id="salesTable" class="display" style="min-width: 845px">
+                                <table id="example4" class="display" style="min-width: 845px">
                                     <thead>
                                         <tr>
                                             <th></th>
@@ -384,6 +384,8 @@
             $(this).parents('.basic-dropdown').find('.dropdown-toggle').html(selected);
         });
     });
+
+   
 </script>
    
 <script>
@@ -440,29 +442,24 @@
 </script>
 
 
-
-<!-- FILTER sales by MONTH AND YEAR -->
 <script>
-    // sales
-var table = $('#salesTable').DataTable({
-    searching: true,
-    paging: true,
-    select: true,         
-    lengthChange: true
-});
+    if ( $.fn.dataTable.isDataTable( '#example4' ) ) {
+        table = $('#example4').DataTable();
+        $('#date-filter-form').on('change', 'select', function() {
+            var year = $('#year').val();
+            var month = $('#month').val();
+            var date = month + '/' + year;
+            table.search(date).draw();
+        });
+    }
+    else {
+        table = $('#example4').DataTable( {
+            paging: false
+        } );
+    }
 
-$('#salesTable_wrapper').css('min-height', '500px'); /* Change the height value as needed */
-
-
-$('#date-filter-form').on('change', 'select', function() {
-    var year = $('#year').val();
-    var month = $('#month').val();
-    var date = month + '/' + year;
-    table.search(date).draw();
-});
 
 </script>
-    
 
 
 

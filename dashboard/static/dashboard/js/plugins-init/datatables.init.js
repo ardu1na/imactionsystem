@@ -122,14 +122,21 @@ let dataSet = [
 		
 	});
 	// dataTable4
-	var table = $('#dataTable4').DataTable({
-		searching: true,
-		paging:true,
-		select: true,         
-		lengthChange:true,
-		
-		
-	});
+var table = $('#example4').DataTable({
+    searching: true,
+    paging: true,
+    select: true,
+    lengthChange: true
+});
+
+$('#date-filter-form').on('change', 'select', function() {
+    var year = $('#year').val();
+    var month = $('#month').val();
+    var date = month + '/' + year;
+    table.search(date).draw();
+});
+
+	
 	
 	// dataTable5
 	var table = $('#example5').DataTable({
