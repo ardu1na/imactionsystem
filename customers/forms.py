@@ -49,6 +49,10 @@ class ClientForm(ModelForm):
             'name' : TextInput(attrs={'class':"form-control",
             'id':"name",
             'placeholder':"Client",}),
+            
+            'cuit' : TextInput(attrs={'class':"form-control",
+            'id':"cuit",
+            'placeholder':"CUIT",}),
 
             'website' : URLInput(attrs={'class':"form-control",
             'id':"website",
@@ -209,6 +213,10 @@ class EditClientForm(ModelForm):
             'name' : TextInput(attrs={'class':"form-control",
             'id':"name",
             'placeholder':"Client",}),
+            
+            'cuit' : TextInput(attrs={'class':"form-control",
+            'id':"cuit",
+            'placeholder':"CUIT",}),
 
             'website' : URLInput(attrs={'class':"form-control",
             'id':"website",
