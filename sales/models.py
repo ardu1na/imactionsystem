@@ -139,7 +139,7 @@ class Sale(models.Model):
     @property
     def total(self):
         result = self.price - self.cost
-        return '${}'.format(result)
+        return '${:,}'.format(result)
 
     def __str__(self):
        return '{} - {} ({})'.format(self.client, self.service, self.date)
@@ -147,7 +147,7 @@ class Sale(models.Model):
 
     @admin.display
     def subtotal(self):
-        return '${}'.format(self.price - self.cost)
+        return '${:,}'.format(self.price - self.cost)
 
     @property
     def price_service(self):
