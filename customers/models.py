@@ -70,6 +70,7 @@ class Client(models.Model):
 
     name = models.CharField(max_length=150)
     business_name = models.CharField(max_length=150, blank=True, null=True)
+    cuit = models.CharField(max_length=80, blank=True, null=True, verbose_name="CUIT")
     source = models.CharField(max_length=50, choices=CANAL_CHOICES, null=True, blank=True)
     date = models.DateField(editable=True, default=date.today)
     website = models.URLField(blank=True, null=True)
