@@ -238,7 +238,7 @@ def biexp(request):
                     lead_gen += expense.value
                 if expense.category == "Office":
                     office += expense.value
-                if expense.category == "Other":
+                if expense.category == "Others":
                     other += expense.value
                 if expense.category == "Tax":
                     tax += expense.value
@@ -287,7 +287,7 @@ def biexp(request):
                     lead_gen += expense.value
                 if expense.category == "Office":
                     office += expense.value
-                if expense.category == "Other":
+                if expense.category == "Others":
                     other += expense.value
                 if expense.category == "Tax":
                     tax += expense.value
@@ -441,7 +441,7 @@ def deleteemployee(request, id):
 @login_required(login_url='dashboard:login')
 def sales(request):
     
-    services = ['SEO','Google Ads','Facebook Ads','Web Design', 'Hosting', 'LinkedIn', 'SSL certificate','Web Plan','Combo', 'Community Management', 'Email Marketing', 'Other', 'Other RR']
+    services = ['SEO','Google Ads','Facebook Ads','Web Design', 'Hosting', 'LinkedIn', 'SSL certificate','Web Plan','Combo', 'Community Management', 'Email Marketing', 'Others', 'Others RR']
     today = date.today()
     this_month = date.today().month
     month_name = date(1900, this_month, 1).strftime('%B')
@@ -519,7 +519,7 @@ def sales(request):
             s_combo  += sale.get_change
         elif sale.service == "Web Plan":
             s_webp += sale.get_change
-        elif sale.service == "Other RR":
+        elif sale.service == "Others RR":
             s_other += sale.get_change
         elif sale.service == "Web Design":
             s_web += sale.get_change
@@ -529,7 +529,7 @@ def sales(request):
             s_ssl += sale.get_change
         elif sale.service == "Email Marketing":
             s_em += sale.get_change
-        elif sale.service == "Other":
+        elif sale.service == "Others":
             s_other1 += sale.get_change
             
         else: pass

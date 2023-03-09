@@ -185,7 +185,7 @@ class Client(models.Model):
         other_total=0
         if self.cancelled == "Active":
             for sale in self.sales.all():
-                if sale.service == "Other RR":
+                if sale.service == "Others RR":
                     if sale.cancelled == "Active":
                         other_total += sale.get_change
         return '${:.2f}'.format(other_total)
