@@ -169,7 +169,7 @@ class Client(models.Model):
                 if sale.cancelled == "Active":
                     if sale.revenue == "RR":
                         total += sale.get_change
-        return '${:.2f}'.format(total)
+        return '${:,.2f}'.format(total)
 
     
 
@@ -188,7 +188,7 @@ class Client(models.Model):
                 if sale.service == "Others RR":
                     if sale.cancelled == "Active":
                         other_total += sale.get_change
-        return '${:.2f}'.format(other_total)
+        return '${:,.2f}'.format(other_total)
     
     @property
     def get_seo(self, *args, **kwargs):
@@ -198,7 +198,7 @@ class Client(models.Model):
                 if sale.service == "SEO":
                     if sale.cancelled == "Active":
                         seo_total += sale.get_change
-        return '${:.2f}'.format(seo_total)
+        return '${:,.2f}'.format(seo_total)
     @property
     def get_gads(self, *args, **kwargs):
         gads_total=0
@@ -207,7 +207,7 @@ class Client(models.Model):
                 if sale.service == "Google Ads":
                    if sale.cancelled == "Active":
                         gads_total += sale.get_change
-        return '${:.2f}'.format(gads_total)
+        return '${:,.2f}'.format(gads_total)
     @property
     def get_combo(self, *args, **kwargs):
         combo_total=0
@@ -216,7 +216,7 @@ class Client(models.Model):
                 if sale.service == "Combo":
                     if sale.cancelled == "Active":
                         combo_total += sale.get_change
-        return '${:.2f}'.format(combo_total)
+        return '${:,.2f}'.format(combo_total)
     @property
     def get_fads(self, *args, **kwargs):
         fads_total=0
@@ -225,7 +225,7 @@ class Client(models.Model):
                 if sale.service == "Facebook Ads":
                     if sale.cancelled == "Active":
                         fads_total += sale.get_change
-        return '${:.2f}'.format(fads_total)
+        return '${:,.2f}'.format(fads_total)
     @property
     def get_lnkd(self, *args, **kwargs):
         lnkd_total=0
@@ -234,7 +234,7 @@ class Client(models.Model):
                 if sale.service == "LinkedIn":
                     if sale.cancelled == "Active":
                         lnkd_total += sale.get_change
-        return '${:.2f}'.format(lnkd_total)
+        return '${:,.2f}'.format(lnkd_total)
     @property
     def get_cm(self, *args, **kwargs):
         cm_total=0
@@ -243,7 +243,7 @@ class Client(models.Model):
                 if sale.service == "Community Management":
                     if sale.cancelled == "Active":
                         cm_total += sale.get_change
-        return '${:.2f}'.format(cm_total)
+        return '${:,.2f}'.format(cm_total)
     @property
     def get_wp(self, *args, **kwargs):
         wp_total=0
@@ -252,7 +252,7 @@ class Client(models.Model):
                 if sale.service == "Web Plan":
                     if sale.cancelled == "Active":
                         wp_total += sale.get_change
-        return '${:.2f}'.format(wp_total)
+        return '${:,.2f}'.format(wp_total)
     @property
     def get_combo(self, *args, **kwargs):
         combo_total=0
@@ -261,7 +261,7 @@ class Client(models.Model):
                 if sale.service == "Combo":
                     if sale.cancelled == "Active":
                         combo_total += sale.get_change
-        return '${:.2f}'.format(combo_total)
+        return '${:,.2f}'.format(combo_total)
     ##########
 
 
