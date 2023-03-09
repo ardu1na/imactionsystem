@@ -1,4 +1,5 @@
 {% extends 'dashboard/elements/layouts/admin.html' %}
+{% load humanize %}
 
 {% load static %}
 
@@ -227,7 +228,7 @@
                                                 </td>
                                                 <td> <a class="mb-0 fs-16 font-w500" href="{% url 'dashboard:editsale' id=sale.id %}"> {{sale.service}} </a> </td>
                                                 <td>{{sale.note|default_if_none:"-"}}</td>
-                                                <td>$ {{sale.change}}</td>
+                                                <td>$ {{sale.change|floatformat:2|intcomma}}</td>
                                                 <div class="d-flex flex-row m-auto">
                                                         <td>{{sale.kind|default_if_none:"-"}}</td>
                                                     {% if sale.status == "FC" %}
