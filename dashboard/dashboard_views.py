@@ -441,7 +441,7 @@ def deleteemployee(request, id):
 @login_required(login_url='dashboard:login')
 def sales(request):
     
-    services = ['SEO','Google Ads','Facebook Ads','Web Design', 'Hosting', 'LinkedIn', 'SSL certificate','Web Plan','COMBO', 'Community Management', 'Email Marketing', 'Other', 'Other RR']
+    services = ['SEO','Google Ads','Facebook Ads','Web Design', 'Hosting', 'LinkedIn', 'SSL certificate','Web Plan','Combo', 'Community Management', 'Email Marketing', 'Other', 'Other RR']
     today = date.today()
     this_month = date.today().month
     month_name = date(1900, this_month, 1).strftime('%B')
@@ -515,7 +515,7 @@ def sales(request):
             s_lin  += sale.get_change
         elif sale.service == "Community Management":
             s_cm  += sale.get_change
-        elif sale.service == "COMBO":
+        elif sale.service == "Combo":
             s_combo  += sale.get_change
         elif sale.service == "Web Plan":
             s_webp += sale.get_change
@@ -727,7 +727,7 @@ def clients(request):
             s_lin  += sale.get_change
         elif sale.service == "Community Management":
             s_cm  += sale.get_change
-        elif sale.service == "COMBO":
+        elif sale.service == "Combo":
             s_combo  += sale.get_change
         elif sale.service == "Web Plan":
             s_webp += sale.get_change
@@ -1420,7 +1420,7 @@ def index(request):
                     diciembre_seo +=sale.get_change
                     
                     
-            sales_combo_current_year = Sale.objects.filter(service="COMBO").filter(cancelled="Active")\
+            sales_combo_current_year = Sale.objects.filter(service="Combo").filter(cancelled="Active")\
                                                 .filter(date__year=year)
                 
             enero_combo = 0
@@ -1722,7 +1722,7 @@ def index(request):
                     diciembre_seo +=sale.get_change
                     
                     
-            sales_combo_current_year = Sale.objects.filter(service="COMBO").filter(cancelled="Active")
+            sales_combo_current_year = Sale.objects.filter(service="Combo").filter(cancelled="Active")
                 
             enero_combo = 0
             febrero_combo = 0

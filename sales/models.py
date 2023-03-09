@@ -44,7 +44,7 @@ class Sale(models.Model):
     LIKD = 'LinkedIn'
     SSL = 'SSL certificate'
     WEB_PLAN = 'Web Plan'
-    COMBO = 'COMBO'
+    COMBO = 'Combo'
     CM = 'Community Management'
     EMKTG = 'Email Marketing'
     OTHER = 'Other'
@@ -56,7 +56,7 @@ class Sale(models.Model):
         (LIKD, ('LinkedIn')),
         (CM, ('Community Management')),
         (WEB_PLAN, ('Web Plan')),
-        (COMBO, ('COMBO')),
+        (COMBO, ('Combo')),
         (DW, ('Web Design')),
         (HO, ('Hosting')),
         (SSL, ('SSL certificate')),
@@ -68,7 +68,7 @@ class Sale(models.Model):
     def get_revenue(self):
         if self.service == 'SEO' or self.service == 'Google Ads' or self.service == 'Community Management' \
         or self.service == 'Facebook Ads' or self.service == 'Web Plan' or self.service == 'LinkedIn' \
-        or self.service == 'COMBO' or self.service == 'Other RR':
+        or self.service == 'Combo' or self.service == 'Other RR':
             return ("RR")
         else:
             return ("OneOff")
