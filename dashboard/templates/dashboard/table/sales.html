@@ -148,7 +148,43 @@
                     <div class="card-header border-0 flex-wrap pb-0 mb-3">
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addsale">ADD Sale<span class="btn-icon-end">
                         <i class="fa fa-plus"></i></span>
+                        
                 </div> 
+
+                <div class="card-header">
+                    <form id="date-filter-form" class="form-inline mb-3">
+                        <div class="form-group mr-3">
+                          <label for="year">Year:</label>
+                          <select id="year" name="year" class="form-control">
+                            <option value="">All</option>
+                            <option value="2023">2023</option>
+                            <option value="2022">2022</option>
+                            <option value="2021">2021</option>
+                          </select>
+                        </div>
+                        <div class="form-group">
+                          <label for="month">Month:</label>
+                          <select id="month" name="month" class="form-control">
+                            <option value="">All</option>
+                            <option value="01">January</option>
+                            <option value="02">February</option>
+                            <option value="03">March</option>
+                            <option value="04">April</option>
+                            <option value="05">May</option>
+                            <option value="06">June</option>
+                            <option value="07">July</option>
+                            <option value="08">August</option>
+                            <option value="09">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                          </select>
+                        </div>
+                      </form>
+                      
+                  </div>
+
+                  
                     <div class="card-body">
                         <form action="{% url 'dashboard:deletesales' %}" method="POST">
                             {% csrf_token %}
@@ -181,21 +217,22 @@
                                                 <td> <a class="mb-0 fs-16 font-w500" href="{% url 'dashboard:editsale' id=sale.id %}"> {{sale.service}} </a> </td>
                                                 <td>{{sale.note|default_if_none:"-"}}</td>
                                                 <td>$ {{sale.change}}</td>
-                                                <td>{{sale.kind|default_if_none:"-"}}</td>
-                                                {% if sale.status == "FC" %}
-                                                    <td> <span class="badge light badge-danger">
-                                                        {{sale.status}}
-                                                    </span> </td>
-                                                {% elif sale.status == "P" %}
-                                                    <td> <span class="badge light badge-success">
-                                                        {{sale.status}}
-                                                    </span> </td>
-                                                {% else %} 
-                                                    <td> <span class="badge light badge-warning">
-                                                        {{sale.status|default_if_none:"?"}}
-                                                    </span> </td>
-                                                {% endif %}
-
+                                                <div class="d-flex flex-row m-auto">
+                                                        <td>{{sale.kind|default_if_none:"-"}}</td>
+                                                    {% if sale.status == "FC" %}
+                                                        <td> <span class="badge light badge-danger">
+                                                            {{sale.status}}
+                                                        </span> </td>
+                                                    {% elif sale.status == "P" %}
+                                                        <td> <span class="badge light badge-success">
+                                                            {{sale.status}}
+                                                        </span> </td>
+                                                    {% else %} 
+                                                        <td> <span class="badge light badge-warning">
+                                                            {{sale.status|default_if_none:"?"}}
+                                                        </span> </td>
+                                                    {% endif %}
+                                                </div>
                                                 <td>{{sale.date|date:"d/m/Y"}}</td>
                                                 <td>{{sale.comments|default_if_none:"-"}}</td>                                    
                                                 <td>
@@ -323,6 +360,11 @@
 {% endblock %}
 
 {% block additional_js %}
+
+ 
+    
+
+
  <!-- dropdown sales by service -->
 <script>
     $(document).ready(function() {
@@ -386,6 +428,32 @@
     }
 </script>
 
+
+
+<!-- FILTER sales by MONTH AND YEAR -->
+<script>
+    $(document).ready(function() {
+      var table = $('#example4').DataTable({
+        // your existing DataTable options
+      });
+    
+      // add event listener to filter by date
+      $('#date-filter-form').on('change', 'select', function() {
+        var year = $('#year').val();
+        var month = $('#month').val();
+        var date = month + '/' + year;
+        table.search(date).draw();
+      });
+    });
+
+
+    
+</script>
+    
+
+
+
+    
  <!-- NEWMODALS -->
  <script>
     
