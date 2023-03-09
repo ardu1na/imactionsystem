@@ -56,6 +56,7 @@ class Client(models.Model):
     MP_IM='MP Imactions'
     MP_P='MP Personal'
     BANK_TRANSFER='Bank Transfer'
+    PAYPAL='Paypal'
 
     WOP_CHOICES=(
         (CASH, ('Cash')),
@@ -63,6 +64,8 @@ class Client(models.Model):
         (MP_IM, ('MP Imactions')),
         (MP_P, ('MP Personal')),
         (BANK_TRANSFER, ('Bank Transfer')),
+        (PAYPAL, ('Paypal')),
+
     )
 
     name = models.CharField(max_length=150)
