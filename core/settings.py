@@ -59,7 +59,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     
     'import_export',
-
+    'django.contrib.humanize',
     'widget_tweaks',
     'dashboard',
     'dashboard.users',
