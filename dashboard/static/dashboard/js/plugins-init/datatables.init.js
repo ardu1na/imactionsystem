@@ -128,8 +128,9 @@ let dataSet = [
 		select: true,         
 		lengthChange:true,
 		
+		
 	});
-   
+	
 	// dataTable5
 	var table = $('#example5').DataTable({
 		searching: false,
@@ -181,7 +182,7 @@ let dataSet = [
 	// dataTable9
 		
 	// table row
-	var table = $('#dataTable1, #dataTable2, #dataTable3, #dataTable4,  #example3, #example4').DataTable({
+	var table = $('#dataTable1, #dataTable2, #dataTable3, #,  #example3, #example4, #salesTable').DataTable({
 		language: {
 			paginate: {
 			  next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
