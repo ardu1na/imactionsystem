@@ -57,9 +57,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
-    'import_export',
     'django.contrib.humanize',
+
+    'import_export',
+
     'widget_tweaks',
     'dashboard',
     'dashboard.users',
@@ -233,3 +234,5 @@ CKEDITOR_CONFIGS = {
 
 
 DJANGO_EASY_AUDIT_WATCH_REQUEST_EVENTS = False
+
+

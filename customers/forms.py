@@ -32,12 +32,14 @@ class TierConf(ModelForm):
 
 
 class ClientForm(ModelForm): 
+        
     
-   
+        
     class Meta:
         model = Client
         
         exclude = ['id', 'cancelled', 'comment_can', 'date_can', 'fail_can']
+        
         
         widgets = {
 
@@ -74,8 +76,7 @@ class ClientForm(ModelForm):
                 'class':"form-select",
             'id':"wop",
             'placeholder':"WOP",}),
-
-
+            
 
             'c1_name' : TextInput(attrs={'class':"form-control",
             'id':"c1_name",
@@ -189,8 +190,7 @@ class ClientForm(ModelForm):
 
 
         }
-
-
+        
 
 
 

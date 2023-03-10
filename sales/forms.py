@@ -9,14 +9,14 @@ class SaleForm(ModelForm):
     
     client = ModelChoiceField(queryset=Client.objects.all(), widget=Select(attrs={'class':"form-select",
             'id':"client",
-            'placeholder':"client",}))
+            'placeholder':"client",}), empty_label = ' - ')
 
     
+
     class Meta:
         model = Sale
         
         exclude = ['sale_id', 'cancelled', 'comment_can', 'date_can', 'fail_can', 'revenue', 'change']
-        
         
         
         widgets = {

@@ -92,18 +92,18 @@ class Sale(models.Model):
         (USD, ('USD')))
 
     client = models.ForeignKey(Client, related_name='sales', null=True, blank=True, on_delete=models.CASCADE, verbose_name="ACCOUNT")
-    kind = models.CharField(max_length=50, choices=KIND_CHOICES, null=True, blank=True, verbose_name="KIND")
+    kind = models.CharField(max_length=50, choices=KIND_CHOICES, null=True, blank=False, default=None, verbose_name="KIND")
     date = models.DateField(default=date.today, verbose_name="DATE")
     total = models.IntegerField(blank=True, null=True, verbose_name="TOTAL")
     comments =models.CharField(max_length=500, null=True, blank=True, verbose_name="COMMENTS")
-    revenue = models.CharField(max_length=20, null=True, blank=True, choices=REVENUE_CHOICES, help_text="Leave blank to automatically fill", verbose_name="REVENUE")
-    service = models.CharField(max_length=50, choices=SERVICE_CHOICES, verbose_name="SERVICE")
+    revenue = models.CharField(max_length=20, null=True, blank=False, default=None, choices=REVENUE_CHOICES, help_text="Leave blank to automatically fill", verbose_name="REVENUE")
+    service = models.CharField(max_length=50, choices=SERVICE_CHOICES, verbose_name="SERVICE", blank=False, default=None)
     price = models.DecimalField(default=0, verbose_name="PRICE", decimal_places=2, max_digits=12)
-    currency = models.CharField(max_length=50, default="ARS", choices=COIN_CHOICES, null=True, blank=True, verbose_name="CURRENCY")
+    currency = models.CharField(max_length=50, default="ARS", choices=COIN_CHOICES, null=True, blank=False, verbose_name="CURRENCY")
     note = models.CharField(max_length=400, null=True, blank=True, verbose_name="NOTES")
     cost = models.IntegerField(default=0, verbose_name="COST")
-    status = models.CharField(max_length=5, choices=S_CHOICES, null=True, blank=True, verbose_name="STATUS $")
-    cancelled = models.CharField(default='Active', max_length=50, choices=CANCELLED_CHOICES)
+    status = models.CharField(max_length=5, choices=S_CHOICES, null=True, blank=False, default=None, verbose_name="STATUS $")
+    cancelled = models.CharField(default='Active', max_length=50, choices=CANCELLED_CHOICES, blank=False)
     change = models.DecimalField(default=0, verbose_name="PRICE", decimal_places=2, max_digits=12, null=True, blank=True)
     
     @property
@@ -127,7 +127,7 @@ class Sale(models.Model):
     
     comment_can = models.CharField(max_length=500, blank=True, null=True, verbose_name="COMMENT")
     date_can = models.DateField(null=True, blank=True, verbose_name="DATE")
-    fail_can = models.CharField(max_length=50, choices=FAIL_CHOICES, blank=True, null=True, verbose_name="DO WE FAIL?")
+    fail_can = models.CharField(max_length=50, choices=FAIL_CHOICES, blank=False,default=None, null=True, verbose_name="DO WE FAIL?")
         
     
     def save(self, *args, **kwargs):
