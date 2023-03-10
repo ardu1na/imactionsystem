@@ -7,7 +7,7 @@ from customers.models import Client
 
 class SaleForm(ModelForm):
     
-    client = ModelChoiceField(queryset=Client.objects.all(), widget=Select(attrs={'class':"form-select",
+    client = ModelChoiceField(queryset=Client.objects.all(), widget=Select(attrs={'class':"default-select form-control wide mb-3",
             'id':"client",
             'placeholder':"client",}), empty_label = ' - ')
 
@@ -26,7 +26,7 @@ class SaleForm(ModelForm):
             'type':"date",
             'placeholder':"Date",}),
 
-            'kind' : Select(attrs={'class':"form-select",
+            'kind' : Select(attrs={'class':"default-select form-control wide mb-3",
             'id':"kind",
             'placeholder':"Kind",}),
 
@@ -35,7 +35,7 @@ class SaleForm(ModelForm):
             'placeholder':"Comments",}),
 
             'service' : Select(attrs={
-                'class':"form-select",
+                'class':"default-select form-control wide mb-3",
                 'id':"service",
                 'placeholder' : "Service",
                 }
@@ -49,7 +49,7 @@ class SaleForm(ModelForm):
                 }
             ),
             
-            'currency' : Select(attrs={'class':"form-select",
+            'currency' : Select(attrs={'class':"default-select form-control wide mb-3",
             'id':"currency",
             'placeholder':"Currency",}),
 
@@ -68,7 +68,7 @@ class SaleForm(ModelForm):
             ),
 
             'status' : Select(attrs={
-                'class':"form-select",
+                'class':"default-select form-control wide mb-3",
                 'id':"status",
                 'placeholder' : "Status"
                 }
@@ -98,7 +98,7 @@ class ClientSaleForm(ModelForm):
             'type':"date",
             'placeholder':"Date",}),
 
-            'kind' : Select(attrs={'class':"form-select",
+            'kind' : Select(attrs={'class':"default-select form-control wide mb-3",
             'id':"kind",
             'placeholder':"Kind",}),
 
@@ -107,7 +107,7 @@ class ClientSaleForm(ModelForm):
             'placeholder':"Comments",}),
 
             'service' : Select(attrs={
-                'class':"form-select",
+                'class':"default-select form-control wide mb-3",
                 'id':"service",
                 'placeholder' : "Service",
                 }
@@ -122,7 +122,7 @@ class ClientSaleForm(ModelForm):
             ),
             
             
-            'currency' : Select(attrs={'class':"form-select",
+            'currency' : Select(attrs={'class':"default-select form-control wide mb-3",
             'id':"currency",
             'placeholder':"Currency",}),
             
@@ -142,7 +142,7 @@ class ClientSaleForm(ModelForm):
             ),
 
             'status' : Select(attrs={
-                'class':"form-select",
+                'class':"default-select form-control wide mb-3",
                 'id':"status",
                 'placeholder' : "Status"
                 }
@@ -168,7 +168,7 @@ class EditSaleForm(ModelForm):
             'type':"date",
             'placeholder':"Date",}),
             
-            'kind' : Select(attrs={'class':"form-select",
+            'kind' : Select(attrs={'class':"default-select form-control wide mb-3",
             'id':"kind",
             'placeholder':"Kind",}),
 
@@ -177,7 +177,7 @@ class EditSaleForm(ModelForm):
             'placeholder':"Comments",}),
 
             'service' : Select(attrs={
-                'class':"form-select",
+                'class':"default-select form-control wide mb-3",
                 'id':"service",
                 'placeholder' : "Service",
                 }
@@ -192,7 +192,7 @@ class EditSaleForm(ModelForm):
             ),
             
             
-            'currency' : Select(attrs={'class':"form-select",
+            'currency' : Select(attrs={'class':"default-select form-control wide mb-3",
             'id':"currency",
             'placeholder':"Currency",}),
 
@@ -211,14 +211,14 @@ class EditSaleForm(ModelForm):
             ),
 
             'status' : Select(attrs={
-                'class':"form-select",
+                'class':"default-select form-control wide mb-3",
                 'id':"status",
                 'placeholder' : "Status"
                 }
             ),
             
             'cancelled' : Select(attrs={
-                'class':"form-select",
+                'class':"default-select form-control wide mb-3",
             'id':"cancelled",
             'placeholder':"Cancelled?",}),
             
@@ -228,7 +228,7 @@ class EditSaleForm(ModelForm):
             'placeholder':"Cancellation date",}),
             
             'fail_can' : Select(attrs={
-                'class':"form-select",
+                'class':"default-select form-control wide mb-3",
             'id':"fail_can",
             'placeholder':"Do we fail?",}),
             
