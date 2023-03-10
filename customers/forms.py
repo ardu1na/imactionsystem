@@ -65,17 +65,16 @@ class ClientForm(ModelForm):
             'placeholder':"Business name",}),
 
             'source' : Select(attrs={
-                'class':"form-select",
+                'class':"default-select form-control wide mb-3",
                 'id':"source",
                 'placeholder' : "Source",
-                'empty_label':"Select the source",
                 }
             ),
 
             'wop' : Select(attrs={
-                'class':"form-select",
-            'id':"wop",
-            'placeholder':"WOP",}),
+                'class':"default-select form-control wide mb-3",
+                'id':"wop",
+                'placeholder':"WOP",}),
             
 
             'c1_name' : TextInput(attrs={'class':"form-control",
@@ -227,7 +226,7 @@ class EditClientForm(ModelForm):
             'placeholder':"Business name",}),
 
             'source' : Select(attrs={
-                'class':"form-select",
+                'class':"default-select form-control wide mb-3",
                 'id':"source",
                 'placeholder' : "Source",
                 'empty_label':"Select the source",
@@ -235,7 +234,7 @@ class EditClientForm(ModelForm):
             ),
 
             'wop' : Select(attrs={
-                'class':"form-select",
+                'class':"default-select form-control wide mb-3",
             'id':"wop",
             'placeholder':"WOP",}),
 

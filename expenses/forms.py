@@ -20,7 +20,7 @@ class ExpenseForm(ModelForm):
             'type':"date",
             'placeholder':"Date",}),
 
-            'category' : Select(attrs={'class':"form-select",
+            'category' : Select(attrs={'class':"default-select form-control wide mb-3",
             'id':"category",
             'placeholder':"Category",}),
 
@@ -29,7 +29,7 @@ class ExpenseForm(ModelForm):
             'placeholder':"Concept",}),
 
             'wop' : Select(attrs={
-                'class':"form-select",
+                'class':"default-select form-control wide mb-3",
                 'id':"wop",
                 'placeholder' : "WOP",
                 }),
@@ -58,7 +58,7 @@ class EmployeeForm(ModelForm):
             'placeholder':"Date"}),            
             
             'rol' : Select(attrs={
-                'class':"form-select",
+                'class':"default-select form-control wide mb-3",
                 'id':"rol",
                 'placeholder' : "Rol",
                 }),
@@ -96,7 +96,7 @@ class EditEmployeeForm(ModelForm):
         widgets = {
             
             'active' :     Select(attrs={
-                'class':"form-select",
+                'class':"default-select form-control wide mb-3",
                 'id':"active",
                 'placeholder' : "Active?",
                 }),
@@ -116,7 +116,7 @@ class EditEmployeeForm(ModelForm):
 
 
             'rol' : Select(attrs={
-                'class':"form-select",
+                'class':"default-select form-control wide mb-3",
                 'id':"rol",
                 'placeholder' : "Rol",
                 }),
