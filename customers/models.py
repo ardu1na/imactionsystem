@@ -71,11 +71,11 @@ class Client(models.Model):
     name = models.CharField(max_length=150)
     business_name = models.CharField(max_length=150, blank=True, null=True)
     cuit = models.CharField(max_length=80, blank=True, null=True, verbose_name="CUIT")
-    source = models.CharField(max_length=50, choices=CANAL_CHOICES, null=True, blank=True)
+    source = models.CharField(max_length=50, choices=CANAL_CHOICES, null=True, blank=False, default=None)
     date = models.DateField(editable=True, default=date.today)
     website = models.URLField(blank=True, null=True)
     
-    wop = models.CharField(max_length=150, choices=WOP_CHOICES, null=True, blank=True, verbose_name='WOP')
+    wop = models.CharField(max_length=150, choices=WOP_CHOICES, null=True, blank=False, verbose_name='WOP', default=None)
     
     
     # new contact data
@@ -100,7 +100,7 @@ class Client(models.Model):
 
 
 
-    cancelled = models.CharField(default='Active', max_length=51, choices=CANCELLED_CHOICES)
+    cancelled = models.CharField(default='Active', max_length=51, choices=CANCELLED_CHOICES, blank=True)
     YES = 'YES'
     NO = 'NO'
     DEBATIBLE = 'DEBATIBLE'
@@ -111,7 +111,7 @@ class Client(models.Model):
         )  
     comment_can = models.CharField(max_length=500, blank=True, null=True, verbose_name="COMMENT")
     date_can = models.DateField(null=True, blank=True, verbose_name="DATE")
-    fail_can = models.CharField(max_length=50, choices=FAIL_CHOICES, blank=True, null=True, verbose_name="DO WE FAIL?")
+    fail_can = models.CharField(max_length=50, choices=FAIL_CHOICES, blank=False, default= None, null=True, verbose_name="DO WE FAIL?")
     
     def __str__(self):
        return str(self.name)

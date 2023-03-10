@@ -18,7 +18,7 @@ class Employee(models.Model):
         (GONE, ('No')),)
     
     
-    rol = models.CharField(max_length=15, choices=ROL_CHOICES, verbose_name="ROL", default="Staff")
+    rol = models.CharField(max_length=15, choices=ROL_CHOICES, blank=False,  verbose_name="ROL", default="Staff")
     
     name = models.CharField(max_length=150, verbose_name="NAME")
     
@@ -27,7 +27,7 @@ class Employee(models.Model):
     tel = models.CharField(max_length=40, blank=True, null=True, verbose_name="PHONE")
     
     date_join = models.DateField(default=date.today, verbose_name="JOIN")
-    active = models.CharField(max_length=15, choices=ACT_CHOICES, verbose_name="ACTIVE?", default="Yes")
+    active = models.CharField(max_length=15, choices=ACT_CHOICES, blank= False, verbose_name="ACTIVE?", default="Yes")
     date_gone = models.DateField(null=True, blank=True, verbose_name="GONE")
     
     white = models.DecimalField(default= 0, max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="SALARY")
@@ -97,10 +97,10 @@ class Expense(models.Model):
         )
     
     date = models.DateField(default=date.today)
-    category = models.CharField(max_length=80, default="Other", choices=EXP_CHOICES, verbose_name="CATEGORY")
+    category = models.CharField(max_length=80, default=None, choices=EXP_CHOICES, blank=False, verbose_name="CATEGORY")
     concept = models.CharField(max_length=150, verbose_name="CONCEPT", blank=True, null=True)
     value = models.DecimalField(decimal_places=2, max_digits=15, blank= True, null= True, verbose_name="VALUE")
-    wop = models.CharField(max_length=80, default="Various", choices=WOP_CHOICES, verbose_name="WOP")
+    wop = models.CharField(max_length=80, default=None, blank= False, choices=WOP_CHOICES, verbose_name="WOP")
 
     def __str__ (self):
         return '{}/{}: ${}'.format(self.category, self.concept, self.value)
