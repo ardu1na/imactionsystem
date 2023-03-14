@@ -687,8 +687,12 @@ def clients(request):
         if client.get_rr_client == True:
             clients_rr.append(client.id)
     c_rr_total = len(clients_rr)
-                        
-    formula = total_rr/c_rr_total
+
+    if len(clients_rr) > 0:
+        formula = total_rr/c_rr_total
+    else:
+        formula = 0
+        
        
     addform=ClientForm()
     if request.method == 'GET':
