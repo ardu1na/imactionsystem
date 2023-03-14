@@ -789,10 +789,18 @@ def cancellations(request):
     clients_cancelled = Client.objects.filter(cancelled="Cancelled")
     sales_cancelled = Sale.objects.filter(cancelled="Cancelled").filter(revenue="RR")
     
+    today = date.today()
+    this_month = date.today().month
+    month = date(1900, this_month, 1).strftime('%B')
+    
+    sales_this_month = sales_cancelled.filter(date__month=today.month, client__cancelled="Active")
+    
     
     context={
         "clients_cancelled": clients_cancelled,
         "sales_cancelled" : sales_cancelled,
+        "month" : month,
+        "sales" : sales_this_month.count(),
        
         "page_title":"Cancellations"
     }   
