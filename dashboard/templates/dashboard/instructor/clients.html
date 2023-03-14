@@ -3,6 +3,8 @@
 {% load static %}
 
 {% block additional_css %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 {% endblock %}
 
 {% block content %}
@@ -210,7 +212,7 @@
                                         {% for client in clients %}
                                         {% if client.get_rr_client %}
                                         <tr>
-                                                <td><input type="checkbox" name="selected_clients" value="{{ client.id }}"></td>
+                                            <td><input type="checkbox" name="selected_clients" value="{{ client.id }}" data-row-index="{{ forloop.counter0 }}"></td>
 
                                             <td>
                                                 <div class="d-flex align-items-center">
@@ -449,4 +451,31 @@
     <script src="{% static 'dashboard/vendor/apexcharts/apexcharts.min.js' %}"></script>
     <script src="{% static 'dashboard/vendor/chart.js/chart.min.js' %}"></script>
     <script src="{% static 'dashboard/vendor/echarts/echarts.min.js' %}"></script>
+
+
+    
+<script>
+    var lastChecked = null;
+  
+    $(document).ready(function() {
+      // Escuchar el evento 'click' en los checkboxes de la tabla
+      $('#example4 tbody').on('click', 'input[type="checkbox"]', function(e) {
+        if(!lastChecked) {
+          lastChecked = this;
+          return;
+        }
+  
+        if(e.shiftKey) {
+          var start = $('#example4 tbody input[type="checkbox"]').index(this);
+          var end = $('#example4 tbody input[type="checkbox"]').index(lastChecked);
+  
+          $('#example4 tbody input[type="checkbox"]').slice(Math.min(start,end), Math.max(start,end)+ 1).prop('checked', lastChecked.checked);
+  
+        }
+  
+        lastChecked = this;
+      });
+    });
+  </script>
+
 {% endblock %}

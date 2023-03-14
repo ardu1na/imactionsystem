@@ -115,7 +115,8 @@
                                         {% if expenses %}
                                         {% for expense in expenses %}
                                             <tr>
-                                                <td><input type="checkbox" name="selected_expenses" value="{{ expense.id }}"></td>
+                                                <td><input type="checkbox" name="selected_expenses" value="{{ expense.id }}" data-row-index="{{ forloop.counter0 }}"></td>
+
                                                 <td>
                                                     <a class="mb-0 fs-16 font-w500" href="{% url 'dashboard:editexpense' id=expense.id %}">{{expense.category}}</a>
                                                 </td>
@@ -340,6 +341,29 @@
 </script>
 
 
+<script>
+    var lastChecked = null;
+  
+    $(document).ready(function() {
+      // Escuchar el evento 'click' en los checkboxes de la tabla
+      $('#example4 tbody').on('click', 'input[type="checkbox"]', function(e) {
+        if(!lastChecked) {
+          lastChecked = this;
+          return;
+        }
+  
+        if(e.shiftKey) {
+          var start = $('#example4 tbody input[type="checkbox"]').index(this);
+          var end = $('#example4 tbody input[type="checkbox"]').index(lastChecked);
+  
+          $('#example4 tbody input[type="checkbox"]').slice(Math.min(start,end), Math.max(start,end)+ 1).prop('checked', lastChecked.checked);
+  
+        }
+  
+        lastChecked = this;
+      });
+    });
+  </script>
 
 
 {% endblock %}
