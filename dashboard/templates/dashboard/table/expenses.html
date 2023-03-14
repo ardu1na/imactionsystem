@@ -120,7 +120,7 @@
                                                 <td>
                                                     <a class="mb-0 fs-16 font-w500" href="{% url 'dashboard:editexpense' id=expense.id %}">{{expense.category}}</a>
                                                 </td>
-                                                <td> {{expense.concept}} </td>
+                                                <td> {{expense.concept|truncatechars:25}} </td>
                                                 <td>${{expense.value}}</td>
                                                 <td>{{expense.wop}}</td>   
                                                 <td>{{expense.date|date:"d/m/Y"}}</td>   
