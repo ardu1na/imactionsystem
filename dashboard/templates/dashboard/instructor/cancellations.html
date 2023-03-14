@@ -75,10 +75,56 @@
             </div>
     
 
-            <div class="col-xl-12">  
+        <div class="col-xl-12">  
 
             <div class="card students-list">
-                          
+                
+                <div class="d-flex flex-row-reverse mx-5 mt-3">
+
+                    <form id="date-filter-form">
+                        <div class="row">
+
+                        <div class="col-lg-6 col-l-6 col-m-6 ">
+
+                            <div class="form-group mr-3">
+                            <label for="year">Year:</label>
+                            <select id="year" name="year" class="form-control">
+                                <option value="">All</option>
+                                <option value="2025">2025</option>
+                                <option value="2024">2024</option>
+                                <option value="2023">2023</option>
+                                <option value="2022">2022</option>
+                                <option value="2021">2021</option>
+                            </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-l-6 col-m-6 ">
+
+                            <div class="form-group ">
+                            <label for="month">Month:</label>
+                            <select id="month" name="month" class="form-control">
+                                <option value="">All</option>
+                                <option value="01">January</option>
+                                <option value="02">February</option>
+                                <option value="03">March</option>
+                                <option value="04">April</option>
+                                <option value="05">May</option>
+                                <option value="06">June</option>
+                                <option value="07">July</option>
+                                <option value="08">August</option>
+                                <option value="09">September</option>
+                                <option value="10">October</option>
+                                <option value="11">November</option>
+                                <option value="12">December</option>
+                            </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    </form>
+
+                </div>
+
                 <!-- TABLE CANCELLATIONS -->
                 <div class="card-body py-4">
                     <div class="table-responsive">
@@ -138,5 +184,23 @@
 
 {% block additional_js %}
 
+<script>
+    if ( $.fn.dataTable.isDataTable( '#example4' ) ) {
+        table = $('#example4').DataTable();
+        $('#date-filter-form').on('change', 'select', function() {
+            var year = $('#year').val();
+            var month = $('#month').val();
+            var date = month + '/' + year;
+            table.search(date).draw();
+        });
+    }
+    else {
+        table = $('#example4').DataTable( {
+            paging: false
+        } );
+    }
+
+
+</script>
 
 {% endblock %}
