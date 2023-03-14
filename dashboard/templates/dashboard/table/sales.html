@@ -232,7 +232,7 @@
                                                     </div>
                                                 </td>
                                                 <td> <a class="mb-0 fs-16 font-w500" href="{% url 'dashboard:editsale' id=sale.id %}"> {{sale.service}} </a> </td>
-                                                <td>{{sale.note|default_if_none:"-"}}</td>
+                                                <td>{{sale.note|default_if_none:"-"|truncatechars:25}}</td>
                                                 <td>$ {{sale.change|floatformat:2|intcomma}}</td>
                                                 <div class="d-flex flex-row m-auto">
                                                         <td>{{sale.kind|default_if_none:"-"}}</td>
@@ -251,7 +251,7 @@
                                                     {% endif %}
                                                 </div>
                                                 <td>{{sale.date|date:"d/m/Y"}}</td>
-                                                <td>{{sale.comments|default_if_none:"-"}}</td>                                    
+                                                <td>{{sale.comments|default_if_none:"-"|truncatechars:25}}</td>                                    
                                                 <td>
                                                     <div class="d-flex flex-row">
                                                             <!-- delete BUTTON -->

@@ -118,7 +118,7 @@
                                         <td>${{sale.get_change}}</td>
                                         <td>{{sale.fail_can}}</td>
                                         <td><div class="d-flex align-items-center">
-                                            {{sale.comment_can}}</div></td>    
+                                            {{sale.comment_can|truncatechars:25}}</div></td>    
                                     {% endfor %}
                                 {%endif%}
 
