@@ -789,11 +789,27 @@ def cancellations(request):
     clients_cancelled = Client.objects.filter(cancelled="Cancelled")
     sales_cancelled = Sale.objects.filter(cancelled="Cancelled").filter(revenue="RR")
     
+    today = date.today()
+    this_month = date.today().month
+    month = date(1900, this_month, 1).strftime('%B')
+    
+    sales_this_month = sales_cancelled.filter(date_can__month=today.month, client__cancelled="Active")
+    clients_this_month = clients_cancelled.filter(date_can__month=today.month)
+
+
+    total_amount = sales_cancelled.filter(date_can__month=today.month).aggregate(Sum('change'))['change__sum']
+    def get_total_format():
+        try:
+            return '{:,.0f}'.format(total_amount)
+        except: return 0
     
     context={
         "clients_cancelled": clients_cancelled,
         "sales_cancelled" : sales_cancelled,
-       
+        "month" : month,
+        "sales" : sales_this_month.count(),
+        "clients": clients_this_month.count(),
+        "total": get_total_format,       
         "page_title":"Cancellations"
     }   
     
