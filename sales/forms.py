@@ -56,7 +56,7 @@ class SaleForm(ModelForm):
             'note' : TextInput(attrs={
                 'class':"form-control",
                 'id':"note",
-                'placeholder' : "Note"
+                'placeholder' : "Notes"
                 }
             ),
 
@@ -130,7 +130,7 @@ class ClientSaleForm(ModelForm):
             'note' : TextInput(attrs={
                 'class':"form-control",
                 'id':"note",
-                'placeholder' : "Note"
+                'placeholder' : "Notes"
                 }
             ),
 
@@ -199,7 +199,7 @@ class EditSaleForm(ModelForm):
             'note' : TextInput(attrs={
                 'class':"form-control",
                 'id':"note",
-                'placeholder' : "Note"
+                'placeholder' : "Notes"
                 }
             ),
 
