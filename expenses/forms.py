@@ -48,7 +48,7 @@ class EmployeeForm(ModelForm):
     
        class Meta:
         model = Employee
-        exclude = ['id', 'active', 'date_gone', 'white', 'nigga', 'mp', 'tc', 'atm_cash']
+        exclude = ['id', 'active', 'date_gone',]
         
         widgets = {
             
@@ -83,6 +83,43 @@ class EmployeeForm(ModelForm):
                 'id':"tel",
                 'placeholder' : "Phone Number"
                 }),
+            
+            'white' : TextInput(attrs={
+                'class':"form-control",
+                'id':"white",
+                'placeholder' : "WHITE"
+                }
+            ),          
+
+            'nigga' : TextInput(attrs={
+                'role':"textbox",
+
+                'class':"form-control",
+                'id':"nigga",
+                'placeholder' : "NIGGA"
+                }
+            ),        
+            
+            'mp' : TextInput(attrs={
+                'class':"form-control",
+                'id':"mp",
+                'placeholder' : "MP"
+                }
+            ),                      
+
+            'tc' : TextInput(attrs={
+                'class':"form-control",
+                'id':"tc",
+                'placeholder' : "TC"
+                }
+            ),          
+            
+            'atm_cash' : TextInput(attrs={
+                'class':"form-control",
+                'id':"atm_cash",
+                'placeholder' : "ATM CASH"
+                }
+            ),
         }
 
 
@@ -142,6 +179,7 @@ class EditEmployeeForm(ModelForm):
                 'id':"tel",
                 'placeholder' : "Phone Number"
                 }),
+            
             }        
         
         
