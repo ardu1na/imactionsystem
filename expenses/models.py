@@ -30,6 +30,8 @@ class Employee(models.Model):
     active = models.CharField(max_length=15, choices=ACT_CHOICES, blank= False, verbose_name="ACTIVE?", default="Yes")
     date_gone = models.DateField(null=True, blank=True, verbose_name="GONE")
     
+    
+    
     white = models.DecimalField(default= 0, max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="SALARY")
     nigga = models.DecimalField(default= 0, max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="NIGGA")
     

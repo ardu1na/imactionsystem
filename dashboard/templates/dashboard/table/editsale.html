@@ -128,17 +128,23 @@
 
 {% block additional_js %}
 
+
+
+{% block additional_js %}
+
 <script>
     var can = document.getElementById("cancelled");
-    var coso = document.getElementById("cancelation");
-    coso.style.display="none"
+    var info = document.getElementById("cancelation");
+    info.style.display = (can.value === "Active") ? "none" : "block";
     can.onchange=function(){
     
         if(this.value=="Active"){
-            coso.style.display="none";  
+            info.style.display="none";  
         }else{
-            coso.style.display="block";
+            info.style.display="block";
         }
     }        
 </script>
+
+
 {% endblock %}

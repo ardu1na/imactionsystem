@@ -31,55 +31,55 @@
                     <div class="tab-content">
                         <div id="navpills-1" class="tab-pane active">
                             <div class="row">
-                        
-                                    <!-- TABLE EMPLOYEES -->
-                                        <div class="table-responsive py-4">
-                                            <table id="example4" class="display mb-4" style="min-width: 845px">
-                                                <thead>
-                                                    <tr>
-                                                        
-                                                        <th>NAME</th>
-                                                        <th>WHITE</th>
-                                                        <th>SOCIAL</th>
-                                                        <th>NIGGA</th>
-                                                        <th>MONTHLY BONUS</th>
-                                                        <th>ANNUAL BONUS</th>
-                                                        <th></th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>{% if employees %}
-                                                    {% for employee in employees %}
-                                                    <tr>
-                                                        <td>
-                                                            <div class="d-flex align-items-center">
-                                                                <a class="mb-0 fs-16 font-w500" href="{% url 'dashboard:editemployee' id=employee.id %}">{{employee.name}}</a>
-                                                            </div>
-                                                        </td>
-                                                        <td>$ {{employee.white|floatformat:2}}</td>
-                                                        <td>$ {{employee.get_social|floatformat:2}}</td>
-                                                        <td>$ {{employee.nigga|floatformat:2}}</td>
-                    
-                                                        <td>$ {{employee.get_aguinaldo_mensual|floatformat:2}}</td>
-                                                        <td>$ {{employee.get_aguinaldo|floatformat:2}}</td>
-                                                        <td>
-                                                            <div class="d-flex flex-row">
-                                                               
-                                                                    <!-- delete BUTTON -->
-                                                                        <button type="button" class="shadow-sm btn btn-danger px-3 mx-1" data-bs-toggle="modal" data-bs-target="#deleteemployee{{employee.id}}">
-                                                                        <i class="fa-solid fa-trash fs-7"></i>
-                                                                        </button>                                                                                  
-                                                                    <!-- edit BUTTON -->
-                                                                        <a href="{% url 'dashboard:editemployee' id=employee.id %}" class="px-3 shadow-sm btn btn-secondary mx-1">
-                                                                            <i class="fa-solid fa-pen-to-square"></i>
-                                                                        </a>                                                
-                                                            </div>                                        
-                                                        </td>
-                                                    </tr>
-                                                    {% endfor %}
-                                                    {%endif%}
-                                                </tbody>
-                                            </table>
+
+        <!-- TABLE EMPLOYEES -->
+            <div class="table-responsive py-4">
+                <table id="example4" class="display mb-4" style="min-width: 845px">
+                    <thead>
+                        <tr>
+                            
+                            <th>NAME</th>
+                            <th>WHITE</th>
+                            <th>SOCIAL</th>
+                            <th>NIGGA</th>
+                            <th>MONTHLY BONUS</th>
+                            <th>ANNUAL BONUS</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>{% if employees %}
+                        {% for employee in employees %}
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <a class="mb-0 fs-16 font-w500" href="{% url 'dashboard:editemployee' id=employee.id %}">{{employee.name}}</a>
                                 </div>
+                            </td>
+                            <td>$ {{employee.white|floatformat:2}}</td>
+                            <td>$ {{employee.get_social|floatformat:2}}</td>
+                            <td>$ {{employee.nigga|floatformat:2}}</td>
+
+                            <td>$ {{employee.get_aguinaldo_mensual|floatformat:2}}</td>
+                            <td>$ {{employee.get_aguinaldo|floatformat:2}}</td>
+                            <td>
+                                <div class="d-flex flex-row">
+                                    
+                                        <!-- delete BUTTON -->
+                                            <button type="button" class="shadow-sm btn btn-danger px-3 mx-1" data-bs-toggle="modal" data-bs-target="#deleteemployee{{employee.id}}">
+                                            <i class="fa-solid fa-trash fs-7"></i>
+                                            </button>                                                                                  
+                                        <!-- edit BUTTON -->
+                                            <a href="{% url 'dashboard:editemployee' id=employee.id %}" class="px-3 shadow-sm btn btn-secondary mx-1">
+                                                <i class="fa-solid fa-pen-to-square"></i>
+                                            </a>                                                
+                                </div>                                        
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        {%endif%}
+                    </tbody>
+                </table>
+    </div>
                             </div>
                         </div>
                         <div id="navpills-2" class="tab-pane">
@@ -160,63 +160,97 @@
     <div class="modal fade " id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
+
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel">Add a new Employee</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>           
+                </div>       
+
                 <form  method="post">
                 {% csrf_token %}
-                <div class="modal-body">
-                  
-                    <div class="form-group my-3">
-                        <label class="form-label">Date</label>
-                        {{ addform.date_join}}
-                    </div>
-
-                    <div class="form-group my-3">
-                        {{addform.name}}
-                    </div>
+                    <div class="modal-body">
                     
+                        <div class="form-group my-3">
+                            <label class="form-label">Date</label>
+                            {{ addform.date_join}}
+                        </div>
 
-                    <div class="accordion accordion-rounded-stylish" id="accordion-twelve">
-                        <div class="accordion-item">
-                            <div class="accordion-header  rounded-lg" id="accord-12One" data-bs-toggle="collapse" data-bs-target="#collapse12One" aria-controls="collapse12One"   aria-expanded="true"  role="button">
-                                <span class="accordion-header-icon"></span>
-                                <span class="accordion-header-text">Contact Data</span>
-                                <span class="accordion-header-indicator"></span>
-                            </div>
+                        <div class="form-group my-3">
+                            {{addform.name}}
+                        </div>                        
 
-                            <div id="collapse12One" class="collapse accordion__body hidden" aria-labelledby="accord-12One" data-bs-parent="#accordion-twelve">
-                                <div class="accordion-body-text">
+                        <div class="accordion accordion-rounded-stylish" id="accordion-twelve">
+                            <div class="accordion-item">
                                 
-                                    <div class="form-group my-3 d-flex justify-content-between">
-                                        <div class="me-3">
-                                            {{addform.email}} </div>
+                                <div class="accordion-header  rounded-lg" id="accord-12One" data-bs-toggle="collapse" data-bs-target="#collapse12One" aria-controls="collapse12One"   aria-expanded="true"  role="button">
+                                    <span class="accordion-header-icon"></span>
+                                    <span class="accordion-header-text">Contact Data</span>
+                                    <span class="accordion-header-indicator"></span>
+                                </div>
+
+                                <div id="collapse12One" class="collapse accordion__body hidden" aria-labelledby="accord-12One" data-bs-parent="#accordion-twelve">
+                                    <div class="accordion-body-text">
+                                    
+                                        <div class="form-group my-3 d-flex justify-content-between">
+                                            <div class="me-3">
+                                                {{addform.email}} </div>                                            
+                                        </div>
+
+                                        <div class="form-group my-3">
+                                            {{addform.tel}}
+                                        </div>
+                                        
+                                        <div class="form-group my-3">
+                                            {{addform.address}}
+                                        </div>
                                         
                                     </div>
-                                    <div class="form-group my-3">
-                                        {{addform.tel}}
-                                    </div>
-                                    
-                                    <div class="form-group my-3">
-                                        {{addform.address}}
-                                    </div>
-                                    
-                                </div>
+                                </div>                             
+                            </div>                          
+                        </div>
+
+                        <div class="form-group my-3">
+                            {{addform.rol}}
+                        </div>
+
+                        <div class="form-group my-3">
+                            <label class="form-label">White</label>
+
+                             {{addform.white}}
+                        </div>
+
+                        <div class="form-group my-3">
+                            <label class="form-label">Nigga</label>
+
+                                {{addform.nigga}}
+                        </div>
+
+                        <div id="ceo">
+                            <div class="form-group my-3">
+                                <label class="form-label">MP</label>
+
+                                    {{addform.mp}}
                             </div>
 
                             <div class="form-group my-3">
-                                {{addform.rol}}
+                                <label class="form-label">TC</label>
+
+                             {{addform.tc}}
                             </div>
+
+                            <div class="form-group my-3">
+                                <label class="form-label">ATM CASH</label>
+
+                                 {{addform.atm_cash}}
+                            </div>
+
                         </div>
-                        
-                    </div>
 
+                        <div class="form-floating my-3 text-center">
+                            <button type="submit" class="shadow-sm btn btn-secondary" name="addemployee"><i class="fa-solid fa-check me-2"></i> Submit</button>
+                        </div>
 
-                    <div class="form-floating my-3 text-center">
-                        <button type="submit" class="shadow-sm btn btn-secondary" name="addemployee"><i class="fa-solid fa-check me-2"></i> Submit</button>
                     </div>
-                </div>
                 </form>
             </div>
         </div>
@@ -230,5 +264,22 @@
         <script>
             const deleteemployee = new bootstrap.Modal('#deleteemployee',   {keyboard: true}    )
         </script>
+
+        
+
+<script>
+    var can = document.getElementById("rol");
+    var info = document.getElementById("ceo");
+    info.style.display = (can.value === "Staff") ? "none" : "block";
+    can.onchange=function(){
+    
+        if(this.value=="Staff"){
+            info.style.display="none";  
+        }else{
+            info.style.display="block";
+        }
+    }        
+</script>
+
 
 {% endblock %}
