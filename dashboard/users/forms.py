@@ -54,8 +54,6 @@ class CustomUserForm(forms.ModelForm):
                   'first_name',
                   'last_name',
                   'groups',
-                  'is_active',
-                  'is_staff',
                   'password1',
                   'password2',
                 )
@@ -98,8 +96,6 @@ class EditUserForm(forms.ModelForm):
                   'last_name',
                   
                   'groups',
-                  'is_active',
-                  'is_staff',
                 )
 
     def save(self, commit=True):
