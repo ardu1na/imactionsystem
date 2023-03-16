@@ -33,7 +33,7 @@ class Employee(models.Model):
     
     
     white = models.DecimalField(default= 0, max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="SALARY")
-    nigga = models.DecimalField(default= 0, max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="NIGGA")
+    nigga = models.DecimalField(default= 0, max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="NIGGA %")
     
     mp = models.DecimalField(default= 0, max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="MP")
     tc = models.DecimalField(default= 0, max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="TC")
@@ -50,16 +50,22 @@ class Employee(models.Model):
     
     @property
     def get_aguinaldo(self):
-        aguinaldo = self.white + self.nigga + self.get_social
+        aguinaldo = self.white + self.get_nigga + self.get_social
         return aguinaldo
-    
+
+    @property
+    def get_nigga(self):
+        nigga = (self.white*self.nigga)/100
+        return nigga
+            
     @property
     def get_aguinaldo_mensual(self):
-        aguinaldo = self.white + self.nigga + self.get_social
+        aguinaldo = self.white + self.get_nigga + self.get_social
         return aguinaldo/12
+    
     @property
     def get_wage_ceo(self):
-        wage = self.white + self.nigga + self.mp + self.tc + self.atm_cash
+        wage = self.white + self.get_nigga + self.mp + self.tc + self.atm_cash
         return wage
     
     
