@@ -48,9 +48,10 @@
             {% endif %}
             {% endfor %}
 
-            <hr>
             {% for group in request.user.groups.all %}
-            {% if group.name == "admin" %}         
+            {% if group.name == "admin" %}    
+            <hr>
+     
             <li>
                 <a href="{% url 'dashboard:setting' %}">
                     <i class="fa-solid fa-gear"></i>
