@@ -25,7 +25,6 @@
                          <div class="row">
 
 
-                       
                         <div class="row col-md-6">
                             <div class="mb-3 col-md-6">
                                <label class="form-label">First Name {% if form.first_name.field.required %}<span class="text-danger">*</span> {% endif %}</label>
@@ -66,6 +65,9 @@
                               is active
                               </label>
                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-md-6 m-auto">
                            <div class="form-check form-check-inline">
                               {{ form.is_staff|attr:"class:form-check-input"|attr:"type:checkbox"|attr:"checked" }}
                               <label class="form-check-label">
@@ -74,8 +76,24 @@
                            </div>
                         </div>
 
-                           
-                      
+
+
+
+                        
+                        <div class="row">
+                              <div class="mb-3 col-md-4 custom-user">
+                                 <label class="form-label">Permissions {% if form.groups.field.required %}<span class="text-danger">*</span>{% endif %}</label>
+                                 {{ form.groups|attr:"class:multi-select form-control"|attr:"name:groups[]" }}
+                                 <div class="text-danger w-100 d-block mt-1">
+                                 {{ form.groups.errors }}
+                                 </div>
+                              </div>
+                              
+                            
+                        </div>
+
+                       
+
                           
 
                      {% if form.password1 %}
@@ -131,7 +149,23 @@
 
 
 
+<script>
+   function readURL(input) {
 
+      if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+               $('#imagePreview').css('background-image', 'url('+e.target.result +')');
+               $('#imagePreview').hide();
+               $('#imagePreview').fadeIn(650);
+            }
+            reader.readAsDataURL(input.files[0]);
+      }
+   }
+   $("#id_avatar").change(function() {
+      readURL(this);
+   });
+</script> 
 
 
 <script>

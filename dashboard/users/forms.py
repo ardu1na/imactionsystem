@@ -43,7 +43,8 @@ class SignupForm(forms.ModelForm):
 class CustomUserForm(forms.ModelForm):
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
     password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput)
-    
+    groups = forms.ModelMultipleChoiceField(queryset=Group.objects.all(),required=False)
+
 
     class Meta:
         model = CustomUser
@@ -53,12 +54,8 @@ class CustomUserForm(forms.ModelForm):
                   'first_name',
                   'last_name',
                   'groups',
-                  'about',
                   'is_active',
                   'is_staff',
-                  'facebook_url',
-                  'twitter_url',
-                  'linkedin_url',
                   'password1',
                   'password2',
                 )
@@ -81,6 +78,10 @@ class CustomUserForm(forms.ModelForm):
 
 
 
+
+
+
+
 class EditUserForm(forms.ModelForm):
     first_name = forms.CharField(required=True)
     last_name = forms.CharField(required=True)
@@ -97,11 +98,8 @@ class EditUserForm(forms.ModelForm):
                   'last_name',
                   
                   'groups',
-                  'about',
                   'is_active',
-                  'facebook_url',
-                  'twitter_url',
-                  'linkedin_url',
+                  'is_staff',
                 )
 
     def save(self, commit=True):
