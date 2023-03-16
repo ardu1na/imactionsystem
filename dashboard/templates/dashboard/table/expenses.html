@@ -1,6 +1,7 @@
 {% extends 'dashboard/elements/layouts/admin.html' %}
 
-{% load static %}
+{% load static %}{% load humanize %}
+
 
 {% block additional_css %}
 {% endblock %}
@@ -121,7 +122,7 @@
                                                     <a class="mb-0 fs-16 font-w500" href="{% url 'dashboard:editexpense' id=expense.id %}">{{expense.category}}</a>
                                                 </td>
                                                 <td> {{expense.concept|truncatechars:25}} </td>
-                                                <td>${{expense.value}}</td>
+                                                <td>${{expense.value|floatformat:2|intcomma}}</td>
                                                 <td>{{expense.wop}}</td>   
                                                 <td>{{expense.date|date:"d/m/Y"}}</td>   
                 
@@ -154,7 +155,7 @@
                                                             </div>
                                                         </td>
                                                         <td> {{employee.name}} </td>
-                                                        <td>${{employee.white}}</td>
+                                                        <td>${{employee.white|floatformat:2|intcomma}}</td>
                                                         <td>Bank Transfer</td>    
                                                         <td> - </td>   
                             
@@ -177,7 +178,7 @@
                                                             </div>
                                                         </td>
                                                         <td> {{employee.name}} </td>
-                                                        <td>${{employee.nigga}}</td>
+                                                        <td>${{employee.nigga|floatformat:2|intcomma}}</td>
                                                         <td>Cash</td>     
                                                         <td> - </td>   
                             
@@ -204,7 +205,7 @@
                                                             </div>
                                                         </td>
                                                         <td> {{employee.name}} </td>
-                                                        <td>${{employee.get_wage_ceo}}</td>
+                                                        <td>${{employee.get_wage_ceo|floatformat:2|intcomma}}</td>
                                                         <td>Various</td>  
                                                         <td> - </td>   
                         
@@ -231,7 +232,7 @@
                                                 </div>
                                             </td>
                                             <td> MONTHLY BONUS </td>
-                                            <td>${{all_bonus|floatformat:2}}</td>
+                                            <td>${{all_bonus|floatformat:2|intcomma}}</td>
                                             <td>Various</td>    
                                             <td> - </td>   
                             

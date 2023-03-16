@@ -1,6 +1,7 @@
 {% extends 'dashboard/elements/layouts/admin.html' %}
 
-{% load static %}
+{% load static %}{% load humanize %}
+
 
 {% block additional_css %}
 {% endblock %}
@@ -161,7 +162,7 @@
                                            <a href="{% url 'dashboard:editsale' id=sale.id %}"> {{sale.service}} </a>
                                             {% endif %} 
                                         </td>
-                                        <td>${{sale.get_change}}</td>
+                                        <td>${{sale.change|floatformat:2|intcomma}}</td>
                                         <td>{{sale.fail_can}}</td>
                                         <td><div class="d-flex align-items-center">
                                             {{sale.comment_can|truncatechars:25}}</div></td>    
