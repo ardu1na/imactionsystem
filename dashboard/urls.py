@@ -22,7 +22,7 @@ urlpatterns = [
     path('expenses/', dashboard_views.expenses, name="expenses"),
     path('expenses/delete/<int:id>/', dashboard_views.deleteexpense, name="deleteexpense"), 
     path('expenses/edit/<int:id>/', dashboard_views.editexpense, name="editexpense"), 
-    path('expenses/bi/',dashboard_views.biexp, name="biexp"),
+    path('bi/', dashboard_views.bi, name="bi"),
     path('expenses/deleteexpenses/', dashboard_views.delete_expenses, name="deleteexpenses"),
 
     
