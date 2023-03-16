@@ -192,6 +192,7 @@ class EditWageForm(ModelForm):
         
         widgets = {           
 
+            
             'white' : TextInput(attrs={
                 'class':"form-control",
                 'id':"white",
@@ -227,4 +228,5 @@ class EditWageForm(ModelForm):
                 'id':"atm_cash",
                 'placeholder' : "ATM CASH"
                 }
+        
             ),}

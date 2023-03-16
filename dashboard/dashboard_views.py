@@ -173,13 +173,13 @@ def expenses(request):
     with_wages = without_wages + all_bonus
     for employee in employees:
         with_wages += employee.white
-        with_wages += employee.nigga
+        with_wages += employee.get_nigga
         
         
     ceo = 0
     for employee in employees.filter(rol="CEO"):
         ceo += employee.white
-        ceo += employee.nigga
+        ceo += employee.get_nigga
         ceo += employee.mp
         ceo += employee.tc
         ceo += employee.atm_cash
@@ -189,7 +189,7 @@ def expenses(request):
     staff = 0
     for employee in employees.filter(rol="Staff"):
         staff += employee.white
-        staff += employee.nigga
+        staff += employee.get_nigga
         staff += employee.get_aguinaldo_mensual
    
                 
@@ -247,11 +247,11 @@ def biexp(request):
             for employee in employees:
                 if employee.rol == "Staff":
                     wages += employee.white
-                    wages += employee.nigga
+                    wages += employee.get_nigga
                     wages += employee.get_aguinaldo_mensual
                 if employee.rol == "CEO":
                     wages_ceo += employee.white
-                    wages_ceo += employee.nigga
+                    wages_ceo += employee.get_nigga
                     wages_ceo += employee.mp
                     wages_ceo += employee.tc
                     wages_ceo += employee.atm_cash
@@ -296,11 +296,11 @@ def biexp(request):
             for employee in employees:
                 if employee.rol == "Staff":
                     wages += employee.white
-                    wages += employee.nigga
+                    wages += employee.get_nigga
                     wages += employee.get_aguinaldo_mensual
                 if employee.rol == "CEO":
                     wages_ceo += employee.white
-                    wages_ceo += employee.nigga
+                    wages_ceo += employee.get_nigga
                     wages_ceo += employee.mp
                     wages_ceo += employee.tc
                     wages_ceo += employee.atm_cash

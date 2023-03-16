@@ -4,72 +4,68 @@
 {% block content %}
 
 
-<!-- START modal edit wages -->
+<!-- START modal edit wages employee -->
 <div class="modal fade " id="editwage{{editemployee.id}}" tabindex="-1" aria-labelledby="editwage{{editemployee.id}}Label" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
+
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="editwage{{editemployee.id}}Label">{{editemployee.name}} WAGES</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>           
-            <form  method="post" class="basic-form" >
+            </div>       
+
+            <form  method="post">
             {% csrf_token %}
                 <div class="modal-body">
                 
-                    <li class="list-group-item">
-                        <h4>WHITE</h4> 
-                        <p class="fs-4">
-                            <span class="badge light badge-info">
-                                $ {{editwageform.white}}
-                            </span>
-                        </p>
-                    </li>
-                    <li class="list-group-item">
-                        <h4>NIGGA</h4> 
-                        <p class="fs-4">
-                            <span class="badge light badge-danger">
-                                $ {{editwageform.nigga}}
-                            </span>
-                        </p>
-                    </li>
+                  
+                    <div class="form-group my-3">
+                        <label class="form-label">White</label>
+
+                         {{editwageform.white}}
+                    </div>
+
+                    <div class="form-group my-3">
+                        <label class="form-label">Nigga %</label>
+
+                            {{editwageform.nigga}}
+                    </div>
 
                     {% if editemployee.rol == "CEO" %}
-                        <li class="list-group-item">
-                            <h4>MP</h4> 
-                            <p class="fs-4">
-                                <span class="badge light badge-primary">
-                                    $ {{editwageform.mp}}
-                                </span>
-                            </p>
-                        </li>
-                        <li class="list-group-item">
-                            <h4>TC</h4> 
-                            <p class="fs-4">
-                                <span class="badge light badge-secondary">
-                                    $ {{editwageform.tc}}
-                                </span>
-                            </p>
-                        </li>
-                        <li class="list-group-item">
-                            <h4>ATM CASH</h4> 
-                            <p class="fs-4">
-                                <span class="badge light badge-warning">
-                                    $ {{editwageform.atm_cash}}
-                                </span>
-                            </p>
-                        </li>
+
+                    <div id="ceo">
+                        <div class="form-group my-3">
+                            <label class="form-label">MP</label>
+
+                                {{editwageform.mp}}
+                        </div>
+
+                        <div class="form-group my-3">
+                            <label class="form-label">TC</label>
+
+                            {{editwageform.tc}}
+                        </div>
+
+                        <div class="form-group my-3">
+                            <label class="form-label">ATM CASH</label>
+
+                             {{editwageform.atm_cash}}
+                        </div>
+
+                    </div>
                     {% endif %}
 
 
                     <div class="form-floating my-3 text-center">
                         <button type="submit" class="shadow-sm btn btn-secondary" name="editwage"><i class="fa-solid fa-check me-2"></i> Submit</button>
                     </div>
+
                 </div>
             </form>
         </div>
     </div>
 </div>
-<!-- END modal edit wages -->
+<!-- END modal add employee -->
 
 
 
