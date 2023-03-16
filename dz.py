@@ -113,7 +113,7 @@ dz_array = {
                                     f"{foldername_d}/vendor/bootstrap-daterangepicker/daterangepicker.css",
                                     f"{foldername_d}/vendor/select2/css/select2.min.css",
                                 ],
-                                "biexp":[
+                                "bi":[
                                     f"{foldername_d}/vendor/bootstrap-daterangepicker/daterangepicker.css",
                                     f"{foldername_d}/vendor/select2/css/select2.min.css",
                                 ],
@@ -254,7 +254,7 @@ dz_array = {
                                     f"{foldername_d}/vendor/pickadate/themes/default.css",
                                     f"{foldername_d}/vendor/pickadate/themes/default.date.css",
                                 ],
-                                "biexp":[
+                                "bi":[
                                     f"{foldername_d}/vendor/bootstrap-daterangepicker/daterangepicker.css",
                                     f"{foldername_d}/vendor/clockpicker/css/bootstrap-clockpicker.min.css",
                                     f"{foldername_d}/vendor/jquery-asColorPicker/css/asColorPicker.min.css",
@@ -385,7 +385,7 @@ dz_array = {
                                     f"{foldername_d}/js/dashboard/instructor-courses.js",
                                     f"{foldername_d}/js/dlab.carousel.js",
                                 ],
-                                "biexp":[
+                                "bi":[
                                     f"{foldername_d}/vendor/chart.js/Chart.bundle.min.js",
                                     f"{foldername_d}/vendor/apexchart/apexchart.js",
                                     f"{foldername_d}/vendor/peity/jquery.peity.min.js",
@@ -586,7 +586,7 @@ dz_array = {
                                 f"{foldername_d}/js/plugins-init/material-date-picker-init.js",
                                 f"{foldername_d}/js/plugins-init/pickadate-init.js",
                             ],
-                            "biexp":[
+                            "bi":[
                                 f"{foldername_d}/vendor/bootstrap-select/dist/js/bootstrap-select.min.js",
                                 f"{foldername_d}/vendor/chart.js/Chart.bundle.min.js",
                                 f"{foldername_d}/vendor/apexchart/apexchart.js",

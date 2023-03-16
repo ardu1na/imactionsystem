@@ -266,9 +266,9 @@ def expenses(request):
     return render(request,'dashboard/table/expenses.html', context)
 
 
-@user_passes_test(lambda user: user.groups.filter(name='expenses').exists())
+@user_passes_test(lambda user: user.groups.filter(name='admin').exists())
 @login_required(login_url='dashboard:login')
-def biexp(request):
+def bi(request):
     if request.method == 'GET':
         daterange_str = request.GET.get('daterange')
         if daterange_str:
@@ -397,7 +397,7 @@ def biexp(request):
         "all": all
     }
 
-    return render(request,'dashboard/table/biexpe.html', context)
+    return render(request,'dashboard/table/bi.html', context)
 
 
 @user_passes_test(lambda user: user.groups.filter(name='expenses').exists())
