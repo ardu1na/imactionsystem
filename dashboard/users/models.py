@@ -42,12 +42,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 	first_name = models.CharField(max_length=255,blank=True, null=True)
 	last_name = models.CharField(max_length=255,blank=True, null=True)
 	groups = models.ManyToManyField(Group,blank=True)
-	about = models.TextField(_('about'),max_length=500,blank=True)
 
-	facebook_url = models.URLField(max_length = 255, null=True, blank=True)
-	twitter_url = models.URLField(max_length = 255, null=True, blank=True)
-	linkedin_url = models.URLField(max_length = 255, null=True, blank=True)
-	
 	is_staff = models.BooleanField(default=True)
 	is_active = models.BooleanField(default=True)
 	

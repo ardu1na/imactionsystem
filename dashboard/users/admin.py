@@ -14,12 +14,7 @@ class UserAdminConfig(UserAdmin):
 	fieldsets=(
 			(None,{'fields':('username','email', 'first_name','last_name',)}),
 			('Permissions',{'fields':('is_staff','is_active','is_superuser','groups','user_permissions')}),
-			('Personal',{'fields':('facebook_url','twitter_url','linkedin_url','about',)}),
 		)
-
-	formfield_overrides = {
-		CustomUser.about: {'widget': Textarea(attrs={'rows':10,'cols':40})},
-	}
 
 	add_fieldsets = (
 	(None,{

@@ -15,6 +15,7 @@ import mimetypes
 from django.db.models import Sum
 from datetime import datetime
 
+from django.db.models import Q
 
 from customers.models import *
 from customers.forms import *
@@ -45,10 +46,12 @@ from itertools import chain
 
 from django.core.paginator import Paginator
 
+from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.models import Group
 
    
     
-    
+@user_passes_test(lambda user: user.groups.filter(name='sessions').exists())   
 @login_required(login_url='dashboard:login')
 def activity(request):
     ct = ContentType.objects.get_for_model(LastBlue)
@@ -74,7 +77,6 @@ def activity(request):
 
 
 
-
 @login_required(login_url='dashboard:login')
 def setting (request):
     context = {
@@ -84,7 +86,7 @@ def setting (request):
 
 
 
-
+@user_passes_test(lambda user: user.groups.filter(name='sessions').exists())
 @login_required(login_url='dashboard:login')
 def conf(request):
     
@@ -115,7 +117,7 @@ def conf(request):
 
 
 
-
+@user_passes_test(lambda user: user.groups.filter(name='expenses').exists())
 @login_required(login_url='dashboard:login')
 def editexpense(request, id):
     editexpense = Expense.objects.get(id=id)
@@ -139,7 +141,7 @@ def editexpense(request, id):
             return HttpResponseRedirect('/expenses/')
         else: return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
         
-
+@user_passes_test(lambda user: user.groups.filter(name='expenses').exists())
 @login_required(login_url='dashboard:login')
 def expenses(request):
     
@@ -206,7 +208,7 @@ def expenses(request):
     return render(request,'dashboard/table/expenses.html', context)
 
 
-
+@user_passes_test(lambda user: user.groups.filter(name='expenses').exists())
 @login_required(login_url='dashboard:login')
 def biexp(request):
     if request.method == 'GET':
@@ -340,7 +342,7 @@ def biexp(request):
     return render(request,'dashboard/table/biexpe.html', context)
 
 
-
+@user_passes_test(lambda user: user.groups.filter(name='expenses').exists())
 @login_required(login_url='dashboard:login')
 def deleteexpense(request, id):
     expense = Expense.objects.get(id=id)
@@ -351,7 +353,7 @@ def deleteexpense(request, id):
 
 
 
-
+@user_passes_test(lambda user: user.groups.filter(name='employees').exists())
 @login_required(login_url='dashboard:login')
 def editemployee(request, id):
     
@@ -398,7 +400,7 @@ def editemployee(request, id):
                 return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
         
 
-
+@user_passes_test(lambda user: user.groups.filter(name='employees').exists())
 @login_required(login_url='dashboard:login')
 def employees(request):
     staff = Employee.objects.filter(rol="Staff")
@@ -428,6 +430,8 @@ def employees(request):
     }
     return render(request,'dashboard/instructor/employees.html',context)
 
+
+@user_passes_test(lambda user: user.groups.filter(name='employees').exists())
 @login_required(login_url='dashboard:login')
 def deleteemployee(request, id):
     employee = Employee.objects.get(id=id)
@@ -438,6 +442,7 @@ def deleteemployee(request, id):
 
 
 
+@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
 def sales(request):
     
@@ -562,6 +567,7 @@ def sales(request):
     }
     return render(request,'dashboard/table/sales.html',context)
 
+@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
 def salesdata(request):
     sales_rr_current_year = Sale.objects.filter(revenue="RR").filter(cancelled="Active")\
@@ -639,6 +645,7 @@ def salesdata(request):
 
 
 
+@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
 def deletesale(request, id):
     sale = Sale.objects.get(id=id)
@@ -646,6 +653,7 @@ def deletesale(request, id):
     return redirect(reverse('dashboard:sales')+ "?deleted")
 
 
+@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
 def editsale(request, id):
     
@@ -669,6 +677,7 @@ def editsale(request, id):
             return redirect(reverse('dashboard:sales')+ "?ok")
         else: return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
 
+@user_passes_test(lambda user: user.groups.filter(name='clients').exists())
 @login_required(login_url='dashboard:login')
 def clients(request):
     clients = Client.objects.filter(cancelled="Active")
@@ -783,7 +792,7 @@ def clients(request):
 
 
 
-
+@user_passes_test(lambda user: user.groups.filter(Q(name='sales')).exists())
 @login_required(login_url='dashboard:login')
 def cancellations(request):
     clients_cancelled = Client.objects.filter(cancelled="Cancelled")
@@ -816,6 +825,7 @@ def cancellations(request):
     return render(request,'dashboard/instructor/cancellations.html',context)
 
 
+@user_passes_test(lambda user: user.groups.filter(name='clients').exists())
 @login_required(login_url='dashboard:login')
 def deleteclient(request, id):
     client = Client.objects.get(id=id)
@@ -824,6 +834,7 @@ def deleteclient(request, id):
 
 
 
+@user_passes_test(lambda user: user.groups.filter(name='clients').exists())
 @login_required(login_url='dashboard:login')
 def delete_clients(request):
     if request.method == 'POST' and 'delete' in request.POST:
@@ -833,6 +844,7 @@ def delete_clients(request):
     else:
         return HttpResponseBadRequest('Invalid request')
 
+@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
 def delete_sales(request):
     if request.method == 'POST' and 'delete' in request.POST:
@@ -843,6 +855,7 @@ def delete_sales(request):
         return HttpResponseBadRequest('Invalid request')
     
     
+@user_passes_test(lambda user: user.groups.filter(name='expenses').exists())
 @login_required(login_url='dashboard:login')
 def delete_expenses(request):
     if request.method == 'POST' and 'delete' in request.POST:
@@ -853,6 +866,7 @@ def delete_expenses(request):
         return HttpResponseBadRequest('Invalid request')    
 
 
+@user_passes_test(lambda user: user.groups.filter(name='clients').exists())
 @login_required(login_url='dashboard:login')
 def editclient(request, id):
     
@@ -887,7 +901,7 @@ def editclient(request, id):
         
         
         
-        
+@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
 def addclientsale(request, id):
     
