@@ -5,17 +5,26 @@
         <ul class="metismenu" id="menu">
             
             <hr>
-
+            {% for group in request.user.groups.all %}
+            {% if group.name == "clients" %}
             <li><a href="{% url 'dashboard:clients' %}">
                 <i class="bi bi-people"></i> 
                 <span class="nav-text">CLIENTS</span></a>
             </li>
+            {% endif %}
+            {% endfor %}
 
-           
+            {% for group in request.user.groups.all %}
+            {% if group.name == "sales" %}
             <li><a href="{% url 'dashboard:sales' %}">
                 <i class="bi bi-file-earmark-spreadsheet"></i>
                 <span class="nav-text">SALES</span></a>
             </li>
+            {% endif %}
+            {% endfor %}
+
+            {% for group in request.user.groups.all %}
+            {% if group.name == "admin" %}            
 
             <li>
                 <a href="{% url 'dashboard:cancellations' %}">
@@ -23,7 +32,11 @@
                     <span class="nav-text">CANCELLATIONS</span>
                 </a>
             </li>
+            {% endif %}
+            {% endfor %}
 
+            {% for group in request.user.groups.all %}
+            {% if group.name == "expenses" %}            
             <li><a class="has-arrow " href="javascript:void(0);" aria-expanded="false">
                 <i class="bi bi-file-arrow-up"></i>
                 <span class="nav-text">EXPENSES</span></a>
@@ -32,9 +45,12 @@
                     <li><a href="{% url 'dashboard:employees' %}"> WAGES/EMPLOYEES </a></li>
                 </ul>
             </li>
+            {% endif %}
+            {% endfor %}
 
             <hr>
-
+            {% for group in request.user.groups.all %}
+            {% if group.name == "admin" %}         
             <li>
                 <a href="{% url 'dashboard:setting' %}">
                     <i class="fa-solid fa-gear"></i>
@@ -49,6 +65,8 @@
                     <span class="nav-text">ACTIVITY</span>
                 </a>
             </li>
+            {% endif %}
+            {% endfor %}
 
             <hr>
 

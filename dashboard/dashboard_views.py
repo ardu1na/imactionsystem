@@ -51,7 +51,7 @@ from django.contrib.auth.models import Group
 
    
     
-@user_passes_test(lambda user: user.groups.filter(name='sessions').exists())   
+@user_passes_test(lambda user: user.groups.filter(name='admin').exists())   
 @login_required(login_url='dashboard:login')
 def activity(request):
     ct = ContentType.objects.get_for_model(LastBlue)
@@ -86,7 +86,7 @@ def setting (request):
 
 
 
-@user_passes_test(lambda user: user.groups.filter(name='sessions').exists())
+@user_passes_test(lambda user: user.groups.filter(name='admin').exists())
 @login_required(login_url='dashboard:login')
 def conf(request):
     
