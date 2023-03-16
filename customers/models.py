@@ -68,7 +68,7 @@ class Client(models.Model):
 
     )
 
-    name = models.CharField(max_length=150)
+    name = models.CharField(max_length=150, unique=True)
     business_name = models.CharField(max_length=150, blank=True, null=True)
     cuit = models.CharField(max_length=80, blank=True, null=True, verbose_name="CUIT")
     source = models.CharField(max_length=50, choices=CANAL_CHOICES, null=True, blank=False, default=None)
