@@ -138,7 +138,7 @@
 
 
                                     <td>
-                                        <a href="{% url 'dashboard:user-details' id=user.id %}">
+                                        <a href="{% url 'dashboard:edit-user' id=user.id %}">
                                         <div class="d-flex align-items-center">
                                             <span class="w-space-no">{{ user.first_name }} {{ user.last_name }}</span>
                                         </div>
@@ -161,9 +161,7 @@
                                     <td>
                                         <div class="sweetalert">
                                             <div class="d-flex">
-                                                {% if perms.auth.change_permission %}
-                                                <a href="{% url 'dashboard:assign-permissions-to-user' id=user.id %}" class="btn btn-secondary shadow btn-xs sharp me-1" title="Permissions"><i class="fa fa-shield"></i></a>
-                                                {% endif %}
+                                                
                                                 {% if perms.users.change_customuser %}
                                                 <a href="{% url 'dashboard:edit-user' id=user.id %}" class="btn btn-primary shadow btn-xs sharp me-1" title="Edit"><i class="fa fa-pencil"></i></a>
                                                 {% endif %}
