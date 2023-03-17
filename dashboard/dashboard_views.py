@@ -1270,7 +1270,7 @@ def index(request):
     except:
         pass
 
-    blue = (last_blue.venta+last_blue.compra)/2
+    blue = (b_venta+b_compra)/2
     
     
     # GRAPHS rr   
