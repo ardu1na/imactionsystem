@@ -1262,15 +1262,17 @@ def index(request):
 
     last_blue = LastBlue.objects.get(pk=1) 
     try:
-            if last_blue.venta != b_venta:
+        blue = (b_venta+b_compra)/2
+        if last_blue.venta != b_venta:
                 last_blue.venta = b_venta
-            if last_blue.compra != b_compra:
+        if last_blue.compra != b_compra:
                 last_blue.compra = b_compra
-            last_blue.save()
+        last_blue.save()
+            
     except:
-        pass
+       blue = (last_blue.venta+last_blue.compra)/2
 
-    blue = (b_venta+b_compra)/2
+    
     
     
     # GRAPHS rr   
