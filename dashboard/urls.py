@@ -17,7 +17,10 @@ urlpatterns = [
 
     path('employees/',dashboard_views.employees, name="employees"),
     path('employees/delete/<int:id>/', dashboard_views.deleteemployee, name="deleteemployee"), 
-    path('employees/edit/<int:id>/', dashboard_views.editemployee, name="editemployee"), 
+    path('employees/edit/<int:id>/', dashboard_views.editemployee, name="editemployee"),
+    
+    path('ceo/',dashboard_views.ceo, name="ceo"),
+    path('ceo/edit/<int:id>/', dashboard_views.editceo, name="editceo"),  
 
     path('expenses/', dashboard_views.expenses, name="expenses"),
     path('expenses/delete/<int:id>/', dashboard_views.deleteexpense, name="deleteexpense"), 

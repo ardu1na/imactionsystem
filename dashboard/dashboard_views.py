@@ -375,6 +375,78 @@ def deleteemployee(request, id):
 
 
 
+@user_passes_test(lambda user: user.groups.filter(name='admin').exists())
+@login_required(login_url='dashboard:login')
+def editceo(request, id):
+    
+    editemployee = Employee.objects.get(id=id)
+
+    if request.method == "GET":
+        
+        editform = EditEmployeeForm(instance=editemployee)
+        editwageform = EditWageForm(instance=editemployee)
+
+        context = {
+            'editform': editform,
+            'editwageform': editform,
+            'editemployee': editemployee,
+            'id': id
+            }
+        
+        return render (request, 'dashboard/instructor/editemployee.html', context)
+
+    
+    if request.method == 'POST':
+        if "editemployee" in request.POST:
+            editform = EditEmployeeForm(request.POST, instance=editemployee)
+            if editform.is_valid():
+                editform.save()
+                return redirect(reverse('dashboard:ceo')+ "?ok")
+            else:
+                return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
+        else:
+            editwageform=EditWageForm(request.POST, instance=editemployee)          
+            editwageform.salary = request.POST['salary']
+            editwageform.nigga = request.POST['nigga']
+            if editwageform.is_valid():
+                editwageform.save()
+                return redirect(reverse('dashboard:ceo')+ "?ok")
+
+            else: 
+                return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
+        
+
+@user_passes_test(lambda user: user.groups.filter(name='admin').exists())
+@login_required(login_url='dashboard:login')
+def ceo(request):
+    ceo = Employee.objects.filter(rol="CEO")        
+    
+    if request.method == 'GET':
+        addform = EmployeeForm()
+        
+    if request.method == 'POST':
+        if "addemployee" in request.POST:
+            addform = EmployeeForm(request.POST)
+            if addform.is_valid():
+                addform.save()
+                return redirect(reverse('dashboard:ceo')+ "?added")
+            else:
+                return HttpResponse("hacked from las except else form")                            
+    
+    
+
+          
+    context={
+        "ceo": ceo,
+        "addform": addform,        
+        "page_title":"WAGES/CEO",
+    }
+    return render(request,'dashboard/instructor/ceo.html',context)
+
+
+
+
+
 
 
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())

@@ -78,7 +78,11 @@ class Employee(models.Model):
         total = self.salary + self.get_social + self.get_aguinaldo_mensual
         return total
     
-
+    @property
+    def get_total_ceo (self):
+        total = self.salary + self.get_aguinaldo_mensual + self.mp + self.atm_cash + self.tc
+        return total
+    
     def __str__ (self):
         return self.name
     
