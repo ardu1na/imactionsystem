@@ -8,25 +8,20 @@
 
 {% block content %}
 
-
 <div class="row">
-    <div class="col-xl-12 col-md-6">
+    <div class="card">
 
-                
-        <div class="card">
-            <div class="card-header border-0 pb-0">
-                <h4>EXPENSES BY CATEGORY</h4>
-                
+        <div class="card-body">
+            <div class="col-12">
+                        <div id="morris_donught" class="morris_chart_height"></div>
+                    </div>    
             </div>
-
-            <div class="card-body">
-                <div id="expchart"></div>
-                
-            </div>	
         </div>
+
     </div>
 </div>
-        
+
+
     <!-- main -->
         <div class="row">
 
@@ -95,7 +90,7 @@
                             </span>
                             <div class="media-body">
                                 <p class="mb-1">Wages CEO</p>
-                                <h4 class="mb-0">$ 0</h4>
+                                <h4 class="mb-0">${{wages_ceo|floatformat:2}}</h4>
                             </div>
                         </div>
                         
@@ -171,9 +166,9 @@
                                                                 <a class="mb-0 fs-16 font-w500" href="{% url 'dashboard:editemployee' id=employee.id %}">Wages</a>
                                                             </div>
                                                         </td>
-                                                        <td> {{employee.name}} / white </td>
-                                                        <td>${{employee.get_white|floatformat:2|intcomma}}</td>
-                                                        <td>Bank Transfer</td>    
+                                                        <td> {{employee.name}} / total </td>
+                                                        <td>${{employee.get_total|floatformat:2|intcomma}}</td>
+                                                        <td>Various</td>    
                                                         <td> - </td>   
                             
                                                         <td>
@@ -186,6 +181,14 @@
                                                             </div>                                        
                                                         </td>
                                                     </tr>
+                                                   
+
+                                            {% endfor %}
+                                        {% endif %}
+
+                                        {% if ceo %}
+                                            {% for employee in ceo %}
+                                                
                                                     <tr>
                                                         <td> - </td>   
 
@@ -194,44 +197,26 @@
                                                                 <a class="mb-0 fs-16 font-w500" href="{% url 'dashboard:editemployee' id=employee.id %}">Wages</a>
                                                             </div>
                                                         </td>
-                                                        <td> {{employee.name}} / nigga </td>
-                                                        <td>${{employee.get_nigga|floatformat:2|intcomma}}</td>
-                                                        <td>Cash</td>     
+                                                        <td> {{employee.name}} / total </td>
+                                                        <td>${{employee.get_total_ceo|floatformat:2|intcomma}}</td>
+                                                        <td>Various</td>    
                                                         <td> - </td>   
                             
                                                         <td>
                                                             <div class="d-flex flex-row">
-                                                                
-                                                                                                                                                    
+                                                                                                                                                                                                            
                                                                     <!-- edit BUTTON -->
                                                                     <a href="{% url 'dashboard:editemployee' id=employee.id %}" class="shadow-sm btn btn-secondary mx-1 px-3">
                                                                         <i class="fa-solid fa-pen-to-square"></i>
                                                                     </a>                                                 
-                                                            </div>                                         
+                                                            </div>                                        
                                                         </td>
                                                     </tr>
+                                                   
 
                                             {% endfor %}
                                         {% endif %}
-                                        {% if all_bonus %}
-                                        <tr>
-                                            <td> - </td>   
-
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <a class="mb-0 fs-16 font-w500">Wages/BONUS</a>
-                                                </div>
-                                            </td>
-                                            <td> MONTHLY BONUS (all employees) </td>
-                                            <td>${{all_bonus|floatformat:2|intcomma}}</td>
-                                            <td>Various</td>    
-                                            <td> - </td>   
-                            
-                                            <td>
-                                                                                
-                                            </td>
-                                        </tr>
-                                        {% endif %}
+                                        
                                     </tbody>
                                 </table>
                             </div>
@@ -329,109 +314,6 @@
 
 
 
-<script>
-
-    (function($) {
-        /* "use strict" */
-        
-     var dlabChartlist = function(){
-         
-        var screenWidth = $(window).width();
-        
-        
-         var expchart = function() {
-            var options = {
-                series: [{{empresa|floatformat:1}}, {{lead_gen|floatformat:1}}, {{office|floatformat:1}}, {{other|floatformat:1}}, {{tax|floatformat:1}}, {{wages_staff|floatformat:1}}],
-                chart: {
-                  type: 'donut',
-                  height: 500
-                },
-                dataLabels: {
-                  enabled: true,
-                  formatter: function(val, opts) {
-                    return val.toFixed(0) + '%'
-                  },
-                  style: {
-                    fontSize: '12px',
-                    colors: ['#fff'],
-              
-                  },
-                  dropShadow: {
-                    enabled: false,
-                  }
-                },
-                stroke: {
-                  width: 0,
-                },
-                colors: ['#FEC64F', '#e35b17', '#17e3e3', '#e31739', '#171ee3', '#c417e3', ],
-                legend: {
-                  position: 'bottom',
-                  show: true,
-                  labels: {
-                    useSeriesColors: false,
-                    colors: ['#FEC64F', '#e35b17', '#17e3e3', '#e31739', '#171ee3', '#c417e3'],
-                    formatter: function(seriesName, opts) {
-                      return opts.w.globals.labels[opts.seriesIndex] + ": " + seriesName + "%";
-                    }
-                  }
-                },
-                labels: ['Empresa ${{empresa|floatformat:2}}', 'LeadGen ${{lead_gen|floatformat:2}} ', 'Office ${{office|floatformat:2}} ', 'Others ${{other|floatformat:2}}', 'Tax ${{tax|floatformat:2}} ', 'Wages Staff ${{wages_staff|floatformat:2}}'],
-                responsive: [{
-                    breakpoint: 1800,
-                    options: {
-                      chart: {
-                        height: 400
-                      },
-                    }
-                  }, {
-                    breakpoint: 1200,
-                    options: {
-                      chart: {
-                        height: 300
-                      },
-                    }
-                  }, {
-                    breakpoint: 600,
-                    options: {
-                      chart: {
-                        height: 200
-                      },
-                    }
-                  }]
-                  
-              };
-              
-            var chart = new ApexCharts(document.querySelector("#expchart"), options);
-            chart.render();
-        }
-     
-        /* Function ============ */
-        return {
-            init:function(){
-            },
-            
-            
-            load:function(){
-                expchart();
-            },
-            
-            resize:function(){
-            }
-        }
-    
-    }();
-    
-    jQuery(window).on('load',function(){
-        setTimeout(function(){
-            dlabChartlist.load();
-        }, 1000); 
-        
-    });
-    
-    })(jQuery);
-    </script>
-
-
 
  <!-- NEWMODALS -->
  <script>
@@ -480,7 +362,69 @@
     }
 </script>
 
+<script>
+    var dlabMorris = function(){
+    
+    var chart;
+    var screenWidth = $(window).width();
 
+    var setChartWidth = function(){
+        if(screenWidth <= 768)
+        {
+            var chartBlockWidth = 0;
+            chartBlockWidth = (screenWidth < 300 )?screenWidth:300;
+            jQuery('.morris_chart_height').css('min-width',chartBlockWidth - 31);
+        }
+    }
+
+    var donutChart = function(){
+        chart = Morris.Donut({
+            element: 'morris_donught',
+            data: [{
+                label: "\xa0 \xa0 Office \xa0 \xa0",
+                value: {{office}},
+
+            }, {
+                label: "\xa0 \xa0 Taxes \xa0 \xa0",
+                value: {{tax}}
+            }, {
+                label: "\xa0 \xa0 Company \xa0 \xa0",
+                value: {{empresa}}
+            }],
+            resize: true,
+            redraw: true,
+            colors: ['#ff6a59', 'rgb(255, 92, 0)', '#4cbc9a'],
+            //responsive:true,
+
+        });
+    }
+
+    /* Function ============ */
+    return {
+        init:function(){
+            setChartWidth();
+            donutChart();
+        },
+
+
+        resize:function(){
+            screenWidth = $(window).width();
+            setChartWidth();
+            if (chart) {
+                chart.destroy();
+            }
+            donutChart();
+        }
+    }
+
+}();
+
+// To destroy and start again the chart
+chart.destroy();
+donutChart();
+
+
+</script>
 
 
 

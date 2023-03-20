@@ -147,6 +147,7 @@ def expenses(request):
     
     expenses = Expense.objects.all()
     employees = Employee.objects.filter(active="Yes").exclude(rol="CEO")
+    ceo = Employee.objects.filter(rol="CEO", active="Yes")
     
     if request.method == 'GET':
         addform = ExpenseForm()
@@ -166,12 +167,18 @@ def expenses(request):
     
     all_bonus = 0
     wages_staff = 0
+    wages_ceo = 0
+    
+    for i in ceo:
+        wages_ceo += i.get_total_ceo
+        all_bonus += i.get_aguinaldo_mensual
+        
     for employee in employees:
         wages_staff += employee.get_total
         all_bonus += employee.get_aguinaldo_mensual
         
     
-    with_wages = without_wages + wages_staff
+    with_wages = without_wages + wages_staff + wages_ceo
     
     empresa = 0
     lead_gen = 0
@@ -190,12 +197,8 @@ def expenses(request):
         if expense.category == "Others":
             other += expense.value
         if expense.category == "Tax":
-            tax += expense.value
-        
-
-    
-
-        
+            tax += expense.value    
+                
     context={
         "page_title": "Expenses",
         "expenses" : expenses,
@@ -206,15 +209,14 @@ def expenses(request):
         "all_bonus" : all_bonus,
         "employees" : employees,
         
-        "staff": wages_staff,
+        "wages_staff": wages_staff,
         "empresa" : empresa,
         "lead_gen" : lead_gen,
         "office" : office,
         "other" : other,
         "tax" : tax,
-        "wages" : wages_staff,
-        
-        
+        "wages_ceo" : wages_ceo,
+        "ceo" : ceo,     
         
     }
 
