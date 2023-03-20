@@ -20,9 +20,9 @@
                 
                   
                     <div class="form-group my-3">
-                        <label class="form-label">White</label>
+                        <label class="form-label">Salary</label>
 
-                         {{editwageform.white}}
+                         {{editwageform.salary}}
                     </div>
 
                     <div class="form-group my-3">
@@ -159,7 +159,7 @@
                             <div class="tab-pane fade" id="messages8" role="tabpanel">
                                 <div class="pt-4">
                                     
-                                    <div class="basic-list-group m-3">
+                                    <div class="basic-list-group m-3 px-4">
                                         <div class="form-floating my-2 d-flex flex-row-reverse">                                                
                                             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editwage{{editemployee.id}}">CHANGE
                                             </button>
@@ -169,7 +169,7 @@
                                                 <h4>WHITE</h4> 
                                                 <p class="fs-4">
                                                     <span class="badge light badge-info">
-                                                        $ {{editemployee.white}}
+                                                        $ {{editemployee.get_white|floatformat:2}}
                                                     </span>
                                                 </p>
                                             </li>
@@ -178,7 +178,7 @@
                                                 <h4>NIGGA</h4> 
                                                 <p class="fs-4">
                                                     <span class="badge light badge-danger">
-                                                        $ {{editemployee.nigga}}
+                                                        $ {{editemployee.get_nigga|floatformat:2}}
                                                     </span>
                                                 </p>
                                             </li>
@@ -211,7 +211,7 @@
                                             {% endif %}
 
                                             <li class="list-group-item">
-                                                <h4>Social</h4> 
+                                                <h4>TAX</h4> 
                                                 <p class="fs-4">
                                                     <span class="badge light badge-success">
                                                         $  {{editemployee.get_social|floatformat:2}}
@@ -229,10 +229,10 @@
                                             </li>
 
                                             <li class="list-group-item">
-                                                <h4>ANNUAL BONUS</h4> 
+                                                <h4>TOTAL</h4> 
                                                 <p class="fs-4">
                                                     <span class="badge light badge-dark">
-                                                        $  {{editemployee.get_aguinaldo|floatformat:2}}
+                                                        $  {{editemployee.get_total|floatformat:2}}
                                                     </span>
                                                 </p>
                                             </li>

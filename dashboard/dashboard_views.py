@@ -165,7 +165,7 @@ def expenses(request):
             else:
                 return HttpResponse("hacked from las except else form")
             
-    without_wages = 0
+    """ without_wages = 0
     for expense in expenses:
         without_wages += expense.value
         
@@ -190,15 +190,15 @@ def expenses(request):
     for employee in employees.exclude(rol="CEO"):
         staff += employee.white
         staff += employee.get_nigga
-        staff += employee.get_aguinaldo_mensual
+        staff += employee.get_aguinaldo_mensual"""
    
     empresa = 0
     lead_gen = 0
     office = 0
     other = 0
     tax = 0
-    wages = 0
-    wages_ceo = 0
+    #wages = 0
+    #wages_ceo = 0
 
     
     for expense in expenses:
@@ -212,7 +212,7 @@ def expenses(request):
             other += expense.value
         if expense.category == "Tax":
             tax += expense.value
-    for employee in employees:
+    """for employee in employees:
         if employee.rol != "CEO":
             wages += employee.white
             wages += employee.get_nigga
@@ -223,19 +223,19 @@ def expenses(request):
             wages_ceo += employee.mp
             wages_ceo += employee.tc
             wages_ceo += employee.atm_cash
-            wages_ceo += employee.get_aguinaldo_mensual
+            wages_ceo += employee.get_aguinaldo_mensual"""
 
     
-    all = empresa + lead_gen + office + tax + other + wages + wages_ceo
+    all = empresa + lead_gen + office + tax + other #+ wages + wages_ceo
     
     try:
         emp = (empresa*100)/all
         lead = (lead_gen*100)/all
         taxes = (tax*100)/all
-        wage = (wages*100)/all
+        #wage = (wages*100)/all
         others = (other*100)/all
         offic= (office*100)/all
-        wage_ceo = (wages_ceo*100)/all
+        #wage_ceo = (wages_ceo*100)/all
     except:
         emp = 0
         lead = 0
@@ -248,20 +248,20 @@ def expenses(request):
     context={
         "page_title": "Expenses",
         "expenses" : expenses,
-        "employees": employees,
+        #"employees": employees,
         "addform" : addform,
-        "all_bonus": all_bonus, 
-        "without_wages" : without_wages,
-        "with_wages": with_wages,
-        "ceo": ceo,
-        "staff": staff,
+        #"all_bonus": all_bonus, 
+        #"without_wages" : without_wages,
+        #"with_wages": with_wages,
+        #"ceo": ceo,
+        #"staff": staff,
         "empresa" : empresa,
         "lead_gen" : lead_gen,
         "office" : office,
         "other" : other,
         "tax" : tax,
-        "wages" : wages,
-        "wages_ceo" : wages_ceo,
+        #"wages" : wages,
+        #"wages_ceo" : wages_ceo,
         "emp": emp,
         "lead" : lead,
         "offic" : offic,
@@ -377,7 +377,7 @@ def editemployee(request, id):
                 return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
         else:
             editwageform=EditWageForm(request.POST, instance=editemployee)          
-            editwageform.white = request.POST['white']
+            editwageform.salary = request.POST['salary']
             editwageform.nigga = request.POST['nigga']
             if editwageform.is_valid():
                 editwageform.save()
