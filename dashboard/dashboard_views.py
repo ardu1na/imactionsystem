@@ -146,14 +146,9 @@ def editexpense(request, id):
 def expenses(request):
     
     expenses = Expense.objects.all()
-    employees = Employee.objects.filter(active="Yes")
-    all_bonus = 0
-    for employee in employees:
-        all_bonus += employee.get_aguinaldo_mensual
-  
+    employees = Employee.objects.filter(active="Yes").exclude(rol="CEO")
     
     if request.method == 'GET':
-        
         addform = ExpenseForm()
         
     if request.method == 'POST':
@@ -165,110 +160,32 @@ def expenses(request):
             else:
                 return HttpResponse("hacked from las except else form")
             
-    """ without_wages = 0
+    without_wages = 0
     for expense in expenses:
         without_wages += expense.value
-        
-        
-    with_wages = without_wages + all_bonus
+    
+    all_bonus = 0
+    wages_staff = 0
     for employee in employees:
-        with_wages += employee.white
-        with_wages += employee.get_nigga
-        
-        
-    ceo = 0
-    for employee in employees.filter(rol="CEO"):
-        ceo += employee.white
-        ceo += employee.get_nigga
-        ceo += employee.mp
-        ceo += employee.tc
-        ceo += employee.atm_cash
-        ceo += employee.get_aguinaldo_mensual
+        wages_staff += employee.get_total
+        all_bonus += employee.get_aguinaldo_mensual
+                
+    with_wages = without_wages + wages_staff
+    
+    
+    
 
         
-    staff = 0
-    for employee in employees.exclude(rol="CEO"):
-        staff += employee.white
-        staff += employee.get_nigga
-        staff += employee.get_aguinaldo_mensual"""
-   
-    empresa = 0
-    lead_gen = 0
-    office = 0
-    other = 0
-    tax = 0
-    #wages = 0
-    #wages_ceo = 0
-
-    
-    for expense in expenses:
-        if expense.category == "Empresa":
-            empresa += expense.value
-        if expense.category == "Lead Gen":
-            lead_gen += expense.value
-        if expense.category == "Office":
-            office += expense.value
-        if expense.category == "Others":
-            other += expense.value
-        if expense.category == "Tax":
-            tax += expense.value
-    """for employee in employees:
-        if employee.rol != "CEO":
-            wages += employee.white
-            wages += employee.get_nigga
-            wages += employee.get_aguinaldo_mensual
-        if employee.rol == "CEO":
-            wages_ceo += employee.white
-            wages_ceo += employee.get_nigga
-            wages_ceo += employee.mp
-            wages_ceo += employee.tc
-            wages_ceo += employee.atm_cash
-            wages_ceo += employee.get_aguinaldo_mensual"""
-
-    
-    all = empresa + lead_gen + office + tax + other #+ wages + wages_ceo
-    
-    try:
-        emp = (empresa*100)/all
-        lead = (lead_gen*100)/all
-        taxes = (tax*100)/all
-        #wage = (wages*100)/all
-        others = (other*100)/all
-        offic= (office*100)/all
-        #wage_ceo = (wages_ceo*100)/all
-    except:
-        emp = 0
-        lead = 0
-        taxes = 0
-        wage = 0
-        others = 0
-        offic=0
-        wage_ceo = 0
-                               
     context={
         "page_title": "Expenses",
         "expenses" : expenses,
-        #"employees": employees,
         "addform" : addform,
-        #"all_bonus": all_bonus, 
-        #"without_wages" : without_wages,
-        #"with_wages": with_wages,
-        #"ceo": ceo,
-        #"staff": staff,
-        "empresa" : empresa,
-        "lead_gen" : lead_gen,
-        "office" : office,
-        "other" : other,
-        "tax" : tax,
-        #"wages" : wages,
-        #"wages_ceo" : wages_ceo,
-        "emp": emp,
-        "lead" : lead,
-        "offic" : offic,
-        "others": others,
-        "taxes": taxes,
-        "wage" : wage,
-        "wage_ceo": wage_ceo,
+        "without_wages" : without_wages,
+        "with_wages": with_wages,
+        "wages_staff" : wages_staff,
+        "all_bonus" : all_bonus,
+        "employees" : employees,
+        
         
     }
 
