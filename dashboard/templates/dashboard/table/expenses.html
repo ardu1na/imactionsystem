@@ -145,7 +145,7 @@
 
                                         {% if employees %}
                                             {% for employee in employees %}
-                                                {% if employee.rol == "Staff" %}
+                                                {% if employee.rol != "CEO" %}
                                                     <tr>
                                                         <td> - </td>   
 

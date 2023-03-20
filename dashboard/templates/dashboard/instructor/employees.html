@@ -281,5 +281,14 @@
     }        
 </script>
 
+<script>
+    var select = document.getElementById("rol"); 
+    var option = select.querySelector('option[value="CEO"]'); 
+        if (option) 
+        {select.removeChild(option);}
+</script>
+
+
+
 
 {% endblock %}
