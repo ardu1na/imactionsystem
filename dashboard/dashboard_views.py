@@ -228,14 +228,23 @@ def expenses(request):
     
     all = empresa + lead_gen + office + tax + other + wages + wages_ceo
     
-    emp = (empresa*100)/all
-    lead = (lead_gen*100)/all
-    taxes = (tax*100)/all
-    wage = (wages*100)/all
-    others = (other*100)/all
-    offic= (office*100)/all
-    wage_ceo = (wages_ceo*100)/all
-                            
+    try:
+        emp = (empresa*100)/all
+        lead = (lead_gen*100)/all
+        taxes = (tax*100)/all
+        wage = (wages*100)/all
+        others = (other*100)/all
+        offic= (office*100)/all
+        wage_ceo = (wages_ceo*100)/all
+    except:
+        emp = 0
+        lead = 0
+        taxes = 0
+        wage = 0
+        others = 0
+        offic=0
+        wage_ceo = 0
+                               
     context={
         "page_title": "Expenses",
         "expenses" : expenses,
@@ -1136,17 +1145,19 @@ def download_config(request):
 @login_required(login_url='dashboard:login')
 def index(request):
     today = date.today()
-    last_backup = BackUps.objects.get(id=1)
-    if last_backup.date.month != today.month:
-        print("doing back up")
-        export_sales()
-        export_clients()
-        export_employees()
-        export_expenses()
-        last_backup.date = today
-        last_backup.save()
-    else:
-        print("don't need to back up, allready updated")
+    try :
+        last_backup = BackUps.objects.get(id=1)
+        if last_backup.date.month != today.month:
+            print("doing back up")
+            export_sales()
+            export_clients()
+            export_employees()
+            export_expenses()
+            last_backup.date = today
+            last_backup.save()
+        else:
+            print("don't need to back up, allready updated")
+    except: pass
         
         
     clients = Client.objects.all()
@@ -1182,7 +1193,9 @@ def index(request):
             elif client.tier == "V":
                 v += 1
 
+    
     last_blue = LastBlue.objects.get(pk=1) 
+    
     try:
         blue = (b_venta+b_compra)/2
         if last_blue.venta != b_venta:

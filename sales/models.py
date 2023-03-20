@@ -6,7 +6,8 @@ from decimal import Decimal
 
 
 class LastBlue (models.Model):
-    compra = models.DecimalField(max_digits=15, decimal_places=2)
+    compra = models.DecimalField(max_digits=15, decimal_places=2
+                                 )
     venta = models.DecimalField(max_digits=15, decimal_places=2)
     date_updated = models.DateTimeField(auto_now=True)
     
