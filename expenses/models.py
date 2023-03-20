@@ -4,13 +4,26 @@ from django.db import models
 
 
 class Employee(models.Model):
-    STAFF = 'Staff'
+    SEO = 'SEO'
+    GADS = 'GADS'
+    FADS = 'FADS'
+    DESIGN = 'Design'
+    ADMIN = 'Admin'
+    SALES = 'Sales'
+    OTHERS = 'Others'
     CEO = 'CEO'
     ROL_CHOICES = (
-        (STAFF, ('Staff')),
+        (SEO, ('SEO')),
+        (GADS, ('GADS')),
+        (FADS, ('FADS')),
+        (DESIGN, ('Design')),
+        (ADMIN, ('Admin')),
+        (SALES, ('Sales')),
+        (OTHERS, ('Others')),
         (CEO, ('CEO')),)
+
     
-    
+
     ACTIVE = 'Yes'
     GONE = 'No'
     ACT_CHOICES = (
@@ -18,7 +31,7 @@ class Employee(models.Model):
         (GONE, ('No')),)
     
     
-    rol = models.CharField(max_length=15, choices=ROL_CHOICES, blank=False,  verbose_name="ROL", default="Staff")
+    rol = models.CharField(max_length=15, choices=ROL_CHOICES, blank=False, null=True,  verbose_name="ROL", default=None)
     
     name = models.CharField(max_length=150, verbose_name="NAME")
     

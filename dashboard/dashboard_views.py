@@ -187,7 +187,7 @@ def expenses(request):
 
         
     staff = 0
-    for employee in employees.filter(rol="Staff"):
+    for employee in employees.exclude(rol="CEO"):
         staff += employee.white
         staff += employee.get_nigga
         staff += employee.get_aguinaldo_mensual
@@ -213,7 +213,7 @@ def expenses(request):
         if expense.category == "Tax":
             tax += expense.value
     for employee in employees:
-        if employee.rol == "Staff":
+        if employee.rol != "CEO":
             wages += employee.white
             wages += employee.get_nigga
             wages += employee.get_aguinaldo_mensual
@@ -266,138 +266,60 @@ def expenses(request):
     return render(request,'dashboard/table/expenses.html', context)
 
 
+
+
 @user_passes_test(lambda user: user.groups.filter(name='admin').exists())
 @login_required(login_url='dashboard:login')
 def bi(request):
-    if request.method == 'GET':
-        daterange_str = request.GET.get('daterange')
-        if daterange_str:
-            try:
-                start_date_str, end_date_str = daterange_str.split(' - ')
-                start_date = datetime.strptime(start_date_str, '%m/%d/%Y')
-                end_date = datetime.strptime(end_date_str, '%m/%d/%Y')
-            except ValueError:
-                return HttpResponse("Invalid date format")
-            expenses = Expense.objects.filter(date__range=(start_date, end_date))
-            employees = Employee.objects.filter(active="Yes")
-            
-            
-            empresa = 0
-            lead_gen = 0
-            office = 0
-            other = 0
-            tax = 0
-            wages = 0
-            wages_ceo = 0
+    sales = Sale.objects.all()
+    clients = Client.objects.all()
+    expenses = Expense.objects.all()
+    employees = Employee.objects.all()
+    combined_list = list(chain(sales, clients, expenses, employees))
+    
+    services = ['SEO','Google Ads','Facebook Ads','Web Design', 'Hosting', 'LinkedIn', 'SSL certificate','Web Plan','Combo', 'Community Management', 'Email Marketing', 'Others', 'Others RR']
+    kind = ['Upsell', 'New Client', 'Cross Sell']
+    revenue = ['RR', 'OneOff']
+    cancelled = ['Cancelled', 'Active']
+    if request.GET.getlist('service'):
+        selected_services = request.GET.getlist('service')
         
-            
-            for expense in expenses:
-                if expense.category == "Empresa":
-                    empresa += expense.value
-                if expense.category == "Lead Gen":
-                    lead_gen += expense.value
-                if expense.category == "Office":
-                    office += expense.value
-                if expense.category == "Others":
-                    other += expense.value
-                if expense.category == "Tax":
-                    tax += expense.value
-            for employee in employees:
-                if employee.rol == "Staff":
-                    wages += employee.white
-                    wages += employee.get_nigga
-                    wages += employee.get_aguinaldo_mensual
-                if employee.rol == "CEO":
-                    wages_ceo += employee.white
-                    wages_ceo += employee.get_nigga
-                    wages_ceo += employee.mp
-                    wages_ceo += employee.tc
-                    wages_ceo += employee.atm_cash
-                    wages_ceo += employee.get_aguinaldo_mensual
+        sales = Sale.objects.filter(service__in=selected_services)
+    else:
+        sales = Sale.objects.all()
 
-            
-            all = empresa + lead_gen + office + tax + other + wages + wages_ceo
-            
-            emp = (empresa*100)/all
-            lead = (lead_gen*100)/all
-            taxes = (tax*100)/all
-            wage = (wages*100)/all
-            others = (other*100)/all
-            offic= (office*100)/all
-            wage_ceo = (wages_ceo*100)/all
+        if request.GET.getlist('kind'):
+            selected_kinds = request.GET.getlist('kind')
+            sales = sales.filter(kind__in=selected_kinds)
 
-        else:
-            expenses = Expense.objects.all()
-            employees = Employee.objects.filter(active="Yes")
-            
-                    
-            empresa = 0
-            lead_gen = 0
-            office = 0
-            other = 0
-            tax = 0
-            wages = 0
-            wages_ceo = 0
-        
-            
-            for expense in expenses:
-                if expense.category == "Empresa":
-                    empresa += expense.value
-                if expense.category == "Lead Gen":
-                    lead_gen += expense.value
-                if expense.category == "Office":
-                    office += expense.value
-                if expense.category == "Others":
-                    other += expense.value
-                if expense.category == "Tax":
-                    tax += expense.value
-            for employee in employees:
-                if employee.rol == "Staff":
-                    wages += employee.white
-                    wages += employee.get_nigga
-                    wages += employee.get_aguinaldo_mensual
-                if employee.rol == "CEO":
-                    wages_ceo += employee.white
-                    wages_ceo += employee.get_nigga
-                    wages_ceo += employee.mp
-                    wages_ceo += employee.tc
-                    wages_ceo += employee.atm_cash
-                    wages_ceo += employee.get_aguinaldo_mensual
+        if request.GET.getlist('revenue'):
+            selected_revenues = request.GET.getlist('revenue')
+            sales = sales.filter(revenue__in=selected_revenues)
 
-            
-            all = empresa + lead_gen + office + tax + other + wages + wages_ceo
-            
-            emp = (empresa*100)/all
-            lead = (lead_gen*100)/all
-            taxes = (tax*100)/all
-            wage = (wages*100)/all
-            others = (other*100)/all
-            offic= (office*100)/all
-            wage_ceo = (wages_ceo*100)/all
-                    
+        if request.GET.getlist('cancelled'):
+            selected_cancelled = request.GET.getlist('cancelled')
+            sales = sales.filter(cancelled__in=selected_cancelled)
+
+
+
+        clients = Client.objects.all()
+        expenses = Expense.objects.all()
+        employees = Employee.objects.all()
+        combined_list = list(chain(sales, clients, expenses, employees))
+    
     context={
         "page_title": "BUSINESS INTELLIGENCE",
-        "expenses" : expenses,
-        "employees": employees,
-        "empresa" : empresa,
-        "lead_gen" : lead_gen,
-        "office" : office,
-        "other" : other,
-        "tax" : tax,
-        "wages" : wages,
-        "wages_ceo" : wages_ceo,
-        "emp": emp,
-        "lead" : lead,
-        "offic" : offic,
-        "others": others,
-        "taxes": taxes,
-        "wage" : wage,
-        "wage_ceo": wage_ceo,
+        "data": combined_list,
+        "services": services,
+        "kind": kind,
+        "revenue": revenue,
+        "cancelled": cancelled,
+        "sales":sales
         
-        "all": all
     }
 
     return render(request,'dashboard/table/bi.html', context)
+
 
 
 @user_passes_test(lambda user: user.groups.filter(name='expenses').exists())
@@ -461,7 +383,7 @@ def editemployee(request, id):
 @user_passes_test(lambda user: user.groups.filter(name='employees').exists())
 @login_required(login_url='dashboard:login')
 def employees(request):
-    staff = Employee.objects.filter(rol="Staff")
+    staff = Employee.objects.exclude(rol="CEO")
     ceo = Employee.objects.filter(rol="CEO")        
     employees  = Employee.objects.filter(active="Yes")
     all = Employee.objects.all()

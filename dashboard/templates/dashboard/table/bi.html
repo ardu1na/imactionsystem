@@ -7,32 +7,64 @@
 
 {% block content %}
         
-    <!-- main -->
-        <div class="row">
-            <div class="col-xl-12 col-md-6">
-
-                        
-                <div class="card">
-                    <div class="card-header border-0 pb-0">
-                        <h4>EXPENSES BY CATEGORY</h4>
-						<form method="get">
-							<div class="d-flex flex-row">
-								<input class="form-control input-daterange-datepicker" type="text" name="daterange" value="01/01/2022 - 01/31/2030">
-								<span><input type="submit" class="btn btn-outline-dark ms-2"></span>
-							</div>
-
-						</form>
-                    </div>
-
-                    <div class="card-body">
-                        <div id="expchart"></div>
-                        
-                    </div>	
-                </div>
-            </div>
+   
+<!-- main -->
+<div class="row">
+    <div class="col-xl-12 col-md-6">
+        <div class="card">
+            <div class="card-body">
+				<form method="get" name="filter">
+					<div class="form-group">
+						<label for="service">Service:</label>
+						{% for service in services %}
+						<input type="checkbox" name="service" id="{{service}}" value="{{service}}">
+						<label for="{{service}}">{{service}}</label>
+						{% endfor %}
+					</div>
+					<div class="form-group">
+						<label for="kind">Kind:</label>
+						{% for k in kind %}
+						<input type="checkbox" name="kind" id="{{k}}" value="{{k}}">
+						<label for="{{k}}">{{k}}</label>
+						{% endfor %}
+					</div>
+					<div class="form-group">
+						<label for="revenue">Revenue:</label>
+						{% for r in revenue %}
+						<input type="checkbox" name="revenue" id="{{r}}" value="{{r}}">
+						<label for="{{r}}">{{r}}</label>
+						{% endfor %}
+					</div>
+					<div class="form-group">
+						<label for="cancelled">Cancelled:</label>
+						{% for c in cancelled %}
+						<input type="checkbox" name="cancelled" id="{{c}}" value="{{c}}">
+						<label for="{{c}}">{{c}}</label>
+						{% endfor %}
+					</div>
+				
+					<button class="btn btn-dark px-4" type="submit" name="filter">Filter</button>
+				</form>
+				
+				
+            </div>	
         </div>
+    </div>
+</div>
 
-
+<!-- main -->
+<div class="row">
+    <div class="col-xl-12 col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h2>DATA:</h2>
+                {% for d in sales %}
+                    <p>{{d}}</p>
+                {% endfor %}	
+            </div>	
+        </div>
+    </div>
+</div>
 
 
 
@@ -42,121 +74,4 @@
 {% endblock %}
 
 {% block additional_js %}
-
-<script>
-    // Get the query parameter from the URL
-    const queryParams = new URLSearchParams(window.location.search);
-    const dateRange = queryParams.get('daterange');
-
-    // Set the value of the input field
-    const inputField = document.querySelector('.input-daterange-datepicker');
-    if (dateRange) {
-        inputField.value = dateRange;
-    }
-</script>
-
-
-
-
-<script>
-
-(function($) {
-    /* "use strict" */
-	
- var dlabChartlist = function(){
-	 
-	var screenWidth = $(window).width();
-	
-	
-	 var expchart = function() {
-		var options = {
-			series: [{{emp|floatformat:1}}, {{wage|floatformat:1}}, {{lead|floatformat:1}}, {{offic|floatformat:1}}, {{others|floatformat:1}}, {{taxes|floatformat:0}}, {{wage_ceo|floatformat:0}}],
-			chart: {
-			  type: 'donut',
-			  height: 500
-			},
-			dataLabels: {
-			  enabled: true,
-			  formatter: function(val, opts) {
-				return val.toFixed(0) + '%'
-			  },
-			  style: {
-				fontSize: '12px',
-				colors: ['#fff'],
-		  
-			  },
-			  dropShadow: {
-				enabled: false,
-			  }
-			},
-			stroke: {
-			  width: 0,
-			},
-			colors: ['#FEC64F', '#e35b17', '#17e3e3', '#e31739', '#171ee3', '#c417e3', '#14b57d'],
-			legend: {
-			  position: 'bottom',
-			  show: true,
-			  labels: {
-				useSeriesColors: false,
-				colors: ['#FEC64F', '#e35b17', '#17e3e3', '#e31739', '#171ee3', '#c417e3', '#14b57d'],
-				formatter: function(seriesName, opts) {
-				  return opts.w.globals.labels[opts.seriesIndex] + ": " + seriesName + "%";
-				}
-			  }
-			},
-			labels: ['Empresa ${{empresa|floatformat:2}}', 'Wages ${{wages|floatformat:2}} ', 'LeadGen ${{lead_gen|floatformat:2}} ', 'Office ${{office|floatformat:2}}', 'Others ${{other|floatformat:2}} ', 'Taxes ${{tax|floatformat:2}}', 'Wages CEO ${{wages_ceo|floatformat:2}}'],
-			responsive: [{
-				breakpoint: 1800,
-				options: {
-				  chart: {
-					height: 400
-				  },
-				}
-			  }, {
-				breakpoint: 1200,
-				options: {
-				  chart: {
-					height: 300
-				  },
-				}
-			  }, {
-				breakpoint: 600,
-				options: {
-				  chart: {
-					height: 200
-				  },
-				}
-			  }]
-			  
-		  };
-		  
-		var chart = new ApexCharts(document.querySelector("#expchart"), options);
-		chart.render();
-	}
- 
-	/* Function ============ */
-	return {
-		init:function(){
-		},
-		
-		
-		load:function(){
-			expchart();
-		},
-		
-		resize:function(){
-		}
-	}
-
-}();
-
-jQuery(window).on('load',function(){
-	setTimeout(function(){
-		dlabChartlist.load();
-	}, 1000); 
-	
-});
-
-})(jQuery);
-</script>
 {% endblock %}

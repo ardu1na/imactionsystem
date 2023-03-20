@@ -270,10 +270,10 @@
 <script>
     var can = document.getElementById("rol");
     var info = document.getElementById("ceo");
-    info.style.display = (can.value === "Staff") ? "none" : "block";
+    info.style.display = (can.value !== "CEO") ? "none" : "block";
     can.onchange=function(){
     
-        if(this.value=="Staff"){
+        if(this.value!="CEO"){
             info.style.display="none";  
         }else{
             info.style.display="block";
