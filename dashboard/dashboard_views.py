@@ -169,10 +169,30 @@ def expenses(request):
     for employee in employees:
         wages_staff += employee.get_total
         all_bonus += employee.get_aguinaldo_mensual
-                
+        
+    
     with_wages = without_wages + wages_staff
     
+    empresa = 0
+    lead_gen = 0
+    office = 0
+    other = 0
+    tax = 0
+
     
+    for expense in expenses:
+        if expense.category == "Empresa":
+            empresa += expense.value
+        if expense.category == "Lead Gen":
+            lead_gen += expense.value
+        if expense.category == "Office":
+            office += expense.value
+        if expense.category == "Others":
+            other += expense.value
+        if expense.category == "Tax":
+            tax += expense.value
+        
+
     
 
         
@@ -185,6 +205,15 @@ def expenses(request):
         "wages_staff" : wages_staff,
         "all_bonus" : all_bonus,
         "employees" : employees,
+        
+        "staff": wages_staff,
+        "empresa" : empresa,
+        "lead_gen" : lead_gen,
+        "office" : office,
+        "other" : other,
+        "tax" : tax,
+        "wages" : wages_staff,
+        
         
         
     }
