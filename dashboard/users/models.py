@@ -48,8 +48,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 	last_name = models.CharField(max_length=255,blank=True)
 	groups = models.ManyToManyField(Group,blank=True)
 	
-	is_staff = models.BooleanField(default=False)
-	is_active = models.BooleanField(default=False)
+	is_staff = models.BooleanField(default=True)
+	is_active = models.BooleanField(default=True)
 	
 	objects = CustomAccountManager()
 
