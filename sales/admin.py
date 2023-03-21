@@ -1,6 +1,5 @@
 
 from django.contrib import admin
-from django.contrib.admin.models import LogEntry
 
 from unfold.admin import ModelAdmin
 from import_export.admin import ImportExportModelAdmin
