@@ -59,19 +59,134 @@
             <div class="card-body">
                 <h2>DATA:</h2>
                 {% for d in sales %}
-                    <p>{{d}}</p>
+                    <p>{{d}} ---> ${{d.change}}</p>
                 {% endfor %}	
             </div>	
         </div>
     </div>
 </div>
 
-
-
+<div class="col-xl-12 col-xxl-12 col-lg-12 col-sm-12">
+	<div class="card">
+		<div class="card-header">
+			<h4 class="card-title">DATA</h4>
+		</div>
+		<div class="card-body">
+			<canvas id="barChart_1"></canvas>
+		</div>
+	</div>
+</div>
 
 
 
 {% endblock %}
 
 {% block additional_js %}
+
+<script>
+	(function($) {
+		"use strict" 
+	
+		
+		/* function draw() {
+			
+		} */
+	
+	 var dzSparkLine = function(){
+		let draw = Chart.controllers.line.__super__.draw; //draw shadow
+		
+		var screenWidth = $(window).width();
+		
+		var barChart1 = function(){
+			if(jQuery('#barChart_1').length > 0 ){
+				const barChart_1 = document.getElementById("barChart_1").getContext('2d');
+		
+				barChart_1.height = 300;
+	
+				new Chart(barChart_1, {
+					type: 'bar',
+					data: {
+						defaultFontFamily: 'Poppins',
+						labels: [{% for label in labels %} "{{ label }}"{% if not forloop.last %}, {% endif %}{% endfor %}],
+						datasets: [
+						{
+							label: "Total amount",
+							data: [{% for amount in total_amounts %} 
+								{% if amount == 0 %} 
+									0.1{% if not forloop.last %}, {% endif %}
+								{% else %} 
+									{{ amount }}{% if not forloop.last %}, {% endif %}
+								{% endif %}{% endfor %}],
+							borderColor: 'rgba(235, 129, 83, 1)',
+							borderWidth: "0",
+							backgroundColor: [
+								'rgba(235, 129, 83, 1)',
+								'rgba(245, 40, 145, 0.8)',
+								'rgba(25, 200, 95, 0.8)',
+								'rgba(238, 199, 45, 0.8)',
+								'rgba(255, 12, 26, 0.8)',
+								'rgba(75, 12, 255, 0.8)',
+								'rgba(245, 40, 145, 0.8)',
+								'rgba(228, 242, 33, 0.8)',
+								'rgba(25, 200, 95, 0.8)',
+								'rgba(238, 199, 45, 0.8)',
+								'rgba(118, 242, 33, 0.8)',
+								'rgba(130, 33, 242, 0.8)',
+								'rgba(33, 184, 242, 0.8)',
+								]
+						}
+					]
+
+					},
+					options: {
+						legend: false, 
+						scales: {
+							yAxes: [{
+								ticks: {
+									beginAtZero: true
+								}
+							}],
+							xAxes: [{
+								// Change here
+								barPercentage: 0.5
+							}]
+						}
+					}
+				});
+			}
+		}
+	
+	
+	
+		/* Function ============ */
+		return {
+			init:function(){
+			},
+			
+			
+			load:function(){
+				barChart1();	
+			},
+			
+			resize:function(){
+				// barChart1();
+			}
+		}
+	
+	}();
+	
+	
+		
+	jQuery(window).on('load',function(){
+		dzSparkLine.load();
+	});
+	
+	jQuery(window).on('resize',function(){
+		//dzSparkLine.resize();
+		setTimeout(function(){ dzSparkLine.resize(); }, 1000);
+	});
+		
+	})(jQuery);
+</script>
+
 {% endblock %}

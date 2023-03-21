@@ -16,7 +16,7 @@ from django.db.models import Sum
 from datetime import datetime
 
 from django.db.models import Q
-
+from django.db.models import Count
 from customers.models import *
 from customers.forms import *
 from sales.models import *
@@ -263,15 +263,20 @@ def bi(request):
     employees = Employee.objects.all()
     combined_list = list(chain(sales, clients, expenses, employees))
     
-    services = ['SEO','Google Ads','Facebook Ads','Web Design', 'Hosting', 'LinkedIn', 'SSL certificate','Web Plan','Combo', 'Community Management', 'Email Marketing', 'Others', 'Others RR']
-    kind = ['Upsell', 'New Client', 'Cross Sell']
-    revenue = ['RR', 'OneOff']
-    cancelled = ['Cancelled', 'Active']
+    #services = ["Google Ads", "SEO","Facebook Ads","Web Design", "Hosting", "LinkedIn", "SSL certificate","Web Plan","Combo", "Community Management", "Email Marketing", "Others", "Others RR"]
+    kind = ["Upsell", "New Client", "Cross Sell"]
+    revenue = ["RR", "OneOff"]
+    cancelled = ["Cancelled", "Active"]
+    
+    services = ["Google Ads", "SEO","Facebook Ads","Web Design", "Hosting", "LinkedIn", "SSL certificate","Web Plan","Combo", "Community Management", "Email Marketing", "Others", "Others RR"]
+
+    
+
     if request.GET.getlist('service'):
         selected_services = request.GET.getlist('service')
-        
-        sales = Sale.objects.filter(service__in=selected_services)
+        sales = sales.filter(service__in=selected_services)
     else:
+        selected_services = services
         sales = Sale.objects.all()
 
         if request.GET.getlist('kind'):
@@ -285,14 +290,24 @@ def bi(request):
         if request.GET.getlist('cancelled'):
             selected_cancelled = request.GET.getlist('cancelled')
             sales = sales.filter(cancelled__in=selected_cancelled)
-
-
-
-        clients = Client.objects.all()
-        expenses = Expense.objects.all()
-        employees = Employee.objects.all()
-        combined_list = list(chain(sales, clients, expenses, employees))
     
+    
+    # Annotate the sales queryset with the total amount for each service
+    totals = sales.values('service').annotate(total_amount=Sum('change')).order_by('service')
+
+    # Create a dictionary mapping each service to its index in the `services` list
+    service_index = {service: index for index, service in enumerate(services)}
+
+    # Sort the totals by the index of the service in the `services` list
+    # Annotate the sales queryset with the total amount and count for each service
+    totals = sales.values('service').annotate(total_amount=Sum('change'), count=Count('id')).order_by('service')
+
+    # Create a new list of labels with the count of sales for each service
+    labels = [f"{total['service']} ({total['count']})" for total in totals]
+
+    # Extract the total amounts and labels in the correct order
+    total_amounts = [total['total_amount'] for total in totals]
+   
     context={
         "page_title": "BUSINESS INTELLIGENCE",
         "data": combined_list,
@@ -300,11 +315,13 @@ def bi(request):
         "kind": kind,
         "revenue": revenue,
         "cancelled": cancelled,
-        "sales":sales
-        
+        "sales":sales,
+        "labels": labels,
+        "total_amounts": total_amounts
     }
 
     return render(request,'dashboard/table/bi.html', context)
+
 
 
 

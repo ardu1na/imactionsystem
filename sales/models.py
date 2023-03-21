@@ -19,6 +19,11 @@ class LastBlue (models.Model):
 last_blue = LastBlue.objects.get(pk=1)
 blue = (last_blue.venta+last_blue.compra)/2
 
+
+
+
+
+
 class Sale(models.Model):
 
     UPSELL='Upsell'
