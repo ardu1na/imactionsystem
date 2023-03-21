@@ -146,14 +146,10 @@ def editexpense(request, id):
 def expenses(request):
     
     expenses = Expense.objects.all()
-    employees = Employee.objects.filter(active="Yes")
-    all_bonus = 0
-    for employee in employees:
-        all_bonus += employee.get_aguinaldo_mensual
-  
+    employees = Employee.objects.filter(active="Yes").exclude(rol="CEO")
+    ceo = Employee.objects.filter(rol="CEO", active="Yes")
     
     if request.method == 'GET':
-        
         addform = ExpenseForm()
         
     if request.method == 'POST':
@@ -168,37 +164,27 @@ def expenses(request):
     without_wages = 0
     for expense in expenses:
         without_wages += expense.value
+    
+    all_bonus = 0
+    wages_staff = 0
+    wages_ceo = 0
+    
+    for i in ceo:
+        wages_ceo += i.get_total_ceo
+        all_bonus += i.get_aguinaldo_mensual
         
-        
-    with_wages = without_wages + all_bonus
     for employee in employees:
-        with_wages += employee.white
-        with_wages += employee.get_nigga
+        wages_staff += employee.get_total
+        all_bonus += employee.get_aguinaldo_mensual
         
-        
-    ceo = 0
-    for employee in employees.filter(rol="CEO"):
-        ceo += employee.white
-        ceo += employee.get_nigga
-        ceo += employee.mp
-        ceo += employee.tc
-        ceo += employee.atm_cash
-        ceo += employee.get_aguinaldo_mensual
-
-        
-    staff = 0
-    for employee in employees.filter(rol="Staff"):
-        staff += employee.white
-        staff += employee.get_nigga
-        staff += employee.get_aguinaldo_mensual
-   
+    
+    with_wages = without_wages + wages_staff + wages_ceo
+    
     empresa = 0
     lead_gen = 0
     office = 0
     other = 0
     tax = 0
-    wages = 0
-    wages_ceo = 0
 
     
     for expense in expenses:
@@ -211,193 +197,86 @@ def expenses(request):
         if expense.category == "Others":
             other += expense.value
         if expense.category == "Tax":
-            tax += expense.value
-    for employee in employees:
-        if employee.rol == "Staff":
-            wages += employee.white
-            wages += employee.get_nigga
-            wages += employee.get_aguinaldo_mensual
-        if employee.rol == "CEO":
-            wages_ceo += employee.white
-            wages_ceo += employee.get_nigga
-            wages_ceo += employee.mp
-            wages_ceo += employee.tc
-            wages_ceo += employee.atm_cash
-            wages_ceo += employee.get_aguinaldo_mensual
-
-    
-    all = empresa + lead_gen + office + tax + other + wages + wages_ceo
-    
-    emp = (empresa*100)/all
-    lead = (lead_gen*100)/all
-    taxes = (tax*100)/all
-    wage = (wages*100)/all
-    others = (other*100)/all
-    offic= (office*100)/all
-    wage_ceo = (wages_ceo*100)/all
-                            
+            tax += expense.value    
+                
     context={
         "page_title": "Expenses",
         "expenses" : expenses,
-        "employees": employees,
         "addform" : addform,
-        "all_bonus": all_bonus, 
         "without_wages" : without_wages,
         "with_wages": with_wages,
-        "ceo": ceo,
-        "staff": staff,
+        "wages_staff" : wages_staff,
+        "all_bonus" : all_bonus,
+        "employees" : employees,
+        
+        "wages_staff": wages_staff,
         "empresa" : empresa,
         "lead_gen" : lead_gen,
         "office" : office,
         "other" : other,
         "tax" : tax,
-        "wages" : wages,
         "wages_ceo" : wages_ceo,
-        "emp": emp,
-        "lead" : lead,
-        "offic" : offic,
-        "others": others,
-        "taxes": taxes,
-        "wage" : wage,
-        "wage_ceo": wage_ceo,
+        "ceo" : ceo,     
         
     }
 
     return render(request,'dashboard/table/expenses.html', context)
 
 
+
+
 @user_passes_test(lambda user: user.groups.filter(name='admin').exists())
 @login_required(login_url='dashboard:login')
 def bi(request):
-    if request.method == 'GET':
-        daterange_str = request.GET.get('daterange')
-        if daterange_str:
-            try:
-                start_date_str, end_date_str = daterange_str.split(' - ')
-                start_date = datetime.strptime(start_date_str, '%m/%d/%Y')
-                end_date = datetime.strptime(end_date_str, '%m/%d/%Y')
-            except ValueError:
-                return HttpResponse("Invalid date format")
-            expenses = Expense.objects.filter(date__range=(start_date, end_date))
-            employees = Employee.objects.filter(active="Yes")
-            
-            
-            empresa = 0
-            lead_gen = 0
-            office = 0
-            other = 0
-            tax = 0
-            wages = 0
-            wages_ceo = 0
+    sales = Sale.objects.all()
+    clients = Client.objects.all()
+    expenses = Expense.objects.all()
+    employees = Employee.objects.all()
+    combined_list = list(chain(sales, clients, expenses, employees))
+    
+    services = ['SEO','Google Ads','Facebook Ads','Web Design', 'Hosting', 'LinkedIn', 'SSL certificate','Web Plan','Combo', 'Community Management', 'Email Marketing', 'Others', 'Others RR']
+    kind = ['Upsell', 'New Client', 'Cross Sell']
+    revenue = ['RR', 'OneOff']
+    cancelled = ['Cancelled', 'Active']
+    if request.GET.getlist('service'):
+        selected_services = request.GET.getlist('service')
         
-            
-            for expense in expenses:
-                if expense.category == "Empresa":
-                    empresa += expense.value
-                if expense.category == "Lead Gen":
-                    lead_gen += expense.value
-                if expense.category == "Office":
-                    office += expense.value
-                if expense.category == "Others":
-                    other += expense.value
-                if expense.category == "Tax":
-                    tax += expense.value
-            for employee in employees:
-                if employee.rol == "Staff":
-                    wages += employee.white
-                    wages += employee.get_nigga
-                    wages += employee.get_aguinaldo_mensual
-                if employee.rol == "CEO":
-                    wages_ceo += employee.white
-                    wages_ceo += employee.get_nigga
-                    wages_ceo += employee.mp
-                    wages_ceo += employee.tc
-                    wages_ceo += employee.atm_cash
-                    wages_ceo += employee.get_aguinaldo_mensual
+        sales = Sale.objects.filter(service__in=selected_services)
+    else:
+        sales = Sale.objects.all()
 
-            
-            all = empresa + lead_gen + office + tax + other + wages + wages_ceo
-            
-            emp = (empresa*100)/all
-            lead = (lead_gen*100)/all
-            taxes = (tax*100)/all
-            wage = (wages*100)/all
-            others = (other*100)/all
-            offic= (office*100)/all
-            wage_ceo = (wages_ceo*100)/all
+        if request.GET.getlist('kind'):
+            selected_kinds = request.GET.getlist('kind')
+            sales = sales.filter(kind__in=selected_kinds)
 
-        else:
-            expenses = Expense.objects.all()
-            employees = Employee.objects.filter(active="Yes")
-            
-                    
-            empresa = 0
-            lead_gen = 0
-            office = 0
-            other = 0
-            tax = 0
-            wages = 0
-            wages_ceo = 0
-        
-            
-            for expense in expenses:
-                if expense.category == "Empresa":
-                    empresa += expense.value
-                if expense.category == "Lead Gen":
-                    lead_gen += expense.value
-                if expense.category == "Office":
-                    office += expense.value
-                if expense.category == "Others":
-                    other += expense.value
-                if expense.category == "Tax":
-                    tax += expense.value
-            for employee in employees:
-                if employee.rol == "Staff":
-                    wages += employee.white
-                    wages += employee.get_nigga
-                    wages += employee.get_aguinaldo_mensual
-                if employee.rol == "CEO":
-                    wages_ceo += employee.white
-                    wages_ceo += employee.get_nigga
-                    wages_ceo += employee.mp
-                    wages_ceo += employee.tc
-                    wages_ceo += employee.atm_cash
-                    wages_ceo += employee.get_aguinaldo_mensual
+        if request.GET.getlist('revenue'):
+            selected_revenues = request.GET.getlist('revenue')
+            sales = sales.filter(revenue__in=selected_revenues)
 
-            
-            all = empresa + lead_gen + office + tax + other + wages + wages_ceo
-            
-            emp = (empresa*100)/all
-            lead = (lead_gen*100)/all
-            taxes = (tax*100)/all
-            wage = (wages*100)/all
-            others = (other*100)/all
-            offic= (office*100)/all
-            wage_ceo = (wages_ceo*100)/all
-                    
+        if request.GET.getlist('cancelled'):
+            selected_cancelled = request.GET.getlist('cancelled')
+            sales = sales.filter(cancelled__in=selected_cancelled)
+
+
+
+        clients = Client.objects.all()
+        expenses = Expense.objects.all()
+        employees = Employee.objects.all()
+        combined_list = list(chain(sales, clients, expenses, employees))
+    
     context={
         "page_title": "BUSINESS INTELLIGENCE",
-        "expenses" : expenses,
-        "employees": employees,
-        "empresa" : empresa,
-        "lead_gen" : lead_gen,
-        "office" : office,
-        "other" : other,
-        "tax" : tax,
-        "wages" : wages,
-        "wages_ceo" : wages_ceo,
-        "emp": emp,
-        "lead" : lead,
-        "offic" : offic,
-        "others": others,
-        "taxes": taxes,
-        "wage" : wage,
-        "wage_ceo": wage_ceo,
+        "data": combined_list,
+        "services": services,
+        "kind": kind,
+        "revenue": revenue,
+        "cancelled": cancelled,
+        "sales":sales
         
-        "all": all
     }
 
     return render(request,'dashboard/table/bi.html', context)
+
 
 
 @user_passes_test(lambda user: user.groups.filter(name='expenses').exists())
@@ -446,7 +325,7 @@ def editemployee(request, id):
                 return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
         else:
             editwageform=EditWageForm(request.POST, instance=editemployee)          
-            editwageform.white = request.POST['white']
+            editwageform.salary = request.POST['salary']
             editwageform.nigga = request.POST['nigga']
             if editwageform.is_valid():
                 editwageform.save()
@@ -461,7 +340,7 @@ def editemployee(request, id):
 @user_passes_test(lambda user: user.groups.filter(name='employees').exists())
 @login_required(login_url='dashboard:login')
 def employees(request):
-    staff = Employee.objects.filter(rol="Staff")
+    staff = Employee.objects.exclude(rol="CEO")
     ceo = Employee.objects.filter(rol="CEO")        
     employees  = Employee.objects.filter(active="Yes")
     all = Employee.objects.all()
@@ -495,6 +374,78 @@ def deleteemployee(request, id):
     employee = Employee.objects.get(id=id)
     employee.delete()
     return redirect(reverse('dashboard:employees')+ "?deleted")
+
+
+
+@user_passes_test(lambda user: user.groups.filter(name='admin').exists())
+@login_required(login_url='dashboard:login')
+def editceo(request, id):
+    
+    editemployee = Employee.objects.get(id=id)
+
+    if request.method == "GET":
+        
+        editform = EditEmployeeForm(instance=editemployee)
+        editwageform = EditWageForm(instance=editemployee)
+
+        context = {
+            'editform': editform,
+            'editwageform': editform,
+            'editemployee': editemployee,
+            'id': id
+            }
+        
+        return render (request, 'dashboard/instructor/editceo.html', context)
+
+    
+    if request.method == 'POST':
+        if "editemployee" in request.POST:
+            editform = EditEmployeeForm(request.POST, instance=editemployee)
+            if editform.is_valid():
+                editform.save()
+                return redirect(reverse('dashboard:ceo')+ "?ok")
+            else:
+                return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
+        else:
+            editwageform=EditWageForm(request.POST, instance=editemployee)          
+            editwageform.salary = request.POST['salary']
+            editwageform.nigga = request.POST['nigga']
+            if editwageform.is_valid():
+                editwageform.save()
+                return redirect(reverse('dashboard:ceo')+ "?ok")
+
+            else: 
+                return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
+        
+
+@user_passes_test(lambda user: user.groups.filter(name='admin').exists())
+@login_required(login_url='dashboard:login')
+def ceo(request):
+    ceo = Employee.objects.filter(rol="CEO")        
+    
+    if request.method == 'GET':
+        addform = EmployeeForm()
+        
+    if request.method == 'POST':
+        if "addemployee" in request.POST:
+            addform = EmployeeForm(request.POST)
+            if addform.is_valid():
+                addform.save()
+                return redirect(reverse('dashboard:ceo')+ "?added")
+            else:
+                return HttpResponse("hacked from las except else form")                            
+    
+    
+
+          
+    context={
+        "ceo": ceo,
+        "addform": addform,        
+        "page_title":"WAGES/CEO",
+    }
+    return render(request,'dashboard/instructor/ceo.html',context)
+
+
 
 
 
@@ -1214,17 +1165,19 @@ def download_config(request):
 @login_required(login_url='dashboard:login')
 def index(request):
     today = date.today()
-    last_backup = BackUps.objects.get(id=1)
-    if last_backup.date.month != today.month:
-        print("doing back up")
-        export_sales()
-        export_clients()
-        export_employees()
-        export_expenses()
-        last_backup.date = today
-        last_backup.save()
-    else:
-        print("don't need to back up, allready updated")
+    try :
+        last_backup = BackUps.objects.get(id=1)
+        if last_backup.date.month != today.month:
+            print("doing back up")
+            export_sales()
+            export_clients()
+            export_employees()
+            export_expenses()
+            last_backup.date = today
+            last_backup.save()
+        else:
+            print("don't need to back up, allready updated")
+    except: pass
         
         
     clients = Client.objects.all()
@@ -1260,7 +1213,9 @@ def index(request):
             elif client.tier == "V":
                 v += 1
 
+    
     last_blue = LastBlue.objects.get(pk=1) 
+    
     try:
         blue = (b_venta+b_compra)/2
         if last_blue.venta != b_venta:

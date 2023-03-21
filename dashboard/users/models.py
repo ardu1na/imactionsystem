@@ -36,19 +36,25 @@ def user_directory_path(instance, filename):
 	return f'users/{instance.email}/images/{filename}'
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-	
+	GENDER_CHOICES = (
+		('','Choose gender'),
+		('Male', 'Male'),
+		('Female', 'Female'),
+		('Others', 'Others'),
+	)
 	username = models.CharField(max_length=191,unique=True)
 	email = models.EmailField(_('email address'),unique=True)
-	first_name = models.CharField(max_length=255,blank=True, null=True)
-	last_name = models.CharField(max_length=255,blank=True, null=True)
+	first_name = models.CharField(max_length=255,blank=True)
+	last_name = models.CharField(max_length=255,blank=True)
 	groups = models.ManyToManyField(Group,blank=True)
-
+	
 	is_staff = models.BooleanField(default=True)
 	is_active = models.BooleanField(default=True)
 	
 	objects = CustomAccountManager()
 
 	USERNAME_FIELD = 'email'  
+	REQUIRED_FIELDS = ['username','first_name','last_name']
 	
 
 	def __str__(self):

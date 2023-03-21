@@ -171,6 +171,10 @@ dz_array = {
                                 "employees":[
                                     f"{foldername_d}/vendor/datatables/css/jquery.dataTables.min.css",
                                 ],
+                                 "ceo":[
+                                    f"{foldername_d}/vendor/datatables/css/jquery.dataTables.min.css",
+                                ],
+
 
                                 "instructor_resources":[],
                                 "instructor_transactions":[
@@ -406,6 +410,14 @@ dz_array = {
                                     f"{foldername_d}/vendor/owl-carousel/owl.carousel.js",
                                     f"{foldername_d}/js/dashboard/instructor-student.js",
                                 ],
+                                "ceo":[
+                                    f"{foldername_d}/vendor/chart.js/Chart.bundle.min.js",
+                                    f"{foldername_d}/vendor/apexchart/apexchart.js",
+                                    f"{foldername_d}/vendor/datatables/js/jquery.dataTables.min.js",
+                                    f"{foldername_d}/js/plugins-init/datatables.init.js",
+                                    f"{foldername_d}/vendor/owl-carousel/owl.carousel.js",
+                                    f"{foldername_d}/js/dashboard/instructor-student.js",
+                                ],
                                 "employees":[
                                     f"{foldername_d}/vendor/chart.js/Chart.bundle.min.js",
                                     f"{foldername_d}/vendor/apexchart/apexchart.js",
@@ -421,6 +433,17 @@ dz_array = {
                                     f"{foldername_d}/js/plugins-init/datatables.init.js",
                                     f"{foldername_d}/vendor/owl-carousel/owl.carousel.js",
                                     f"{foldername_d}/js/dashboard/instructor-student.js",
+                                    f"{foldername_d}/vendor/chart.js/Chart.bundle.min.js",
+                                    f"{foldername_d}/vendor/apexchart/apexchart.js",
+                                    f"{foldername_d}/vendor/jquery-sparkline/jquery.sparkline.min.js",
+                                    f"{foldername_d}/js/plugins-init/sparkline-init.js",
+                                    f"{foldername_d}/vendor/svganimation/vivus.min.js",
+                                    f"{foldername_d}/vendor/svganimation/svg.animation.js",
+                                     f"{foldername_d}/vendor/chart.js/Chart.bundle.min.js",
+                                    f"{foldername_d}/vendor/apexchart/apexchart.js",
+                                    f"{foldername_d}/vendor/raphael/raphael.min.js",
+                                    f"{foldername_d}/vendor/morris/morris.min.js",
+                                    f"{foldername_d}/js/plugins-init/morris-init.js",
                                 ],
                                 
                                 "instructor_resources":[

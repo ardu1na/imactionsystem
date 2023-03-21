@@ -9,7 +9,7 @@
 {% block content %}
 
 
-        
+
     <!-- main -->
         <div class="row">
 
@@ -60,7 +60,7 @@
                             </span>
                             <div class="media-body">
                                 <p class="mb-1">Wages staff</p>
-                                <h4 class="mb-0">$ {{staff|floatformat:2}} </h4>
+                                <h4 class="mb-0">$ {{wages_staff|floatformat:2}} </h4>
                             </div>
                         </div>
                         
@@ -78,7 +78,7 @@
                             </span>
                             <div class="media-body">
                                 <p class="mb-1">Wages CEO</p>
-                                <h4 class="mb-0">$ {{ceo|floatformat:2}} </h4>
+                                <h4 class="mb-0">${{wages_ceo|floatformat:2}}</h4>
                             </div>
                         </div>
                         
@@ -145,7 +145,7 @@
 
                                         {% if employees %}
                                             {% for employee in employees %}
-                                                {% if employee.rol == "Staff" %}
+                                                
                                                     <tr>
                                                         <td> - </td>   
 
@@ -154,9 +154,9 @@
                                                                 <a class="mb-0 fs-16 font-w500" href="{% url 'dashboard:editemployee' id=employee.id %}">Wages</a>
                                                             </div>
                                                         </td>
-                                                        <td> {{employee.name}} </td>
-                                                        <td>${{employee.white|floatformat:2|intcomma}}</td>
-                                                        <td>Bank Transfer</td>    
+                                                        <td> {{employee.name}} / total </td>
+                                                        <td>${{employee.get_total|floatformat:2|intcomma}}</td>
+                                                        <td>Various</td>    
                                                         <td> - </td>   
                             
                                                         <td>
@@ -169,49 +169,30 @@
                                                             </div>                                        
                                                         </td>
                                                     </tr>
+                                                   
+
+                                            {% endfor %}
+                                        {% endif %}
+
+                                        {% if ceo %}
+                                            {% for employee in ceo %}
+                                                
                                                     <tr>
                                                         <td> - </td>   
-
-                                                        <td>
-                                                            <div class="d-flex align-items-center">
-                                                                <a class="mb-0 fs-16 font-w500" href="{% url 'dashboard:editemployee' id=employee.id %}">WAGES/Nigga</a>
-                                                            </div>
-                                                        </td>
-                                                        <td> {{employee.name}} </td>
-                                                        <td>${{employee.nigga|floatformat:2|intcomma}}</td>
-                                                        <td>Cash</td>     
-                                                        <td> - </td>   
-                            
-                                                        <td>
-                                                            <div class="d-flex flex-row">
-                                                                
-                                                                                                                                                    
-                                                                    <!-- edit BUTTON -->
-                                                                    <a href="{% url 'dashboard:editemployee' id=employee.id %}" class="shadow-sm btn btn-secondary mx-1 px-3">
-                                                                        <i class="fa-solid fa-pen-to-square"></i>
-                                                                    </a>                                                 
-                                                            </div>                                         
-                                                        </td>
-                                                    </tr>
-                                                {% endif %}
-                                                {% if employee.rol == "CEO" %}
-                                                    <tr>
-                                                        <td> - </td>   
-
 
                                                         <td>
                                                             <div class="d-flex align-items-center">
                                                                 <a class="mb-0 fs-16 font-w500" href="{% url 'dashboard:editemployee' id=employee.id %}">Wages</a>
                                                             </div>
                                                         </td>
-                                                        <td> {{employee.name}} </td>
-                                                        <td>${{employee.get_wage_ceo|floatformat:2|intcomma}}</td>
-                                                        <td>Various</td>  
+                                                        <td> {{employee.name}} / total </td>
+                                                        <td>${{employee.get_total_ceo|floatformat:2|intcomma}}</td>
+                                                        <td>Various</td>    
                                                         <td> - </td>   
-                        
+                            
                                                         <td>
                                                             <div class="d-flex flex-row">
-                                                                                                                                                    
+                                                                                                                                                                                                            
                                                                     <!-- edit BUTTON -->
                                                                     <a href="{% url 'dashboard:editemployee' id=employee.id %}" class="shadow-sm btn btn-secondary mx-1 px-3">
                                                                         <i class="fa-solid fa-pen-to-square"></i>
@@ -219,28 +200,11 @@
                                                             </div>                                        
                                                         </td>
                                                     </tr>
-                                                {% endif %}
+                                                   
+
                                             {% endfor %}
                                         {% endif %}
-                                        {% if all_bonus %}
-                                        <tr>
-                                            <td> - </td>   
-
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <a class="mb-0 fs-16 font-w500">Wages/BONUS</a>
-                                                </div>
-                                            </td>
-                                            <td> MONTHLY BONUS </td>
-                                            <td>${{all_bonus|floatformat:2|intcomma}}</td>
-                                            <td>Various</td>    
-                                            <td> - </td>   
-                            
-                                            <td>
-                                                                                
-                                            </td>
-                                        </tr>
-                                        {% endif %}
+                                        
                                     </tbody>
                                 </table>
                             </div>
@@ -261,23 +225,6 @@
 
 
 
-        <div class="row">
-            <div class="col-xl-12 col-md-6">
-
-                        
-                <div class="card">
-                    <div class="card-header border-0 pb-0">
-                        <h4>EXPENSES BY CATEGORY</h4>
-						
-                    </div>
-
-                    <div class="card-body">
-                        <div id="expchart"></div>
-                        
-                    </div>	
-                </div>
-            </div>
-        </div>
 
 
 
@@ -352,6 +299,10 @@
 {% endblock %}
 
 {% block additional_js %}
+
+
+
+
  <!-- NEWMODALS -->
  <script>
     const addexpense = new bootstrap.Modal('#addexpense',   {keyboard: true}    )
@@ -400,109 +351,6 @@
 </script>
 
 
-
-
-<script>
-
-(function($) {
-    /* "use strict" */
-	
- var dlabChartlist = function(){
-	 
-	var screenWidth = $(window).width();
-	
-	
-	 var expchart = function() {
-		var options = {
-			series: [{{emp|floatformat:1}}, {{wage|floatformat:1}}, {{lead|floatformat:1}}, {{offic|floatformat:1}}, {{others|floatformat:1}}, {{taxes|floatformat:0}}, {{wage_ceo|floatformat:0}}],
-			chart: {
-			  type: 'donut',
-			  height: 500
-			},
-			dataLabels: {
-			  enabled: true,
-			  formatter: function(val, opts) {
-				return val.toFixed(0) + '%'
-			  },
-			  style: {
-				fontSize: '12px',
-				colors: ['#fff'],
-		  
-			  },
-			  dropShadow: {
-				enabled: false,
-			  }
-			},
-			stroke: {
-			  width: 0,
-			},
-			colors: ['#FEC64F', '#e35b17', '#17e3e3', '#e31739', '#171ee3', '#c417e3', '#14b57d'],
-			legend: {
-			  position: 'bottom',
-			  show: true,
-			  labels: {
-				useSeriesColors: false,
-				colors: ['#FEC64F', '#e35b17', '#17e3e3', '#e31739', '#171ee3', '#c417e3', '#14b57d'],
-				formatter: function(seriesName, opts) {
-				  return opts.w.globals.labels[opts.seriesIndex] + ": " + seriesName + "%";
-				}
-			  }
-			},
-			labels: ['Empresa ${{empresa|floatformat:2}}', 'Wages ${{wages|floatformat:2}} ', 'LeadGen ${{lead_gen|floatformat:2}} ', 'Office ${{office|floatformat:2}}', 'Others ${{other|floatformat:2}} ', 'Taxes ${{tax|floatformat:2}}', 'Wages CEO ${{wages_ceo|floatformat:2}}'],
-			responsive: [{
-				breakpoint: 1800,
-				options: {
-				  chart: {
-					height: 400
-				  },
-				}
-			  }, {
-				breakpoint: 1200,
-				options: {
-				  chart: {
-					height: 300
-				  },
-				}
-			  }, {
-				breakpoint: 600,
-				options: {
-				  chart: {
-					height: 200
-				  },
-				}
-			  }]
-			  
-		  };
-		  
-		var chart = new ApexCharts(document.querySelector("#expchart"), options);
-		chart.render();
-	}
- 
-	/* Function ============ */
-	return {
-		init:function(){
-		},
-		
-		
-		load:function(){
-			expchart();
-		},
-		
-		resize:function(){
-		}
-	}
-
-}();
-
-jQuery(window).on('load',function(){
-	setTimeout(function(){
-		dlabChartlist.load();
-	}, 1000); 
-	
-});
-
-})(jQuery);
-</script>
 
 
 {% endblock %}

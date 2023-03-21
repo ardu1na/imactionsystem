@@ -84,10 +84,10 @@ class EmployeeForm(ModelForm):
                 'placeholder' : "Phone Number"
                 }),
             
-            'white' : TextInput(attrs={
+            'salary' : TextInput(attrs={
                 'class':"form-control",
-                'id':"white",
-                'placeholder' : "WHITE"
+                'id':"salary",
+                'placeholder' : "salary"
                 }
             ),          
 
@@ -96,7 +96,7 @@ class EmployeeForm(ModelForm):
 
                 'class':"form-control",
                 'id':"nigga",
-                'placeholder' : "NIGGA"
+                'placeholder' : "NIGGA %"
                 }
             ),        
             
@@ -193,10 +193,10 @@ class EditWageForm(ModelForm):
         widgets = {           
 
             
-            'white' : TextInput(attrs={
+            'salary' : TextInput(attrs={
                 'class':"form-control",
-                'id':"white",
-                'placeholder' : "WHITE"
+                'id':"salary",
+                'placeholder' : "SALARY"
                 }
             ),          
 
@@ -205,7 +205,7 @@ class EditWageForm(ModelForm):
 
                 'class':"form-control",
                 'id':"nigga",
-                'placeholder' : "NIGGA"
+                'placeholder' : "NIGGA %"
                 }
             ),        
             

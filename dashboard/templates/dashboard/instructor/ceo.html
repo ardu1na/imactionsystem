@@ -12,82 +12,88 @@
 <!-- MAIN EMPLOYEES -->
     
 
-<div class="row">     
-    <div class="col-xl-12">
-        <div class="d-flex flex-row-reverse my-2">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">ADD Employee<span class="btn-icon-end">
-                <i class="fa fa-plus"></i></span>     
-        </div>
+    <div class="row">     
+        <div class="col-xl-12">
+            <div class="d-flex flex-row-reverse my-2">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">NEW<span class="btn-icon-end">
+                    <i class="fa fa-plus"></i></span>     
+            </div>
 
-        <div class="card">
-            <div class="card-body">
-                
-                <div class="tab-content">
-                    <div class="row">
-
-                        <!-- TABLE EMPLOYEES -->
-                        <div class="table-responsive py-4">
-                            <table id="example4" class="display mb-4" style="min-width: 845px">
-                                <thead>
-                                    <tr>
-                                        
-                                        <th>NAME</th>
-                                        <th>ROL</th>
-                                        <th>SALARY</th>
-                                        <th>WHITE</th>
-                                        <th>TAX</th>
-                                        <th>NIGGA</th>
-                                        <th>MONTHLY BONUS</th>
-                                        <th>TOTAL</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>{% if staff %}
-                                    {% for employee in staff %}
-                                    <tr>
-                                        <td>
-                                            <div class="d-flex align-items-center">
-                                                <a class="mb-0 fs-16 font-w500" href="{% url 'dashboard:editemployee' id=employee.id %}">{{employee.name}}</a>
-                                            </div>
-                                        </td>
-
-                                        <td>{{employee.rol}}</td>
-
-                                        <td>${{employee.salary|floatformat:2}}</td>
+            <div class="card">
+                <div class="card-body">
+                    
+                    <!-- TABLE EMPLOYEES -->
+                    <div class="table-responsive py-4">
+                        <table id="example4" class="display mb-4" style="min-width: 845px">
+                            <thead>
+                                <tr>
+                                    
+                                    <th>NAME</th>
+                                    <th>SALARY</th>
+                                    <th>WHITE</th>
+                                    <th>NIGGA</th>
+                                    <th>MP</th>
+                                    <th>TC</th>
+                                    <th>ATM CASH</th>
+                                    <th>MONTHLY BONUS </th>
+                                    <th>TOTAL </th>
 
 
-                                        <td>${{employee.get_white|floatformat:2}}</td>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>{% if ceo %}
+                                {% for employee in ceo %}
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <a class="mb-0 fs-16 font-w500" href="{% url 'dashboard:editceo' id=employee.id %}">{{employee.name}}</a>
+                                        </div>
+                                    </td>
 
-                                        <td>${{employee.get_social|floatformat:2}}</td>
-                                        <td>${{employee.get_nigga|floatformat:2}}</td>
 
-                                        <td>${{employee.get_aguinaldo_mensual|floatformat:2}}</td>
-                                        <td>${{employee.get_total|floatformat:2}}</td>
-                                        <td>
-                                            <div class="d-flex flex-row">
-                                                
-                                                    <!-- delete BUTTON -->
-                                                        <button type="button" class="shadow-sm btn btn-danger px-3 mx-1" data-bs-toggle="modal" data-bs-target="#deleteemployee{{employee.id}}">
-                                                        <i class="fa-solid fa-trash fs-7"></i>
-                                                        </button>                                                                                  
-                                                    <!-- edit BUTTON -->
-                                                        <a href="{% url 'dashboard:editemployee' id=employee.id %}" class="px-3 shadow-sm btn btn-secondary mx-1">
-                                                            <i class="fa-solid fa-pen-to-square"></i>
-                                                        </a>                                                
-                                            </div>                                        
-                                        </td>
-                                    </tr>
-                                    {% endfor %}
-                                    {%endif%}
-                                </tbody>
-                            </table>
-                        </div>
+                                    <td>${{employee.salary|floatformat:2}}</td>
+
+
+                                    <td>${{employee.get_white|floatformat:2}}</td>
+
+                                    <td>${{employee.get_nigga|floatformat:2}}</td>
+
+                                    <td>${{employee.mp|floatformat:2}}</td>
+                                    
+                                    <td>${{employee.tc|floatformat:2}}</td>
+                                    
+                                    <td>${{employee.atm_cash|floatformat:2}}</td>
+
+                                    <td>${{employee.get_aguinaldo_mensual|floatformat:2}}</td>
+
+                                    <td>${{employee.get_total_ceo|floatformat:2}}</td>
+
+                                    <td>
+                                        <div class="d-flex flex-row">
+                                            
+                                                <!-- delete BUTTON -->
+                                                    <button type="button" class="shadow-sm btn btn-danger px-3 mx-1" data-bs-toggle="modal" data-bs-target="#deleteemployee{{employee.id}}">
+                                                    <i class="fa-solid fa-trash fs-7"></i>
+                                                    </button>                                                                                  
+                                                <!-- edit BUTTON -->
+                                                    <a href="{% url 'dashboard:editceo' id=employee.id %}" class="px-3 shadow-sm btn btn-secondary mx-1">
+                                                        <i class="fa-solid fa-pen-to-square"></i>
+                                                    </a>                                                
+                                        </div>                                        
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                {%endif%}
+                            </tbody>
+                        </table>
                     </div>
+
                 </div>
-            </div>                   
+            </div>
+                       
         </div>
     </div>
-</div>
 <!-- end MAIN employees -->
 
 
@@ -224,12 +230,6 @@
     }        
 </script>
 
-<script>
-    var select = document.getElementById("rol"); 
-    var option = select.querySelector('option[value="CEO"]'); 
-        if (option) 
-        {select.removeChild(option);}
-</script>
 
 
 

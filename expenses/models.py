@@ -4,13 +4,26 @@ from django.db import models
 
 
 class Employee(models.Model):
-    STAFF = 'Staff'
+    SEO = 'SEO'
+    GADS = 'GADS'
+    FADS = 'FADS'
+    DESIGN = 'Design'
+    ADMIN = 'Admin'
+    SALES = 'Sales'
+    OTHERS = 'Others'
     CEO = 'CEO'
     ROL_CHOICES = (
-        (STAFF, ('Staff')),
+        (SEO, ('SEO')),
+        (GADS, ('GADS')),
+        (FADS, ('FADS')),
+        (DESIGN, ('Design')),
+        (ADMIN, ('Admin')),
+        (SALES, ('Sales')),
+        (OTHERS, ('Others')),
         (CEO, ('CEO')),)
+
     
-    
+
     ACTIVE = 'Yes'
     GONE = 'No'
     ACT_CHOICES = (
@@ -18,7 +31,7 @@ class Employee(models.Model):
         (GONE, ('No')),)
     
     
-    rol = models.CharField(max_length=15, choices=ROL_CHOICES, blank=False,  verbose_name="ROL", default="Staff")
+    rol = models.CharField(max_length=15, choices=ROL_CHOICES, blank=False, null=True,  verbose_name="ROL", default=None)
     
     name = models.CharField(max_length=150, verbose_name="NAME")
     
@@ -30,9 +43,8 @@ class Employee(models.Model):
     active = models.CharField(max_length=15, choices=ACT_CHOICES, blank= False, verbose_name="ACTIVE?", default="Yes")
     date_gone = models.DateField(null=True, blank=True, verbose_name="GONE")
     
+    salary = models.DecimalField(default= 0, max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="SALARY")
     
-    
-    white = models.DecimalField(default= 0, max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="SALARY")
     nigga = models.DecimalField(default= 0, max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="NIGGA %")
     
     mp = models.DecimalField(default= 0, max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="MP")
@@ -40,33 +52,39 @@ class Employee(models.Model):
     atm_cash = models.DecimalField(default= 0, max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="ATM CASH")
     
     
-
+    @property
+    def get_white (self):
+        white = self.salary - (self.salary*(self.nigga/100))
+        return white
+    
+    @property
+    def get_nigga (self):
+        nigga = (self.salary*(self.nigga/100))
+        return nigga
+    
+    @property
+    def get_social (self):
+        social = self.get_white/2
+        return social
+    
+    
+    @property
+    def get_aguinaldo_mensual (self):
+        month = self.salary/12
+        return month
+    
+    @property
+    def get_total (self):
+        total = self.salary + self.get_social + self.get_aguinaldo_mensual
+        return total
+    
+    @property
+    def get_total_ceo (self):
+        total = self.salary + self.get_aguinaldo_mensual + self.mp + self.atm_cash + self.tc
+        return total
+    
     def __str__ (self):
         return self.name
-    
-    @property
-    def get_social(self):
-        return self.white/2
-    
-    @property
-    def get_aguinaldo(self):
-        aguinaldo = self.white + self.get_nigga + self.get_social
-        return aguinaldo
-
-    @property
-    def get_nigga(self):
-        nigga = (self.white*self.nigga)/100
-        return nigga
-            
-    @property
-    def get_aguinaldo_mensual(self):
-        aguinaldo = self.white + self.get_nigga + self.get_social
-        return aguinaldo/12
-    
-    @property
-    def get_wage_ceo(self):
-        wage = self.white + self.get_nigga + self.mp + self.tc + self.atm_cash
-        return wage
     
     
     
