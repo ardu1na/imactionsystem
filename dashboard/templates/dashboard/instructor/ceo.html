@@ -73,7 +73,7 @@
                                         <div class="d-flex flex-row">
                                             
                                                 <!-- delete BUTTON -->
-                                                    <button type="button" class="shadow-sm btn btn-danger px-3 mx-1" data-bs-toggle="modal" data-bs-target="#deleteemployee{{employee.id}}">
+                                                    <button type="button" class="shadow-sm btn btn-danger px-3 mx-1" data-bs-toggle="modal" data-bs-target="#deleteceo{{employee.id}}">
                                                     <i class="fa-solid fa-trash fs-7"></i>
                                                     </button>                                                                                  
                                                 <!-- edit BUTTON -->
@@ -99,8 +99,8 @@
 
 <!-- modals delete employees -->
     {% for employee in employees %}
-        <div class="modal" id="deleteemployee{{employee.id}}">
-            {% include 'dashboard/instructor/deleteemployee.html' %}
+        <div class="modal" id="deleteceo{{employee.id}}">
+            {% include 'dashboard/instructor/deleteceo.html' %}
         </div>
     {% endfor %}
 
@@ -211,7 +211,7 @@
 {% block additional_js %}
     <!-- NEWMODAL -->
         <script>
-            const deleteemployee = new bootstrap.Modal('#deleteemployee',   {keyboard: true}    )
+            const deleteceo = new bootstrap.Modal('#deleteceo',   {keyboard: true}    )
         </script>
 
         

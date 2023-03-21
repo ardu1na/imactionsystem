@@ -433,17 +433,6 @@ dz_array = {
                                     f"{foldername_d}/js/plugins-init/datatables.init.js",
                                     f"{foldername_d}/vendor/owl-carousel/owl.carousel.js",
                                     f"{foldername_d}/js/dashboard/instructor-student.js",
-                                    f"{foldername_d}/vendor/chart.js/Chart.bundle.min.js",
-                                    f"{foldername_d}/vendor/apexchart/apexchart.js",
-                                    f"{foldername_d}/vendor/jquery-sparkline/jquery.sparkline.min.js",
-                                    f"{foldername_d}/js/plugins-init/sparkline-init.js",
-                                    f"{foldername_d}/vendor/svganimation/vivus.min.js",
-                                    f"{foldername_d}/vendor/svganimation/svg.animation.js",
-                                     f"{foldername_d}/vendor/chart.js/Chart.bundle.min.js",
-                                    f"{foldername_d}/vendor/apexchart/apexchart.js",
-                                    f"{foldername_d}/vendor/raphael/raphael.min.js",
-                                    f"{foldername_d}/vendor/morris/morris.min.js",
-                                    f"{foldername_d}/js/plugins-init/morris-init.js",
                                 ],
                                 
                                 "instructor_resources":[
