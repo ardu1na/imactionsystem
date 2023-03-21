@@ -71,7 +71,7 @@
 
         <div class="page-titles">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{% url 'dashboard:employees' %}">Employees</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'dashboard:ceo' %}">CEO</a></li>
                 <li class="breadcrumb-item active"><a href="javascript:void(0)">{{editemployee.name}}</a></li>
             </ol>
         </div>
@@ -210,14 +210,7 @@
                                             </li>
                                             {% endif %}
 
-                                            <li class="list-group-item">
-                                                <h4>TAX</h4> 
-                                                <p class="fs-4">
-                                                    <span class="badge light badge-success">
-                                                        $  {{editemployee.get_social|floatformat:2}}
-                                                    </span>
-                                                </p>
-                                            </li>
+                                           
 
                                             <li class="list-group-item">
                                                 <h4>MONTHLY BONUS</h4> 
@@ -232,7 +225,7 @@
                                                 <h4>TOTAL</h4> 
                                                 <p class="fs-4">
                                                     <span class="badge light badge-dark">
-                                                        $  {{editemployee.get_total|floatformat:2}}
+                                                        $  {{editemployee.get_total_ceo|floatformat:2}}
                                                     </span>
                                                 </p>
                                             </li>
@@ -264,6 +257,37 @@
             coso.style.display="block";
         }
     }        
+</script>
+
+
+
+
+
+<script>
+    var select = document.getElementById("rol"); 
+    var option = select.querySelector('option[value="SEO"]');
+    var option2 = select.querySelector('option[value="GADS"]');
+    var option3 = select.querySelector('option[value="FADS"]');
+    var option4 = select.querySelector('option[value="Design"]');
+    var option5 = select.querySelector('option[value="Admin"]');
+    var option6 = select.querySelector('option[value="Sales"]');
+    var option7 = select.querySelector('option[value="Others"]');
+
+        if (option) 
+        {select.removeChild(option);}
+        if (option2) 
+        {select.removeChild(option2);}
+        if (option3) 
+        {select.removeChild(option3);}
+        if (option4) 
+        {select.removeChild(option4);}
+        if (option5) 
+        {select.removeChild(option5);}
+        if (option6) 
+        {select.removeChild(option6);}
+        if (option7) 
+        {select.removeChild(option7);}
+
 </script>
 
 

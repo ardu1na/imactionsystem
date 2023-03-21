@@ -73,9 +73,9 @@
                                         <div class="d-flex flex-row">
                                             
                                                 <!-- delete BUTTON -->
-                                                    <button type="button" class="shadow-sm btn btn-danger px-3 mx-1" data-bs-toggle="modal" data-bs-target="#deleteemployee{{employee.id}}">
+                                                <a class="btn btn-danger" href="{% url 'dashboard:deleteceo' id=employee.id %}">
                                                     <i class="fa-solid fa-trash fs-7"></i>
-                                                    </button>                                                                                  
+                                        </a>                                                                                  
                                                 <!-- edit BUTTON -->
                                                     <a href="{% url 'dashboard:editceo' id=employee.id %}" class="px-3 shadow-sm btn btn-secondary mx-1">
                                                         <i class="fa-solid fa-pen-to-square"></i>
@@ -97,12 +97,6 @@
 <!-- end MAIN employees -->
 
 
-<!-- modals delete employees -->
-    {% for employee in employees %}
-        <div class="modal" id="deleteemployee{{employee.id}}">
-            {% include 'dashboard/instructor/deleteemployee.html' %}
-        </div>
-    {% endfor %}
 
 
 <!-- START modal add employee -->
@@ -209,28 +203,37 @@
 
 
 {% block additional_js %}
-    <!-- NEWMODAL -->
-        <script>
-            const deleteemployee = new bootstrap.Modal('#deleteemployee',   {keyboard: true}    )
-        </script>
+       
 
-        
+
+
 
 <script>
-    var can = document.getElementById("rol");
-    var info = document.getElementById("ceo");
-    info.style.display = (can.value !== "CEO") ? "none" : "block";
-    can.onchange=function(){
-    
-        if(this.value!="CEO"){
-            info.style.display="none";  
-        }else{
-            info.style.display="block";
-        }
-    }        
+    var select = document.getElementById("rol"); 
+    var option = select.querySelector('option[value="SEO"]');
+    var option2 = select.querySelector('option[value="GADS"]');
+    var option3 = select.querySelector('option[value="FADS"]');
+    var option4 = select.querySelector('option[value="Design"]');
+    var option5 = select.querySelector('option[value="Admin"]');
+    var option6 = select.querySelector('option[value="Sales"]');
+    var option7 = select.querySelector('option[value="Others"]');
+
+        if (option) 
+        {select.removeChild(option);}
+        if (option2) 
+        {select.removeChild(option2);}
+        if (option3) 
+        {select.removeChild(option3);}
+        if (option4) 
+        {select.removeChild(option4);}
+        if (option5) 
+        {select.removeChild(option5);}
+        if (option6) 
+        {select.removeChild(option6);}
+        if (option7) 
+        {select.removeChild(option7);}
+
 </script>
-
-
 
 
 

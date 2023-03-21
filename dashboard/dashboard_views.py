@@ -194,22 +194,43 @@ def expenses(request):
             lead_gen += expense.value
         if expense.category == "Office":
             office += expense.value
-        if expense.category == "Others":
+        if expense.category == "Other":
             other += expense.value
         if expense.category == "Tax":
             tax += expense.value    
-                
+            
+            
+    all = empresa + lead_gen + office + tax + other + wages_staff + wages_ceo
+    
+    try:            
+        empresa1 = (empresa*100)/all
+        lead_gen1 = (lead_gen*100)/all
+        tax1 = (tax*100)/all
+        wages_staff1 = (wages_staff*100)/all
+        other1 = (other*100)/all
+        office1 = (office*100)/all
+        wages_ceo1 = (wages_ceo*100)/all
+    except:
+        empresa1 = 0
+        lead_gen1 = 0
+        tax1 = 0
+        wages_staff1 = 0
+        other1 = 0
+        office1 = 0
+        wages_ceo1 = 0
+                    
     context={
         "page_title": "Expenses",
         "expenses" : expenses,
         "addform" : addform,
         "without_wages" : without_wages,
         "with_wages": with_wages,
-        "wages_staff" : wages_staff,
         "all_bonus" : all_bonus,
         "employees" : employees,
-        
-        "wages_staff": wages_staff,
+        "ceo" : ceo,     
+
+
+        #chart data  
         "empresa" : empresa,
         "lead_gen" : lead_gen,
         "office" : office,
@@ -217,7 +238,15 @@ def expenses(request):
         "tax" : tax,
         "wages_ceo" : wages_ceo,
         "ceo" : ceo,     
-        
+        "wages_staff" : wages_staff,
+        "empresa1" : empresa1,
+        "lead_gen1" : lead_gen1,
+        "office1" : office1,
+        "other1" : other1,
+        "tax1" : tax1,
+        "wages_ceo1" : wages_ceo1,
+        "wages_staff1" : wages_staff1,
+
     }
 
     return render(request,'dashboard/table/expenses.html', context)
@@ -376,6 +405,12 @@ def deleteemployee(request, id):
     return redirect(reverse('dashboard:employees')+ "?deleted")
 
 
+@user_passes_test(lambda user: user.groups.filter(name='admin').exists())
+@login_required(login_url='dashboard:login')
+def deleteceo(request, id):
+    employee = Employee.objects.get(id=id)
+    employee.delete()
+    return redirect(reverse('dashboard:ceo')+ "?deleted")
 
 @user_passes_test(lambda user: user.groups.filter(name='admin').exists())
 @login_required(login_url='dashboard:login')
