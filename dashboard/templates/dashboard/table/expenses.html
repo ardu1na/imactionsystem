@@ -8,18 +8,6 @@
 
 {% block content %}
 
-<div class="row">
-    <div class="card">
-
-        <div class="card-body">
-            <div class="col-12">
-                        <div id="morris_donught" class="morris_chart_height"></div>
-                    </div>    
-            </div>
-        </div>
-
-    </div>
-</div>
 
 
     <!-- main -->
@@ -362,69 +350,6 @@
     }
 </script>
 
-<script>
-    var dlabMorris = function(){
-    
-    var chart;
-    var screenWidth = $(window).width();
-
-    var setChartWidth = function(){
-        if(screenWidth <= 768)
-        {
-            var chartBlockWidth = 0;
-            chartBlockWidth = (screenWidth < 300 )?screenWidth:300;
-            jQuery('.morris_chart_height').css('min-width',chartBlockWidth - 31);
-        }
-    }
-
-    var donutChart = function(){
-        chart = Morris.Donut({
-            element: 'morris_donught',
-            data: [{
-                label: "\xa0 \xa0 Office \xa0 \xa0",
-                value: {{office}},
-
-            }, {
-                label: "\xa0 \xa0 Taxes \xa0 \xa0",
-                value: {{tax}}
-            }, {
-                label: "\xa0 \xa0 Company \xa0 \xa0",
-                value: {{empresa}}
-            }],
-            resize: true,
-            redraw: true,
-            colors: ['#ff6a59', 'rgb(255, 92, 0)', '#4cbc9a'],
-            //responsive:true,
-
-        });
-    }
-
-    /* Function ============ */
-    return {
-        init:function(){
-            setChartWidth();
-            donutChart();
-        },
-
-
-        resize:function(){
-            screenWidth = $(window).width();
-            setChartWidth();
-            if (chart) {
-                chart.destroy();
-            }
-            donutChart();
-        }
-    }
-
-}();
-
-// To destroy and start again the chart
-chart.destroy();
-donutChart();
-
-
-</script>
 
 
 

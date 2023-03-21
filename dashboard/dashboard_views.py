@@ -395,7 +395,7 @@ def editceo(request, id):
             'id': id
             }
         
-        return render (request, 'dashboard/instructor/editemployee.html', context)
+        return render (request, 'dashboard/instructor/editceo.html', context)
 
     
     if request.method == 'POST':
