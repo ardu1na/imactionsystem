@@ -16,7 +16,7 @@ from django.db.models import Sum
 from datetime import datetime
 
 from django.db.models import Q
-
+from django.db.models import Count
 from customers.models import *
 from customers.forms import *
 from sales.models import *
@@ -291,7 +291,6 @@ def bi(request):
             selected_cancelled = request.GET.getlist('cancelled')
             sales = sales.filter(cancelled__in=selected_cancelled)
     
-    # Annotate the sales queryset with the total amount for each service
     
     # Annotate the sales queryset with the total amount for each service
     totals = sales.values('service').annotate(total_amount=Sum('change')).order_by('service')
@@ -300,15 +299,15 @@ def bi(request):
     service_index = {service: index for index, service in enumerate(services)}
 
     # Sort the totals by the index of the service in the `services` list
-    totals = sorted(totals, key=lambda x: service_index.get(x['service']))
+    # Annotate the sales queryset with the total amount and count for each service
+    totals = sales.values('service').annotate(total_amount=Sum('change'), count=Count('id')).order_by('service')
+
+    # Create a new list of labels with the count of sales for each service
+    labels = [f"{total['service']} ({total['count']})" for total in totals]
 
     # Extract the total amounts and labels in the correct order
     total_amounts = [total['total_amount'] for total in totals]
-    labels = [total['service'] for total in totals]
-    """totals = sales.values('service').annotate(total_amount=Sum('change')).order_by('service')
-    total_amounts = [total['total_amount'] for total in totals]
-    labels = [service for service in selected_services]
-    """
+   
     context={
         "page_title": "BUSINESS INTELLIGENCE",
         "data": combined_list,
