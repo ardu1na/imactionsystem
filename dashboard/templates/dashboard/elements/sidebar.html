@@ -42,7 +42,7 @@
                 <span class="nav-text">EXPENSES</span></a>
                 <ul aria-expanded="false">
                     <li><a href="{% url 'dashboard:expenses' %}"> ALL </a></li>
-                    <li><a href="{% url 'dashboard:employees' %}"> WAGES/EMPLOYEES </a></li>
+                    <li><a href="{% url 'dashboard:employees' %}"> WAGES/STAFF </a></li>
                     {% for group in request.user.groups.all %}
                     {% if group.name == "admin" %}  
                     <li><a href="{% url 'dashboard:ceo' %}"> WAGES/CEO </a></li>
