@@ -409,7 +409,7 @@ def employees(request):
         "employees": employees,
         "all": all,
         "addform": addform,        
-        "page_title":"WAGES/EMPLOYEES",
+        "page_title":"WAGES/STAFF",
     }
     return render(request,'dashboard/instructor/employees.html',context)
 
