@@ -30,8 +30,6 @@
                                     
                                     <th>NAME</th>
                                     <th>SALARY</th>
-                                    <th>WHITE</th>
-                                    <th>NIGGA</th>
                                     <th>MP</th>
                                     <th>TC</th>
                                     <th>ATM CASH</th>
@@ -53,11 +51,6 @@
 
 
                                     <td>${{employee.salary|floatformat:2}}</td>
-
-
-                                    <td>${{employee.get_white|floatformat:2}}</td>
-
-                                    <td>${{employee.get_nigga|floatformat:2}}</td>
 
                                     <td>${{employee.mp|floatformat:2}}</td>
                                     
@@ -162,11 +155,6 @@
                              {{addform.salary}}
                         </div>
 
-                        <div class="form-group my-3">
-                            <label class="form-label">Nigga %</label>
-
-                                {{addform.nigga}}
-                        </div>
 
                         <div id="ceo">
                             <div class="form-group my-3">
