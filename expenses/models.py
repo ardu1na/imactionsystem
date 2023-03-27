@@ -1,6 +1,14 @@
 from datetime import date
+from decimal import Decimal
 
 from django.db import models
+
+from sales.models import LastBlue
+
+last_blue = LastBlue.objects.get(pk=1)
+blue = (last_blue.venta+last_blue.compra)/2
+
+
 
 
 class Employee(models.Model):
@@ -49,7 +57,9 @@ class Employee(models.Model):
     
     mp = models.DecimalField(default= 0, max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="MP")
     tc = models.DecimalField(default= 0, max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="TC")
-    atm_cash = models.DecimalField(default= 0, max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="ATM CASH")
+    atm_cash = models.DecimalField(default= 0, max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="CASH $")
+    cash_usd = models.DecimalField(default= 0, max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="CASH USD")
+    paypal = models.DecimalField(default= 0, max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="PAYPAL")
     
     
     @property
@@ -67,24 +77,41 @@ class Employee(models.Model):
         social = self.get_white/2
         return social
     
-    
-    @property
-    def get_aguinaldo_mensual (self):
-        if self.rol == "CEO":
-            month = self.get_total_ceo/12
-        else:
-            month = self.get_total/12
-        return month
-    
     @property
     def get_total (self):
         total = self.get_white + self.get_social + self.get_nigga
         return total
     
+    
+    @property
+    def get_paypal (self):
+        p_c = self.paypal*Decimal(blue)
+        return p_c
+    
+    
+    
+    @property
+    def get_cash_usd (self):
+        c = self.cash_usd*Decimal(blue)
+        return c
+    
+    
     @property
     def get_total_ceo (self):
-        total = self.salary + self.mp + self.atm_cash + self.tc
+        total = self.salary + self.mp + self.atm_cash + self.tc + self.get_paypal + self.get_cash_usd
         return total
+    
+    @property
+    def get_aguinaldo_mensual (self):
+        if self.rol == "CEO":
+            month = self.salary/12
+        else:
+            month = self.get_total/12
+        return month
+    
+    
+    
+   
     
     def __str__ (self):
         return self.name
