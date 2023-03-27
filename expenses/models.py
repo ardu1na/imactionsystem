@@ -83,7 +83,7 @@ class Employee(models.Model):
     
     @property
     def get_total_ceo (self):
-        total = self.get_white + self.get_nigga + self.mp + self.atm_cash + self.tc
+        total = self.salary + self.mp + self.atm_cash + self.tc
         return total
     
     def __str__ (self):
