@@ -45,7 +45,7 @@ class Employee(models.Model):
     
     salary = models.DecimalField(default= 0, max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="SALARY")
     
-    nigga = models.DecimalField(default= 0, max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="NIGGA %")
+    nigga = models.DecimalField(default= 0, max_digits=50, decimal_places=25, null=True, blank=True, verbose_name="NIGGA %")
     
     mp = models.DecimalField(default= 0, max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="MP")
     tc = models.DecimalField(default= 0, max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="TC")
@@ -70,17 +70,20 @@ class Employee(models.Model):
     
     @property
     def get_aguinaldo_mensual (self):
-        month = self.salary/12
+        if self.rol == "CEO":
+            month = self.get_total_ceo/12
+        else:
+            month = self.get_total/12
         return month
     
     @property
     def get_total (self):
-        total = self.salary + self.get_social + self.get_aguinaldo_mensual
+        total = self.get_white + self.get_social + self.get_nigga
         return total
     
     @property
     def get_total_ceo (self):
-        total = self.salary + self.get_aguinaldo_mensual + self.mp + self.atm_cash + self.tc
+        total = self.get_white + self.get_nigga + self.mp + self.atm_cash + self.tc
         return total
     
     def __str__ (self):
