@@ -440,7 +440,7 @@ def editceo(request, id):
     if request.method == "GET":
         
         editform = EditEmployeeForm(instance=editemployee)
-        editwageform = EditWageForm(instance=editemployee)
+        editwageform = EditWageCeo(instance=editemployee)
 
         context = {
             'editform': editform,
@@ -461,9 +461,8 @@ def editceo(request, id):
             else:
                 return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
         else:
-            editwageform=EditWageForm(request.POST, instance=editemployee)          
+            editwageform=EditWageCeo(request.POST, instance=editemployee)          
             editwageform.salary = request.POST['salary']
-            editwageform.nigga = request.POST['nigga']
             if editwageform.is_valid():
                 editwageform.save()
                 return redirect(reverse('dashboard:ceo')+ "?ok")
@@ -497,6 +496,13 @@ def ceo(request):
         "addform": addform,        
         "page_title":"WAGES/CEO",
     }
+    
+    blue = LastBlue.objects.get(pk=1)
+    test = blue.venta+1
+    print("_____________________BLUE_____________:")
+    print (blue.venta)
+    print("_____________________TEST_____________:")
+    print (test)
     return render(request,'dashboard/instructor/ceo.html',context)
 
 

@@ -117,7 +117,21 @@ class EmployeeForm(ModelForm):
             'atm_cash' : TextInput(attrs={
                 'class':"form-control",
                 'id':"atm_cash",
-                'placeholder' : "ATM CASH"
+                'placeholder' : "CASH $"
+                }
+            ),
+            
+            'cash_usd' : TextInput(attrs={
+                'class':"form-control",
+                'id':"cash_usd",
+                'placeholder' : "CASH USD"
+                }
+            ),
+            
+            'paypal' : TextInput(attrs={
+                'class':"form-control",
+                'id':"paypal",
+                'placeholder' : "PAYPAL"
                 }
             ),
         }
@@ -229,4 +243,81 @@ class EditWageForm(ModelForm):
                 'placeholder' : "ATM CASH"
                 }
         
-            ),}
+            ),
+            
+            
+            'cash_usd' : TextInput(attrs={
+                'class':"form-control",
+                'id':"cash_usd",
+                'placeholder' : "CASH USD"
+                }
+            ),
+            
+            'paypal' : TextInput(attrs={
+                'class':"form-control",
+                'id':"paypal",
+                'placeholder' : "PAYPAL"
+                }
+            ),
+            
+            }
+        
+        
+        
+class EditWageCeo(ModelForm):
+    
+    class Meta:
+        model = Employee
+        
+        exclude = ['id', 'rol', 'name', 'address', 'email', 'tel', 'date_join', 'active','date_gone', 'nigga']
+        
+        widgets = {           
+
+            
+            'salary' : TextInput(attrs={
+                'class':"form-control",
+                'id':"salary",
+                'placeholder' : "SALARY"
+                }
+            ),          
+
+               
+            
+            'mp' : TextInput(attrs={
+                'class':"form-control",
+                'id':"mp",
+                'placeholder' : "MP"
+                }
+            ),                      
+
+            'tc' : TextInput(attrs={
+                'class':"form-control",
+                'id':"tc",
+                'placeholder' : "TC"
+                }
+            ),          
+            
+            'atm_cash' : TextInput(attrs={
+                'class':"form-control",
+                'id':"atm_cash",
+                'placeholder' : "ATM CASH"
+                }
+        
+            ),
+            
+            
+            'cash_usd' : TextInput(attrs={
+                'class':"form-control",
+                'id':"cash_usd",
+                'placeholder' : "CASH USD"
+                }
+            ),
+            
+            'paypal' : TextInput(attrs={
+                'class':"form-control",
+                'id':"paypal",
+                'placeholder' : "PAYPAL"
+                }
+            ),
+            
+            }
