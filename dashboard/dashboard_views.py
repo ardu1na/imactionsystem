@@ -386,7 +386,7 @@ def editemployee(request, id):
 @user_passes_test(lambda user: user.groups.filter(name='employees').exists())
 @login_required(login_url='dashboard:login')
 def employees(request):
-    staff = Employee.objects.exclude(rol="CEO", active="Yes")
+    staff = Employee.objects.exclude(rol="CEO").filter(active="Yes")
     ceo = Employee.objects.filter(rol="CEO")        
     employees  = Employee.objects.filter(active="Yes")
     all = Employee.objects.all()
