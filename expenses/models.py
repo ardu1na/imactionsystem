@@ -57,7 +57,9 @@ class Employee(models.Model):
     
     mp = models.DecimalField(default= 0, max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="MP")
     tc = models.DecimalField(default= 0, max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="TC")
-    atm_cash = models.DecimalField(default= 0, max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="CASH $")
+    cash = models.DecimalField(default= 0, max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="CASH $")
+
+    atm_cash = models.DecimalField(default= 0, max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="ATM CASH")
     cash_usd = models.DecimalField(default= 0, max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="CASH USD")
     paypal = models.DecimalField(default= 0, max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="PAYPAL")
     
@@ -98,7 +100,7 @@ class Employee(models.Model):
     
     @property
     def get_total_ceo (self):
-        total = self.salary + self.mp + self.atm_cash + self.tc + self.get_paypal + self.get_cash_usd
+        total = self.salary + self.mp + self.atm_cash + self.cash + self.tc + self.get_paypal + self.get_cash_usd
         return total
     
     @property
