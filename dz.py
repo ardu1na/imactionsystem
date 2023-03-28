@@ -171,6 +171,9 @@ dz_array = {
                                 "employees":[
                                     f"{foldername_d}/vendor/datatables/css/jquery.dataTables.min.css",
                                 ],
+                                 "employeesold":[
+                                    f"{foldername_d}/vendor/datatables/css/jquery.dataTables.min.css",
+                                ],
                                  "ceo":[
                                     f"{foldername_d}/vendor/datatables/css/jquery.dataTables.min.css",
                                 ],
@@ -419,6 +422,14 @@ dz_array = {
                                     f"{foldername_d}/js/dashboard/instructor-student.js",
                                 ],
                                 "employees":[
+                                    f"{foldername_d}/vendor/chart.js/Chart.bundle.min.js",
+                                    f"{foldername_d}/vendor/apexchart/apexchart.js",
+                                    f"{foldername_d}/vendor/datatables/js/jquery.dataTables.min.js",
+                                    f"{foldername_d}/js/plugins-init/datatables.init.js",
+                                    f"{foldername_d}/vendor/owl-carousel/owl.carousel.js",
+                                    f"{foldername_d}/js/dashboard/instructor-student.js",
+                                ],
+                                "employeesold":[
                                     f"{foldername_d}/vendor/chart.js/Chart.bundle.min.js",
                                     f"{foldername_d}/vendor/apexchart/apexchart.js",
                                     f"{foldername_d}/vendor/datatables/js/jquery.dataTables.min.js",

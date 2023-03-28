@@ -1,0 +1,116 @@
+{% extends 'dashboard/elements/layouts/admin.html' %}
+
+{% load static %}
+
+{% block additional_css %}
+{% endblock %}
+
+{% block content %}
+
+
+
+<!-- MAIN EMPLOYEES -->
+    
+
+<div class="row">   
+    
+    
+
+    <div class="col-12">
+
+        <div class="d-flex flex-row my-2">
+            <a class="btn btn-secondary ps-1" href="{% url 'dashboard:employees' %}"><i class="bi bi-chevron-left px-2"></i>Back</a>
+        </div>
+    </div>
+
+
+    <div class="col-xl-12">
+        
+
+        <div class="card">
+            <div class="card-body">
+                
+                <div class="tab-content">
+                    <div class="row">
+
+                        <!-- TABLE EMPLOYEES -->
+                        <div class="table-responsive py-4">
+                            <table id="example4" class="display mb-4" style="min-width: 845px">
+                                <thead>
+                                    <tr>
+                                        
+                                        <th>NAME</th>
+                                        <th>AREA</th>
+                                        <th>LAST SALARY</th>
+                                        <th>START</th>
+                                        <th>END</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>{% if old %}
+                                    {% for employee in old %}
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <a class="mb-0 fs-16 font-w500" href="{% url 'dashboard:editemployee' id=employee.id %}">{{employee.name}}</a>
+                                            </div>
+                                        </td>
+
+                                        <td>{{employee.rol}}</td>
+
+                                        <td>${{employee.salary|floatformat:2}}</td>
+
+
+                                        <td>{{employee.date_join|date:"d/m/Y"}}</td>
+
+                                        <td>{{employee.date_gone|date:"d/m/Y"}}</td>
+
+                                        <td>
+                                            <div class="d-flex flex-row">
+                                                
+                                                    <!-- delete BUTTON -->
+                                                        <button type="button" class="shadow-sm btn btn-danger px-3 mx-1" data-bs-toggle="modal" data-bs-target="#deleteemployee{{employee.id}}">
+                                                        <i class="fa-solid fa-trash fs-7"></i>
+                                                        </button>                                                                                  
+                                                    <!-- edit BUTTON -->
+                                                        <a href="{% url 'dashboard:editemployee' id=employee.id %}" class="px-3 shadow-sm btn btn-secondary mx-1">
+                                                            <i class="fa-solid fa-pen-to-square"></i>
+                                                        </a>                                                
+                                            </div>                                        
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                    {%endif%}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>                   
+        </div>
+    </div>
+</div>
+<!-- end MAIN employees -->
+
+
+<!-- modals delete employees -->
+    {% for employee in employees %}
+        <div class="modal" id="deleteemployee{{employee.id}}">
+            {% include 'dashboard/instructor/deleteemployee.html' %}
+        </div>
+    {% endfor %}
+
+{% endblock %}
+
+
+{% block additional_js %}
+    <!-- NEWMODAL -->
+        <script>
+            const deleteemployee = new bootstrap.Modal('#deleteemployee',   {keyboard: true}    )
+        </script>
+
+    
+
+
+
+{% endblock %}

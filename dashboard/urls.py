@@ -16,6 +16,8 @@ urlpatterns = [
 
 
     path('employees/',dashboard_views.employees, name="employees"),
+    path('employees/old/', dashboard_views.employeesold, name="old"),
+
     path('employees/delete/<int:id>/', dashboard_views.deleteemployee, name="deleteemployee"), 
     path('employees/edit/<int:id>/', dashboard_views.editemployee, name="editemployee"),
     

@@ -385,6 +385,22 @@ def editemployee(request, id):
 
 @user_passes_test(lambda user: user.groups.filter(name='employees').exists())
 @login_required(login_url='dashboard:login')
+def employeesold(request):
+    
+    old =Employee.objects.filter(active="No")
+                              
+          
+    context={
+        
+        "page_title":"STAFF/OLD",
+        "old": old,
+    }
+    
+    return render(request,'dashboard/instructor/employeesold.html',context)
+
+
+@user_passes_test(lambda user: user.groups.filter(name='employees').exists())
+@login_required(login_url='dashboard:login')
 def employees(request):
     staff = Employee.objects.exclude(rol="CEO").filter(active="Yes")
     ceo = Employee.objects.filter(rol="CEO")        
