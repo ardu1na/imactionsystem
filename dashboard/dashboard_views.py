@@ -385,6 +385,22 @@ def editemployee(request, id):
 
 @user_passes_test(lambda user: user.groups.filter(name='employees').exists())
 @login_required(login_url='dashboard:login')
+def employeesold(request):
+    
+    old =Employee.objects.filter(active="No")
+                              
+          
+    context={
+        
+        "page_title":"STAFF/OLD",
+        "old": old,
+    }
+    
+    return render(request,'dashboard/instructor/employeesold.html',context)
+
+
+@user_passes_test(lambda user: user.groups.filter(name='employees').exists())
+@login_required(login_url='dashboard:login')
 def employees(request):
     staff = Employee.objects.exclude(rol="CEO").filter(active="Yes")
     ceo = Employee.objects.filter(rol="CEO")        
@@ -463,11 +479,36 @@ def editceo(request, id):
         else:
             editwageform=EditWageCeo(request.POST, instance=editemployee)          
             editwageform.salary = request.POST['salary']
+            editwageform.mp = request.POST['mp']
+
+            editwageform.tc = request.POST['tc']
+
+            editwageform.atm_cash = request.POST['atm_cash']
+
+            editwageform.paypal = request.POST['paypal']
+
+            editwageform.cash_usd = request.POST['salary']
+
+            
             if editwageform.is_valid():
                 editwageform.save()
                 return redirect(reverse('dashboard:ceo')+ "?ok")
 
             else: 
+                print("_______________________________________________________________________-")
+                print("_______________________________________________________________________-")
+                print("_______________________________________________________________________-")
+
+                print(editwageform)
+                print("_______________________________________________________________________-")
+
+                print("_______________________ERRORS_______________________")
+
+                print(editwageform.errors)
+                print("_______________________________________________________________________-")
+                print("_______________________________________________________________________-")
+                print("_______________________________________________________________________-")
+
                 return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
         
 
@@ -477,11 +518,11 @@ def ceo(request):
     ceo = Employee.objects.filter(rol="CEO")        
     
     if request.method == 'GET':
-        addform = EmployeeForm()
+        addform = CeoForm()
         
     if request.method == 'POST':
         if "addemployee" in request.POST:
-            addform = EmployeeForm(request.POST)
+            addform = CeoForm(request.POST)
             if addform.is_valid():
                 addform.save()
                 return redirect(reverse('dashboard:ceo')+ "?added")
@@ -497,12 +538,6 @@ def ceo(request):
         "page_title":"WAGES/CEO",
     }
     
-    blue = LastBlue.objects.get(pk=1)
-    test = blue.venta+1
-    print("_____________________BLUE_____________:")
-    print (blue.venta)
-    print("_____________________TEST_____________:")
-    print (test)
     return render(request,'dashboard/instructor/ceo.html',context)
 
 
