@@ -48,7 +48,7 @@ class EmployeeForm(ModelForm):
     
        class Meta:
         model = Employee
-        exclude = ['id', 'active', 'date_gone', 'cash_usd', 'atm_cash', 'tc', 'mp', 'paypal']
+        exclude = ['id', 'active', 'date_gone', 'cash_usd', 'atm_cash', 'cash', 'tc', 'mp', 'paypal']
         
         widgets = {
             
@@ -166,6 +166,14 @@ class CeoForm(ModelForm):
                 'placeholder' : "TC"
                 }
             ),          
+            
+            'cash' : TextInput(attrs={
+                'class':"form-control",
+                'id':"cash",
+                'placeholder' : "CASH"
+                }
+        
+            ),
             
             'atm_cash' : TextInput(attrs={
                 'class':"form-control",
@@ -319,6 +327,14 @@ class EditWageCeo(ModelForm):
                 'class':"form-control",
                 'id':"atm_cash",
                 'placeholder' : "ATM CASH"
+                }
+        
+            ),
+            
+            'cash' : TextInput(attrs={
+                'class':"form-control",
+                'id':"cash",
+                'placeholder' : "CASH"
                 }
         
             ),

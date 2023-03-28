@@ -349,7 +349,7 @@ def editemployee(request, id):
 
         context = {
             'editform': editform,
-            'editwageform': editform,
+            'editwageform': editwageform,
             'editemployee': editemployee,
             'id': id
             }
@@ -460,7 +460,7 @@ def editceo(request, id):
 
         context = {
             'editform': editform,
-            'editwageform': editform,
+            'editwageform': editwageform,
             'editemployee': editemployee,
             'id': id
             }
@@ -484,6 +484,8 @@ def editceo(request, id):
             editwageform.tc = request.POST['tc']
 
             editwageform.atm_cash = request.POST['atm_cash']
+            
+            editwageform.cash = request.POST['cash']
 
             editwageform.paypal = request.POST['paypal']
 
