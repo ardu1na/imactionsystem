@@ -4,9 +4,23 @@ from import_export.widgets import ForeignKeyWidget
 
 from sales.models import Sale
 from customers.models import Client
-from expenses.models import Expense, Employee
+from expenses.models import Expense, Employee, Holiday
    
+
+
+
+class HolidayResource(resources.ModelResource):
     
+    employee = Field(
+        column_name='employee',
+        attribute='employee',
+        widget=ForeignKeyWidget(model=Employee, field='name'))
+    
+    
+    class Meta:
+        model = Holiday
+        
+            
 
 class SaleResource(resources.ModelResource):
     
