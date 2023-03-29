@@ -2,8 +2,8 @@ from django.contrib import admin
 from unfold.admin import ModelAdmin
 from import_export.admin import ImportExportModelAdmin
 
-from dashboard.resources import EmployeeResource, ExpenseResource
-from expenses.models import Employee, Expense
+from dashboard.resources import EmployeeResource, ExpenseResource, HolidayResource
+from expenses.models import Employee, Expense, Holiday
 
 class EmployeeAdmin(ModelAdmin, ImportExportModelAdmin): 
     resource_class = EmployeeResource
@@ -16,3 +16,12 @@ class ExpenseAdmin(ModelAdmin, ImportExportModelAdmin):
 
 
 admin.site.register(Expense, ExpenseAdmin)
+
+
+
+
+class HolidayAdmin(ModelAdmin, ImportExportModelAdmin): 
+    resource_class = HolidayResource
+
+
+admin.site.register(Holiday, HolidayAdmin)
