@@ -1,7 +1,46 @@
 from django.forms import ModelForm, \
-TextInput, EmailInput, Select, BooleanField
+TextInput, EmailInput, Select, HiddenInput
 
-from expenses.models import Employee, Expense
+from expenses.models import Employee, Expense, Holiday
+
+class HolidayEmployeeForm(ModelForm):
+    class Meta:
+        model = Holiday
+        exclude = ['id', 'employee']
+
+        widgets = {
+            
+            
+            'year': TextInput(attrs=
+                              {'class':"form-control",
+                                'id':"year",
+                                'placeholder':"YEAR",}),
+            
+            'month': Select(attrs={
+                        'class':"default-select form-control wide mb-3",
+                        'id':"month",
+                        'placeholder' : "MONTH",
+                        }),
+            
+            'days': TextInput(attrs=        
+                              {'class':"form-control",
+                                'id':"days",
+                                'placeholder':"DAYS",}),
+            
+            'date_start' : TextInput(attrs=
+                                {'class':"datetimepicker form-control",
+                                'id':"PublishDateTimeTextbox",
+                                'type':"date",
+                                'placeholder':"Date Start",}),
+            
+            
+            'date_end' : TextInput(attrs=
+                            {'class':"datetimepicker form-control",
+                            'id':"PublishDateTimeTextbox",
+                            'type':"date",
+                            'placeholder':"Date End",}),
+                        }
+
 
 
 
@@ -10,6 +49,7 @@ class ExpenseForm(ModelForm):
         model = Expense
         
         exclude = ['id',]
+        
         
         
         

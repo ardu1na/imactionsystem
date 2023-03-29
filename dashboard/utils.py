@@ -5,7 +5,32 @@ from django.core.mail import EmailMessage
 from tablib import Dataset
 
 from dashboard.resources import SaleResource, ClientResource, \
-    EmployeeResource, ExpenseResource
+    EmployeeResource, ExpenseResource, HolidayResource
+
+
+
+
+def export_holidays():
+    holiday_resource = HolidayResource()
+    data = holiday_resource.export()
+    current_date = datetime.now().strftime('%Y-%m-%d')
+    filename = f"holidays_{current_date}.xlsx"
+    response = HttpResponse(data.xlsx, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    
+    # Create email message with attachment
+    email_subject = 'Holidays backup'
+    email_body = 'Please find attached the latest sales data.'
+    email = EmailMessage(
+        subject=email_subject,
+        body=email_body,
+        to=["hola@imactions.com"]
+    )
+    email.attach(filename, response.getvalue(), 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    email.send()
+
+
+
 
 def export_sales():
     sale_resource = SaleResource()

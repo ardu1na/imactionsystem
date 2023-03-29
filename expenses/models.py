@@ -150,7 +150,7 @@ class Holiday (models.Model):
 
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, verbose_name="EMPLOYEE", related_name="holidays")
     year = models.IntegerField(verbose_name="YEAR", null=True, blank= True)
-    month = models.CharField(choices= MONTH_CHOICES, max_length=50, null=True, blank= True)
+    month = models.CharField(choices= MONTH_CHOICES, max_length=150, null=True, blank= True, default=None)
     days = models.SmallIntegerField(verbose_name="DAYS", null=True, blank= True)
     date_start = models.DateField(null=True, blank= True)
     date_end = models.DateField(null=True, blank= True)

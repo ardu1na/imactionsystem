@@ -346,8 +346,11 @@ def editemployee(request, id):
         
         editform = EditEmployeeForm(instance=editemployee)
         editwageform = EditWageForm(instance=editemployee)
+        holyday_instance = Holiday.objects.filter(employee=editemployee).last()
+        holydayform = HolidayEmployeeForm(instance=holyday_instance) if holyday_instance else HolidayEmployeeForm()
 
         context = {
+            'holidayform'  : holydayform,
             'editform': editform,
             'editwageform': editwageform,
             'editemployee': editemployee,
@@ -369,6 +372,21 @@ def editemployee(request, id):
 
                 print(editform.errors)
                 return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
+        
+        if "holiday" in request.POST:
+            holidayform = HolidayEmployeeForm(request.POST)
+            if holidayform.is_valid():
+                holiday = holidayform.save(commit=False)
+                holiday.employee = editemployee
+                holiday.save()
+                return redirect(reverse('dashboard:employees')+ "?ok")
+            else:
+                print (holidayform)
+
+                print(holidayform.errors)
+                return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
+        
+        
         else:
             editwageform=EditWageForm(request.POST, instance=editemployee)          
             editwageform.salary = request.POST['salary']
@@ -1283,6 +1301,7 @@ def index(request):
             export_clients()
             export_employees()
             export_expenses()
+            export_holidays()
             last_backup.date = today
             last_backup.save()
         else:
