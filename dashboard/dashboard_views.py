@@ -417,7 +417,16 @@ def employees(request):
                 addform.save()
                 return redirect(reverse('dashboard:employees')+ "?added")
             else:
-                return HttpResponse("hacked from las except else form")                            
+                return HttpResponse("hacked from las except else form") 
+            
+    total_white = 0
+    total_nigga = 0
+    total_total = 0
+    
+    for i in staff:
+        total_white += i.get_white
+        total_nigga += i.get_nigga
+        total_total += i.get_total     
           
     context={
         "staff": staff,
@@ -425,8 +434,12 @@ def employees(request):
         "ceo": ceo,
         "employees": employees,
         "all": all,
-        "addform": addform,        
+        "addform": addform,
+        "white": total_white,
+        "nigga": total_nigga,
+        "total": total_total,        
         "page_title":"WAGES/STAFF",
+        
     }
     
     return render(request,'dashboard/instructor/employees.html',context)
