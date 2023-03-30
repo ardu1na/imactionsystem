@@ -170,36 +170,38 @@ class Employee(models.Model):
         return self.name
     
 class Holiday (models.Model):
-    JAN = "January"
-    FEB = "February"
-    MAR = "March"
-    APR = "April"
-    MAY = "May"
-    JUN = "June"
-    JUL = "July"
-    AUG = "August"
-    SEP = "September"
-    OCT = "October"
-    NOV = "November"
-    DEC = "December"
-    MONTH_CHOICES = {
-        (JAN, ("January")),
-        (FEB, ("February")),
-        (MAR, ("March")),
-        (APR, ("April")),
-        (MAY, ("May")),
-        (JUN, ("June")),
-        (JUL, ("July")),
-        (AUG, ("August")),
-        (SEP, ("September")),
-        (OCT, ("October")),
-        (NOV, ("November")),
-        (DEC, ("December"))       
-    }
+    JAN = 'January'
+    FEB = 'February'
+    MAR = 'March'
+    APR = 'April'
+    MAY = 'May'
+    JUN = 'June'
+    JUL = 'July'
+    AUG = 'August'
+    SEP = 'September'
+    OCT = 'October'
+    NOV = 'November'
+    DEC = 'December'
+    MONTH_CHOICES = (
+        (JAN, ('January')),
+        (FEB, ('February')),
+        (MAR, ('March')),
+        (APR, ('April')),
+        (MAY, ('May')),
+        (JUN, ('June')),
+        (JUL, ('July')),
+        (AUG, ('August')),
+        (SEP, ('September')),
+        (OCT, ('October')),
+        (NOV, ('November')),
+        (DEC, ('December')),       
+    )
 
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, verbose_name="EMPLOYEE", related_name="holidays")
     year = models.IntegerField(verbose_name="YEAR", null=True, blank= True)
-    month = models.CharField(choices= MONTH_CHOICES, max_length=150, null=True, blank= True, default=None)
+    
+    month = models.CharField(choices=MONTH_CHOICES, max_length=150, null=True, blank= False, default=None, verbose_name="MONTH")
+    
     days = models.SmallIntegerField(verbose_name="DAYS", null=True, blank= True)
     date_start = models.DateField(null=True, blank= True)
     date_end = models.DateField(null=True, blank= True)

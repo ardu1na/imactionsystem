@@ -98,12 +98,19 @@ class Sale(models.Model):
         (USD, ('USD')))
 
     client = models.ForeignKey(Client, related_name='sales', null=True, blank=True, on_delete=models.CASCADE, verbose_name="ACCOUNT")
+    
     kind = models.CharField(max_length=50, choices=KIND_CHOICES, null=True, blank=False, default=None, verbose_name="KIND")
+    
     date = models.DateField(default=date.today, verbose_name="DATE")
+    
     total = models.IntegerField(blank=True, null=True, verbose_name="TOTAL")
+    
     comments =models.CharField(max_length=500, null=True, blank=True, verbose_name="COMMENTS")
+    
     revenue = models.CharField(max_length=20, null=True, blank=False, default=None, choices=REVENUE_CHOICES, help_text="Leave blank to automatically fill", verbose_name="REVENUE")
+    
     service = models.CharField(max_length=50, choices=SERVICE_CHOICES, verbose_name="SERVICE", blank=False, default=None)
+    
     price = models.DecimalField(default=0, verbose_name="PRICE", decimal_places=2, max_digits=12)
     currency = models.CharField(max_length=50, default="ARS", choices=COIN_CHOICES, null=True, blank=False, verbose_name="CURRENCY")
     note = models.CharField(max_length=400, null=True, blank=True, verbose_name="NOTES")

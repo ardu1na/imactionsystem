@@ -519,7 +519,10 @@ def employees(request):
 def deleteholiday(request, id):
     holiday = Holiday.objects.get(id=id)
     holiday.delete()
-    return redirect(reverse('dashboard:employees')+ "?deleted")
+    if holiday.employee.rol == "CEO":
+        return redirect(reverse('dashboard:editceo')+ "?deleted")
+    else:
+        return redirect(reverse('dashboard:employees')+ "?deleted")
 
 @user_passes_test(lambda user: user.groups.filter(name='employees').exists())
 @login_required(login_url='dashboard:login')
@@ -541,30 +544,31 @@ def deleteceo(request, id):
 def editceo(request, id):
     
     editemployee = Employee.objects.get(id=id)
+    holidays = Holiday.objects.filter(employee=editemployee)
 
     if request.method == "GET":
         
         editform = EditEmployeeForm(instance=editemployee)
         wage_instance = Salary.objects.filter(employee=editemployee).last()
         editwageform = EditWageCeo(instance=wage_instance) if wage_instance else EditWageCeo()
-        
-        holyday_instance = Holiday.objects.filter(employee=editemployee).last()
-        holydayform = HolidayEmployeeForm(instance=holyday_instance) if holyday_instance else HolidayEmployeeForm()
+        holydayform = HolidayEmployeeForm()
 
         context = {
             'holidayform'  : holydayform,
             'editform': editform,
             'editwageform': editwageform,
             'editemployee': editemployee,
-            'id': id
+            'id': id,
+            'holidays': holidays
             }
         
         return render (request, 'dashboard/instructor/editceo.html', context)
 
-
+    
     if request.method == 'POST':
         if "editemployee" in request.POST:
             editform = EditEmployeeForm(request.POST, instance=editemployee)
+            print (editform)
             if editform.is_valid():
                 editform.save()
                 return redirect(reverse('dashboard:ceo')+ "?ok")
@@ -575,8 +579,8 @@ def editceo(request, id):
                 return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
         
         if "holiday" in request.POST:
-            holyday_instance = Holiday.objects.filter(employee=editemployee).last()
-            holydayform = HolidayEmployeeForm(request.POST, instance=holyday_instance) if holyday_instance else HolidayEmployeeForm(request.POST)
+            
+            holydayform = HolidayEmployeeForm(request.POST)
             if holydayform.is_valid():
                 holiday = holydayform.save(commit=False)
                 holiday.employee = editemployee
@@ -590,7 +594,7 @@ def editceo(request, id):
         
         if "editwage" in request.POST:
             wage_instance = Salary.objects.filter(employee=editemployee).last()
-            editwageform = EditWageCeo(request.POST, instance=wage_instance) if wage_instance else EditWageCeo(request.POST)
+            editwageform = EditWageCeo(request.POST, instance=wage_instance) if wage_instance else EditWageForm(request.POST)
             if editwageform.is_valid():
                 wage = editwageform.save(commit=False)
                 wage.employee = editemployee
