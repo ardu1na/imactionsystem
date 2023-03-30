@@ -348,8 +348,8 @@ def editemployee(request, id):
         wage_instance = Salary.objects.filter(employee=editemployee).last()
         editwageform = EditWageForm(instance=wage_instance) if wage_instance else EditWageForm()
         
-        holyday_instance = Holiday.objects.filter(employee=editemployee).last()
-        holydayform = HolidayEmployeeForm(instance=holyday_instance) if holyday_instance else HolidayEmployeeForm()
+        #holyday_instance = Holiday.objects.filter(employee=editemployee).last()
+        holydayform = HolidayEmployeeForm()
 
         context = {
             'holidayform'  : holydayform,
@@ -377,8 +377,8 @@ def editemployee(request, id):
                 return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
         
         if "holiday" in request.POST:
-            holyday_instance = Holiday.objects.filter(employee=editemployee).last()
-            holydayform = HolidayEmployeeForm(request.POST, instance=holyday_instance) if holyday_instance else HolidayEmployeeForm(request.POST)
+            
+            holydayform = HolidayEmployeeForm(request.POST)
             if holydayform.is_valid():
                 holiday = holydayform.save(commit=False)
                 holiday.employee = editemployee
@@ -404,8 +404,42 @@ def editemployee(request, id):
                 return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
 
 
+@user_passes_test(lambda user: user.groups.filter(name='admin').exists())
+@login_required(login_url='dashboard:login')
+def editholiday(request, id):
+    
+    editholiday = Holiday.objects.get(id=id)
+    editemployee = editholiday.employee
+    
+    
+    if request.method == "GET":
+                
+        holyday_instance = Holiday.objects.filter(employee=editemployee).last()
+        holydayform = HolidayEmployeeForm(instance=holyday_instance) if holyday_instance else HolidayEmployeeForm()
+
+        context = {
+            'holidayform'  : holydayform,
+            'editemployee': editemployee,
+            'id': id
+            }
+        
+        return render (request, 'dashboard/instructor/editholiday.html', context)
 
 
+    if request.method == 'POST':
+                
+        if "holiday" in request.POST:
+            holyday_instance = Holiday.objects.filter(employee=editemployee).last()
+            holydayform = HolidayEmployeeForm(request.POST, instance=holyday_instance) if holyday_instance else HolidayEmployeeForm(request.POST)
+            if holydayform.is_valid():
+                holiday = holydayform.save(commit=False)
+                holiday.employee = editemployee
+                holiday.save()
+                return redirect(reverse('dashboard:employees')+ "?ok")
+            else:
+                print (holydayform)
+                print(holydayform.errors)
+                return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
 
 
 
@@ -481,6 +515,13 @@ def employees(request):
     
     return render(request,'dashboard/instructor/employees.html',context)
 
+
+@user_passes_test(lambda user: user.groups.filter(name='employees').exists())
+@login_required(login_url='dashboard:login')
+def deleteholiday(request, id):
+    holiday = Holiday.objects.get(id=id)
+    holiday.delete()
+    return redirect(reverse('dashboard:employees')+ "?deleted")
 
 @user_passes_test(lambda user: user.groups.filter(name='employees').exists())
 @login_required(login_url='dashboard:login')
