@@ -1,5 +1,4 @@
-from django.shortcuts import render, redirect,get_object_or_404
-from dashboard.forms import ConfigurationForm
+from django.shortcuts import render, redirect
 from dashboard.models import Configurations
 from django.contrib import messages
 from django.urls import reverse
@@ -428,13 +427,18 @@ def employees(request):
     all = Employee.objects.all()
     
     if request.method == 'GET':
-        addform = MixEmployeeSalaryForm()
+        addform = EmployeeForm()
+        salaryform = EmployeeSalaryForm()
         
     if request.method == 'POST':
         if "addemployee" in request.POST:
-            addform = MixEmployeeSalaryForm(request.POST)
-            if addform.is_valid():
-                addform.save()
+            addform = EmployeeForm(request.POST)
+            salaryform = EmployeeSalaryForm(request.POST)
+            if addform.is_valid() and salaryform.is_valid():
+                employee = addform.save()
+                salary = salaryform.save(commit=False)
+                salary.employee = employee
+                salary.save()
                 return redirect(reverse('dashboard:employees')+ "?added")
             else:
                 return HttpResponse("hacked from las except else form") 
@@ -446,10 +450,10 @@ def employees(request):
     
     for employee in staff:
         try:
-            total_white += employee.salaries.latest('period').get_white()
+            total_white += employee.get_white()
         
-            total_nigga += employee.salaries.latest('period').get_nigga()
-            total_total += employee.salaries.latest('period').get_total()
+            total_nigga += employee.get_nigga()
+            total_total += employee.get_total()
         except:
             pass     
           
@@ -459,7 +463,8 @@ def employees(request):
         "ceo": ceo,
         "employees": employees,
         "all": all,
-        "addform": addform,
+        "employee_form": addform,
+        "salary_form": salaryform,
         "white": total_white,
         "nigga": total_nigga,
         "total": total_total,        

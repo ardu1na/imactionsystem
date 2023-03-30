@@ -161,13 +161,6 @@ class EmployeeSalaryForm(ModelForm):
            
         }
         
-EmployeeFormSet = formset_factory(EmployeeForm)
-SalaryFormSet = formset_factory(EmployeeSalaryForm)
-
-class MixEmployeeSalaryForm(forms.Form):
-    employee_form = EmployeeFormSet(prefix='employee')
-    salary_form = SalaryFormSet(prefix='salary')
-        
         
 
 
