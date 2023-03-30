@@ -402,6 +402,11 @@ def editemployee(request, id):
                 return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
 
 
+
+
+
+
+
 @user_passes_test(lambda user: user.groups.filter(name='employees').exists())
 @login_required(login_url='dashboard:login')
 def employeesold(request):
@@ -499,9 +504,14 @@ def editceo(request, id):
     if request.method == "GET":
         
         editform = EditEmployeeForm(instance=editemployee)
-        editwageform = EditWageCeo(instance=editemployee)
+        wage_instance = Salary.objects.filter(employee=editemployee).last()
+        editwageform = EditWageCeo(instance=wage_instance) if wage_instance else EditWageCeo()
+        
+        holyday_instance = Holiday.objects.filter(employee=editemployee).last()
+        holydayform = HolidayEmployeeForm(instance=holyday_instance) if holyday_instance else HolidayEmployeeForm()
 
         context = {
+            'holidayform'  : holydayform,
             'editform': editform,
             'editwageform': editwageform,
             'editemployee': editemployee,
@@ -510,7 +520,7 @@ def editceo(request, id):
         
         return render (request, 'dashboard/instructor/editceo.html', context)
 
-    
+
     if request.method == 'POST':
         if "editemployee" in request.POST:
             editform = EditEmployeeForm(request.POST, instance=editemployee)
@@ -518,44 +528,39 @@ def editceo(request, id):
                 editform.save()
                 return redirect(reverse('dashboard:ceo')+ "?ok")
             else:
-                return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
-        else:
-            editwageform=EditWageCeo(request.POST, instance=editemployee)          
-            editwageform.salary = request.POST['salary']
-            editwageform.mp = request.POST['mp']
+                print (editform)
 
-            editwageform.tc = request.POST['tc']
-
-            editwageform.atm_cash = request.POST['atm_cash']
-            
-            editwageform.cash = request.POST['cash']
-
-            editwageform.paypal = request.POST['paypal']
-
-            editwageform.cash_usd = request.POST['salary']
-
-            
-            if editwageform.is_valid():
-                editwageform.save()
-                return redirect(reverse('dashboard:ceo')+ "?ok")
-
-            else: 
-                print("_______________________________________________________________________-")
-                print("_______________________________________________________________________-")
-                print("_______________________________________________________________________-")
-
-                print(editwageform)
-                print("_______________________________________________________________________-")
-
-                print("_______________________ERRORS_______________________")
-
-                print(editwageform.errors)
-                print("_______________________________________________________________________-")
-                print("_______________________________________________________________________-")
-                print("_______________________________________________________________________-")
-
+                print(editform.errors)
                 return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
         
+        if "holiday" in request.POST:
+            holyday_instance = Holiday.objects.filter(employee=editemployee).last()
+            holydayform = HolidayEmployeeForm(request.POST, instance=holyday_instance) if holyday_instance else HolidayEmployeeForm(request.POST)
+            if holydayform.is_valid():
+                holiday = holydayform.save(commit=False)
+                holiday.employee = editemployee
+                holiday.save()
+                return redirect(reverse('dashboard:ceo')+ "?ok")
+            else:
+                print (holydayform)
+                print(holydayform.errors)
+                return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
+
+        
+        if "editwage" in request.POST:
+            wage_instance = Salary.objects.filter(employee=editemployee).last()
+            editwageform = EditWageCeo(request.POST, instance=wage_instance) if wage_instance else EditWageCeo(request.POST)
+            if editwageform.is_valid():
+                wage = editwageform.save(commit=False)
+                wage.employee = editemployee
+                wage.save()
+                return redirect(reverse('dashboard:ceo')+ "?ok")
+            else: 
+                print (editwageform)
+                print(editwageform.errors)
+                return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
+
+
 
 @user_passes_test(lambda user: user.groups.filter(name='admin').exists())
 @login_required(login_url='dashboard:login')

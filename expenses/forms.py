@@ -378,8 +378,7 @@ class EditWageCeo(ModelForm):
     class Meta:
         model = Salary
         
-        exclude = ['id', 'rol', 'name', 'address', 'email', 'tel', 'date_join', 'active','date_gone', 'nigga']
-        
+        fields = ['salary', 'mp', 'atm_cash', 'cash', 'cash_usd', 'paypal', 'tc']
         widgets = {           
 
             
@@ -436,11 +435,5 @@ class EditWageCeo(ModelForm):
                 'placeholder' : "PAYPAL"
                 }
             ),
-            
-            'period': TextInput(attrs=
-                                {'class':"datetimepicker form-control",
-                                'id':"PublishDateTimeTextbox",
-                                'type':"date",
-                                'placeholder':"Date Start",}),
             
             }
