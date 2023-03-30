@@ -82,7 +82,7 @@
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link" id="holiday-tab" data-bs-toggle="tab" href="#holiday-tab">
+                                <a class="nav-link" id="holiday-tab" data-bs-toggle="tab" href="#holiday">
                                     <span> 
                                         <i class="ti-star fs-4 me-2"></i>
                                     </span> Holidays
@@ -149,7 +149,7 @@
                                 </div>
                             </div>
 
-                            <div class="tab-pane fade" id="holiday-tab" role="tabpanel">
+                            <div class="tab-pane fade" id="holiday" role="tabpanel">
                                 <div class="pt-4">
 
                                     <div class="basic-form">
@@ -190,7 +190,7 @@
                                             </div>
 
 
-                                            <button type="submit" name="holiday" class="btn btn-primary">Save</button>
+                                            <button type="submit" name="holiday" class="btn btn-primary">CHANGE</button>
                                         </form>
                                     </div>
                                 </div>
@@ -334,22 +334,30 @@
 <script>
 
     // Get references to the holiday tab and the card with the ID "holidays"
-    const holidayTab = document.getElementById('holiday-tab');
-    const holidaysCard = document.getElementById('holidays');
-    
-    // Hide the holidays card by default
+const holidayTab = document.getElementById('holiday-tab');
+const holidaysCard = document.getElementById('holidays');
+
+// Hide the holidays card by default
+holidaysCard.style.display = 'none';
+
+// Add an event listener to the holiday tab that listens for clicks
+holidayTab.addEventListener('click', function() {
+  // Toggle the display property of the holidays card based on whether the tab is active or not
+  if (holidayTab.classList.contains('active')) {
+    holidaysCard.style.display = 'block';
+  } else {
     holidaysCard.style.display = 'none';
-    
-    // Add an event listener to the holiday tab that listens for clicks
-    holidayTab.addEventListener('click', function() {
-      // Toggle the display property of the holidays card based on whether the tab is active or not
-      if (holidayTab.classList.contains('active')) {
-        holidaysCard.style.display = 'block';
-      } else {
-        holidaysCard.style.display = 'none';
-      }
-    });
-    
+  }
+});
+
+document.addEventListener('click', function(event) {
+    // Check if the clicked element is outside the holidays card
+    if (!holidaysCard.contains(event.target) && !holidayTab.contains(event.target)) {
+      holidaysCard.style.display = 'none';
+      holidayTab.classList.remove('active');
+    }
+  });
+
     </script>
     
 
