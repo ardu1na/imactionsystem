@@ -121,7 +121,26 @@ class Employee(models.Model):
         p_c = wages.paypal*Decimal(blue)
         return p_c
     
+    def get_mp(self):
+        wages  = Salary.objects.filter(employee=self.pk).latest() 
+        i = wages.mp
+        return i 
     
+    def get_atm(self):
+        wages  = Salary.objects.filter(employee=self.pk).latest() 
+        i = wages.atm_cash
+        return i 
+    
+    def get_tc(self):
+        wages  = Salary.objects.filter(employee=self.pk).latest() 
+        i = wages.tc
+        return i 
+    
+    
+    def get_cash(self):
+        wages  = Salary.objects.filter(employee=self.pk).latest() 
+        i = wages.cash
+        return i 
     
     def get_cash_usd (self):
         wages  = Salary.objects.filter(employee=self.pk).latest() 
@@ -175,8 +194,7 @@ class Holiday (models.Model):
         (SEP, ("September")),
         (OCT, ("October")),
         (NOV, ("November")),
-        (DEC, ("December")),
-        
+        (DEC, ("December"))       
     }
 
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, verbose_name="EMPLOYEE", related_name="holidays")

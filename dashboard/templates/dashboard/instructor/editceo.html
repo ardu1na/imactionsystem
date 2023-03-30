@@ -182,7 +182,7 @@
                                                 <h4>SALARY</h4> 
                                                 <p class="fs-4">
                                                     <span class="badge light badge-info">
-                                                        $ {{editemployee.salary|floatformat:2}}
+                                                        $ {{editemployee.get_salary|floatformat:2}}
                                                     </span>
                                                 </p>
                                             </li>
@@ -192,7 +192,7 @@
                                                 <h4>MP</h4> 
                                                 <p class="fs-4">
                                                     <span class="badge light badge-primary">
-                                                        $ {{editemployee.mp|floatformat:2}}
+                                                        $ {{editemployee.get_mp|floatformat:2}}
                                                     </span>
                                                 </p>
                                             </li>
@@ -200,25 +200,27 @@
                                                 <h4>TC</h4> 
                                                 <p class="fs-4">
                                                     <span class="badge light badge-secondary">
-                                                        $ {{editemployee.tc|floatformat:2}}
+                                                        $ {{editemployee.get_tc|floatformat:2}}
                                                     </span>
                                                 </p>
                                             </li>
+                                            
+
+
+                                            <li class="list-group-item">
+                                                <h4>ATM</h4> 
+                                                <p class="fs-4">
+                                                    <span class="badge light badge-secondary">
+                                                        $ {{editemployee.get_atm|floatformat:2}}
+                                                    </span>
+                                                </p>
+                                            </li>
+
                                             <li class="list-group-item">
                                                 <h4>CASH $ </h4> 
                                                 <p class="fs-4">
                                                     <span class="badge light badge-warning">
-                                                        $ {{editemployee.cash|floatformat:2}}
-                                                    </span>
-                                                </p>
-                                            </li>
-
-
-                                            <li class="list-group-item">
-                                                <h4>ATM CASH</h4> 
-                                                <p class="fs-4">
-                                                    <span class="badge light badge-secondary">
-                                                        $ {{editemployee.atm_cash|floatformat:2}}
+                                                        $ {{editemployee.get_cash|floatformat:2}}
                                                     </span>
                                                 </p>
                                             </li>

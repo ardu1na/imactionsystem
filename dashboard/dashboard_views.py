@@ -375,32 +375,32 @@ def editemployee(request, id):
                 return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
         
         if "holiday" in request.POST:
-            holidayform = HolidayEmployeeForm(request.POST)
-            if holidayform.is_valid():
-                holiday = holidayform.save(commit=False)
+            holyday_instance = Holiday.objects.filter(employee=editemployee).last()
+            holydayform = HolidayEmployeeForm(request.POST, instance=holyday_instance) if holyday_instance else HolidayEmployeeForm(request.POST)
+            if holydayform.is_valid():
+                holiday = holydayform.save(commit=False)
                 holiday.employee = editemployee
                 holiday.save()
                 return redirect(reverse('dashboard:employees')+ "?ok")
             else:
-                print (holidayform)
-
-                print(holidayform.errors)
+                print (holydayform)
+                print(holydayform.errors)
                 return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
+
         
-        
-        else:
-            editwageform=EditWageForm(request.POST)   
+        if "editwage" in request.POST:
+            wage_instance = Salary.objects.filter(employee=editemployee).last()
+            editwageform = EditWageForm(request.POST, instance=wage_instance) if wage_instance else EditWageForm(request.POST)
             if editwageform.is_valid():
                 wage = editwageform.save(commit=False)
                 wage.employee = editemployee
                 wage.save()
                 return redirect(reverse('dashboard:employees')+ "?ok")
-
             else: 
                 print (editwageform)
                 print(editwageform.errors)
                 return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
-        
+
 
 @user_passes_test(lambda user: user.groups.filter(name='employees').exists())
 @login_required(login_url='dashboard:login')
@@ -411,7 +411,7 @@ def employeesold(request):
           
     context={
         
-        "page_title":"STAFF/OLD",
+        "page_title":"STAFF OLD",
         "old": old,
     }
     
@@ -468,7 +468,7 @@ def employees(request):
         "white": total_white,
         "nigga": total_nigga,
         "total": total_total,        
-        "page_title":"WAGES/STAFF",
+        "page_title":"WAGES STAFF",
         
     }
     
@@ -563,24 +563,28 @@ def ceo(request):
     ceo = Employee.objects.filter(rol="CEO")        
     
     if request.method == 'GET':
-        addform = MixCeoSalaryForm()
+        addform = CeoForm()
+        salaryform = CeoSalaryForm()           
         
     if request.method == 'POST':
         if "addemployee" in request.POST:
-            addform = MixCeoSalaryForm(request.POST)
-            if addform.is_valid():
-                addform.save()
+            addform = CeoForm(request.POST)
+            salaryform = CeoSalaryForm(request.POST)
+            if addform.is_valid() and salaryform.is_valid():
+                employee = addform.save()
+                salary = salaryform.save(commit=False)
+                salary.employee = employee
+                salary.save()
                 return redirect(reverse('dashboard:ceo')+ "?added")
             else:
                 return HttpResponse("hacked from las except else form")                            
     
-    
-
-          
+              
     context={
         "ceo": ceo,
-        "addform": addform,        
-        "page_title":"WAGES/CEO",
+        "ceo_form": addform,
+        "salary_form": salaryform,        
+        "page_title":"WAGES CEO",
     }
     
     return render(request,'dashboard/instructor/ceo.html',context)

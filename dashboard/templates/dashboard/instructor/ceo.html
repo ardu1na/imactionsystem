@@ -32,8 +32,9 @@
                                     <th>SALARY</th>
                                     <th>MP</th>
                                     <th>TC</th>
+                                   
+                                    <th>ATM</th>
                                     <th>CASH $</th>
-                                    <th>ATM CASH</th>
                                     <th>CASH USD</th>
                                     <th>PAYPAL</th>
                                     <th>MONTHLY BONUS </th>
@@ -53,14 +54,14 @@
                                     </td>
 
 
-                                    <td>${{employee.salary|floatformat:2}}</td>
+                                    <td>${{employee.get_salary|floatformat:2}}</td>
 
-                                    <td>${{employee.mp|floatformat:2}}</td>
+                                    <td>${{employee.get_mp|floatformat:2}}</td>
                                     
-                                    <td>${{employee.tc|floatformat:2}}</td>
-                                    <td>${{employee.cash|floatformat:2}}</td>
+                                    <td>${{employee.get_tc|floatformat:2}}</td>
+                                    <td>${{employee.get_atm|floatformat:2}}</td>
                                     
-                                    <td>${{employee.atm_cash|floatformat:2}}</td>
+                                    <td>${{employee.get_cash|floatformat:2}}</td>
 
                                     <td>${{employee.get_cash_usd|floatformat:2}}</td>
                                     
@@ -111,8 +112,7 @@
                 </div>       
 
                 <form  method="post">
-                {% csrf_token %} {{ form.ceo_form.management_form }}
-                {{ form.salary_form.management_form }}
+                {% csrf_token %} 
                     <div class="modal-body">
                     
                         <div class="form-group my-3">
@@ -179,7 +179,7 @@
                             </div>
 
                             <div class="form-group my-3">
-                                <label class="form-label">ATM CASH</label>
+                                <label class="form-label">ATM</label>
     
                                  {{salary_form.atm_cash}}
                             </div>

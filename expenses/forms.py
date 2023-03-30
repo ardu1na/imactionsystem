@@ -250,7 +250,7 @@ class CeoSalaryForm(ModelForm):
             'atm_cash' : TextInput(attrs={
                 'class':"form-control",
                 'id':"atm_cash",
-                'placeholder' : "CASH $"
+                'placeholder' : "ATM"
                 }
             ),
             
@@ -270,13 +270,6 @@ class CeoSalaryForm(ModelForm):
             
            
         }
-        
-CeoFormSet = formset_factory(CeoForm)
-SalaryCeoFormSet = formset_factory(CeoSalaryForm)
-
-class MixCeoSalaryForm(forms.Form):
-    ceo_form = CeoFormSet(prefix='ceo')
-    salary_form = SalaryCeoFormSet(prefix='salary')
     
     
     
