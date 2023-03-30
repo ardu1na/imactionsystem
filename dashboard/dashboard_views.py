@@ -345,7 +345,9 @@ def editemployee(request, id):
     if request.method == "GET":
         
         editform = EditEmployeeForm(instance=editemployee)
-        editwageform = EditWageForm(instance=editemployee)
+        wage_instance = Salary.objects.filter(employee=editemployee).last()
+        editwageform = EditWageForm(instance=wage_instance) if wage_instance else EditWageForm()
+        
         holyday_instance = Holiday.objects.filter(employee=editemployee).last()
         holydayform = HolidayEmployeeForm(instance=holyday_instance) if holyday_instance else HolidayEmployeeForm()
 
@@ -388,11 +390,11 @@ def editemployee(request, id):
         
         
         else:
-            editwageform=EditWageForm(request.POST, instance=editemployee)          
-            editwageform.salary = request.POST['salary']
-            editwageform.nigga = request.POST['nigga']
+            editwageform=EditWageForm(request.POST)   
             if editwageform.is_valid():
-                editwageform.save()
+                wage = editwageform.save(commit=False)
+                wage.employee = editemployee
+                wage.save()
                 return redirect(reverse('dashboard:employees')+ "?ok")
 
             else: 
@@ -426,11 +428,11 @@ def employees(request):
     all = Employee.objects.all()
     
     if request.method == 'GET':
-        addform = EmployeeForm()
+        addform = MixEmployeeSalaryForm()
         
     if request.method == 'POST':
         if "addemployee" in request.POST:
-            addform = EmployeeForm(request.POST)
+            addform = MixEmployeeSalaryForm(request.POST)
             if addform.is_valid():
                 addform.save()
                 return redirect(reverse('dashboard:employees')+ "?added")
@@ -441,10 +443,15 @@ def employees(request):
     total_nigga = 0
     total_total = 0
     
-    for i in staff:
-        total_white += i.get_white
-        total_nigga += i.get_nigga
-        total_total += i.get_total     
+    
+    for employee in staff:
+        try:
+            total_white += employee.salaries.latest('period').get_white()
+        
+            total_nigga += employee.salaries.latest('period').get_nigga()
+            total_total += employee.salaries.latest('period').get_total()
+        except:
+            pass     
           
     context={
         "staff": staff,
@@ -551,11 +558,11 @@ def ceo(request):
     ceo = Employee.objects.filter(rol="CEO")        
     
     if request.method == 'GET':
-        addform = CeoForm()
+        addform = MixCeoSalaryForm()
         
     if request.method == 'POST':
         if "addemployee" in request.POST:
-            addform = CeoForm(request.POST)
+            addform = MixCeoSalaryForm(request.POST)
             if addform.is_valid():
                 addform.save()
                 return redirect(reverse('dashboard:ceo')+ "?added")

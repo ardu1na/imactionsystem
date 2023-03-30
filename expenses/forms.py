@@ -1,7 +1,11 @@
-from django.forms import ModelForm, \
-TextInput, EmailInput, Select, HiddenInput
+from django import forms
 
-from expenses.models import Employee, Expense, Holiday
+from django.forms import ModelForm, \
+TextInput, EmailInput, Select
+from django.forms import formset_factory
+
+
+from expenses.models import Employee, Expense, Holiday, Salary
 
 class HolidayEmployeeForm(ModelForm):
     class Meta:
@@ -88,7 +92,7 @@ class EmployeeForm(ModelForm):
     
        class Meta:
         model = Employee
-        exclude = ['id', 'active', 'date_gone', 'cash_usd', 'atm_cash', 'cash', 'tc', 'mp', 'paypal']
+        exclude = ['id', 'active', 'date_gone']
         
         widgets = {
             
@@ -123,6 +127,20 @@ class EmployeeForm(ModelForm):
                 'id':"tel",
                 'placeholder' : "Phone Number"
                 }),
+               
+            
+           
+        }
+
+class EmployeeSalaryForm(ModelForm): 
+    
+       class Meta:
+        model = Salary
+        fields = ['salary', 'nigga']
+        
+        widgets = {
+            
+            
             
             'salary' : TextInput(attrs={
                 'class':"form-control",
@@ -142,15 +160,22 @@ class EmployeeForm(ModelForm):
             
            
         }
+        
+EmployeeFormSet = formset_factory(EmployeeForm)
+SalaryFormSet = formset_factory(EmployeeSalaryForm)
 
-
+class MixEmployeeSalaryForm(forms.Form):
+    employee_form = EmployeeFormSet(prefix='employee')
+    salary_form = SalaryFormSet(prefix='salary')
+        
+        
 
 
 class CeoForm(ModelForm): 
     
        class Meta:
         model = Employee
-        exclude = ['id', 'active', 'date_gone', 'nigga']
+        exclude = ['id', 'active', 'date_gone']
         
         widgets = {
             
@@ -185,6 +210,20 @@ class CeoForm(ModelForm):
                 'id':"tel",
                 'placeholder' : "Phone Number"
                 }),
+            
+            
+        }
+
+
+class CeoSalaryForm(ModelForm): 
+    
+       class Meta:
+        model = Salary
+        fields = ['salary', 'atm_cash', 'cash', 'mp', 'paypal', 'cash_usd', 'tc']
+        
+        widgets = {
+            
+            
             
             'salary' : TextInput(attrs={
                 'class':"form-control",
@@ -235,9 +274,21 @@ class CeoForm(ModelForm):
                 'placeholder' : "PAYPAL"
                 }
             ),
+            
+           
         }
+        
+CeoFormSet = formset_factory(CeoForm)
+SalaryCeoFormSet = formset_factory(CeoSalaryForm)
 
-
+class MixCeoSalaryForm(forms.Form):
+    ceo_form = CeoFormSet(prefix='ceo')
+    salary_form = SalaryCeoFormSet(prefix='salary')
+    
+    
+    
+    
+    
 class EditEmployeeForm(ModelForm):
     
     class Meta:
@@ -301,9 +352,9 @@ class EditEmployeeForm(ModelForm):
 class EditWageForm(ModelForm):
     
     class Meta:
-        model = Employee
+        model = Salary
         
-        fields = ['salary', 'nigga']
+        fields = ['salary', 'nigga', 'period']
         
         widgets = {           
 
@@ -324,6 +375,12 @@ class EditWageForm(ModelForm):
                 }
             ),        
             
+             'period' : TextInput(attrs=
+                                {'class':"datetimepicker form-control",
+                                'id':"PublishDateTimeTextbox",
+                                'type':"date",
+                                'placeholder':"Date Start",}),
+            
             
             
             }
@@ -333,7 +390,7 @@ class EditWageForm(ModelForm):
 class EditWageCeo(ModelForm):
     
     class Meta:
-        model = Employee
+        model = Salary
         
         exclude = ['id', 'rol', 'name', 'address', 'email', 'tel', 'date_join', 'active','date_gone', 'nigga']
         
@@ -393,5 +450,11 @@ class EditWageCeo(ModelForm):
                 'placeholder' : "PAYPAL"
                 }
             ),
+            
+            'period': TextInput(attrs=
+                                {'class':"datetimepicker form-control",
+                                'id':"PublishDateTimeTextbox",
+                                'type':"date",
+                                'placeholder':"Date Start",}),
             
             }

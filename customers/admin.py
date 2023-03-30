@@ -1,7 +1,7 @@
 from django.contrib import admin
 from unfold.admin import ModelAdmin
 from sales.models import Sale
-from customers.models import   AbstractClient, ConfTier, BackUps
+from customers.models import   ConfTier, BackUps, Client
 
 from import_export.admin import ImportExportModelAdmin
 
@@ -12,6 +12,8 @@ admin.site.index_title = 'Home'
 admin.site.site_title = 'IMACTIONS'
 
 admin.site.register(BackUps)
+
+
 
 class SaleInstanceInline(admin.TabularInline):
     model = Sale
@@ -40,7 +42,7 @@ class ClientAdmin(ModelAdmin, ImportExportModelAdmin):
     resource_class = ClientResource
  
     
-admin.site.register(AbstractClient, ClientAdmin)
+admin.site.register(Client, ClientAdmin)
 
 
 admin.site.register(ConfTier)

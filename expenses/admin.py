@@ -3,7 +3,7 @@ from unfold.admin import ModelAdmin
 from import_export.admin import ImportExportModelAdmin
 
 from dashboard.resources import EmployeeResource, ExpenseResource, HolidayResource
-from expenses.models import Employee, Expense, Holiday
+from expenses.models import Employee, Expense, Holiday, Salary
 
 class EmployeeAdmin(ModelAdmin, ImportExportModelAdmin): 
     resource_class = EmployeeResource
@@ -18,6 +18,9 @@ class ExpenseAdmin(ModelAdmin, ImportExportModelAdmin):
 admin.site.register(Expense, ExpenseAdmin)
 
 
+
+
+admin.site.register(Salary)
 
 
 class HolidayAdmin(ModelAdmin, ImportExportModelAdmin): 
