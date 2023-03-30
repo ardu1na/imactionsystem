@@ -169,12 +169,12 @@ def expenses(request):
     wages_ceo = 0
     
     for i in ceo:
-        wages_ceo += i.get_total_ceo
-        all_bonus += i.get_aguinaldo_mensual
+        wages_ceo += i.get_total_ceo()
+        all_bonus += i.get_aguinaldo_mensual()
         
     for employee in employees:
-        wages_staff += employee.get_total
-        all_bonus += employee.get_aguinaldo_mensual
+        wages_staff += employee.get_total()
+        all_bonus += employee.get_aguinaldo_mensual()
         
     
     with_wages = without_wages + wages_staff + wages_ceo
@@ -340,6 +340,7 @@ def deleteexpense(request, id):
 def editemployee(request, id):
     
     editemployee = Employee.objects.get(id=id)
+    holidays = Holiday.objects.filter(employee=editemployee)
 
     if request.method == "GET":
         
@@ -355,7 +356,8 @@ def editemployee(request, id):
             'editform': editform,
             'editwageform': editwageform,
             'editemployee': editemployee,
-            'id': id
+            'id': id,
+            'holidays': holidays
             }
         
         return render (request, 'dashboard/instructor/editemployee.html', context)
