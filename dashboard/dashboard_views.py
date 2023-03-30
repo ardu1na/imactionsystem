@@ -347,8 +347,6 @@ def editemployee(request, id):
         editform = EditEmployeeForm(instance=editemployee)
         wage_instance = Salary.objects.filter(employee=editemployee).last()
         editwageform = EditWageForm(instance=wage_instance) if wage_instance else EditWageForm()
-        
-        #holyday_instance = Holiday.objects.filter(employee=editemployee).last()
         holydayform = HolidayEmployeeForm()
 
         context = {
