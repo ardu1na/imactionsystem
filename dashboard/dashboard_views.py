@@ -1396,6 +1396,54 @@ def index(request):
             print("don't need to back up, allready updated")
     except: pass
         
+    staff = Employee.objects.filter(active="Yes")
+    
+    for employee in staff:
+        last_salary = employee.salaries.last()
+        if last_salary.period.month != today.month:
+            new_salary = Salary.objects.create(
+            employee=last_salary.employee,
+            period=today,
+            salary=last_salary.salary,
+            nigga=last_salary.nigga,
+            mp=last_salary.mp,
+            tc=last_salary.tc,
+            cash=last_salary.cash,
+            atm_cash=last_salary.atm_cash,
+            cash_usd=last_salary.cash_usd,
+            paypal=last_salary.paypal,
+        )
+            
+    expenses_list = Expense.objects.all()
+    for expense in expenses_list:    
+        if expense.date.month != today.month:
+            update_expense = Expense.objects.create(
+            date=today,
+            category=expense.category,
+            concept=expense.concept,
+            value=expense.value,
+            wop=expense.wop,
+        )
+            
+    sales_rr_list = Sale.objects.filter(revenue="RR", cancelled="Active")
+    for sale in sales_rr_list:
+        if sale.date.month != today.month:
+            update_rr = Sale.objects.create(
+                client=sale.client,
+                kind= sale.kind,
+                date=today,
+                comments=sale.comments,
+                revenue=sale.revenue,
+                service=sale.service,
+                price=sale.price,
+                currency=sale.currency,
+                note="auto revenue sale",
+                cost=sale.cost,
+                status="FC",
+                cancelled="Active",               
+                    
+            )        
+            
         
     clients = Client.objects.all()
     
