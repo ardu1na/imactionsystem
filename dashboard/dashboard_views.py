@@ -143,8 +143,9 @@ def editexpense(request, id):
 @user_passes_test(lambda user: user.groups.filter(name='expenses').exists())
 @login_required(login_url='dashboard:login')
 def expenses(request):
-    
-    expenses = Expense.objects.all()
+    today = date.today()
+
+    expenses = Expense.objects.filter(date__month=today.month, date__year= today.year)
     employees = Employee.objects.filter(active="Yes").exclude(rol="CEO")
     ceo = Employee.objects.filter(rol="CEO", active="Yes")
     
@@ -676,28 +677,28 @@ def sales(request):
     this_month = date.today().month
     month_name = date(1900, this_month, 1).strftime('%B')
     
-    sales_this_month = Sale.objects.filter(date__month=today.month, revenue="RR", cancelled="Active")
+    sales_this_month = Sale.objects.filter(date__month=today.month, date__year=today.year, revenue="RR", cancelled="Active")
     total_amount = sales_this_month.aggregate(Sum('change'))['change__sum']
     def get_total_format():
         try:
             return '{:,.0f}'.format(total_amount)
         except: return 0
 
-    sales1_this_month = Sale.objects.filter(date__month=today.month, revenue="OneOff", cancelled="Active")
+    sales1_this_month = Sale.objects.filter(date__month=today.month, date__year=today.year, revenue="OneOff", cancelled="Active")
     total1_amount = sales1_this_month.aggregate(Sum('change'))['change__sum']
     def get_total1_format():
         try:
             return '{:,.0f}'.format(total1_amount)
         except: return 0
         
-    clients_this_month = Sale.objects.filter(date__month=today.month, kind="New Client", cancelled="Active")
+    clients_this_month = Sale.objects.filter(date__month=today.month, date__year=today.year, kind="New Client", cancelled="Active")
     total_clients = clients_this_month.count()
     
     
-    upsell_this_month = Sale.objects.filter(date__month=today.month, kind="Upsell", cancelled="Active")
+    upsell_this_month = Sale.objects.filter(date__month=today.month, date__year=today.year, kind="Upsell", cancelled="Active")
     total_upsell_this_month = upsell_this_month.count()
     
-    crosssell_this_month = Sale.objects.filter(date__month=today.month, kind="Cross Sell", cancelled="Active")
+    crosssell_this_month = Sale.objects.filter(date__month=today.month, date__year=today.year, kind="Cross Sell", cancelled="Active")
     total_crosssell_this_month = crosssell_this_month.count()
     
     sales = Sale.objects.all()
@@ -717,7 +718,7 @@ def sales(request):
     
 
     
-    sales_by_service =Sale.objects.filter(cancelled="Active", date__month=today.month)
+    sales_by_service =Sale.objects.filter(cancelled="Active", date__month=today.month, date__year=today.year)
 
     s_seo = 0
     s_gads= 0
@@ -910,7 +911,7 @@ def clients(request):
     total_rr = 0
     for client in clients:
         if client.cancelled == "Active":
-            for sale in client.sales.all():
+            for sale in client.sales.filter(date__month=date.today().month, date__year=date.today().year):
                 if sale.cancelled == "Active":
                     if sale.revenue == "RR":
                         total_rr += sale.get_change
@@ -942,7 +943,7 @@ def clients(request):
                 return HttpResponse("hacked from las except else form")
     
     
-    sales_rr=Sale.objects.filter(cancelled="Active").filter(revenue="RR")
+    sales_rr=Sale.objects.filter(cancelled="Active").filter(revenue="RR", date__month=date.today().month, date__year=date.today().year)
 
     s_seo = 0
     s_gads= 0
