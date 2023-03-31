@@ -1,49 +1,54 @@
 from django import forms
-
 from django.forms import ModelForm, \
 TextInput, EmailInput, Select
-from django.forms import formset_factory
 
 
 from expenses.models import Employee, Expense, Holiday, Salary
+
+
+
+class RaiceForm(forms.Form):
+    nigga = forms.IntegerField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    salary = forms.IntegerField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+
 
 class HolidayEmployeeForm(ModelForm):
     class Meta:
         model = Holiday
         exclude = ['id', 'employee']
 
-        widgets = {
-            
-            
-            'year': TextInput(attrs=
-                              {'class':"form-control",
-                                'id':"year",
-                                'placeholder':"YEAR",}),
-            
+        widgets = {            
+            'year': TextInput(attrs={
+                'class':"form-control",
+                'id':"year",
+                'placeholder':"YEAR",
+            }),      
+                  
             'month': Select(attrs={
-                        'class':"default-select form-control wide mb-3",
-                        'id':"month",
-                        'placeholder' : "MONTH",
-                        }),
-            
-            'days': TextInput(attrs=        
-                              {'class':"form-control",
-                                'id':"days",
-                                'placeholder':"DAYS",}),
-            
-            'date_start' : TextInput(attrs=
-                                {'class':"datetimepicker form-control",
-                                'id':"PublishDateTimeTextbox",
-                                'type':"date",
-                                'placeholder':"Date Start",}),
-            
-            
-            'date_end' : TextInput(attrs=
-                            {'class':"datetimepicker form-control",
-                            'id':"PublishDateTimeTextbox",
-                            'type':"date",
-                            'placeholder':"Date End",}),
-                        }
+                'class':"default-select form-control wide mb-3",
+                'id':"month",
+            }),       
+                 
+            'days': TextInput(attrs={
+                'class':"form-control",
+                'id':"days",
+                'placeholder':"DAYS",
+            }),            
+            'date_start': TextInput(attrs={
+                'class':"datetimepicker form-control",
+                'id':"PublishDateTimeTextbox",
+                'type':"date",
+                'placeholder':"Date Start",
+            }),            
+            'date_end': TextInput(attrs={
+                'class':"datetimepicker form-control",
+                'id':"PublishDateTimeTextbox",
+                'type':"date",
+                'placeholder':"Date End",
+            }),
+        }
+
+
 
 
 

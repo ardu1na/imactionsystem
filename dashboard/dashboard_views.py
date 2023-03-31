@@ -13,7 +13,7 @@ import pickle
 import mimetypes
 from django.db.models import Sum
 from datetime import datetime
-
+from decimal import Decimal
 from django.db.models import Q
 from django.db.models import Count
 from customers.models import *
@@ -348,8 +348,10 @@ def editemployee(request, id):
         wage_instance = Salary.objects.filter(employee=editemployee).last()
         editwageform = EditWageForm(instance=wage_instance) if wage_instance else EditWageForm()
         holydayform = HolidayEmployeeForm()
+        raice = RaiceForm()
 
         context = {
+            'raice': raice,
             'holidayform'  : holydayform,
             'editform': editform,
             'editwageform': editwageform,
@@ -362,6 +364,25 @@ def editemployee(request, id):
 
     
     if request.method == 'POST':
+        
+        if "raice" in request.POST:
+            raice = RaiceForm(request.POST)
+            print (raice)
+            if raice.is_valid():
+                raice_nigga = raice.cleaned_data['nigga']
+                raice_salary = raice.cleaned_data['salary']
+                
+                last_wage = Salary.objects.filter(employee=editemployee.pk).last()
+                last_wage.salary = last_wage.salary + (last_wage.salary*Decimal(raice_salary))/100
+                last_wage.save()
+                return redirect(reverse('dashboard:employees')+ "?ok")
+            else:
+                print (editform)
+
+                print(editform.errors)
+                return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
+        
+        
         if "editemployee" in request.POST:
             editform = EditEmployeeForm(request.POST, instance=editemployee)
             print (editform)

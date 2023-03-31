@@ -54,6 +54,47 @@
 
 
 
+<!-- START modal raice -->
+<div class="modal fade " id="raice" tabindex="-1" aria-labelledby="raiceLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="raiceLabel">RAICE {{editemployee.name}} salary</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>       
+
+            <form  method="post">
+            {% csrf_token %}
+                <div class="modal-body">
+                
+                  
+                    <div class="form-group my-3">
+                        <label class="form-label">% SALARY</label>
+
+                            {{raice.salary}}
+                    </div>
+
+                    <div class="form-group my-3">
+                        <label class="form-label">% NIGGA</label>
+
+                            {{raice.nigga}}
+                    </div>
+
+                    <div class="form-floating my-3 text-center">
+                        <button type="submit" class="shadow-sm btn btn-secondary" name="raice"><i class="fa-solid fa-check me-2"></i> Submit</button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- END modal  -->
+
+
+
+
 
         <div class="page-titles">
             <ol class="breadcrumb">
@@ -100,45 +141,45 @@
                             <div class="tab-pane fade show active" id="home8" role="tabpanel">
                                 <div class="pt-4">
 
-                                    <div class="basic-form">
                                         <form method="post">
                                             {% csrf_token %}
                                             <div class="row">
-                                                <div class="mb-3 col-md-6">
+                                                                                                
+                                                <div class="form-group my-3">
                                                     <label class="form-label">Name</label>
                                                     {{editform.name}}
                                                 </div>
-                                                <div class="mb-3 col-md-6">
+                                                <div class="form-group my-3">
                                                     <label class="form-label">Email</label>
                                                     {{editform.email}}
                                                 </div>
-                                                <div class="mb-3 col-md-6">
+                                                <div class="form-group my-3">
                                                     <label class="form-label">Address</label>
                                                     {{editform.address}}
                                                 </div>
-                                                <div class="mb-3 col-md-6">
+                                                <div class="form-group my-3">
                                                     <label>Phone Number</label>
                                                     {{editform.tel}}
                                                 </div>
                                             </div>
 
                                             <div class="row">
-                                                <div class="mb-3 col-md-4">
+                                                <div class="form-group my-3">
                                                     <label class="form-label">Area</label>
                                                     {{editform.rol}}
                                                 </div>
 
-                                                <div class="mb-3 col-md-2">
+                                                <div class="form-group my-3">
                                                     <label class="form-label">Joined</label>
                                                     {{editform.date_join}}
                                                 </div>
                                             </div>
-                                            <div class="mb-3">
+                                            <div class="form-group my-3">
                                                 <label class="form-label">Active?</label>
                                                 {{ editform.active }}
                                             </div>
 
-                                            <div class="mb-3" id="cancellation">
+                                            <div class="form-group my-3">
                                                 <label class="form-label">Gone</label>
                                                 {{ editform.date_gone }}
                                             </div>
@@ -146,7 +187,6 @@
 
                                             <button type="submit" name="editemployee" class="btn btn-primary">Save</button>
                                         </form>
-                                    </div>
 
                                 </div>
                             </div>
@@ -158,7 +198,7 @@
                                         <form method="post">
                                             {% csrf_token %}
                                             <div class="row">
-                                                <div class="mb-3 col-md-6">
+                                                <div class="form-group my-3">
                                                     <label class="form-label">YEAR</label>
                                                     {{holidayform.year}}
                                                 </div>
@@ -166,7 +206,7 @@
 
 
 
-                                                <div class="mb-3 col-md-6">
+                                                <div class="form-group my-3">
                                                     <label class="form-label">MONTH</label>
 
 
@@ -174,18 +214,19 @@
                                                 </div>
 
 
-                                                <div class="mb-3 col-md-6">
+                                                <div class="form-group my-3">
                                                     <label class="form-label">DAYS</label>
 
 
                                                         {{holidayform.days}}
                                                 </div>
 
-                                                <div class="mb-3 col-md-6">
+                                                <div class="form-group my-3">
                                                     <label class="form-label">START</label>
                                                     {{holidayform.date_start}}
                                                 </div>
-                                                <div class="mb-3 col-md-6">
+
+                                                <div class="form-group my-3">
                                                     <label>END</label>
                                                     {{holidayform.date_end}}
                                                 </div>
@@ -203,9 +244,15 @@
                                 <div class="pt-4">
                                     
                                     <div class="basic-list-group m-3 px-4">
-                                        <div class="form-floating my-2 d-flex flex-row-reverse">                                                
-                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editwage{{editemployee.id}}">CHANGE
+                                        <div class="form-floating my-2 d-flex flex-row-reverse">  
+                                            <!--change BUTTON -->
+                    
+                                           <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editwage{{editemployee.id}}">CHANGE
                                             </button>
+                                            <!-- raice BUTTON -->
+                                            <button type="button" class="shadow-sm btn btn-success px-3 mx-1" data-bs-toggle="modal" data-bs-target="#raice">
+                                                RAICE
+                                                </button>          
                                         </div>
                                         <ul class="list-group">
                                             <li class="list-group-item">
@@ -408,6 +455,13 @@ document.addEventListener('click', function(event) {
  <!-- NEWMODAL -->
  <script>
     const deleteholiday = new bootstrap.Modal('#deleteholiday',   {keyboard: true}    )
+</script>
+
+
+
+ <!-- NEWMODALS -->
+ <script>
+    const raice = new bootstrap.Modal('#raice',   {keyboard: true}    )
 </script>
 
 {% endblock %}
