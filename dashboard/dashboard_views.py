@@ -617,7 +617,7 @@ def editceo(request, id):
         
         if "editwage" in request.POST:
             wage_instance = Salary.objects.filter(employee=editemployee).last()
-            editwageform = EditWageCeo(request.POST, instance=wage_instance) if wage_instance else EditWageForm(request.POST)
+            editwageform = EditWageCeo(request.POST, instance=wage_instance) if wage_instance else EditWageCeo(request.POST)
             if editwageform.is_valid():
                 wage = editwageform.save(commit=False)
                 wage.employee = editemployee
