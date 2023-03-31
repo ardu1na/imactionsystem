@@ -41,7 +41,7 @@
                         </div>
 
                         <div class="form-group my-3">
-                            <label class="form-label">ATM CASH</label>
+                            <label class="form-label">ATM</label>
 
                              {{editwageform.atm_cash}}
                         </div>
@@ -109,6 +109,13 @@
                                     </span> Pay
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="holiday-tab" data-bs-toggle="tab" href="#holiday">
+                                    <span> 
+                                        <i class="ti-star fs-4 me-2"></i>
+                                    </span> Holidays
+                                </a>
+                            </li>
                         </ul>
                         <!-- Tab panes -->
                         <div class="tab-content tabcontent-border">
@@ -139,18 +146,17 @@
                                                 </div>
                                             </div>
 
-                                            <div class="row">
-                                                <div class="mb-3 col-md-4">
+                                                <div class="form-group my-3">
                                                     <label class="form-label">Role</label>
                                                     {{editform.rol}}
                                                 </div>
 
-                                                <div class="mb-3 col-md-2">
+                                                <div class="form-group my-3">
                                                     <label class="form-label">Joined</label>
                                                     {{editform.date_join}}
                                                 </div>
-                                            </div>
-                                            <div class="mb-3">
+
+                                                <div class="form-group my-3">
                                                 <label class="form-label">Active?</label>
                                                 {{ editform.active }}
                                             </div>
@@ -182,7 +188,7 @@
                                                 <h4>SALARY</h4> 
                                                 <p class="fs-4">
                                                     <span class="badge light badge-info">
-                                                        $ {{editemployee.salary|floatformat:2}}
+                                                        $ {{editemployee.get_salary|floatformat:2}}
                                                     </span>
                                                 </p>
                                             </li>
@@ -192,7 +198,7 @@
                                                 <h4>MP</h4> 
                                                 <p class="fs-4">
                                                     <span class="badge light badge-primary">
-                                                        $ {{editemployee.mp|floatformat:2}}
+                                                        $ {{editemployee.get_mp|floatformat:2}}
                                                     </span>
                                                 </p>
                                             </li>
@@ -200,25 +206,27 @@
                                                 <h4>TC</h4> 
                                                 <p class="fs-4">
                                                     <span class="badge light badge-secondary">
-                                                        $ {{editemployee.tc|floatformat:2}}
+                                                        $ {{editemployee.get_tc|floatformat:2}}
                                                     </span>
                                                 </p>
                                             </li>
+                                            
+
+
+                                            <li class="list-group-item">
+                                                <h4>ATM</h4> 
+                                                <p class="fs-4">
+                                                    <span class="badge light badge-secondary">
+                                                        $ {{editemployee.get_atm|floatformat:2}}
+                                                    </span>
+                                                </p>
+                                            </li>
+
                                             <li class="list-group-item">
                                                 <h4>CASH $ </h4> 
                                                 <p class="fs-4">
                                                     <span class="badge light badge-warning">
-                                                        $ {{editemployee.cash|floatformat:2}}
-                                                    </span>
-                                                </p>
-                                            </li>
-
-
-                                            <li class="list-group-item">
-                                                <h4>ATM CASH</h4> 
-                                                <p class="fs-4">
-                                                    <span class="badge light badge-secondary">
-                                                        $ {{editemployee.atm_cash|floatformat:2}}
+                                                        $ {{editemployee.get_cash|floatformat:2}}
                                                     </span>
                                                 </p>
                                             </li>
@@ -266,11 +274,135 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="tab-pane fade" id="holiday" role="tabpanel">
+                                <div class="pt-4">
+
+                                        <form method="post">
+                                            {% csrf_token %}
+                                                <div class="form-group my-3">
+                                                    <label class="form-label">YEAR</label>
+                                                    {{holidayform.year}}
+                                                </div>
+
+
+
+
+                                                <div class="form-group my-3">
+                                                    <label class="form-label">MONTH</label>
+
+
+                                                        {{holidayform.month}}
+                                                </div>
+
+
+                                                <div class="form-group my-3">
+                                                    <label class="form-label">DAYS</label>
+
+
+                                                        {{holidayform.days}}
+                                                </div>
+
+                                                <div class="form-group my-3">
+                                                    <label class="form-label">START</label>
+                                                    {{holidayform.date_start}}
+                                                </div>
+                                                <div class="form-group my-3">
+                                                    <label>END</label>
+                                                    {{holidayform.date_end}}
+                                                </div>
+
+
+                                            <button type="submit" name="holiday" class="btn btn-primary">ADD</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        {% if holidays %}
+        <div class="row" >
+            <div class="col-xl-12">
+                <div class="card" id="holidays">
+                    <div class="card-header">
+                        <h3>Holidays</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="mt-2">
+                            <div class="table-responsive">
+                                <table id="example4" class="display mb-4" style="min-width: 845px">
+                                    <thead>
+                                        <tr>
+                                            
+                                            <th>YEAR</th>
+                                            <th>MONTH</th>
+                                            <th>DAYS</th>
+                                            <th>START</th>
+                                            <th>END</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for i in holidays %}
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <a class="mb-0 fs-16 font-w500">{{i.year}}</a>
+                                                </div>
+                                            </td>
+    
+                                            <td>{{i.month}}</td>
+                                            <td>{{i.days}} days</td>
+    
+    
+                                            <td>{{i.date_start|date:"d/m/Y"}}</td>
+    
+                                            <td>{{i.date_end|date:"d/m/Y"}}</td>
+                                            <td>
+                                                <div class="d-flex flex-row">
+                                                    
+                                                        <!-- delete BUTTON -->
+                                                            <button type="button" class="shadow-sm btn btn-danger px-3 mx-1" data-bs-toggle="modal" data-bs-target="#deleteholiday{{i.id}}">
+                                                            <i class="fa-solid fa-trash fs-7"></i>
+                                                            </button>                                                                                  
+                                                        <!-- edit BUTTON -->
+                                                        <a href="{% url 'dashboard:editholiday' id=i.id %}" class="px-3 shadow-sm btn btn-secondary mx-1">
+                                                            <i class="fa-solid fa-pen-to-square "></i>
+                                                        </a>                                             
+                                                </div>                                        
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                       
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        {%endif%}
+
+
+
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+<!-- modals delete holidays -->
+{% for i in holidays %}
+<div class="modal" id="deleteholiday{{i.id}}">
+    {% include 'dashboard/instructor/deleteholiday.html' %}
+</div>
+{% endfor %}
+
+
 
 {% endblock %}
 
@@ -292,7 +424,34 @@
 </script>
 
 
+<script>
 
+    // Get references to the holiday tab and the card with the ID "holidays"
+const holidayTab = document.getElementById('holiday-tab');
+const holidaysCard = document.getElementById('holidays');
+
+// Hide the holidays card by default
+holidaysCard.style.display = 'none';
+
+// Add an event listener to the holiday tab that listens for clicks
+holidayTab.addEventListener('click', function() {
+  // Toggle the display property of the holidays card based on whether the tab is active or not
+  if (holidayTab.classList.contains('active')) {
+    holidaysCard.style.display = 'block';
+  } else {
+    holidaysCard.style.display = 'none';
+  }
+});
+
+document.addEventListener('click', function(event) {
+    // Check if the clicked element is outside the holidays card
+    if (!holidaysCard.contains(event.target) && !holidayTab.contains(event.target)) {
+      holidaysCard.style.display = 'none';
+      holidayTab.classList.remove('active');
+    }
+  });
+
+    </script>
 
 
 <script>

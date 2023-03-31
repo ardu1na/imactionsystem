@@ -11,6 +11,36 @@ blue = (last_blue.venta+last_blue.compra)/2
 
 
 
+
+
+
+
+class Salary (models.Model):
+    employee = models.ForeignKey('Employee', on_delete=models.CASCADE, verbose_name="EMPLOYEE", related_name="salaries")
+    
+    period = models.DateField(default=date.today)
+    
+    salary = models.DecimalField(default= 0, max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="SALARY")
+    
+    nigga = models.DecimalField(default= 0, max_digits=50, decimal_places=25, null=True, blank=True, verbose_name="NIGGA %")
+    
+    mp = models.DecimalField(default= 0, max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="MP")
+    tc = models.DecimalField(default= 0, max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="TC")
+    cash = models.DecimalField(default= 0, max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="CASH $")
+
+    atm_cash = models.DecimalField(default= 0, max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="ATM CASH")
+    cash_usd = models.DecimalField(default= 0, max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="CASH USD")
+    paypal = models.DecimalField(default= 0, max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="PAYPAL")
+    
+    
+    
+    
+    
+    class Meta:
+        get_latest_by = ['period']
+        
+        
+        
 class Employee(models.Model):
     SEO = 'SEO'
     GADS = 'GADS'
@@ -51,106 +81,127 @@ class Employee(models.Model):
     active = models.CharField(max_length=15, choices=ACT_CHOICES, blank= False, verbose_name="ACTIVE?", default="Yes")
     date_gone = models.DateField(null=True, blank=True, verbose_name="GONE")
     
-    salary = models.DecimalField(default= 0, max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="SALARY")
     
-    nigga = models.DecimalField(default= 0, max_digits=50, decimal_places=25, null=True, blank=True, verbose_name="NIGGA %")
-    
-    mp = models.DecimalField(default= 0, max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="MP")
-    tc = models.DecimalField(default= 0, max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="TC")
-    cash = models.DecimalField(default= 0, max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="CASH $")
+    def get_salary (self):
+        wages  = Salary.objects.filter(employee=self.pk).latest() 
 
-    atm_cash = models.DecimalField(default= 0, max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="ATM CASH")
-    cash_usd = models.DecimalField(default= 0, max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="CASH USD")
-    paypal = models.DecimalField(default= 0, max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="PAYPAL")
+        s = wages.salary 
+        return s
     
+    def get_nigga_per(self):
+        ni = Salary.objects.filter(employee=self.pk).latest() 
+
+        s = ni.nigga 
+        return s    
     
-    @property
     def get_white (self):
-        white = self.salary - (self.salary*(self.nigga/100))
+        wages  = Salary.objects.filter(employee=self.pk).latest() 
+
+        white = wages.salary - (wages.salary*(wages.nigga/100))
         return white
     
-    @property
     def get_nigga (self):
-        nigga = (self.salary*(self.nigga/100))
-        return nigga
+        wages  = Salary.objects.filter(employee=self.pk).latest() 
+
+        n = (wages.salary*(wages.nigga/100))
+        return n
     
-    @property
     def get_social (self):
-        social = self.get_white/2
+        social = self.get_white()/2
         return social
     
-    @property
     def get_total (self):
-        total = self.get_white + self.get_social + self.get_nigga
+        total = self.get_white() + self.get_social() + self.get_nigga()
         return total
     
     
-    @property
     def get_paypal (self):
-        p_c = self.paypal*Decimal(blue)
+        wages  = Salary.objects.filter(employee=self.pk).latest() 
+
+        p_c = wages.paypal*Decimal(blue)
         return p_c
     
+    def get_mp(self):
+        wages  = Salary.objects.filter(employee=self.pk).latest() 
+        i = wages.mp
+        return i 
+    
+    def get_atm(self):
+        wages  = Salary.objects.filter(employee=self.pk).latest() 
+        i = wages.atm_cash
+        return i 
+    
+    def get_tc(self):
+        wages  = Salary.objects.filter(employee=self.pk).latest() 
+        i = wages.tc
+        return i 
     
     
-    @property
+    def get_cash(self):
+        wages  = Salary.objects.filter(employee=self.pk).latest() 
+        i = wages.cash
+        return i 
+    
     def get_cash_usd (self):
-        c = self.cash_usd*Decimal(blue)
+        wages  = Salary.objects.filter(employee=self.pk).latest() 
+
+        c = wages.cash_usd*Decimal(blue)
         return c
     
     
-    @property
     def get_total_ceo (self):
-        total = self.salary + self.mp + self.atm_cash + self.cash + self.tc + self.get_paypal + self.get_cash_usd
+        wages  = Salary.objects.filter(employee=self.pk).latest() 
+
+        total = wages.salary + wages.mp + wages.atm_cash + wages.cash + wages.tc + self.get_paypal() + self.get_cash_usd()
         return total
     
-    @property
     def get_aguinaldo_mensual (self):
+        wages  = Salary.objects.filter(employee=self.pk).latest() 
+
         if self.rol == "CEO":
-            month = self.salary/12
+            month = wages.salary/12
         else:
-            month = self.get_total/12
+            month = self.get_total()/12
         return month
-    
-    
     
    
     
     def __str__ (self):
         return self.name
     
-    
 class Holiday (models.Model):
-    JAN = "January"
-    FEB = "February"
-    MAR = "March"
-    APR = "April"
-    MAY = "May"
-    JUN = "June"
-    JUL = "July"
-    AUG = "August"
-    SEP = "September"
-    OCT = "October"
-    NOV = "November"
-    DEC = "December"
-    MONTH_CHOICES = {
-        (JAN, ("January")),
-        (FEB, ("February")),
-        (MAR, ("March")),
-        (APR, ("April")),
-        (MAY, ("May")),
-        (JUN, ("June")),
-        (JUL, ("July")),
-        (AUG, ("August")),
-        (SEP, ("September")),
-        (OCT, ("October")),
-        (NOV, ("November")),
-        (DEC, ("December")),
-        
-    }
+    JAN = 'January'
+    FEB = 'February'
+    MAR = 'March'
+    APR = 'April'
+    MAY = 'May'
+    JUN = 'June'
+    JUL = 'July'
+    AUG = 'August'
+    SEP = 'September'
+    OCT = 'October'
+    NOV = 'November'
+    DEC = 'December'
+    MONTH_CHOICES = (
+        (JAN, ('January')),
+        (FEB, ('February')),
+        (MAR, ('March')),
+        (APR, ('April')),
+        (MAY, ('May')),
+        (JUN, ('June')),
+        (JUL, ('July')),
+        (AUG, ('August')),
+        (SEP, ('September')),
+        (OCT, ('October')),
+        (NOV, ('November')),
+        (DEC, ('December')),       
+    )
 
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, verbose_name="EMPLOYEE", related_name="holidays")
     year = models.IntegerField(verbose_name="YEAR", null=True, blank= True)
-    month = models.CharField(choices= MONTH_CHOICES, max_length=150, null=True, blank= True, default=None)
+    
+    month = models.CharField(choices=MONTH_CHOICES, max_length=150, null=True, blank= False, default=None, verbose_name="MONTH")
+    
     days = models.SmallIntegerField(verbose_name="DAYS", null=True, blank= True)
     date_start = models.DateField(null=True, blank= True)
     date_end = models.DateField(null=True, blank= True)

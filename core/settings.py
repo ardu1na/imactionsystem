@@ -19,7 +19,7 @@ load_dotenv('.env')
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'aprendizajenaturalconciente@gmail.com' #Put You email here for mail sending
+EMAIL_HOST_USER = 'systemimactions@gmail.com' #Put You email here for mail sending
 
 '''
 Enable 2fa on your google account and create an apps password and use that in place of your true password in your code

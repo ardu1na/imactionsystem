@@ -20,7 +20,13 @@ urlpatterns = [
 
     path('employees/delete/<int:id>/', dashboard_views.deleteemployee, name="deleteemployee"), 
     path('employees/edit/<int:id>/', dashboard_views.editemployee, name="editemployee"),
+
     
+    path('holiday/delete/<int:id>/', dashboard_views.deleteholiday, name="deleteholiday"), 
+    path('holiday/edit/<int:id>/', dashboard_views.editholiday, name="editholiday"), 
+
+
+
     path('ceo/',dashboard_views.ceo, name="ceo"),
     path('ceo/edit/<int:id>/', dashboard_views.editceo, name="editceo"),  
     path('ceo/delete/<int:id>/', dashboard_views.deleteceo, name="deleteceo"),  

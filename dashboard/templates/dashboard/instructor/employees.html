@@ -142,8 +142,7 @@
                                         </td>
 
                                         <td>{{employee.rol}}</td>
-
-                                        <td>${{employee.salary|floatformat:2}}</td>
+                                        <td>${{employee.get_salary|floatformat:2}}</td>
 
 
                                         <td>${{employee.get_white|floatformat:2}}</td>
@@ -210,11 +209,11 @@
                     
                         <div class="form-group my-3">
                             <label class="form-label">Date</label>
-                            {{ addform.date_join}}
+                            {{ employee_form.date_join}}
                         </div>
 
                         <div class="form-group my-3">
-                            {{addform.name}}
+                            {{employee_form.name}}
                         </div>                        
 
                         <div class="accordion accordion-rounded-stylish" id="accordion-twelve">
@@ -231,15 +230,15 @@
                                     
                                         <div class="form-group my-3 d-flex justify-content-between">
                                             <div class="me-3">
-                                                {{addform.email}} </div>                                            
+                                                {{employee_form.email}} </div>                                            
                                         </div>
 
                                         <div class="form-group my-3">
-                                            {{addform.tel}}
+                                            {{employee_form.tel}}
                                         </div>
                                         
                                         <div class="form-group my-3">
-                                            {{addform.address}}
+                                            {{employee_form.address}}
                                         </div>
                                         
                                     </div>
@@ -250,41 +249,22 @@
                         <div class="form-group my-3">
                             <label class="form-label">Area</label>
 
-                            {{addform.rol}}
+                            {{employee_form.rol}}
                         </div>
 
                         <div class="form-group my-3">
                             <label class="form-label">Salary</label>
 
-                             {{addform.salary}}
+                             {{salary_form.salary}}
                         </div>
 
                         <div class="form-group my-3">
                             <label class="form-label">Nigga %</label>
 
-                                {{addform.nigga}}
+                                {{salary_form.nigga}}
                         </div>
 
-                        <div id="ceo">
-                            <div class="form-group my-3">
-                                <label class="form-label">MP</label>
-
-                                    {{addform.mp}}
-                            </div>
-
-                            <div class="form-group my-3">
-                                <label class="form-label">TC</label>
-
-                             {{addform.tc}}
-                            </div>
-
-                            <div class="form-group my-3">
-                                <label class="form-label">ATM CASH</label>
-
-                                 {{addform.atm_cash}}
-                            </div>
-
-                        </div>
+                       
 
                         <div class="form-floating my-3 text-center">
                             <button type="submit" class="shadow-sm btn btn-secondary" name="addemployee"><i class="fa-solid fa-check me-2"></i> Submit</button>
@@ -306,20 +286,6 @@
         </script>
 
         
-
-<script>
-    var can = document.getElementById("rol");
-    var info = document.getElementById("ceo");
-    info.style.display = (can.value !== "CEO") ? "none" : "block";
-    can.onchange=function(){
-    
-        if(this.value!="CEO"){
-            info.style.display="none";  
-        }else{
-            info.style.display="block";
-        }
-    }        
-</script>
 
 <script>
     var select = document.getElementById("rol"); 

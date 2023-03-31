@@ -1,45 +1,54 @@
+from django import forms
 from django.forms import ModelForm, \
-TextInput, EmailInput, Select, HiddenInput
+TextInput, EmailInput, Select
 
-from expenses.models import Employee, Expense, Holiday
+
+from expenses.models import Employee, Expense, Holiday, Salary
+
+
+
+class RaiceForm(forms.Form):
+    nigga = forms.IntegerField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    salary = forms.IntegerField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+
 
 class HolidayEmployeeForm(ModelForm):
     class Meta:
         model = Holiday
         exclude = ['id', 'employee']
 
-        widgets = {
-            
-            
-            'year': TextInput(attrs=
-                              {'class':"form-control",
-                                'id':"year",
-                                'placeholder':"YEAR",}),
-            
+        widgets = {            
+            'year': TextInput(attrs={
+                'class':"form-control",
+                'id':"year",
+                'placeholder':"YEAR",
+            }),      
+                  
             'month': Select(attrs={
-                        'class':"default-select form-control wide mb-3",
-                        'id':"month",
-                        'placeholder' : "MONTH",
-                        }),
-            
-            'days': TextInput(attrs=        
-                              {'class':"form-control",
-                                'id':"days",
-                                'placeholder':"DAYS",}),
-            
-            'date_start' : TextInput(attrs=
-                                {'class':"datetimepicker form-control",
-                                'id':"PublishDateTimeTextbox",
-                                'type':"date",
-                                'placeholder':"Date Start",}),
-            
-            
-            'date_end' : TextInput(attrs=
-                            {'class':"datetimepicker form-control",
-                            'id':"PublishDateTimeTextbox",
-                            'type':"date",
-                            'placeholder':"Date End",}),
-                        }
+                'class':"default-select form-control wide mb-3",
+                'id':"month",
+            }),       
+                 
+            'days': TextInput(attrs={
+                'class':"form-control",
+                'id':"days",
+                'placeholder':"DAYS",
+            }),            
+            'date_start': TextInput(attrs={
+                'class':"datetimepicker form-control",
+                'id':"PublishDateTimeTextbox",
+                'type':"date",
+                'placeholder':"Date Start",
+            }),            
+            'date_end': TextInput(attrs={
+                'class':"datetimepicker form-control",
+                'id':"PublishDateTimeTextbox",
+                'type':"date",
+                'placeholder':"Date End",
+            }),
+        }
+
+
 
 
 
@@ -88,7 +97,7 @@ class EmployeeForm(ModelForm):
     
        class Meta:
         model = Employee
-        exclude = ['id', 'active', 'date_gone', 'cash_usd', 'atm_cash', 'cash', 'tc', 'mp', 'paypal']
+        exclude = ['id', 'active', 'date_gone']
         
         widgets = {
             
@@ -123,6 +132,20 @@ class EmployeeForm(ModelForm):
                 'id':"tel",
                 'placeholder' : "Phone Number"
                 }),
+               
+            
+           
+        }
+
+class EmployeeSalaryForm(ModelForm): 
+    
+       class Meta:
+        model = Salary
+        fields = ['salary', 'nigga']
+        
+        widgets = {
+            
+            
             
             'salary' : TextInput(attrs={
                 'class':"form-control",
@@ -142,15 +165,15 @@ class EmployeeForm(ModelForm):
             
            
         }
-
-
+        
+        
 
 
 class CeoForm(ModelForm): 
     
        class Meta:
         model = Employee
-        exclude = ['id', 'active', 'date_gone', 'nigga']
+        exclude = ['id', 'active', 'date_gone']
         
         widgets = {
             
@@ -185,6 +208,20 @@ class CeoForm(ModelForm):
                 'id':"tel",
                 'placeholder' : "Phone Number"
                 }),
+            
+            
+        }
+
+
+class CeoSalaryForm(ModelForm): 
+    
+       class Meta:
+        model = Salary
+        fields = ['salary', 'atm_cash', 'cash', 'mp', 'paypal', 'cash_usd', 'tc']
+        
+        widgets = {
+            
+            
             
             'salary' : TextInput(attrs={
                 'class':"form-control",
@@ -218,7 +255,7 @@ class CeoForm(ModelForm):
             'atm_cash' : TextInput(attrs={
                 'class':"form-control",
                 'id':"atm_cash",
-                'placeholder' : "CASH $"
+                'placeholder' : "ATM"
                 }
             ),
             
@@ -235,9 +272,14 @@ class CeoForm(ModelForm):
                 'placeholder' : "PAYPAL"
                 }
             ),
+            
+           
         }
-
-
+    
+    
+    
+    
+    
 class EditEmployeeForm(ModelForm):
     
     class Meta:
@@ -301,9 +343,9 @@ class EditEmployeeForm(ModelForm):
 class EditWageForm(ModelForm):
     
     class Meta:
-        model = Employee
+        model = Salary
         
-        fields = ['salary', 'nigga']
+        fields = ['salary', 'nigga', 'period']
         
         widgets = {           
 
@@ -324,6 +366,12 @@ class EditWageForm(ModelForm):
                 }
             ),        
             
+             'period' : TextInput(attrs=
+                                {'class':"datetimepicker form-control",
+                                'id':"PublishDateTimeTextbox",
+                                'type':"date",
+                                'placeholder':"Date Start",}),
+            
             
             
             }
@@ -333,10 +381,9 @@ class EditWageForm(ModelForm):
 class EditWageCeo(ModelForm):
     
     class Meta:
-        model = Employee
+        model = Salary
         
-        exclude = ['id', 'rol', 'name', 'address', 'email', 'tel', 'date_join', 'active','date_gone', 'nigga']
-        
+        fields = ['salary', 'mp', 'atm_cash', 'cash', 'cash_usd', 'paypal', 'tc']
         widgets = {           
 
             

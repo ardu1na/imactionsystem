@@ -155,7 +155,7 @@ class Client(models.Model):
     @property
     def total_rr(self):
         total = 0
-        for sale in self.sales.all():
+        for sale in self.sales.filter(date__month=date.today().month, date__year=date.today().year):
             if sale.revenue == "RR" and sale.cancelled == "Active":
                 total += sale.get_change
         return total
@@ -165,7 +165,7 @@ class Client(models.Model):
     def rr(self):
         total = 0
         if self.cancelled =="Active":
-            for sale in self.sales.all():
+            for sale in self.sales.filter(date__month=date.today().month, date__year=date.today().year):
                 if sale.cancelled == "Active":
                     if sale.revenue == "RR":
                         total += sale.get_change
@@ -184,7 +184,7 @@ class Client(models.Model):
     def get_other(self, *args, **kwargs):
         other_total=0
         if self.cancelled == "Active":
-            for sale in self.sales.all():
+            for sale in self.sales.filter(date__month=date.today().month, date__year=date.today().year):
                 if sale.service == "Others RR":
                     if sale.cancelled == "Active":
                         other_total += sale.get_change
@@ -194,7 +194,7 @@ class Client(models.Model):
     def get_seo(self, *args, **kwargs):
         seo_total=0
         if self.cancelled == "Active":
-            for sale in self.sales.all():
+            for sale in self.sales.filter(date__month=date.today().month, date__year=date.today().year):
                 if sale.service == "SEO":
                     if sale.cancelled == "Active":
                         seo_total += sale.get_change
@@ -202,7 +202,7 @@ class Client(models.Model):
     @property
     def get_gads(self, *args, **kwargs):
         gads_total=0
-        for sale in self.sales.all():
+        for sale in self.sales.filter(date__month=date.today().month, date__year=date.today().year):
             if self.cancelled == "Active":
                 if sale.service == "Google Ads":
                    if sale.cancelled == "Active":
@@ -211,7 +211,7 @@ class Client(models.Model):
     @property
     def get_combo(self, *args, **kwargs):
         combo_total=0
-        for sale in self.sales.all():
+        for sale in self.sales.filter(date__month=date.today().month, date__year=date.today().year):
             if self.cancelled == "Active":
                 if sale.service == "Combo":
                     if sale.cancelled == "Active":
@@ -220,7 +220,7 @@ class Client(models.Model):
     @property
     def get_fads(self, *args, **kwargs):
         fads_total=0
-        for sale in self.sales.all():
+        for sale in self.sales.filter(date__month=date.today().month, date__year=date.today().year):
             if self.cancelled == "Active":
                 if sale.service == "Facebook Ads":
                     if sale.cancelled == "Active":
@@ -229,7 +229,7 @@ class Client(models.Model):
     @property
     def get_lnkd(self, *args, **kwargs):
         lnkd_total=0
-        for sale in self.sales.all():
+        for sale in self.sales.filter(date__month=date.today().month, date__year=date.today().year):
             if self.cancelled == "Active":
                 if sale.service == "LinkedIn":
                     if sale.cancelled == "Active":
@@ -238,7 +238,7 @@ class Client(models.Model):
     @property
     def get_cm(self, *args, **kwargs):
         cm_total=0
-        for sale in self.sales.all():
+        for sale in self.sales.filter(date__month=date.today().month, date__year=date.today().year):
             if self.cancelled == "Active":
                 if sale.service == "Community Management":
                     if sale.cancelled == "Active":
@@ -247,16 +247,17 @@ class Client(models.Model):
     @property
     def get_wp(self, *args, **kwargs):
         wp_total=0
-        for sale in self.sales.all():
+        for sale in self.sales.filter(date__month=date.today().month, date__year=date.today().year):
             if self.cancelled == "Active":
                 if sale.service == "Web Plan":
                     if sale.cancelled == "Active":
                         wp_total += sale.get_change
         return '${:,.2f}'.format(wp_total)
+    
     @property
     def get_combo(self, *args, **kwargs):
         combo_total=0
-        for sale in self.sales.all():
+        for sale in self.sales.filter(date__month=date.today().month, date__year=date.today().year):
             if self.cancelled == "Active":
                 if sale.service == "Combo":
                     if sale.cancelled == "Active":

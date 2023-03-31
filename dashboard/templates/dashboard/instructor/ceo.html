@@ -32,8 +32,9 @@
                                     <th>SALARY</th>
                                     <th>MP</th>
                                     <th>TC</th>
+                                   
+                                    <th>ATM</th>
                                     <th>CASH $</th>
-                                    <th>ATM CASH</th>
                                     <th>CASH USD</th>
                                     <th>PAYPAL</th>
                                     <th>MONTHLY BONUS </th>
@@ -53,14 +54,14 @@
                                     </td>
 
 
-                                    <td>${{employee.salary|floatformat:2}}</td>
+                                    <td>${{employee.get_salary|floatformat:2}}</td>
 
-                                    <td>${{employee.mp|floatformat:2}}</td>
+                                    <td>${{employee.get_mp|floatformat:2}}</td>
                                     
-                                    <td>${{employee.tc|floatformat:2}}</td>
-                                    <td>${{employee.cash|floatformat:2}}</td>
+                                    <td>${{employee.get_tc|floatformat:2}}</td>
+                                    <td>${{employee.get_atm|floatformat:2}}</td>
                                     
-                                    <td>${{employee.atm_cash|floatformat:2}}</td>
+                                    <td>${{employee.get_cash|floatformat:2}}</td>
 
                                     <td>${{employee.get_cash_usd|floatformat:2}}</td>
                                     
@@ -111,16 +112,16 @@
                 </div>       
 
                 <form  method="post">
-                {% csrf_token %}
+                {% csrf_token %} 
                     <div class="modal-body">
                     
                         <div class="form-group my-3">
                             <label class="form-label">Date</label>
-                            {{ addform.date_join}}
+                            {{ ceo_form.date_join}}
                         </div>
 
                         <div class="form-group my-3">
-                            {{addform.name}}
+                            {{ceo_form.name}}
                         </div>                        
 
                         <div class="accordion accordion-rounded-stylish" id="accordion-twelve">
@@ -137,15 +138,15 @@
                                     
                                         <div class="form-group my-3 d-flex justify-content-between">
                                             <div class="me-3">
-                                                {{addform.email}} </div>                                            
+                                                {{ceo_form.email}} </div>                                            
                                         </div>
 
                                         <div class="form-group my-3">
-                                            {{addform.tel}}
+                                            {{ceo_form.tel}}
                                         </div>
                                         
                                         <div class="form-group my-3">
-                                            {{addform.address}}
+                                            {{ceo_form.address}}
                                         </div>
                                         
                                     </div>
@@ -154,13 +155,13 @@
                         </div>
 
                         <div class="form-group my-3">
-                            {{addform.rol}}
+                            {{ceo_form.rol}}
                         </div>
 
                         <div class="form-group my-3">
                             <label class="form-label">Salary</label>
 
-                             {{addform.salary}}
+                             {{salary_form.salary}}
                         </div>
 
 
@@ -168,38 +169,38 @@
                             <div class="form-group my-3">
                                 <label class="form-label">MP</label>
 
-                                    {{addform.mp}}
+                                    {{salary_form.mp}}
                             </div>
 
                             <div class="form-group my-3">
                                 <label class="form-label">TC</label>
 
-                             {{addform.tc}}
+                             {{salary_form.tc}}
                             </div>
 
                             <div class="form-group my-3">
-                                <label class="form-label">ATM CASH</label>
+                                <label class="form-label">ATM</label>
     
-                                 {{addform.atm_cash}}
+                                 {{salary_form.atm_cash}}
                             </div>
     
                             <div class="form-group my-3">
                                 <label class="form-label">CASH $</label>
     
-                                 {{addform.cash}}
+                                 {{salary_form.cash}}
                             </div>
 
                             <div class="form-group my-3">
                                 <label class="form-label">CASH USD</label>
 
-                                 {{addform.cash_usd}}
+                                 {{salary_form.cash_usd}}
                             </div>
 
 
                             <div class="form-group my-3">
                                 <label class="form-label">PAYPAL</label>
 
-                                 {{addform.paypal}}
+                                 {{salary_form.paypal}}
                             </div>
 
                         </div>
