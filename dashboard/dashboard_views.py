@@ -374,6 +374,7 @@ def editemployee(request, id):
                 
                 last_wage = Salary.objects.filter(employee=editemployee.pk).last()
                 last_wage.salary = last_wage.salary + (last_wage.salary*Decimal(raice_salary))/100
+                last_wage.nigga = Decimal(raice_nigga)
                 last_wage.save()
                 return redirect(reverse('dashboard:employees')+ "?ok")
             else:
