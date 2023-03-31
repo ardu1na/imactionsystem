@@ -1400,20 +1400,23 @@ def index(request):
     staff = Employee.objects.filter(active="Yes")
     
     for employee in staff:
-        last_salary = employee.salaries.last()
-        if last_salary.period.month != today.month:
-            new_salary = Salary.objects.create(
-            employee=last_salary.employee,
-            period=today,
-            salary=last_salary.salary,
-            nigga=last_salary.nigga,
-            mp=last_salary.mp,
-            tc=last_salary.tc,
-            cash=last_salary.cash,
-            atm_cash=last_salary.atm_cash,
-            cash_usd=last_salary.cash_usd,
-            paypal=last_salary.paypal,
-        )
+        try:
+            last_salary = employee.salaries.last()
+            if last_salary.period.month != today.month:
+                new_salary = Salary.objects.create(
+                employee=last_salary.employee,
+                period=today,
+                salary=last_salary.salary,
+                nigga=last_salary.nigga,
+                mp=last_salary.mp,
+                tc=last_salary.tc,
+                cash=last_salary.cash,
+                atm_cash=last_salary.atm_cash,
+                cash_usd=last_salary.cash_usd,
+                paypal=last_salary.paypal,
+            )
+        except:
+            pass
             
     expenses_list = Expense.objects.all()
     for expense in expenses_list:    
