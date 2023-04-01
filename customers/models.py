@@ -5,7 +5,14 @@ from django.contrib import admin
 
 
 class BackUps(models.Model):
-    date = models.DateField(auto_now=True)
+    date = models.DateField(default=date.today)
+    
+
+class AutoRevenue(models.Model):
+    date = models.DateField(default=date.today, editable=True)
+    sales = models.BooleanField(default=False, null=True, blank=True)
+    expenses = models.BooleanField(default=False, null=True, blank=True)
+    wages = models.BooleanField(default=False, null=True, blank=True)
     
      
        

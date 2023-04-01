@@ -1,7 +1,7 @@
 from django.contrib import admin
 from unfold.admin import ModelAdmin
 from sales.models import Sale
-from customers.models import   ConfTier, BackUps, Client
+from customers.models import   ConfTier, BackUps, Client, AutoRevenue
 
 from import_export.admin import ImportExportModelAdmin
 
@@ -13,6 +13,7 @@ admin.site.site_title = 'IMACTIONS'
 
 admin.site.register(BackUps)
 
+admin.site.register(AutoRevenue)
 
 
 class SaleInstanceInline(admin.TabularInline):
