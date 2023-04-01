@@ -1395,8 +1395,7 @@ def index(request):
             last_backup.save()
         else:
             print("don't need to back up, allready updated")
-    except: pass
-    
+    except: last_backup = BackUps.objects.create(id=1)
     
     
     try:
