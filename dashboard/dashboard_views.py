@@ -425,6 +425,29 @@ def editemployee(request, id):
                 return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
 
 
+
+@user_passes_test(lambda user: user.groups.filter(name='employees').exists())
+@login_required(login_url='dashboard:login')
+def salaries(request, id):
+    
+    editemployee = Employee.objects.get(id=id)
+    salaries = Salary.objects.filter(employee=editemployee)
+
+    
+
+    context = {
+            'salaries' : salaries,
+            'editemployee': editemployee,
+            'id': id,
+            'page_title':'Salaries History',
+
+            
+            }
+        
+    return render (request, 'dashboard/instructor/salaries.html', context)
+
+    
+
 @user_passes_test(lambda user: user.groups.filter(name='admin').exists())
 @login_required(login_url='dashboard:login')
 def editholiday(request, id):
@@ -475,6 +498,7 @@ def employeesold(request):
         
         "page_title":"STAFF OLD",
         "old": old,
+        
     }
     
     return render(request,'dashboard/instructor/employeesold.html',context)
