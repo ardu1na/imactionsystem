@@ -209,8 +209,9 @@
                                     <thead>
                                         <tr>
                                             <th></th>
-                                            <th>ACCOUNT</th>
                                             <th>SERVICE</th>
+                                            <th>ACCOUNT</th>
+
                                             <th>NOTES</th>
                                             <th>TOTAL</th>
                                             <th>KIND</th>
@@ -226,13 +227,14 @@
                                                 <td><input type="checkbox" name="selected_sales" value="{{ sale.id }}" data-row-index="{{ forloop.counter0 }}"></td>
 
 
+                                               
+                                                <td> <a class="mb-0 fs-16 font-w500" href="{% url 'dashboard:editsale' id=sale.id %}"> {{sale.service}} </a> </td>
                                                 <td>
                                                     <div class="d-flex align-items-center">
                                                         <a class="mb-0 fs-16 font-w500 client-item" href="{% url 'dashboard:editclient' id=sale.client.id %}">{{sale.client}}</a>
                                                     </div>
                                                 </td>
-                                                <td> <a class="mb-0 fs-16 font-w500" href="{% url 'dashboard:editsale' id=sale.id %}"> {{sale.service}} </a> </td>
-                                                <td>{{sale.note|default_if_none:"-"|truncatechars:25}}</td>
+                                                <td> <a href="{% url 'dashboard:editsale' id=sale.id %}">{{sale.note|default_if_none:"-"|truncatechars:25}}</a> </td>
                                                 <td>${{sale.change|floatformat:2|intcomma}}</td>
                                                 <div class="d-flex flex-row m-auto">
                                                         <td>{{sale.kind|default_if_none:"-"}}</td>

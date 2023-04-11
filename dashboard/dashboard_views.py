@@ -137,7 +137,7 @@ def editexpense(request, id):
         form = ExpenseForm(request.POST, instance=editexpense)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/expenses/')
+            return redirect ('dashboard:editexpense', id=editexpense.id)
         else: return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
         
 @user_passes_test(lambda user: user.groups.filter(name='expenses').exists())
@@ -377,7 +377,7 @@ def editemployee(request, id):
                 last_wage.salary = last_wage.salary + (last_wage.salary*Decimal(raice_salary))/100
                 last_wage.nigga = Decimal(raice_nigga)
                 last_wage.save()
-                return redirect(reverse('dashboard:employees')+ "?ok")
+                return redirect('dashboard:editemployee', id=editemployee.id)
             else:
                 print (editform)
 
@@ -390,7 +390,7 @@ def editemployee(request, id):
             print (editform)
             if editform.is_valid():
                 editform.save()
-                return redirect(reverse('dashboard:employees')+ "?ok")
+                return redirect('dashboard:editemployee', id=editemployee.id)
             else:
                 print (editform)
 
@@ -404,7 +404,7 @@ def editemployee(request, id):
                 holiday = holydayform.save(commit=False)
                 holiday.employee = editemployee
                 holiday.save()
-                return redirect(reverse('dashboard:employees')+ "?ok")
+                return redirect('dashboard:editemployee', id=editemployee.id)
             else:
                 print (holydayform)
                 print(holydayform.errors)
@@ -418,7 +418,7 @@ def editemployee(request, id):
                 wage = editwageform.save(commit=False)
                 wage.employee = editemployee
                 wage.save()
-                return redirect(reverse('dashboard:employees')+ "?ok")
+                return redirect('dashboard:editemployee', id=editemployee.id)
             else: 
                 print (editwageform)
                 print(editwageform.errors)
@@ -503,7 +503,7 @@ def editholiday(request, id):
                 holiday = holydayform.save(commit=False)
                 holiday.employee = editemployee
                 holiday.save()
-                return redirect(reverse('dashboard:employees')+ "?ok")
+                return redirect('dashboard:editemployee', id=editemployee.id)
             else:
                 print (holydayform)
                 print(holydayform.errors)
@@ -642,7 +642,7 @@ def editceo(request, id):
             print (editform)
             if editform.is_valid():
                 editform.save()
-                return redirect(reverse('dashboard:ceo')+ "?ok")
+                return redirect('dashboard:editceo', id=editemployee.id)
             else:
                 print (editform)
 
@@ -656,7 +656,7 @@ def editceo(request, id):
                 holiday = holydayform.save(commit=False)
                 holiday.employee = editemployee
                 holiday.save()
-                return redirect(reverse('dashboard:ceo')+ "?ok")
+                return redirect('dashboard:editceo', id=editemployee.id)
             else:
                 print (holydayform)
                 print(holydayform.errors)
@@ -670,7 +670,7 @@ def editceo(request, id):
                 wage = editwageform.save(commit=False)
                 wage.employee = editemployee
                 wage.save()
-                return redirect(reverse('dashboard:ceo')+ "?ok")
+                return redirect('dashboard:editceo', id=editemployee.id)
             else: 
                 print (editwageform)
                 print(editwageform.errors)
@@ -948,7 +948,7 @@ def editsale(request, id):
         editform = EditSaleForm(request.POST, instance=editsale)
         if editform.is_valid():
             editform.save()
-            return redirect(reverse('dashboard:sales')+ "?ok")
+            return redirect('dashboard:editsale', id=editsale.id)
         else: return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
 
 @user_passes_test(lambda user: user.groups.filter(name='clients').exists())
@@ -1169,7 +1169,7 @@ def editclient(request, id):
                     sale.date_can = clientedit.date_can
                     sale.save()
             clientedit.save()
-            return redirect(reverse('dashboard:clients')+ "?ok")
+            return redirect('dashboard:editclient', id=clientedit.id)
         else: return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
         
         
@@ -1199,7 +1199,7 @@ def addclientsale(request, id):
             instance.client=client
             instance.save()
            
-            return HttpResponseRedirect('/clients/')
+            return redirect('dashboard:editclient', id=client.id)
 
         else:
 
