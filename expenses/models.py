@@ -253,3 +253,6 @@ class Expense(models.Model):
     def __str__ (self):
         return '{} / {}: ${}'.format(self.category, self.concept, self.value)
 
+
+    class Meta:
+        ordering = ['-date']
