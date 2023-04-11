@@ -34,6 +34,8 @@ class Salary (models.Model):
     
     
     
+    def __str__ (self):
+        return '{} salary'.format(self.employee) 
     
     
     class Meta:
