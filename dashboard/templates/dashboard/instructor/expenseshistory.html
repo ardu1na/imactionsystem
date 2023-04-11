@@ -7,9 +7,8 @@
 
         <div class="page-titles">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{% url 'dashboard:employees' %}">Employees</a></li>
-                <li class="breadcrumb-item active"><a href="{% url 'dashboard:editemployee' id=editemployee.id %}">{{editemployee.name}}</a></li>
-                <li class="breadcrumb-item active"><a href="javascript:void(0)"> Salaries</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'dashboard:expenses' %}">Expenses</a></li>
+                <li class="breadcrumb-item active"><a href="{% url 'dashboard:editexpense' id=editexpense.id %}"> {{editexpense.category}}: {{editexpense.concept}} </a></li>
 
             </ol>
         </div>
@@ -26,26 +25,22 @@
                                         <tr>
                                             
                                             <th>PERIOD</th>
-                                            <th>SALARY</th>
-                                            <th>NIGGA %</th>
+                                            <th>VALUE</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {% if salaries %}
-                                        {% for i in salaries %}
+                                        {% if same_expense %}
+                                        {% for i in same_expense %}
                                         <tr>
                                             
     
-                                            <td>{{i.period|date:"m/Y"}}</td>
-                                            <td>$ {{i.salary|floatformat:2}}</td>
-    
-    
-                                            <td>{{i.nigga|floatformat:2}}</td>
+                                            <td>{{i.date|date:"m/Y"}}</td>
+                                            <td>{{i.value}}</td>
                                         </tr>
                                         {% endfor %}
                                         {% else %}
 
-                                        <p>No salaries registered yet...</p>
+                                        <p>No history of this expense registered yet...</p>
                                         {% endif %}
                                        
                                     </tbody>

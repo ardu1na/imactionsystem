@@ -452,6 +452,25 @@ def salaries(request, id):
     return render (request, 'dashboard/instructor/salaries.html', context)
 
     
+@user_passes_test(lambda user: user.groups.filter(name='employees').exists())
+@login_required(login_url='dashboard:login')
+def expenseshistory(request, id):
+    
+    editexpense = Expense.objects.get(id=id)
+    same_expense = Expense.objects.filter(concept=editexpense.concept)
+    
+    
+
+    context = {
+            'editexpense' : editexpense,
+            'same_expense': same_expense,
+            'id': id,
+            'page_title':'Expense History',
+
+            
+            }
+        
+    return render (request, 'dashboard/instructor/expenseshistory.html', context)
 
 @user_passes_test(lambda user: user.groups.filter(name='admin').exists())
 @login_required(login_url='dashboard:login')

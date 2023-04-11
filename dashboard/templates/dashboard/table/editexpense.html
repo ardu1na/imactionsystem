@@ -35,21 +35,27 @@
 <!-- MAIN -->
         <div class="row page-titles">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item active"><a href="/expenses/">EXPENSES</a></li>
+                <li class="breadcrumb-item active"><a href="/expenses/"> EXPENSES </a></li>
                 <li class="breadcrumb-item"><a> {{editexpense}} </a> </li>
             </ol>
         </div>
-       
+
+        <a href="{% url 'dashboard:expenseshistory' id=editexpense.id %}" class="flex-row-reverse mt-4 px-3 fs-4 btn btn-light"> See History </a>
+
         <div class="row">
             <div class="col-xl-12 col-lg-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title">Change</h4>
-                        
+
+                        <h4 class="card-title my-3">Change</h4>
+
                         <div class="form-floating pt-4 my-3 d-flex flex-row-reverse">
                                                 
                             <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteexpense{{editexpense.id}}">Delete<span class="btn-icon-end">
                                 <i class="fa-solid fa-trash fs-7"></i></span></button>
+
+
+
                         </div>
 
                     </div>
@@ -100,6 +106,8 @@
 
 
                         </div>
+
+
                     </div>
                     
                 </div>
