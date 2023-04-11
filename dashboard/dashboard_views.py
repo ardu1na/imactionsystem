@@ -432,6 +432,11 @@ def salaries(request, id):
     
     editemployee = Employee.objects.get(id=id)
     salaries = Salary.objects.filter(employee=editemployee)
+    
+    raice = 0
+    
+    for salarie in salaries:
+       pass
 
     
 
