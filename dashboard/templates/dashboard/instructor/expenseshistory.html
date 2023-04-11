@@ -1,0 +1,59 @@
+{% extends 'dashboard/elements/layouts/admin.html' %}
+{% load static %}
+
+{% block content %}
+
+
+
+        <div class="page-titles">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'dashboard:expenses' %}">Expenses</a></li>
+                <li class="breadcrumb-item active"><a href="{% url 'dashboard:editexpense' id=editexpense.id %}"> {{editexpense.category}}: {{editexpense.concept}} </a></li>
+
+            </ol>
+        </div>
+
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+                        
+                        <div class="mt-2">
+                            <div class="table-responsive">
+                                <table id="example4" class="display mb-4" style="min-width: 845px">
+                                    <thead>
+                                        <tr>
+                                            
+                                            <th>PERIOD</th>
+                                            <th>VALUE</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% if same_expense %}
+                                        {% for i in same_expense %}
+                                        <tr>
+                                            
+    
+                                            <td>{{i.date|date:"m/Y"}}</td>
+                                            <td>{{i.value}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                        {% else %}
+
+                                        <p>No history of this expense registered yet...</p>
+                                        {% endif %}
+                                       
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        
+
+
+{% endblock %}

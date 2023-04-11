@@ -249,5 +249,5 @@ class Expense(models.Model):
     wop = models.CharField(max_length=80, default=None, blank= False, choices=WOP_CHOICES, verbose_name="WOP")
 
     def __str__ (self):
-        return '{}/{}: ${}'.format(self.category, self.concept, self.value)
+        return '{} / {}: ${}'.format(self.category, self.concept, self.value)
 
