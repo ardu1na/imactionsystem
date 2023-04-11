@@ -37,10 +37,10 @@
                                             
     
                                             <td>{{i.period|date:"m/Y"}}</td>
-                                            <td>$ {{i.salary}}</td>
+                                            <td>$ {{i.salary|floatformat:2}}</td>
     
     
-                                            <td>{{i.nigga}}</td>
+                                            <td>{{i.nigga|floatformat:2}}</td>
                                         </tr>
                                         {% endfor %}
                                         {% else %}
