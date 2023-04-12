@@ -725,31 +725,33 @@ def sales(request):
     this_month = date.today().month
     month_name = date(1900, this_month, 1).strftime('%B')
     
-    sales_this_month = Sale.objects.filter(date__month=today.month, date__year=today.year, revenue="RR", cancelled="Active")
+    sales_this_month = Sale.objects.filter(date__month=today.month, date__year=today.year, revenue="RR", cancelled="Active").exclude(note="auto revenue sale")
+    
     total_amount = sales_this_month.aggregate(Sum('change'))['change__sum']
+    
     def get_total_format():
         try:
             return '{:,.0f}'.format(total_amount)
         except: return 0
 
-    sales1_this_month = Sale.objects.filter(date__month=today.month, date__year=today.year, revenue="OneOff", cancelled="Active")
+    sales1_this_month = Sale.objects.filter(date__month=today.month, date__year=today.year, revenue="OneOff", cancelled="Active").exclude(note="auto revenue sale")
     total1_amount = sales1_this_month.aggregate(Sum('change'))['change__sum']
     def get_total1_format():
         try:
             return '{:,.0f}'.format(total1_amount)
         except: return 0
         
-    clients_this_month = Sale.objects.filter(date__month=today.month, date__year=today.year, kind="New Client", cancelled="Active")
+    clients_this_month = Sale.objects.filter(date__month=today.month, date__year=today.year, kind="New Client", cancelled="Active").exclude(note="auto revenue sale")
     total_clients = clients_this_month.count()
     
     
-    upsell_this_month = Sale.objects.filter(date__month=today.month, date__year=today.year, kind="Upsell", cancelled="Active")
+    upsell_this_month = Sale.objects.filter(date__month=today.month, date__year=today.year, kind="Upsell", cancelled="Active").exclude(note="auto revenue sale")
     total_upsell_this_month = upsell_this_month.count()
     
-    crosssell_this_month = Sale.objects.filter(date__month=today.month, date__year=today.year, kind="Cross Sell", cancelled="Active")
+    crosssell_this_month = Sale.objects.filter(date__month=today.month, date__year=today.year, kind="Cross Sell", cancelled="Active").exclude(note="auto revenue sale")
     total_crosssell_this_month = crosssell_this_month.count()
     
-    sales = Sale.objects.all()
+    sales = Sale.objects.filter(date__month=today.month, date__year=today.year).exclude(note="auto revenue sale")
     
     if request.method == 'GET':
         addform = SaleForm()
@@ -766,7 +768,7 @@ def sales(request):
     
 
     
-    sales_by_service =Sale.objects.filter(cancelled="Active", date__month=today.month, date__year=today.year)
+    sales_by_service =Sale.objects.filter(cancelled="Active", date__month=today.month, date__year=today.year).exclude(note="auto revenue sale")
 
     s_seo = 0
     s_gads= 0
