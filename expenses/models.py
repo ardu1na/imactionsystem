@@ -6,7 +6,7 @@ from django.db import models
 from sales.models import LastBlue
 
 last_blue = LastBlue.objects.get(pk=1)
-blue = (last_blue.venta+last_blue.compra)/2
+blue = last_blue.compra
 
 
 

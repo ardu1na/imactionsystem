@@ -9,6 +9,5 @@ try:
     casa = data[1]
     blue = casa["casa"]
     compra = float(blue["compra"].replace(',', '.'))
-    venta = float(blue["venta"].replace(',', '.'))
 except:
     pass

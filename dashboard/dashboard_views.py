@@ -27,7 +27,6 @@ from dashboard.utils import *
 import csv
 from dashboard.forms import UploadFileForm
 try: 
-    from .services import venta as b_venta
     from .services import compra as b_compra
 except: pass
 
@@ -1562,15 +1561,13 @@ def index(request):
     last_blue = LastBlue.objects.get(pk=1) 
     
     try:
-        blue = (b_venta+b_compra)/2
-        if last_blue.venta != b_venta:
-                last_blue.venta = b_venta
+        blue = b_compra
         if last_blue.compra != b_compra:
                 last_blue.compra = b_compra
         last_blue.save()
             
     except:
-       blue = (last_blue.venta+last_blue.compra)/2
+       blue = last_blue.compra
 
     
     
