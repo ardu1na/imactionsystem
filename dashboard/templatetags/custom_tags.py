@@ -9,7 +9,15 @@ import json
 
 register = template.Library()
 
-#This the custom filter, name is getitems
+
+
+def percentage_increase(current_salary, previous_salary):
+    if previous_salary == 0:
+        return "-"
+    else:
+        return "{:.2f}%".format((current_salary - previous_salary) / previous_salary * 100)
+register.filter('percentage_increase', percentage_increase)
+
 
 def getdata(json_data, args):    
     func_name=''
@@ -64,6 +72,8 @@ register.filter('split', split)
 def multiply(val1,val2):
     return val1*val2
 register.filter('multiply', multiply)
+
+
 
 # def getStringToJson(val):
 #     print("String to Dict")

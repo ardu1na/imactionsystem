@@ -1,0 +1,55 @@
+{% load static %}
+{% if holidays %}
+        
+                        <div class="mt-4">
+                            <div class="table-responsive">
+                                <table id="example4" class="display mb-4" style="min-width: 845px">
+                                    <thead>
+                                        <tr>
+                                            
+                                            <th>YEAR</th>
+                                            <th>MONTH</th>
+                                            <th>DAYS</th>
+                                            <th>START</th>
+                                            <th>END</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for i in holidays %}
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <a class="mb-0 fs-16 font-w500">{{i.year}}</a>
+                                                </div>
+                                            </td>
+    
+                                            <td>{{i.month}}</td>
+                                            <td>{{i.days}} days</td>
+    
+    
+                                            <td>{{i.date_start|date:"d/m/Y"}}</td>
+    
+                                            <td>{{i.date_end|date:"d/m/Y"}}</td>
+                                            <td>
+                                                <div class="d-flex flex-row">
+                                                    
+                                                        <!-- delete BUTTON -->
+                                                            <button type="button" class="shadow-sm btn btn-danger px-3 mx-1" data-bs-toggle="modal" data-bs-target="#deleteholiday{{i.id}}">
+                                                            <i class="fa-solid fa-trash fs-7"></i>
+                                                            </button>                                                                                  
+                                                        <!-- edit BUTTON -->
+                                                        <a href="{% url 'dashboard:editholiday' id=i.id %}" class="px-3 shadow-sm btn btn-secondary mx-1">
+                                                            <i class="fa-solid fa-pen-to-square "></i>
+                                                        </a>                                             
+                                                </div>                                        
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                       
+                                    </tbody>
+                                </table>
+                            </div>
+                                
+                        </div>
+                        {%endif%}
