@@ -589,15 +589,18 @@ def employees(request):
 def deleteholiday(request, id):
     holiday = Holiday.objects.get(id=id)
     holiday.delete()
+    employeeid=holiday.employee.id
+    
     if holiday.employee.rol == "CEO":
-        return redirect(reverse('dashboard:editceo')+ "?deleted")
+        return redirect(reverse('dashboard:editceo', kwargs={'id': employeeid}) + '#holiday')
     else:
-        return redirect(reverse('dashboard:employees')+ "?deleted")
+        return redirect(reverse('dashboard:editemployee', kwargs={'id': employeeid}) + '#holiday')
 
 @user_passes_test(lambda user: user.groups.filter(name='employees').exists())
 @login_required(login_url='dashboard:login')
 def deleteemployee(request, id):
     employee = Employee.objects.get(id=id)
+    id = employee.id
     employee.delete()
     return redirect(reverse('dashboard:employees')+ "?deleted")
 
@@ -655,7 +658,7 @@ def editceo(request, id):
                 holiday = holydayform.save(commit=False)
                 holiday.employee = editemployee
                 holiday.save()
-                return redirect('dashboard:editceo', id=editemployee.id)
+                return redirect(reverse('dashboard:editceo', kwargs={'id': editemployee.id}) + '#holiday')
             else:
                 print (holydayform)
                 print(holydayform.errors)
@@ -669,7 +672,7 @@ def editceo(request, id):
                 wage = editwageform.save(commit=False)
                 wage.employee = editemployee
                 wage.save()
-                return redirect('dashboard:editceo', id=editemployee.id)
+                return redirect(reverse('dashboard:editceo', kwargs={'id': editemployee.id}) + '#pay')
             else: 
                 print (editwageform)
                 print(editwageform.errors)

@@ -103,7 +103,7 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" data-bs-toggle="tab" href="#messages8">
+                                <a class="nav-link" id="salary-tab" data-bs-toggle="tab" href="#messages8">
                                     <span> 
                                         <i class="ti-wallet fs-4 me-2"></i>
                                     </span> Pay
@@ -410,6 +410,28 @@
 
 
 {% block additional_js %}
+
+
+<script>
+    // Check if URL contains "#pay"
+    if(window.location.hash == "#pay") {
+        // Get the salary tab element
+        var salaryTab = document.getElementById("salary-tab");
+        // Activate the tab
+        var tab = new bootstrap.Tab(salaryTab);
+        tab.show();
+    }
+
+    if(window.location.hash == "#holiday") {
+        // Get the salary tab element
+        var holidayTab = document.getElementById("holiday-tab");
+        // Activate the tab
+        var tab = new bootstrap.Tab(holidayTab);
+        tab.show();
+    }
+
+</script>
+
 <!-- change active select date_gone -->
 <script>
     var can = document.getElementById("active");
