@@ -7,7 +7,7 @@ import json
 from dashboard import setup_config
 import os
 from django.conf import settings
-from django.http import HttpResponse, Http404, HttpResponseRedirect, HttpResponseBadRequest
+from django.http import HttpResponse, Http404, HttpResponseBadRequest
 from django.contrib.auth.decorators import login_required, permission_required 
 import pickle
 import mimetypes
@@ -27,7 +27,6 @@ from dashboard.utils import *
 import csv
 from dashboard.forms import UploadFileForm
 try: 
-    from .services import venta as b_venta
     from .services import compra as b_compra
 except: pass
 
@@ -377,7 +376,7 @@ def editemployee(request, id):
                 last_wage.salary = last_wage.salary + (last_wage.salary*Decimal(raice_salary))/100
                 last_wage.nigga = Decimal(raice_nigga)
                 last_wage.save()
-                return redirect('dashboard:editemployee', id=editemployee.id)
+                return redirect(reverse('dashboard:editemployee', kwargs={'id': editemployee.id}) + '#pay')
             else:
                 print (editform)
 
@@ -404,7 +403,7 @@ def editemployee(request, id):
                 holiday = holydayform.save(commit=False)
                 holiday.employee = editemployee
                 holiday.save()
-                return redirect('dashboard:editemployee', id=editemployee.id)
+                return redirect(reverse('dashboard:editemployee', kwargs={'id': editemployee.id}) + '#holiday')
             else:
                 print (holydayform)
                 print(holydayform.errors)
@@ -418,7 +417,7 @@ def editemployee(request, id):
                 wage = editwageform.save(commit=False)
                 wage.employee = editemployee
                 wage.save()
-                return redirect('dashboard:editemployee', id=editemployee.id)
+                return redirect(reverse('dashboard:editemployee', kwargs={'id': editemployee.id}) + '#pay')
             else: 
                 print (editwageform)
                 print(editwageform.errors)
@@ -1562,15 +1561,13 @@ def index(request):
     last_blue = LastBlue.objects.get(pk=1) 
     
     try:
-        blue = (b_venta+b_compra)/2
-        if last_blue.venta != b_venta:
-                last_blue.venta = b_venta
+        blue = b_compra
         if last_blue.compra != b_compra:
                 last_blue.compra = b_compra
         last_blue.save()
             
     except:
-       blue = (last_blue.venta+last_blue.compra)/2
+       blue = last_blue.compra
 
     
     

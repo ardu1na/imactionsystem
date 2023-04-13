@@ -109,15 +109,16 @@
                     <div class="card-body">
                         <!-- Nav tabs -->
                         <ul class="nav nav-tabs" role="tablist">
+                           
                             <li class="nav-item">
-                                <a class="nav-link active" data-bs-toggle="tab" href="#home8">
+                                <a class="nav-link active" data-bs-toggle="tab" href="#info" id="info-tab">
                                     <span>
                                         <i class="ti-user fs-4 me-2"></i>
                                     </span> Personal
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" data-bs-toggle="tab" href="#messages8">
+                                <a class="nav-link" data-bs-toggle="tab" href="#pay" id="salary-tab">
                                     <span> 
                                         <i class="ti-wallet fs-4 me-2"></i>
                                     </span> Pay
@@ -125,20 +126,17 @@
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link" id="holiday-tab" data-bs-toggle="tab" href="#holiday">
+                                <a class="nav-link" data-bs-toggle="tab" href="#holiday"  id="holiday-tab">
                                     <span> 
                                         <i class="ti-star fs-4 me-2"></i>
                                     </span> Holidays
                                 </a>
                             </li>
-
-
                         </ul>
                         <!-- Tab panes -->
                         <div class="tab-content tabcontent-border">
 
-
-                            <div class="tab-pane fade show active" id="home8" role="tabpanel">
+                            <div class="tab-pane fade show active" id="info" role="tabpanel">
                                 <div class="pt-4">
 
                                         <form method="post">
@@ -239,8 +237,7 @@
                                 </div>
                             </div>
 
-
-                            <div class="tab-pane fade" id="messages8" role="tabpanel">
+                            <div class="tab-pane fade" id="pay" role="tabpanel">
                                 <div class="pt-4">
                                     
                                     <div class="basic-list-group m-3 px-4">
@@ -397,6 +394,27 @@
 
 
 {% block additional_js %}
+
+<script>
+        // Check if URL contains "#pay"
+        if(window.location.hash == "#pay") {
+            // Get the salary tab element
+            var salaryTab = document.getElementById("salary-tab");
+            // Activate the tab
+            var tab = new bootstrap.Tab(salaryTab);
+            tab.show();
+        }
+
+        if(window.location.hash == "#holiday") {
+            // Get the salary tab element
+            var holidayTab = document.getElementById("holiday-tab");
+            // Activate the tab
+            var tab = new bootstrap.Tab(holidayTab);
+            tab.show();
+        }
+    
+</script>
+
 <script>
 
     // Get references to the holiday tab and the card with the ID "holidays"

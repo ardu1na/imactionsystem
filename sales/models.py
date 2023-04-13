@@ -8,16 +8,15 @@ from decimal import Decimal
 class LastBlue (models.Model):
     compra = models.DecimalField(max_digits=15, decimal_places=2
                                  )
-    venta = models.DecimalField(max_digits=15, decimal_places=2)
     date_updated = models.DateTimeField(auto_now=True)
     
     @property
     def get_blue(self):
-        return ((self.venta+self.compra)/2)
+        return self.compra
 
 
 last_blue = LastBlue.objects.get(pk=1)
-blue = (last_blue.venta+last_blue.compra)/2
+blue = last_blue.compra
 
 
 
