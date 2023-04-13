@@ -33,7 +33,7 @@
                                                 <td>{{i.raice|floatformat:2}}%</td>
                                                 <td>{% if next_element.salary %}
                                                     ${{next_element.salary|floatformat:2}}{% else %} 0 {% endif%}</td>
-                                                <td>{% if next_element.salary %}$ {{i.salary|subtract:next_element.salary}}{%else %}0{% endif %}</td>                                                 
+                                                <td>{% if next_element.salary %}$ {{i.salary|subtract:next_element.salary|floatformat:2}}{%else %}0{% endif %}</td>                                                 
 
                                                 
                                             </tr>
