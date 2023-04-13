@@ -117,6 +117,7 @@ class Sale(models.Model):
     status = models.CharField(max_length=5, choices=S_CHOICES, null=True, blank=False, default=None, verbose_name="STATUS $")
     cancelled = models.CharField(default='Active', max_length=50, choices=CANCELLED_CHOICES, blank=False)
     change = models.DecimalField(default=0, verbose_name="PRICE", decimal_places=2, max_digits=12, null=True, blank=True)
+    raice = models.DecimalField(verbose_name="ADJUSTMENT", decimal_places=2, max_digits=12, null=True, blank=True)
     
     @property
     def get_change(self):
