@@ -32,6 +32,7 @@ class Salary (models.Model):
     cash_usd = models.DecimalField(default= 0, max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="CASH USD")
     paypal = models.DecimalField(default= 0, max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="PAYPAL")
     
+    raice = models.DecimalField(default= 0, max_digits=50, decimal_places=2, null=True, blank=True, verbose_name="RAICE")
     
     
     def __str__ (self):
@@ -40,6 +41,8 @@ class Salary (models.Model):
     
     class Meta:
         get_latest_by = ['period']
+        ordering = ['-period']
+
         
         
         

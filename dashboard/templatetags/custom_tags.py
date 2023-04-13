@@ -9,7 +9,39 @@ import json
 
 register = template.Library()
 
-#This the custom filter, name is getitems
+@register.filter
+def subtract(value, arg):
+    return value - arg
+
+@register.filter
+def next(some_list, current_index):
+    """
+    Returns the next element of the list using the current index if it exists.
+    Otherwise returns an empty string.
+    """
+    try:
+        return some_list[int(current_index) + 1] # access the next element
+    except:
+        return '' # return empty string in case of exception
+
+@register.filter
+def previous(some_list, current_index):
+    """
+    Returns the previous element of the list using the current index if it exists.
+    Otherwise returns an empty string.
+    """
+    try:
+        return some_list[int(current_index) - 1] # access the previous element
+    except:
+        return '' # return empty string in case of exception
+    
+def percentage_increase(current_salary, previous_salary):
+    if previous_salary == 0:
+        return "-"
+    else:
+        return "{:.2f}%".format((current_salary - previous_salary) / previous_salary * 100)
+register.filter('percentage_increase', percentage_increase)
+
 
 def getdata(json_data, args):    
     func_name=''
@@ -64,6 +96,8 @@ register.filter('split', split)
 def multiply(val1,val2):
     return val1*val2
 register.filter('multiply', multiply)
+
+
 
 # def getStringToJson(val):
 #     print("String to Dict")

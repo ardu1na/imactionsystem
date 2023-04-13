@@ -341,11 +341,13 @@ def editemployee(request, id):
     
     editemployee = Employee.objects.get(id=id)
     holidays = Holiday.objects.filter(employee=editemployee)
+    salaries = Salary.objects.filter(employee=editemployee)
 
+            
     if request.method == "GET":
         
         editform = EditEmployeeForm(instance=editemployee)
-        wage_instance = Salary.objects.filter(employee=editemployee).last()
+        wage_instance = Salary.objects.filter(employee=editemployee).first()
         editwageform = EditWageForm(instance=wage_instance) if wage_instance else EditWageForm()
         holydayform = HolidayEmployeeForm()
         raice = RaiceForm()
@@ -357,7 +359,8 @@ def editemployee(request, id):
             'editwageform': editwageform,
             'editemployee': editemployee,
             'id': id,
-            'holidays': holidays
+            'holidays': holidays,
+            'salaries': salaries,
             }
         
         return render (request, 'dashboard/instructor/editemployee.html', context)
@@ -375,6 +378,7 @@ def editemployee(request, id):
                 last_wage = Salary.objects.filter(employee=editemployee.pk).last()
                 last_wage.salary = last_wage.salary + (last_wage.salary*Decimal(raice_salary))/100
                 last_wage.nigga = Decimal(raice_nigga)
+                last_wage.raice = Decimal(raice_salary)
                 last_wage.save()
                 return redirect(reverse('dashboard:editemployee', kwargs={'id': editemployee.id}) + '#pay')
             else:
@@ -425,30 +429,6 @@ def editemployee(request, id):
 
 
 
-@user_passes_test(lambda user: user.groups.filter(name='employees').exists())
-@login_required(login_url='dashboard:login')
-def salaries(request, id):
-    
-    editemployee = Employee.objects.get(id=id)
-    salaries = Salary.objects.filter(employee=editemployee)
-    
-    raice = 0
-    
-    for salarie in salaries:
-       pass
-
-    
-
-    context = {
-            'salaries' : salaries,
-            'editemployee': editemployee,
-            'id': id,
-            'page_title':'Salaries History',
-
-            
-            }
-        
-    return render (request, 'dashboard/instructor/salaries.html', context)
 
     
 @user_passes_test(lambda user: user.groups.filter(name='employees').exists())
@@ -618,6 +598,7 @@ def editceo(request, id):
     
     editemployee = Employee.objects.get(id=id)
     holidays = Holiday.objects.filter(employee=editemployee)
+    salaries = Salary.objects.filter(employee=editemployee).order_by('-period')
 
     if request.method == "GET":
         
@@ -632,7 +613,8 @@ def editceo(request, id):
             'editwageform': editwageform,
             'editemployee': editemployee,
             'id': id,
-            'holidays': holidays
+            'holidays': holidays,
+            'salaries': salaries,
             }
         
         return render (request, 'dashboard/instructor/editceo.html', context)

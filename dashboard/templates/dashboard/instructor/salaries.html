@@ -1,94 +1,50 @@
-{% extends 'dashboard/elements/layouts/admin.html' %}
 {% load static %}
-
-{% block content %}
-
-
-
-        <div class="page-titles">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item">
-                    {% if editemployee.rol != "CEO" %}<a href="{% url 'dashboard:employees' %}">Employees</a></li>
-                    <li class="breadcrumb-item active"><a href="{% url 'dashboard:editemployee' id=editemployee.id %}">{{editemployee.name}}</a></li>
-
-                    {% else %} <a href="{% url 'dashboard:ceo' %}">CEO</a></li>
-                    <li class="breadcrumb-item active"><a href="{% url 'dashboard:editceo' id=editemployee.id %}">{{editemployee.name}}</a></li>
-
-                    {% endif %}
-                <li class="breadcrumb-item active"><a href="javascript:void(0)"> Salaries</a></li>
-
-            </ol>
-        </div>
-
-        <div class="row">
-            <div class="col-xl-12">
-                <div class="card">
-                    <div class="card-body">
+{% load custom_tags %}
+       
                         
-                        <div class="mt-2">
+                        <div class="mt-2 my-4">
                             <div class="table-responsive">
-                                <table id="example4" class="display mb-4" style="min-width: 845px">
+                                <table id="example4" class="display" style="min-width: 845px">
                                     <thead>
                                         <tr>
-                                            {% if editemployee.rol != "CEO" %}
                                             <th>PERIOD</th>
-                                            <th>SALARY</th>
-                                            <th>NIGGA %</th>
-                                            {% else %}
-                                            <th>PERIOD</th>
-                                            <th>SALARY</th>
-                                            <th>MP</th>
-                                            <th>TC</th>
-                                            <th>ATM</th>
-                                            <th>CASH</th>
-                                            <th>CASH USD</th>
-                                            <th>PAYPAL</th>
-                                            {% endif %}
+                                            <th>UPDATED SALARY </th>
+                                            <th>RAICE %</th>
+                                            <th>PREVIOUS SALARY </th>
+                                            <th>TOTAL RAICE </th>
+
+
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {% if salaries %}
+
+
                                         {% for i in salaries %}
-                                        <tr>
-                                            <td>{{i.period|date:"m/Y"}}</td>
-
-                                        {% if editemployee.rol != "CEO" %}
-
-                                            <td>$ {{i.salary|floatformat:2}}</td>   
-                                            <td>{{i.nigga|floatformat:2}}</td>
-
-                                        {% else %}
-                                            <td>${{i.salary|floatformat:2}}</td>
-
-                                            <td>${{i.mp|floatformat:2}}</td>
+                                            {% with next_element=salaries|next:forloop.counter0 %}
+                                            {% with previous_element=salaries|previous:forloop.counter0 %} 
                                             
-                                            <td>${{i.tc|floatformat:2}}</td>
-                                            <td>${{i.atm_cash|floatformat:2}}</td>
-                                            
-                                            <td>${{i.cash|floatformat:2}}</td>
-        
-                                            <td>{{i.cash_usd|floatformat:2}} USD</td>
-                                            
-                                            <td>{{i.paypal|floatformat:2}} USD </td>
-                                        {% endif %}
-                                        </tr>
+                                            {% if next_element.salary != i.salary %}
+                                            <tr>
+
+                                                
+                                                <td>{{i.period|date:"m/Y"}}</td>
+                                                <td>$ {{i.salary|floatformat:2}}</td>   
+                                                <td>{{i.raice|floatformat:2}}%</td>
+                                                <td>{% if next_element.salary %}
+                                                    ${{next_element.salary|floatformat:2}}{% else %} 0 {% endif%}</td>
+                                                <td>{% if next_element.salary %}$ {{i.salary|subtract:next_element.salary}}{%else %}0{% endif %}</td>                                                 
+
+                                                
+                                            </tr>
+                                            {% endif %}
+                                            {% endwith %}
+                                            {% endwith %}
                                         {% endfor %}
-                                        {% else %}
-
-                                        <p>No salaries registered yet...</p>
-                                        {% endif %}
+                                    
                                        
+
                                     </tbody>
                                 </table>
                             </div>
                         </div>
-                    </div>
 
-                </div>
-            </div>
-        </div>
-
-        
-
-
-{% endblock %}

@@ -20,7 +20,6 @@ urlpatterns = [
 
     path('employees/delete/<int:id>/', dashboard_views.deleteemployee, name="deleteemployee"), 
     path('employees/edit/<int:id>/', dashboard_views.editemployee, name="editemployee"),
-    path('employees/salaries/<int:id>/', dashboard_views.salaries, name="salaries"),
 
     
     path('holiday/delete/<int:id>/', dashboard_views.deleteholiday, name="deleteholiday"), 
