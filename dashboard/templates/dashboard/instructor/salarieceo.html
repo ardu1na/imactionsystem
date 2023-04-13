@@ -7,13 +7,23 @@
                                 <table id="example4" class="display" style="min-width: 845px">
                                     <thead>
                                         <tr>
+                                            {% if editemployee.rol != "CEO" %}
                                             <th>PERIOD</th>
                                             <th>UPDATED SALARY </th>
-                                            <th>RAICE %</th>
+                                            <th>RAICE</th>
                                             <th>PREVIOUS SALARY </th>
-                                            <th>TOTAL RAICE </th>
 
 
+                                            {% else %}
+                                            <th>PERIOD</th>
+                                            <th>SALARY</th>
+                                            <th>MP</th>
+                                            <th>TC</th>
+                                            <th>ATM</th>
+                                            <th>CASH</th>
+                                            <th>CASH USD</th>
+                                            <th>PAYPAL</th>
+                                            {% endif %}
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -22,25 +32,32 @@
                                         {% for i in salaries %}
                                             {% with next_element=salaries|next:forloop.counter0 %}
                                             {% with previous_element=salaries|previous:forloop.counter0 %} 
-                                            
-                                            {% if next_element.salary != i.salary %}
                                             <tr>
 
+                                                {% if editemployee.rol != "CEO" %}
                                                 
                                                 <td>{{i.period|date:"m/Y"}}</td>
                                                 <td>$ {{i.salary|floatformat:2}}</td>   
                                                 <td>{{i.raice|floatformat:2}}%</td>
                                                 <td>{% if next_element.salary %}
-                                                    ${{next_element.salary|floatformat:2}}{% else %} 0 {% endif%}</td>
-                                                <td>{% if next_element.salary %}$ {{i.salary|subtract:next_element.salary}}{%else %}0{% endif %}</td>
+                                                    ${{next_element.salary|default_if_none:"No previous salaries"|floatformat:2}}{% else %}-{% endif%}</td>
 
                                                       
 
                                                     
 
-                                                
+                                                {% else %}
+                                                <td>{{i.period|date:"m/Y"}}</td>
+
+                                                    <td>${{i.salary|floatformat:2}}</td>
+                                                    <td>${{i.mp|floatformat:2}}</td>
+                                                    <td>${{i.tc|floatformat:2}}</td>
+                                                    <td>${{i.atm_cash|floatformat:2}}</td>
+                                                    <td>${{i.cash|floatformat:2}}</td>
+                                                    <td>{{i.cash_usd|floatformat:2}} USD</td>
+                                                    <td>{{i.paypal|floatformat:2}} USD </td>
+                                                {% endif %}
                                             </tr>
-                                            {% endif %}
                                             {% endwith %}
                                             {% endwith %}
                                         {% endfor %}

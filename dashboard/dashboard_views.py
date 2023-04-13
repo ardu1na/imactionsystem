@@ -347,7 +347,7 @@ def editemployee(request, id):
     if request.method == "GET":
         
         editform = EditEmployeeForm(instance=editemployee)
-        wage_instance = Salary.objects.filter(employee=editemployee).last()
+        wage_instance = Salary.objects.filter(employee=editemployee).first()
         editwageform = EditWageForm(instance=wage_instance) if wage_instance else EditWageForm()
         holydayform = HolidayEmployeeForm()
         raice = RaiceForm()

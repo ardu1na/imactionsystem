@@ -9,6 +9,9 @@ import json
 
 register = template.Library()
 
+@register.filter
+def subtract(value, arg):
+    return value - arg
 
 @register.filter
 def next(some_list, current_index):
