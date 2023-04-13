@@ -598,6 +598,7 @@ def editceo(request, id):
     
     editemployee = Employee.objects.get(id=id)
     holidays = Holiday.objects.filter(employee=editemployee)
+    salaries = Salary.objects.filter(employee=editemployee).order_by('-period')
 
     if request.method == "GET":
         
@@ -612,7 +613,8 @@ def editceo(request, id):
             'editwageform': editwageform,
             'editemployee': editemployee,
             'id': id,
-            'holidays': holidays
+            'holidays': holidays,
+            'salaries': salaries,
             }
         
         return render (request, 'dashboard/instructor/editceo.html', context)
