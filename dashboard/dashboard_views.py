@@ -341,7 +341,7 @@ def editemployee(request, id):
     
     editemployee = Employee.objects.get(id=id)
     holidays = Holiday.objects.filter(employee=editemployee)
-    salaries = Salary.objects.filter(employee=editemployee).order_by('-period')
+    salaries = Salary.objects.filter(employee=editemployee)
 
             
     if request.method == "GET":

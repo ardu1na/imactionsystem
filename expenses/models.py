@@ -41,6 +41,8 @@ class Salary (models.Model):
     
     class Meta:
         get_latest_by = ['period']
+        ordering = ['-period']
+
         
         
         

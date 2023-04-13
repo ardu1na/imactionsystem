@@ -11,6 +11,8 @@
                                             <th>PERIOD</th>
                                             <th>UPDATED SALARY </th>
                                             <th>RAICE</th>
+                                            <th>PREVIOUS SALARY </th>
+
 
                                             {% else %}
                                             <th>PERIOD</th>
@@ -28,17 +30,17 @@
 
 
                                         {% for i in salaries %}
-
+                                            {% with next_element=salaries|next:forloop.counter0 %}
+                                            {% with previous_element=salaries|previous:forloop.counter0 %} 
                                             <tr>
 
                                                 {% if editemployee.rol != "CEO" %}
-                                                {% if i.raice != 0 %}
                                                 <td>{{i.period|date:"m/Y"}}</td>
 
                                                     <td>$ {{i.salary|floatformat:2}}</td>   
                                                     <td>{{i.raice|floatformat:2}}%</td>
-                                                    
-                                                {%endif %}
+                                                    <td>{{next_element.salary|default_if_none:"No previous salaries"|floatformat:2}}</td>
+
                                                       
 
                                                     
@@ -55,6 +57,8 @@
                                                     <td>{{i.paypal|floatformat:2}} USD </td>
                                                 {% endif %}
                                             </tr>
+                                            {% endwith %}
+                                            {% endwith %}
                                         {% endfor %}
                                     
                                        
