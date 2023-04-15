@@ -30,7 +30,8 @@ try:
     from .services import compra as b_compra
 except: pass
 
-
+from dateutil.relativedelta import relativedelta
+from django.utils import timezone
 
 from django.http import HttpResponse
     
@@ -701,10 +702,30 @@ def ceo(request):
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
 def adjustment(request):
-    services = Sale.objects.filter(cancelled="Active", revenue="RR").exclude(note="auto revenue sale")
+    today=date.today()
+    services = Sale.objects.filter(cancelled="Active", revenue="RR")
+    sales_to_raice = []
+    for sale in services:
+        if sale.raice_date:
+            date_start_raice = sale.raice_date + relativedelta(months=3)
+            print("+++++++++++++++++++++LAST RAICE++++++++++++++++++++++++++++++++++") 
+            print(sale.raice_date)
+      
+            print("++++++++++++++ DATE OF NEXT RAICE   ++++++++++++++++++++++++")
+            print(date_start_raice)
+            
+            if date_start_raice.month <= today.month:
+                print("++++++++++++++ today is   ++++++++++++++++++++++++")
+                print(today)
+                sales_to_raice.append(sale)            
+    print("++++++++++++++ SALES TO RAICE  ++++++++++++++++++++++++")
+      
+    print(sales_to_raice)
+        
     
+
     context = {
-        'services': services,
+        'services': sales_to_raice,
         "page_title":"ADJUSTMENTS",
 
     }

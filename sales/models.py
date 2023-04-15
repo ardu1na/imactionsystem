@@ -97,6 +97,9 @@ class Sale(models.Model):
         (USD, ('USD')))
 
     client = models.ForeignKey(Client, related_name='sales', null=True, blank=True, on_delete=models.CASCADE, verbose_name="ACCOUNT")
+
+    raice = models.DecimalField(verbose_name="ADJUSTMENT", decimal_places=2, max_digits=12, null=True, blank=True)
+    raice_date = models.DateField(blank=True, null=True, default=date.today, verbose_name="DATE UPDATED")    
     
     kind = models.CharField(max_length=50, choices=KIND_CHOICES, null=True, blank=False, default=None, verbose_name="KIND")
     
@@ -117,7 +120,6 @@ class Sale(models.Model):
     status = models.CharField(max_length=5, choices=S_CHOICES, null=True, blank=False, default=None, verbose_name="STATUS $")
     cancelled = models.CharField(default='Active', max_length=50, choices=CANCELLED_CHOICES, blank=False)
     change = models.DecimalField(default=0, verbose_name="PRICE", decimal_places=2, max_digits=12, null=True, blank=True)
-    raice = models.DecimalField(verbose_name="ADJUSTMENT", decimal_places=2, max_digits=12, null=True, blank=True)
     
     @property
     def get_change(self):

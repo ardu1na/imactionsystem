@@ -4,16 +4,17 @@
 {% load static %}
 
 {% block additional_css %}
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 {% endblock %}
 
 {% block content %}
 
+{% for sale in services %}
+<div class="modal" id="exampleModal{{sale.id}}" >
+    {% include 'dashboard/table/raicesale.html' %}
+</div>
 
-
-
-        
+{% endfor %}
         <!-- row -->
 
 
@@ -42,7 +43,6 @@
                                             <th>SERVICE</th>
 
                                             <th>TOTAL</th>
-                                            <th>DATE</th>
                                             <th></th>
                                         </tr>
                                     </thead>
@@ -61,14 +61,16 @@
 
                                                 <td>${{sale.change|floatformat:2|intcomma}}</td>
                                                
-                                                <td>{{sale.date|date:"d/m/Y"}}</td>
                                                 <td>
                                                     <div class="d-flex flex-row">
-                                                                                                                                          
-                                                            <span><!-- raice BUTTON -->
-                                                            <a href="{% url 'dashboard:editsale' id=sale.id %}" class="shadow-sm btn btn-secondary px-3">
-                                                                <i class="bi bi-arrow-up-circle-fill"></i>
-                                                            </a>                     </span>                            
+                                                                                                                                            
+                                                            
+                                                        <button type="button" class="py-2 px-3 m-2 btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal{{sale.id}}">
+                                                            <i class="bi bi-envelope fs-4"></i>                                                </button>
+                                                        <a href="/" class="btn btn-success py-2 px-3 m-2"><i class="bi bi-check-square fs-4"></i></a>  
+                                                                                                 
+                                                            
+
                                                     </div>                                        
                                                 </td>
                                             </tr>
@@ -86,10 +88,15 @@
 
 
 
+
+  
+
+
 {% endblock %}
 
 {% block additional_js %}
 
 
   
+
 {% endblock %}
