@@ -4,14 +4,19 @@
     <div class="modal-content">
                
             <div class="modal-body text-center py-5">
-                <p class="fs-5 my-2">Set up {{sale}} adjustment...</p>
+                <h3 class="fs-5 my-3"> {{sale}} </h3>
+                <h1 class="fs-5 my-3">SET PRICE ADJUSTMENT</h1>
+
                 <form method="post">
                     {% csrf_token %}
                     {{ raiceform.raice }}
+                    <br>
+                    <p>Date of Adjustment and Notification</p>
+                    {{raiceform.raice_date}}
                     <input type="hidden" name="id" value="{{ sale.id }}">
 
-                    <button type="submit"  class="shadow-sm btn btn-info fs-6 p-3">
-                        <i class="bi bi-envelope"></i> Send Notification this friday
+                    <button type="submit"  class="shadow-sm btn btn-info fs-6 p-3 my-4">
+                        <i class="bi bi-envelope"></i> Send Notification and auto update Price
                     </button>
                 </form>
 

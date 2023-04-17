@@ -154,7 +154,7 @@ class Sale(models.Model):
 
     @property
     def get_previous(self, *args, **kwargs):
-        previous_sales = Sale.objects.filter(raice_date__lt=self.raice_date).order_by('-raice_date')
+        previous_sales = Sale.objects.filter(service=self.service, client=self.client).order_by('-raice_date')
         if previous_sales:
             return previous_sales[0]
         else:

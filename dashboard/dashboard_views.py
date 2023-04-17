@@ -717,7 +717,6 @@ def adjustment(request):
                 sale.note = f"price adjusted from ${sale.price} on {today}"
                 
                 sale.price = sale.price+((sale.raice/100)*sale.price)
-                sale.raice_date = today
                 sale.save()
                 raiceform.save()
                 return redirect('dashboard:adjustment')
