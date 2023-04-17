@@ -168,7 +168,7 @@ class Sale(models.Model):
         return '${:,}'.format(result)
 
     def __str__(self):
-       return '{} - {} ({})'.format(self.client, self.service, self.date)
+       return '{} - {} '.format(self.client, self.service)
 
 
     @admin.display

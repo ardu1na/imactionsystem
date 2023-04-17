@@ -11,8 +11,19 @@ class AdjustmentForm(ModelForm):
 
     class Meta:
         model = Sale
-        fields = ['raice']
+        fields = ['raice', 'raice_date']
         
+        
+        widgets = {
+            
+            'raice_date' : TextInput(attrs={'class':"datetimepicker form-control",
+            'id':"PublishDateTimeTextbox",
+            'type':"date",
+            'placeholder':"Adjustment Date",}),
+
+            'raice' : TextInput(attrs={'class':"form-control",
+            'id':"raice",
+            'placeholder':"Adjustment %",}),}
 
 class SaleForm(ModelForm):
     

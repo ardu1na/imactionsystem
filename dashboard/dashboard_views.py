@@ -706,13 +706,19 @@ def adjustment(request):
     
     
 
-    
+            
+
     if request.method == 'POST':
 
             sale_id = request.POST.get('id')
             sale = Sale.objects.get(id=sale_id)
             raiceform = AdjustmentForm(request.POST, instance=sale)
             if raiceform.is_valid():
+                sale.note = f"price adjusted from ${sale.price} on {today}"
+                
+                sale.price = sale.price+((sale.raice/100)*sale.price)
+                sale.raice_date = today
+                sale.save()
                 raiceform.save()
                 return redirect('dashboard:adjustment')
             else: 
