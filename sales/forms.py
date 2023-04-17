@@ -6,15 +6,12 @@ from sales.models import Sale
 from customers.models import Client
 
 
-
 class AdjustmentForm(ModelForm):
     id = forms.IntegerField(widget=forms.HiddenInput())
 
     class Meta:
         model = Sale
         fields = ['raice']
-        
-        
         
 
 class SaleForm(ModelForm):

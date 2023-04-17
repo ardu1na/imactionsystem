@@ -151,6 +151,17 @@ class Sale(models.Model):
         super(Sale, self).save(*args, **kwargs)
 
 
+
+    @property
+    def get_previous(self, *args, **kwargs):
+        previous_sales = Sale.objects.filter(raice_date__lt=self.raice_date).order_by('-raice_date')
+        if previous_sales:
+            return previous_sales[0]
+        else:
+            return None
+        
+        
+        
     @property
     def total(self):
         result = self.price - self.cost

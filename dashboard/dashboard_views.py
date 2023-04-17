@@ -1171,12 +1171,13 @@ def editclient(request, id):
     editclient = Client.objects.get(id=id)
 
     if request.method == "GET":
-        
+        sales = editclient.sales.exclude(note="auto revenue sale")
         editform = EditClientForm(instance=editclient)
         context = {
             'editform': editform,
             'editclient': editclient,
-            'id': id
+            'id': id,
+            'sales': sales,
             }
         return render (request, 'dashboard/instructor/editclient.html', context)
 

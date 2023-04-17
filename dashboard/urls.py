@@ -61,6 +61,7 @@ urlpatterns = [
 
 
 
+
     
 	path('users/',users_views.users,name="users"),
 	path('user-details/<int:id>/',users_views.user_details,name="user-details"),
