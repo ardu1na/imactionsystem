@@ -5,7 +5,15 @@
                
             <div class="modal-body text-center py-5">
                 <p class="fs-5 my-2">Set up {{sale}} adjustment...</p>
-                <h4 class="fs-2 my-2">¿Are you sure?</h4>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ raiceform.raice }}
+                    <input type="hidden" name="id" value="{{ sale.id }}">
+
+                    <button type="submit"  class="shadow-sm btn btn-info fs-6 p-3">
+                        <i class="bi bi-envelope"></i> Send Notification this friday
+                    </button>
+                </form>
 
 
 
@@ -14,9 +22,7 @@
                     <a href="{% url 'dashboard:adjustment' %}" class="btn fs-7 mx-2">
                         <i class="fa-solid fa-arrow-left me-2 fs-7"></i> Nop, go back
                     </a>
-                    <a href="/" class="shadow-sm btn btn-info fs-6 p-3">
-                        <i class="bi bi-envelope"></i> Send Notification this friday
-                    </a>
+                   
                 </div>
             </div>
 

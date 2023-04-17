@@ -9,12 +9,8 @@
 
 {% block content %}
 
-{% for sale in services %}
-<div class="modal" id="exampleModal{{sale.id}}" >
-    {% include 'dashboard/table/raicesale.html' %}
-</div>
 
-{% endfor %}
+
         <!-- row -->
 
 
@@ -43,6 +39,8 @@
                                             <th>SERVICE</th>
 
                                             <th>TOTAL</th>
+                                            <th>%adjustment</th>
+
                                             <th></th>
                                         </tr>
                                     </thead>
@@ -60,15 +58,23 @@
                                                 <td> <a class="mb-0 fs-16 font-w500" href="{% url 'dashboard:editsale' id=sale.id %}"> {{sale.service}} </a> </td>
 
                                                 <td>${{sale.change|floatformat:2|intcomma}}</td>
-                                               
+                                                <td>{{sale.raice|floatformat:2}}%</td>
+
                                                 <td>
                                                     <div class="d-flex flex-row">
                                                                                                                                             
                                                             
                                                         <button type="button" class="py-2 px-3 m-2 btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal{{sale.id}}">
-                                                            <i class="bi bi-envelope fs-4"></i>                                                </button>
+                                                            <i class="bi bi-envelope fs-4"></i>                                                </button> 
+
+
+                                                            <div class="modal" id="exampleModal{{sale.id}}" >
+                                                                {% include 'dashboard/table/raicesale.html' %}
+                                                            </div> 
+
+                                                            
                                                         <a href="/" class="btn btn-success py-2 px-3 m-2"><i class="bi bi-check-square fs-4"></i></a>  
-                                                                                                 
+                                                                        
                                                             
 
                                                     </div>                                        
@@ -86,7 +92,7 @@
         </div>
 
 
-
+        
 
 
   

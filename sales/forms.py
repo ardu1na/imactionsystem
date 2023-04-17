@@ -1,9 +1,21 @@
 from django.forms import ModelForm, \
 TextInput, Select, ModelChoiceField, Textarea
+from django import forms
 
 from sales.models import Sale
 from customers.models import Client
 
+
+
+class AdjustmentForm(ModelForm):
+    id = forms.IntegerField(widget=forms.HiddenInput())
+
+    class Meta:
+        model = Sale
+        fields = ['raice']
+        
+        
+        
 
 class SaleForm(ModelForm):
     
