@@ -53,6 +53,9 @@ from django.contrib.auth.models import Group
 @user_passes_test(lambda user: user.groups.filter(name='admin').exists())   
 @login_required(login_url='dashboard:login')
 def activity(request):
+    
+    
+    
     ct = ContentType.objects.get_for_model(LastBlue)
     ct2 = ContentType.objects.get_for_model(CustomUser)
 
@@ -258,6 +261,8 @@ def expenses(request):
 @login_required(login_url='dashboard:login')
 def bi(request):
     sales = Sale.objects.all()
+    
+        
     clients = Client.objects.all()
     expenses = Expense.objects.all()
     employees = Employee.objects.all()
@@ -779,7 +784,9 @@ def sales(request):
     total_crosssell_this_month = crosssell_this_month.count()
     
     sales = Sale.objects.filter(date__month=today.month, date__year=today.year).exclude(note="auto revenue sale")
-    
+    ssales = Sale.objects.all()
+    for sale in ssales:
+        sale.update_db_sales()
     if request.method == 'GET':
         addform = SaleForm()
         

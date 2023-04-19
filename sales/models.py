@@ -41,23 +41,22 @@ class Service(models.Model):
             (OTHER_RR, ('Others RR')),
 
         )
-        servicio = models.CharField(max_length=50, choices=SERVICE_CHOICES)
+        service = models.CharField(max_length=50, choices=SERVICE_CHOICES)
+        client = models.ForeignKey(Client, related_name="services", on_delete=models.CASCADE, null=True)
+        
         total = models.DecimalField(default=0, decimal_places=2, max_digits=20)
         last_adj = models.DecimalField(default=0, decimal_places=2, max_digits=6)
         adj_at = models.DateField(null=True, blank=True)
         
+        def __str__(self):
+            
+            return f"{self.service} - {self.client}"
                 
-        def get_total(self):
-            sales_total = 0
-            sales = self.sales.filter(cancelled="Active", service=self.servicio).exclude(note="auto revenue sale")
-            for sale in sales:
-                sales_total += sale.change
-            return sales_total
         
-        
-        def save(self, *args, **kwargs):
-            self.total = self.get_total
-            super(Service, self).save(*args, **kwargs) 
+            
+            
+        class Meta:
+            unique_together = (('service', 'client'),) 
 
 
 class Sale(models.Model):
@@ -185,6 +184,8 @@ class Sale(models.Model):
     def save(self, *args, **kwargs):
         self.change = self.get_change
         self.revenue = self.get_revenue()
+        
+        
         super(Sale, self).save(*args, **kwargs)
 
 
@@ -197,6 +198,15 @@ class Sale(models.Model):
         else:
             return None
         
+    def update_db_sales (self, *args, **kwargs):
+        if self.cancelled == "Active":
+            if self.note != "auto revenue sale":
+                if self.revenue == "RR":
+                    service, created = Service.objects.get_or_create(
+                    service=self.service,
+                    client=self.client)
+                    self.suscription = service
+                    self.save()
         
         
     @property
@@ -237,7 +247,7 @@ class Sale(models.Model):
     class Meta:
         ordering = ['-date']
         
-    suscription = models.ForeignKey(Service, related_name="sales", on_delete=models.CASCADE)
+    suscription = models.ForeignKey(Service, related_name="sales", on_delete=models.CASCADE, null=True)
     
     
         

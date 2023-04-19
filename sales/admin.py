@@ -5,8 +5,9 @@ from unfold.admin import ModelAdmin
 from import_export.admin import ImportExportModelAdmin
 
 from dashboard.resources import SaleResource
-from sales.models import Sale, LastBlue
+from sales.models import Sale, LastBlue, Service
 
+@admin.register(Service)
 
 
 @admin.register(LastBlue)
