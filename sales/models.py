@@ -20,7 +20,44 @@ blue = last_blue.compra
 
 
 
+class Service(models.Model):
+        SEO ='SEO'
+        GADS = 'Google Ads'
+        FADS = 'Facebook Ads'
+        LIKD = 'LinkedIn'
+        WEB_PLAN = 'Web Plan'
+        COMBO = 'Combo'
+        CM = 'Community Management'
+        EMKTG = 'Email Marketing'
+        OTHER_RR = 'Others RR'
+        SERVICE_CHOICES = (
+            (SEO, ('SEO')),
+            (GADS, ('Google Ads')),
+            (FADS, ('Facebook Ads')),
+            (LIKD, ('LinkedIn')),
+            (CM, ('Community Management')),
+            (WEB_PLAN, ('Web Plan')),
+            (COMBO, ('Combo')),
+            (OTHER_RR, ('Others RR')),
 
+        )
+        servicio = models.CharField(max_length=50, choices=SERVICE_CHOICES)
+        total = models.DecimalField(default=0, decimal_places=2, max_digits=20)
+        last_adj = models.DecimalField(default=0, decimal_places=2, max_digits=6)
+        adj_at = models.DateField(null=True, blank=True)
+        
+                
+        def get_total(self):
+            sales_total = 0
+            sales = self.sales.filter(cancelled="Active", service=self.servicio).exclude(note="auto revenue sale")
+            for sale in sales:
+                sales_total += sale.change
+            return sales_total
+        
+        
+        def save(self, *args, **kwargs):
+            self.total = self.get_total
+            super(Service, self).save(*args, **kwargs) 
 
 
 class Sale(models.Model):
@@ -199,3 +236,9 @@ class Sale(models.Model):
 
     class Meta:
         ordering = ['-date']
+        
+    suscription = models.ForeignKey(Service, related_name="sales", on_delete=models.CASCADE)
+    
+    
+        
+        
