@@ -785,21 +785,23 @@ def sales(request):
     
     sales = Sale.objects.filter(date__month=today.month, date__year=today.year).exclude(note="auto revenue sale")
     
-    
-    
+    """
+    #### FUNCIONES PARA LA NUEVA BASE DE DATOS
     ssales = Sale.objects.all()
     for ssale in ssales:
         ssale.update_db_sales()
     
     
     newservices= Service.objects.all()
-    for service in newservices:
+    for service in newservices: #COMO HACER ESTO EN EL MISMO MODELO
         sales=service.sales.all()
-        for sale in sales:
-            service.total += sale.change
-            service.save()
-        print(service.total)
-        
+        if service.total == 0:
+            for sale in sales:
+                service.total += sale.change
+                service.save()
+
+    #### END FUNCIONES PARA LA NUEVA BASE DE DATOS"""
+    
         
         
         

@@ -1,5 +1,6 @@
 from datetime import date
 from django.db import models
+from django.db.models import F
 from django.contrib import admin
 from customers.models import Client
 from decimal import Decimal
@@ -52,6 +53,18 @@ class Service(models.Model):
             
             return f"{self.service} - {self.client}"
                 
+        """def update_total(self, *args, **kwargs):
+            total = 0
+            for sale in self.sales.all():
+                total += sale.change
+            return total
+            
+        
+        def save(self, *args, **kwargs):
+            self.total = self.update_total()
+           
+            
+            super(Service, self).save(*args, **kwargs)"""
         
             
             
@@ -184,8 +197,12 @@ class Sale(models.Model):
     def save(self, *args, **kwargs):
         self.change = self.get_change
         self.revenue = self.get_revenue()
-        
-        
+        self.update_db_sales()
+        if self.pk:
+            pass
+        else: 
+            self.suscription.total += self.change
+            self.suscription.save()
         super(Sale, self).save(*args, **kwargs)
 
 
@@ -198,16 +215,24 @@ class Sale(models.Model):
         else:
             return None
         
+        
     def update_db_sales (self, *args, **kwargs):
         if self.cancelled == "Active":
             if self.note != "auto revenue sale":
                 if self.revenue == "RR":
-                    service, created = Service.objects.get_or_create(
-                    service=self.service,
-                    client=self.client)
-                    self.suscription = service#[0]
-                    self.save()
-        
+                    
+                    service, created = Service.objects.update_or_create(
+                        service=self.service,
+                        client=self.client,
+                        
+                    )
+                    
+                    self.suscription = service
+                    
+                        
+                    
+
+            
         
     @property
     def total(self):
@@ -247,7 +272,7 @@ class Sale(models.Model):
     class Meta:
         ordering = ['-date']
         
-    suscription = models.ForeignKey(Service, related_name="sales", on_delete=models.CASCADE, null=True)
+    suscription = models.ForeignKey(Service, related_name="sales", on_delete=models.CASCADE, null=True, blank=True)
     
     
         
