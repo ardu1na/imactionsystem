@@ -1,6 +1,6 @@
 from django.contrib import admin
-from unfold.admin import ModelAdmin
-from import_export.admin import ImportExportModelAdmin
+'from unfold.admin import ModelAdmin
+'from import_export.admin import ImportExportModelAdmin
 
 from dashboard.resources import EmployeeResource, ExpenseResource, HolidayResource
 from expenses.models import Employee, Expense, Holiday, Salary
