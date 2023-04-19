@@ -784,9 +784,25 @@ def sales(request):
     total_crosssell_this_month = crosssell_this_month.count()
     
     sales = Sale.objects.filter(date__month=today.month, date__year=today.year).exclude(note="auto revenue sale")
+    
+    
+    
     ssales = Sale.objects.all()
-    for sale in ssales:
-        sale.update_db_sales()
+    for ssale in ssales:
+        ssale.update_db_sales()
+    
+    
+    newservices= Service.objects.all()
+    for service in newservices:
+        sales=service.sales.all()
+        for sale in sales:
+            service.total += sale.change
+            service.save()
+        print(service.total)
+        
+        
+        
+        
     if request.method == 'GET':
         addform = SaleForm()
         

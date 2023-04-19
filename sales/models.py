@@ -205,7 +205,7 @@ class Sale(models.Model):
                     service, created = Service.objects.get_or_create(
                     service=self.service,
                     client=self.client)
-                    self.suscription = service
+                    self.suscription = service#[0]
                     self.save()
         
         

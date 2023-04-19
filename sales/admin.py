@@ -7,18 +7,21 @@ from import_export.admin import ImportExportModelAdmin
 from dashboard.resources import SaleResource
 from sales.models import Sale, LastBlue, Service
 
-@admin.register(Service)
+class SaleInline(admin.StackedInline):
+    model = Sale
 
 
-@admin.register(LastBlue)
-
-
+class ServiceAdmin(ModelAdmin):
+    inlines = [SaleInline,]
+    extra= 0
+admin.site.register(Service, ServiceAdmin)
+    
     
 
 class SaleAdmin(ModelAdmin, ImportExportModelAdmin):
     
     resource_class = SaleResource
    
-
-
 admin.site.register(Sale, SaleAdmin)
+
+admin.site.register(LastBlue)
