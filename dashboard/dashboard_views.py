@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from dashboard.models import Configurations
 from django.contrib import messages
 from django.urls import reverse
@@ -30,7 +30,8 @@ try:
     from .services import compra as b_compra
 except: pass
 
-
+from dateutil.relativedelta import relativedelta
+from django.utils import timezone
 
 from django.http import HttpResponse
     
@@ -698,6 +699,48 @@ def ceo(request):
 
 
 
+@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
+@login_required(login_url='dashboard:login')
+def adjustment(request):
+    today=date.today()
+    
+    
+
+            
+
+    if request.method == 'POST':
+
+            sale_id = request.POST.get('id')
+            sale = Sale.objects.get(id=sale_id)
+            raiceform = AdjustmentForm(request.POST, instance=sale)
+            if raiceform.is_valid():
+                sale.note = f"price adjusted from ${sale.price} on {today}"
+                
+                sale.price = sale.price+((sale.raice/100)*sale.price)
+                sale.save()
+                raiceform.save()
+                return redirect('dashboard:adjustment')
+            else: 
+                print(raiceform.errors)
+                return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")                
+    else:
+        services = Sale.objects.filter(cancelled="Active", revenue="RR")
+        sales_to_raice = []
+        for sale in services:
+            if sale.raice_date:
+                date_start_raice = sale.raice_date + relativedelta(months=3)
+                if date_start_raice.month <= today.month:
+                    sales_to_raice.append(sale)
+        raiceform = AdjustmentForm()    
+
+    context = {
+        'services': sales_to_raice,
+        "page_title":"ADJUSTMENTS",
+        "raiceform": raiceform
+
+    }
+    return render (request, 'dashboard/table/adjustments.html', context)
+
 
 
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
@@ -1133,12 +1176,13 @@ def editclient(request, id):
     editclient = Client.objects.get(id=id)
 
     if request.method == "GET":
-        
+        sales = editclient.sales.exclude(note="auto revenue sale")
         editform = EditClientForm(instance=editclient)
         context = {
             'editform': editform,
             'editclient': editclient,
-            'id': id
+            'id': id,
+            'sales': sales,
             }
         return render (request, 'dashboard/instructor/editclient.html', context)
 

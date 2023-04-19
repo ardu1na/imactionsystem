@@ -1,0 +1,113 @@
+{% extends 'dashboard/elements/layouts/admin.html' %}
+{% load humanize %}
+
+{% load static %}
+
+{% block additional_css %}
+
+{% endblock %}
+
+{% block content %}
+
+
+
+        <!-- row -->
+
+
+        <div class="row">
+
+
+
+
+
+            <div class="col-12">
+                <div class="card p-2">
+                    <div class="card-header border-0 flex-wrap pb-0 mb-3">
+                   
+                        
+                </div> 
+
+                   
+                  
+                    <div class="card-body">
+                       
+                            <div class="table-responsive">
+                                <table id="example4" class="display" style="min-width: 845px">
+                                    <thead>
+                                        <tr>
+                                            <th>ACCOUNT</th>
+                                            <th>SERVICE</th>
+
+                                            <th>PRICE NOW</th>
+                                            <th>LAST UPDATE</th>
+                                            <th>PREVIOUS PRICE</th>
+
+                                            <th>LAST %</th>
+
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for sale in services %}
+                                            <tr>
+
+
+                                               
+                                                <td>
+                                                    <div class="d-flex align-items-center">
+                                                        <a class="mb-0 fs-16 font-w500 client-item" href="{% url 'dashboard:editclient' id=sale.client.id %}">{{sale.client}}</a>
+                                                    </div>
+                                                </td>
+                                                <td> <a class="mb-0 fs-16 font-w500" href="{% url 'dashboard:editsale' id=sale.id %}"> {{sale.service}} </a> </td>
+
+                                                <td>${{sale.change|floatformat:2|intcomma}}</td>
+                                                <td>{{sale.get_previous.raice_date}}</td>
+                                                <td>{{sale.get_previous.change}}</td>
+                                                <td>{{sale.raice|floatformat:2}}%</td>
+
+                                                <td>
+                                                    <div class="d-flex flex-row">
+                                                                                                                                            
+                                                            
+                                                        <button type="button" class="py-2 px-3 m-2 btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal{{sale.id}}">
+                                                            <i class="bi bi-envelope fs-4"></i>                                                </button> 
+
+
+                                                            <div class="modal" id="exampleModal{{sale.id}}" >
+                                                                {% include 'dashboard/table/raicesale.html' %}
+                                                            </div> 
+
+                                                            
+                                                        
+                                                                        
+                                                            
+
+                                                    </div>                                        
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                           
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+
+
+        
+
+
+  
+
+
+{% endblock %}
+
+{% block additional_js %}
+
+
+  
+
+{% endblock %}

@@ -184,9 +184,107 @@ class Client(models.Model):
 
     ##########
     ### in the func below we get
-    ### the total sales of each rr service
+    ### all sales objects of each rr service
     ### it should be MORE DRY i know
     
+    @property
+    def other_rr_sales(self, *args, **kwargs):
+        other = []
+        if self.cancelled == "Active":
+            for sale in self.sales.filter(revenue="RR", cancelled="Active", service="Others RR").exclude(note="auto revenue sale"):
+                other.append(sale)
+        if len(other) > 0:
+            return other
+        else:
+            return None
+    
+    @property
+    def seo_sales(self, *args, **kwargs):
+        seo = []
+        if self.cancelled == "Active":
+            for sale in self.sales.filter(revenue="RR", cancelled="Active", service="SEO").exclude(note="auto revenue sale"):
+                seo.append(sale)
+        if len(seo) > 0:
+            return seo
+        else:
+            return None
+        
+    @property
+    def gads_sales(self, *args, **kwargs):
+        gads = []
+        if self.cancelled == "Active":
+            for sale in self.sales.filter(revenue="RR", cancelled="Active", service="Google Ads").exclude(note="auto revenue sale"):
+                gads.append(sale)
+        if len(gads) > 0:
+            return gads
+        else:
+            return None
+        
+        
+    @property
+    def combo_sales(self, *args, **kwargs):
+        combo = []
+        if self.cancelled == "Active":
+            for sale in self.sales.filter(revenue="RR", cancelled="Active", service="Combo").exclude(note="auto revenue sale"):
+                combo.append(sale)
+        if len(combo) > 0:
+            return combo
+        else:
+            return None
+        
+    @property
+    def fads_sales(self, *args, **kwargs):
+        fads = []
+        if self.cancelled == "Active":
+            for sale in self.sales.filter(revenue="RR", cancelled="Active", service="Facebook Ads").exclude(note="auto revenue sale"):
+                fads.append(sale)
+        if len(fads) > 0:
+            return fads
+        else:
+            return None
+        
+        
+        
+    @property
+    def lin_sales(self, *args, **kwargs):
+        lin = []
+        if self.cancelled == "Active":
+            for sale in self.sales.filter(revenue="RR", cancelled="Active", service="LinkedIn").exclude(note="auto revenue sale"):
+                lin.append(sale)
+        if len(lin) > 0:
+            return lin
+        else:
+            return None
+        
+    @property 
+    def cm_sales(self, *args, **kwargs):
+        cm = []
+        if self.cancelled == "Active":
+            for sale in self.sales.filter(revenue="RR", cancelled="Active", service="Community Management").exclude(note="auto revenue sale"):
+                cm.append(sale)
+        if len(cm) > 0:
+            return cm
+        else:
+            return None
+        
+    @property
+    def wp_sales(self, *args, **kwargs):
+        wp = []
+        if self.cancelled == "Active":
+            for sale in self.sales.filter(revenue="RR", cancelled="Active", service="Web Plan").exclude(note="auto revenue sale"):
+                wp.append(sale)
+        if len(wp) > 0:
+            return wp
+        else:
+            return None
+    
+    ##########
+
+
+    
+        
+        
+        
     @property
     def get_other(self, *args, **kwargs):
         other_total=0
@@ -261,22 +359,8 @@ class Client(models.Model):
                         wp_total += sale.get_change
         return '${:,.2f}'.format(wp_total)
     
-    @property
-    def get_combo(self, *args, **kwargs):
-        combo_total=0
-        for sale in self.sales.filter(date__month=date.today().month, date__year=date.today().year):
-            if self.cancelled == "Active":
-                if sale.service == "Combo":
-                    if sale.cancelled == "Active":
-                        combo_total += sale.get_change
-        return '${:,.2f}'.format(combo_total)
     ##########
 
-
-    
-        
-        
-        
         
 
 

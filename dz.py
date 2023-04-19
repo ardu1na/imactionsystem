@@ -286,6 +286,10 @@ dz_array = {
                                 "sales":[
                                     f"{foldername_d}/vendor/datatables/css/jquery.dataTables.min.css",
                                 ],
+                                
+                                "adjustment":[
+                                    f"{foldername_d}/vendor/datatables/css/jquery.dataTables.min.css",
+                                ],
                                 "cancellations":[
                                     f"{foldername_d}/vendor/datatables/css/jquery.dataTables.min.css",
                                 ],
@@ -676,6 +680,14 @@ dz_array = {
                                 f"{foldername_d}/vendor/datatables/js/jquery.dataTables.min.js",
                                 f"{foldername_d}/js/plugins-init/datatables.init.js",
                             ],
+                            
+                            "adjustment":[
+                                f"{foldername_d}/vendor/chart.js/Chart.bundle.min.js",
+                                f"{foldername_d}/vendor/apexchart/apexchart.js",
+                                f"{foldername_d}/vendor/datatables/js/jquery.dataTables.min.js",
+                                f"{foldername_d}/js/plugins-init/datatables.init.js",
+                            ],
+                             
                             "cancellations":[
                                 f"{foldername_d}/vendor/chart.js/Chart.bundle.min.js",
                                 f"{foldername_d}/vendor/apexchart/apexchart.js",
