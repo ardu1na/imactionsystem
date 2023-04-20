@@ -182,10 +182,8 @@ class Client(models.Model):
     def rr(self):
         total = 0
         if self.cancelled =="Active":
-            for sale in self.sales.filter(date__month=date.today().month, date__year=date.today().year):
-                if sale.cancelled == "Active":
-                    if sale.revenue == "RR":
-                        total += sale.get_change
+            for sale in self.services.all():
+                        total += sale.total
         return '${:,.2f}'.format(total)
 
     

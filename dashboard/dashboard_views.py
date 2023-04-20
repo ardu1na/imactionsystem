@@ -711,7 +711,7 @@ def adjustment(request):
     
     """services = Service.objects.all()
     for service in services:
-        service.update_total
+        service.def
         service.save()"""
     
     
@@ -1013,8 +1013,12 @@ def editsale(request, id):
 @user_passes_test(lambda user: user.groups.filter(name='clients').exists())
 @login_required(login_url='dashboard:login')
 def clients(request):
-    clients = Client.objects.filter(cancelled="Active")
-      
+    clients_all = Client.objects.filter(cancelled="Active")
+    clients = []
+    for client in clients_all:
+        if client.get_rr_client == True:
+            clients.append(client)
+        
     total_rr = 0
     for client in clients:
         if client.cancelled == "Active":
@@ -1025,7 +1029,7 @@ def clients(request):
     total_rr_k = total_rr
     
     clients_rr = []
-    for client in clients.filter(cancelled="Active"):
+    for client in clients_all.filter(cancelled="Active"):
         if client.get_rr_client == True:
             clients_rr.append(client.id)
     c_rr_total = len(clients_rr)

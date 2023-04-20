@@ -221,40 +221,127 @@
                                             <td>{{client.tier}}</td>
 
                                             <td>
-                                                {% with seo_service=False %}
+                                                {% with find=False %}
                                                     {% for service in client.services.all %}
                                                         {% if service.service == "SEO" %}
                                                             ${{service.total|floatformat:2}}
-                                                            {% with seo_service=True %}
+                                                            {% with find=True %}
                                                                 {% endwith %}
                                                         {% endif %}
                                                     {% endfor %}
-                                                    {% if not seo_service %}
+                                                    {% if not find %}
                                                         $0
                                                     {% endif %}
                                                 {% endwith %}
                                             </td>
                                             
-                                                
+                                            <td>
+                                                {% with find=False %}
+                                                    {% for service in client.services.all %}
+                                                        {% if service.service == "Google Ads" %}
+                                                            ${{service.total|floatformat:2}}
+                                                            {% with find=True %}
+                                                                {% endwith %}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    {% if not find %}
+                                                        $0
+                                                    {% endif %}
+                                                {% endwith %}
+                                            </td>  
 
                                             <td>
+                                                {% with find=False %}
+                                                    {% for service in client.services.all %}
+                                                        {% if service.service == "Facebook Ads" %}
+                                                            ${{service.total|floatformat:2}}
+                                                            {% with find=True %}
+                                                                {% endwith %}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    {% if not find %}
+                                                        $0
+                                                    {% endif %}
+                                                {% endwith %}
+                                            </td>  
 
-                                              'Google Ads' 
-                                            </td>
                                             <td>
+                                                {% with find=False %}
+                                                    {% for service in client.services.all %}
+                                                        {% if service.service == "LinkedIn" %}
+                                                            ${{service.total|floatformat:2}}
+                                                            {% with find=True %}
+                                                                {% endwith %}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    {% if not find %}
+                                                        $0
+                                                    {% endif %}
+                                                {% endwith %}
+                                            </td>  
 
-                                               'Facebook Ads'
-                                            </td>
+
+                                            <td>
+                                                {% with find=False %}
+                                                    {% for service in client.services.all %}
+                                                        {% if service.service == "Community Management" %}
+                                                            ${{service.total|floatformat:2}}
+                                                            {% with find=True %}
+                                                                {% endwith %}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    {% if not find %}
+                                                        $0
+                                                    {% endif %}
+                                                {% endwith %}
+                                            </td>  
+                                            
+                                            <td>
+                                                {% with find=False %}
+                                                    {% for service in client.services.all %}
+                                                        {% if service.service == "Web Plan" %}
+                                                            ${{service.total|floatformat:2}}
+                                                            {% with find=True %}
+                                                                {% endwith %}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    {% if not find %}
+                                                        $0
+                                                    {% endif %}
+                                                {% endwith %}
+                                            </td>  
+                                            
+                                            <td>
+                                                {% with find=False %}
+                                                    {% for service in client.services.all %}
+                                                        {% if service.service == "Combo" %}
+                                                            ${{service.total|floatformat:2}}
+                                                            {% with find=True %}
+                                                                {% endwith %}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    {% if not find %}
+                                                        $0
+                                                    {% endif %}
+                                                {% endwith %}
+                                            </td>  
 
 
+                                            <td>
+                                                {% with find=False %}
+                                                    {% for service in client.services.all %}
+                                                        {% if service.service == "Others RR" %}
+                                                            ${{service.total|floatformat:2}}
+                                                            {% with find=True %}
+                                                                {% endwith %}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    {% if not find %}
+                                                        $0
+                                                    {% endif %}
+                                                {% endwith %}
+                                            </td> 
 
-                                                
-                                            <td>{{client.get_fads}}</td>
-                                            <td>{{client.get_lnkd}}</td>
-                                            <td>{{client.get_cm}}</td>
-                                            <td>{{client.get_wp}}</td>
-                                            <td>{{client.get_combo}}</td>
-                                            <td>{{client.get_other}}</td>
                                             <td><b>{{client.rr}}</b></td>  
                                             <td>{{client.wop}}</td>
                                   
