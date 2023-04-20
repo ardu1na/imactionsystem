@@ -709,6 +709,11 @@ def ceo(request):
 def adjustment(request):
     today=date.today()
     
+    """services = Service.objects.all()
+    for service in services:
+        service.update_total
+        service.save()"""
+    
     
 
             

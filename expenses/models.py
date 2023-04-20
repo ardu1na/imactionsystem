@@ -5,8 +5,8 @@ from django.db import models
 
 from sales.models import LastBlue
 
-last_blue = LastBlue.objects.get(pk=1)
-blue = last_blue.compra
+#last_blue = LastBlue.objects.get(pk=1)
+blue = 1 #last_blue.compra
 
 
 

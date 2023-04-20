@@ -16,8 +16,8 @@ class LastBlue (models.Model):
         return self.compra
 
 
-last_blue = LastBlue.objects.get(pk=1)
-blue = last_blue.compra
+#last_blue = LastBlue.objects.get(pk=1)
+blue = 1 #last_blue.compra
 
 
 
@@ -52,15 +52,22 @@ class Service(models.Model):
         def __str__(self):
             
             return f"{self.service} - {self.client}"
-                
-        """def update_total(self, *args, **kwargs):
-            total = 0
-            for sale in self.sales.all():
-                total += sale.change
-            return total
+        
+        @property        
+        def update_total(self):
+            if self.total == 0:
+                total=0
+                for sale in self.sales.all():
+                    total += sale.change
+                self.total=total
+                    
+                print("*******************  REGISTRO   **********************")
+            print("*****************************  FIN    *****************************")
+
+            
             
         
-        def save(self, *args, **kwargs):
+        """def save(self, *args, **kwargs):
             self.total = self.update_total()
            
             
@@ -194,6 +201,16 @@ class Sale(models.Model):
     fail_can = models.CharField(max_length=50, choices=FAIL_CHOICES, blank=False,default=None, null=True, verbose_name="DO WE FAIL?")
         
     
+    def update_db_sales (self, *args, **kwargs):
+        if self.cancelled == "Active":
+            if self.note != "auto revenue sale":
+                if self.revenue == "RR":                    
+                    service, created = Service.objects.update_or_create(
+                        service=self.service,
+                        client=self.client,                        
+                    )                    
+                    self.suscription = service
+                    
     def save(self, *args, **kwargs):
         self.change = self.get_change
         self.revenue = self.get_revenue()
@@ -216,18 +233,6 @@ class Sale(models.Model):
             return None
         
         
-    def update_db_sales (self, *args, **kwargs):
-        if self.cancelled == "Active":
-            if self.note != "auto revenue sale":
-                if self.revenue == "RR":
-                    
-                    service, created = Service.objects.update_or_create(
-                        service=self.service,
-                        client=self.client,
-                        
-                    )
-                    
-                    self.suscription = service
                     
                         
                     

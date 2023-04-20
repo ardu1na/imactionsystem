@@ -210,7 +210,6 @@
                                     </thead>
                                     <tbody>{% if clients %}
                                         {% for client in clients %}
-                                        {% if client.get_rr_client %}
                                         <tr>
                                             <td><input type="checkbox" name="selected_clients" value="{{ client.id }}" data-row-index="{{ forloop.counter0 }}"></td>
 
@@ -220,8 +219,36 @@
                                                 </div>
                                             </td>
                                             <td>{{client.tier}}</td>
-                                            <td>{{client.get_seo}}</td>
-                                            <td>{{client.get_gads}}</td>
+
+                                            <td>
+                                                {% with seo_service=False %}
+                                                    {% for service in client.services.all %}
+                                                        {% if service.service == "SEO" %}
+                                                            ${{service.total|floatformat:2}}
+                                                            {% with seo_service=True %}
+                                                                {% endwith %}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    {% if not seo_service %}
+                                                        $0
+                                                    {% endif %}
+                                                {% endwith %}
+                                            </td>
+                                            
+                                                
+
+                                            <td>
+
+                                              'Google Ads' 
+                                            </td>
+                                            <td>
+
+                                               'Facebook Ads'
+                                            </td>
+
+
+
+                                                
                                             <td>{{client.get_fads}}</td>
                                             <td>{{client.get_lnkd}}</td>
                                             <td>{{client.get_cm}}</td>
@@ -245,7 +272,6 @@
                                                 </div>                                        
                                             </td>
                                         </tr>
-                                        {% endif %}
                                         {% endfor %}
                                         {%endif%}
                                     </tbody>

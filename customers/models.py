@@ -3,7 +3,6 @@ from django.db import models
 from django.contrib import admin
 
 
-
 class BackUps(models.Model):
     date = models.DateField(default=date.today)
     
@@ -29,6 +28,17 @@ class ConfTier(models.Model):
 
 
 class Client(models.Model):
+    
+    @property
+    def get_service(self, service_name):
+        try:
+            service = self.services.get(service=service_name)
+        except:
+            service = None
+        return service
+    
+    
+    
     GOOGLE_ADS='Google Ads'
     FACEBOOK_ADS='Facebook Ads'
     SEO='SEO'
