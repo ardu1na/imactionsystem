@@ -22,6 +22,7 @@ blue = 1 #last_blue.compra
 
 
 class Service(models.Model):
+            
         SEO ='SEO'
         GADS = 'Google Ads'
         FADS = 'Facebook Ads'
@@ -63,6 +64,10 @@ class Service(models.Model):
                     
                 print("*******************  REGISTRO   **********************")
             print("*****************************  FIN    *****************************")
+            
+            
+        
+            
 
             
             

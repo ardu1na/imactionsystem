@@ -30,9 +30,9 @@ class ConfTier(models.Model):
 class Client(models.Model):
     
     @property
-    def get_service(self, service_name):
+    def get_service(self, service):
         try:
-            service = self.services.get(service=service_name)
+            service = self.services.get(service=service)
         except:
             service = None
         return service
@@ -367,14 +367,62 @@ class Client(models.Model):
                         wp_total += sale.get_change
         return '${:,.2f}'.format(wp_total)
     
-    ##########
+    
+    @property        
+    def seo(self):
+        for service in self.services.all():
+            if service.service == "SEO":
+                return service
+                
+        
+    @property        
+    def gads(self):
+        if self.service == "Google Ads":
+            return True
+        
+    @property        
+    def fads(self):
+        if self.service == "Facebook Ads":
+            return True
+    
+    @property        
+    def linkd(self):
+        if self.service == "LinkedIn":
+            return True
+        
+    @property        
+    def wp(self):
+        if self.service == "Web Plan":
+            return True
+    @property        
+    def combo(self):
+        if self.service == "Combo":
+            return True
+        
+    @property        
+    def cm(self):
+        if self.service == "Community Management":
+            return True
+        
+    @property        
+    def cm(self):
+        if self.service == "Email Marketing":
+            return True
+        
+        
+    @property        
+    def cm(self):
+        if self.service == "Others RR":
+            return True
+                
+                
 
-        
+    
 
 
-        
-        
-        
+    
+    
+    
         
         
         
