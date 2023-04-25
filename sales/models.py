@@ -178,44 +178,14 @@ class Sale(models.Model):
     comment_can = models.CharField(max_length=500, blank=True, null=True, verbose_name="COMMENT")
     date_can = models.DateField(null=True, blank=True, verbose_name="DATE")
     fail_can = models.CharField(max_length=50, choices=FAIL_CHOICES, blank=False,default=None, null=True, verbose_name="DO WE FAIL?")
-        
-
-    """def get_service_or_update(self, *args, **kwargs):
-        try:
-            service = Service.objects.get(
-                client=self.client,
-                service=self.service
-            )
-            
-            if self.suscription is None:
-                self.suscription = service
-                service.total += Decimal(self.change)
-                service.save()
-            
-            else:
-                if self.suscription != service:
-                    self.suscription.total -= Decimal(self.change)
-                    self.suscription.save()
-                    self.suscription = service
-                    service.total += Decimal(self.change)
-                    service.save()
-
-        except Service.DoesNotExist:            
-            values = {
-                "client": self.client,
-                "service": self.service,
-                "total": self.change,
-            }            
-            service = Service(**values) 
-            service.save()
-            self.suscription = service
-            service.total += Decimal(self.change)
-            service.save()
-
-        self.save()"""
     
         
+    def delete(self, *args, **kwargs):
         
+        servicio = self.suscription
+        servicio.total -= self.change
+        servicio.save()
+        super().delete(*args, **kwargs)    
         
     
 
@@ -333,58 +303,6 @@ class Sale(models.Model):
     
     
     
-    
-    
-    """
-            
-               
-    def save(self, *args, **kwargs):
-        self.change = self.get_change
-        self.revenue = self.get_revenue()
-        
-        self.update_db_sales()        
-        if self.pk:
-            if self.cancelled != "Active":
-                self.suscription.total -= self.change
-                self.suscription = None
-        else:             
-            if self.cancelled == "Active":
-                self.suscription.total += self.change
-                self.suscription.save()
-                
-        super(Sale, self).save(*args, **kwargs)
-        
-        
-
-    def get_or_create_servivice (self, *args, **kwargs):
-        
-        if self.cancelled == "Active" and self.note != "auto revenue sale" and self.revenue == "RR":
-                
-                        service, created = Service.objects.get_or_create(
-                            service=self.service,
-                            client=self.client,                        
-                        )                    
-                        self.suscription = service  
-        
-        if self.pk:
-            if self.cancelled == "Active":
-                if self.note != "auto revenue sale":
-                    if self.revenue == "RR":                    
-                        service, created = Service.objects.update_or_create(
-                            service=self.service,
-                            client=self.client,                        
-                        )                    
-                        self.suscription = service                    
-                   
-        """           
-
-        
-        
-    
-    
-    
-    
-
 
     @property
     def get_previous(self, *args, **kwargs):
