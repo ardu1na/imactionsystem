@@ -1094,7 +1094,10 @@ def clients(request):
     t5=0
 
     for sale in sales_rr:
+        print(sale.id) 
+        
         if sale.client.tier == "I":
+            
             t1 += sale.get_change
         elif sale.client.tier == "II":
             t2 += sale.get_change

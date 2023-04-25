@@ -138,9 +138,8 @@ class Client(models.Model):
     # the params comes from ConfTier Model defined above
     @property
     def tier(self):
-        if self.total_rr <= ConfTier.objects.get(pk=1).tier_v:
-            return "V"
-        elif self.total_rr <= ConfTier.objects.get(pk=1).tier_iv:
+        
+        if self.total_rr <= ConfTier.objects.get(pk=1).tier_iv:
             return "IV"
         elif self.total_rr <= ConfTier.objects.get(pk=1).tier_iii:
             return "III"
@@ -148,6 +147,8 @@ class Client(models.Model):
             return "II"
         elif self.total_rr > ConfTier.objects.get(pk=1).tier_i:
             return "I"
+        else:
+            return "V"
    
 
     @property
@@ -377,43 +378,52 @@ class Client(models.Model):
         
     @property        
     def gads(self):
-        if self.service == "Google Ads":
-            return True
+        for service in self.services.all():
+            if service.service == "Google Ads":
+                return service
         
     @property        
     def fads(self):
-        if self.service == "Facebook Ads":
-            return True
+        for service in self.services.all():
+            if service.service == "Facebook Ads":
+                return service
     
     @property        
     def linkd(self):
-        if self.service == "LinkedIn":
-            return True
+        for service in self.services.all():
+            if service.service == "LinkedIn":
+                return service
         
     @property        
     def wp(self):
-        if self.service == "Web Plan":
-            return True
+        for service in self.services.all():
+            if service.service == "Web Plan":
+                return service
+            
     @property        
     def combo(self):
-        if self.service == "Combo":
-            return True
+        for service in self.services.all():
+            if service.service == "Combo":
+                return service
+
+    @property    
+    def cm(self):
+        for service in self.services.all():
+            if service.service == "Community Management":
+                return service    
         
     @property        
-    def cm(self):
-        if self.service == "Community Management":
-            return True
-        
-    @property        
-    def cm(self):
-        if self.service == "Email Marketing":
-            return True
+    def emkg(self):
+        for service in self.services.all():
+            if service.service == "Email Marketing":
+                return service    
         
         
     @property        
-    def cm(self):
-        if self.service == "Others RR":
-            return True
+    def otherr(self):
+        for service in self.services.all():
+            if service.service == "Others RR":
+                return service 
                 
                 
 

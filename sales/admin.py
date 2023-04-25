@@ -9,6 +9,7 @@ from sales.models import Sale, LastBlue, Service
 
 class SaleInline(admin.StackedInline):
     model = Sale
+    extra = 0
 
 
 class ServiceAdmin(ModelAdmin):

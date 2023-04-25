@@ -32,8 +32,8 @@ class SaleResource(resources.ModelResource):
     
     class Meta:
         model = Sale"""
-
-
+        
+        
 class SaleResource(resources.ModelResource):
     client = fields.Field(
         column_name='client',
@@ -43,8 +43,10 @@ class SaleResource(resources.ModelResource):
     
     class Meta:
         model = Sale
-        skip_unchanged = True
-        report_skipped = False
+        skip_unchanged = False
+
+
+
 
 
 
