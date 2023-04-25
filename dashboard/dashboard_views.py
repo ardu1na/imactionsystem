@@ -715,11 +715,16 @@ def adjustment(request):
             service_id = request.POST.get('id')
             service = Service.objects.get(id=service_id)
             raiceform = AdjustmentForm(request.POST, instance=service)
+            service.adj_at_old = service.adj_at
+            service.adj_old = service.last_adj
+            service.total_old = service.total 
+            service.save()
+            
             if raiceform.is_valid():
-              
-                service.total = service.total+((service.last_adj/100)*service.total)
+                raiceform.save()                
+                service.total = Decimal(service.total + ((service.last_adj / 100) * service.total))
                 service.save()
-                raiceform.save()
+                
                 return redirect('dashboard:adjustment')
             else: 
                 print(raiceform.errors)

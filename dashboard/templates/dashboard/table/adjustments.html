@@ -37,10 +37,14 @@
                                         <tr>
                                             <th>ACCOUNT</th>
                                             <th>SERVICE</th>
+                                            <th>LAST %</th>
+
+                                            <th>LAST PRICE</th>
+                                            <th>LAST ADJ</th>
 
                                             <th>PRICE NOW</th>
-                                            <th>EMAIL DATE</th>
                                             <th>ADJ %</th>
+                                            <th>EMAIL DATE</th>
 
                                             <th></th>
                                         </tr>
@@ -58,9 +62,14 @@
                                                 </td>
                                                 <td> <a class="mb-0 fs-16 font-w500"> {{sale.service}} </a> </td>
 
+                                                <td>{{sale.adj_old|floatformat:2|intcomma}}%</td>
+                                                <td>${{sale.total_old|floatformat:2|intcomma}}</td>
+                                                <td>{{sale.adj_at_old|date:"d/m/Y"}}</td>
+
+
                                                 <td>${{sale.total|floatformat:2|intcomma}}</td>
+                                                <td>{{sale.last_adj|floatformat:2|intcomma}}%</td>
                                                 <td>{{sale.adj_at|date:"d/m/Y"}}</td>
-                                                <td>{{sale.last_adj}}</td>
                                                
 
                                                 <td>

@@ -50,11 +50,12 @@ class Service(models.Model):
         
         last_adj = models.DecimalField(default=0, decimal_places=2, max_digits=6)
         adj_at = models.DateField(null=True, blank=True)
-        """
+        
+        total_old = models.DecimalField(default=0, decimal_places=2, max_digits=30)
         adj_old =models.DecimalField(default=0, decimal_places=2, max_digits=6)
-        adj_date_old = models.DateField(null=True, blank=True)
+        adj_at_old = models.DateField(null=True, blank=True)
 
-        """
+        
         def __str__(self):
             
             return f"{self.client} - {self.service}"
