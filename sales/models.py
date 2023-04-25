@@ -54,6 +54,8 @@ class Service(models.Model):
         total_old = models.DecimalField(default=0, decimal_places=2, max_digits=30)
         adj_old =models.DecimalField(default=0, decimal_places=2, max_digits=6)
         adj_at_old = models.DateField(null=True, blank=True)
+        
+        state = models.BooleanField(default=True)
 
         
         def __str__(self):
@@ -196,11 +198,13 @@ class Sale(models.Model):
     
 
     def save(self, *args, **kwargs):
-        print()
+        
+        print("################### ################### ################### ################### ################### ")
+        print("################### ################### ################### ################### ################### ")
         print()
         print(f"################### { self } ################### ")
-        print("################### ################### ################### ################### ################### ")
-        print("################### ################### ################### ################### ################### ")
+        print()
+
         print("start save sale instance ... ")
         self.change = self.get_change
         self.revenue = self.get_revenue()
@@ -231,8 +235,21 @@ class Sale(models.Model):
                     self.suscription.total -= self.change
                     self.suscription.save()
                     self.suscription = None
-            
+                    
+            else:
+                print( f" sale {self} is active")
+                print("check if sale is auto revenue")
+                if self.note != "auto revenue sale":
+                    print("it isnt")
+
+                    print("STARTING GET_SERVICE_OR UPDATE ...........")            
+                    self.get_service_or_update()
+                    print("END GET_SERVICE_OR UPDATE ...........")   
+                
+                print( f" saving sale")
             super(Sale, self).save(*args, **kwargs)   
+            
+            print( f" sale saved")
 
         else:
             print()
@@ -287,7 +304,7 @@ class Sale(models.Model):
             
         except Service.DoesNotExist:       
             print(" IT DONT EXISTS")                  
-     
+            
             values = {
                 "client": self.client,
                 "service": self.service,

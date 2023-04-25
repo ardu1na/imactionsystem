@@ -43,7 +43,6 @@ class SaleResource(resources.ModelResource):
     
     class Meta:
         model = Sale
-        skip_unchanged = False
 
 
 

@@ -150,6 +150,17 @@ class Client(models.Model):
         else:
             return "V"
    
+   
+    def save(self, *args, **kwargs):
+        if self.cancelled == "Cancelled":
+            for service in self.services.all():
+                service.state = False
+                service.save()   
+        
+        super(Client, self).save(*args, **kwargs)
+            
+            
+            
 
     @property
     def get_date(self):
@@ -178,9 +189,9 @@ class Client(models.Model):
                 total += sale.get_change
         return total
 
+
     @property
-    @admin.display(description="RR")
-    def rr(self):
+    def rr(self): 
         total = 0
         if self.cancelled =="Active":
             for sale in self.services.all():

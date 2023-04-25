@@ -707,8 +707,14 @@ def ceo(request):
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
 def adjustment(request):
-   
-    services = Service.objects.all()
+    
+    
+    # update to new db
+    sales = Sale.objects.all()
+    for sale in sales:
+        sale.save() # end
+        
+    services = Service.objects.filter(state=True)
     
     if request.method == 'POST':
 
