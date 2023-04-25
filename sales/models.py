@@ -179,43 +179,78 @@ class Sale(models.Model):
     date_can = models.DateField(null=True, blank=True, verbose_name="DATE")
     fail_can = models.CharField(max_length=50, choices=FAIL_CHOICES, blank=False,default=None, null=True, verbose_name="DO WE FAIL?")
         
-        
-        
-        
-        
-        
-        
-    ################### se duplica el valor si se vuelve a guardar
-    def get_service_or_update (self, *args, **kwargs):              
+
+    """def get_service_or_update(self, *args, **kwargs):
         try:
             service = Service.objects.get(
-                client=self.client, service=self.service) 
-                           
-            if not self.suscription:                
+                client=self.client,
+                service=self.service
+            )
+            
+            if self.suscription is None:
                 self.suscription = service
                 service.total += Decimal(self.change)
-                                         
+                service.save()
             
+            else:
+                if self.suscription != service:
+                    self.suscription.total -= Decimal(self.change)
+                    self.suscription.save()
+                    self.suscription = service
+                    service.total += Decimal(self.change)
+                    service.save()
+
         except Service.DoesNotExist:            
             values = {
                 "client": self.client,
                 "service": self.service,
                 "total": self.change,
-                }            
+            }            
             service = Service(**values) 
+            service.save()
+            self.suscription = service
+            service.total += Decimal(self.change)
+            service.save()
+
+        self.save()"""
+    
         
-        service.save()
-        self.save()                    
         
-################### se duplica el valor si se vuelve a guardar
+        
+    
 
     def save(self, *args, **kwargs):
+        print()
+        print()
+        print("################### ################### ################### ################### ################### ")
+        print("################### ################### ################### ################### ################### ")
+        print("################### ################### ################### ################### ################### ")
+        print("start save sale instance ... ")
         self.change = self.get_change
         self.revenue = self.get_revenue()
+        print()
+        print()
+        print("asigning change value and revenue to sale instance ...")
+        print("################### ################### ################### ################### ################### ")
+        print("checking if sale is new or if already exists...")
+
         
         if self.pk:
-            #self.get_service_or_update() acá me hizo el doble
+            print()
+            print("sale exists:")
+            print("checking if sale is CANCELLED...")
+
             if self.cancelled != "Active":
+                print()
+                print("SALE CANCELLED!... setting new values into suscription ...")
+                print("take out sale value into client service")
+                print("save service...")
+                print("take out relationship...")
+
+
+                print("################### ################### ################### ################### ################### ")
+                print("###################                 SALE SAVED               ################### ")
+                
                 if self.suscription:
                     self.suscription.total -= self.change
                     self.suscription.save()
@@ -224,8 +259,63 @@ class Sale(models.Model):
             super(Sale, self).save(*args, **kwargs)   
 
         else:
-            super(Sale, self).save(*args, **kwargs)   
+            print()
+            print("sale is NEW:")
+            print("STARTING GET_SERVICE_OR UPDATE ...........")            
             self.get_service_or_update()
+            print("END GET_SERVICE_OR UPDATE ...........")            
+
+            print()
+            print("################### ################### ################### ################### ################### ")
+
+            print("###################                 SAVING CHANGES         ################### ")
+            print()
+            print("################### ################### ################### ################### ################### ")
+            super(Sale, self).save(*args, **kwargs)
+            print("###################                 SALE SAVED               ################### ")
+
+            
+      
+    
+    ################### se duplica el valor de la venta en el servicio
+    def get_service_or_update (self, *args, **kwargs):  
+        print()
+        print("CHEKCING IF SERVICE WITH SAME SERVICE AND CLIENT DO EXISTS.......")
+        print(".........")                  
+        try:
+            service = Service.objects.get(
+                client=self.client, service=self.service) 
+            print(" IT EXISTS, checking if sale is already asociated.........")                  
+               
+            if not self.suscription:                
+                print(" sale is not asociated... setting relation and adding sale value into service")                  
+
+                service.sales.add(self, bulk= False)
+                service.total += Decimal(self.change)
+                print()
+                print("################### saving service ################################")
+                print(".........")  
+                service.save()     
+            print("sale is allready asociated into service, nothing to do")
+                                         
+            
+        except Service.DoesNotExist:       
+            print(" IT DONT EXISTS")                  
+     
+            values = {
+                "client": self.client,
+                "service": self.service,
+                "total": self.change,
+                }            
+            print("setting client service and total as sale values.........")  
+            service = Service(**values)
+            print("adding sale relationship.........")  
+            service.save()      
+            service.sales.add(self, bulk= False) # funciona si lo creo uno por uno, pero al importar añade dos veces la venta al servicio
+            print()
+            print("################### saving service with new values ################################")
+            print(".........")  
+            
             
                 
     
@@ -233,7 +323,7 @@ class Sale(models.Model):
     
     
     
-        """
+    """
             
                
     def save(self, *args, **kwargs):
