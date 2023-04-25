@@ -141,9 +141,7 @@ class Sale(models.Model):
         (USD, ('USD')))
 
     client = models.ForeignKey(Client, related_name='sales', null=True, blank=True, on_delete=models.CASCADE, verbose_name="ACCOUNT")
-
-    raice = models.DecimalField(verbose_name="ADJUSTMENT", decimal_places=2, max_digits=12, null=True, blank=True)
-    raice_date = models.DateField(blank=True, null=True, default=date.today, verbose_name="DATE UPDATED")    
+   
     
     kind = models.CharField(max_length=50, choices=KIND_CHOICES, null=True, blank=False, default=None, verbose_name="KIND")
     
@@ -259,7 +257,7 @@ class Sale(models.Model):
             
       
     
-    ################### se duplica el valor de la venta en el servicio
+    ################### 
     def get_service_or_update (self, *args, **kwargs):  
         print()
         print("CHEKCING IF SERVICE WITH SAME SERVICE AND CLIENT DO EXISTS.......")
@@ -297,7 +295,6 @@ class Sale(models.Model):
                 }            
             print("setting client service and total as sale values.........")  
             service = Service(**values)
-             # funciona si lo creo uno por uno, pero al importar añade dos veces la venta al servicio
             print()
             print("################### saving service with new values ################################")
             service.save()  
@@ -311,17 +308,6 @@ class Sale(models.Model):
     
     
     
-
-    @property
-    def get_previous(self, *args, **kwargs):
-        previous_sales = Sale.objects.filter(service=self.service, client=self.client).order_by('-raice_date')
-        if previous_sales:
-            return previous_sales[0]
-        else:
-            return None
-        
-        
-                    
                         
                     
 

@@ -93,11 +93,6 @@ class SaleForm(ModelForm):
                 'placeholder' : "Status"
                 }
             ),
-            
-            'raice_date' : TextInput(attrs={'class':"datetimepicker form-control",
-            'id':"PublishDateTimeTextbox",
-            'type':"date",
-            'placeholder':"Adjustment Date",}),
 
         }
 
@@ -172,11 +167,6 @@ class ClientSaleForm(ModelForm):
                 'placeholder' : "Status"
                 }
             ),
-            
-            'raice_date' : TextInput(attrs={'class':"datetimepicker form-control",
-            'id':"PublishDateTimeTextbox",
-            'type':"date",
-            'placeholder':"Adjustment Date",}),
 
         }
 
@@ -268,9 +258,5 @@ class EditSaleForm(ModelForm):
                 'placeholder' : "Comment"
                 }
             ),
-            'raice_date' : TextInput(attrs={'class':"datetimepicker form-control",
-            'id':"PublishDateTimeTextbox",
-            'type':"date",
-            'placeholder':"Adjustment Date",}),
 
         }
