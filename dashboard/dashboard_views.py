@@ -707,46 +707,31 @@ def ceo(request):
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
 def adjustment(request):
-    today=date.today()
+   
+    services = Service.objects.all()
     
-    """services = Service.objects.all()
-    for service in services:
-        service.def
-        service.save()"""
-    
-    
-
-            
-
     if request.method == 'POST':
 
-            sale_id = request.POST.get('id')
-            sale = Sale.objects.get(id=sale_id)
-            raiceform = AdjustmentForm(request.POST, instance=sale)
+            service_id = request.POST.get('id')
+            service = Service.objects.get(id=service_id)
+            raiceform = AdjustmentForm(request.POST, instance=service)
             if raiceform.is_valid():
-                sale.note = f"price adjusted from ${sale.price} on {today}"
-                
-                sale.price = sale.price+((sale.raice/100)*sale.price)
-                sale.save()
+              
+                service.total = service.total+((service.last_adj/100)*service.total)
+                service.save()
                 raiceform.save()
                 return redirect('dashboard:adjustment')
             else: 
                 print(raiceform.errors)
-                return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")                
+                return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
     else:
-        services = Sale.objects.filter(cancelled="Active", revenue="RR")
-        sales_to_raice = []
-        for sale in services:
-            if sale.raice_date:
-                date_start_raice = sale.raice_date + relativedelta(months=3)
-                if date_start_raice.month <= today.month:
-                    sales_to_raice.append(sale)
-        raiceform = AdjustmentForm()    
+        raiceform = AdjustmentForm()                
+    
 
     context = {
-        'services': sales_to_raice,
+        'services': services,
         "page_title":"ADJUSTMENTS",
-        "raiceform": raiceform
+        'raiceform':raiceform,
 
     }
     return render (request, 'dashboard/table/adjustments.html', context)

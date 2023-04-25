@@ -16,8 +16,8 @@ class LastBlue (models.Model):
         return self.compra
 
 
-#last_blue = LastBlue.objects.get(pk=1)
-blue = 1 #last_blue.compra
+last_blue = LastBlue.objects.get(pk=1)
+blue = last_blue.compra
 
 
 
@@ -47,16 +47,23 @@ class Service(models.Model):
         client = models.ForeignKey(Client, related_name="services", on_delete=models.CASCADE, null=True)
         
         total = models.DecimalField(default=0, decimal_places=2, max_digits=20)
+        
         last_adj = models.DecimalField(default=0, decimal_places=2, max_digits=6)
         adj_at = models.DateField(null=True, blank=True)
-        
+        """
+        adj_old =models.DecimalField(default=0, decimal_places=2, max_digits=6)
+        adj_date_old = models.DateField(null=True, blank=True)
+
+        """
         def __str__(self):
             
-            return f"{self.service} - {self.client}"
+            return f"{self.client} - {self.service}"
         
                    
         class Meta:
             unique_together = (('service', 'client'),) 
+            
+        
 
 
 class Sale(models.Model):

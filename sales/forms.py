@@ -2,7 +2,7 @@ from django.forms import ModelForm, \
 TextInput, Select, ModelChoiceField, Textarea
 from django import forms
 
-from sales.models import Sale
+from sales.models import Sale, Service
 from customers.models import Client
 
 
@@ -10,19 +10,19 @@ class AdjustmentForm(ModelForm):
     id = forms.IntegerField(widget=forms.HiddenInput())
 
     class Meta:
-        model = Sale
-        fields = ['raice', 'raice_date']
+        model = Service
+        fields = ['last_adj', 'adj_at']
         
         
         widgets = {
             
-            'raice_date' : TextInput(attrs={'class':"datetimepicker form-control",
+            'adj_at' : TextInput(attrs={'class':"datetimepicker form-control",
             'id':"PublishDateTimeTextbox",
             'type':"date",
             'placeholder':"Adjustment Date",}),
 
-            'raice' : TextInput(attrs={'class':"form-control",
-            'id':"raice",
+            'last_adj' : TextInput(attrs={'class':"form-control",
+            'id':"last_adj",
             'placeholder':"Adjustment %",}),}
 
 class SaleForm(ModelForm):
