@@ -222,7 +222,7 @@ class Sale(models.Model):
     def save(self, *args, **kwargs):
         print()
         print()
-        print("################### ################### ################### ################### ################### ")
+        print(f"################### { self } ################### ")
         print("################### ################### ################### ################### ################### ")
         print("################### ################### ################### ################### ################### ")
         print("start save sale instance ... ")
@@ -261,9 +261,13 @@ class Sale(models.Model):
         else:
             print()
             print("sale is NEW:")
-            print("STARTING GET_SERVICE_OR UPDATE ...........")            
-            self.get_service_or_update()
-            print("END GET_SERVICE_OR UPDATE ...........")            
+            print("check if sale is auto revenue")
+            if self.note != "auto revenue sale":
+                print("it isnt")
+
+                print("STARTING GET_SERVICE_OR UPDATE ...........")            
+                self.get_service_or_update()
+                print("END GET_SERVICE_OR UPDATE ...........")            
 
             print()
             print("################### ################### ################### ################### ################### ")
@@ -290,12 +294,18 @@ class Sale(models.Model):
             if not self.suscription:                
                 print(" sale is not asociated... setting relation and adding sale value into service")                  
 
-                service.sales.add(self, bulk= False)
+                #service.sales.add(self, bulk= False)
                 service.total += Decimal(self.change)
                 print()
                 print("################### saving service ################################")
                 print(".........")  
                 service.save()     
+                print(".....service saved....")  
+                print("################### setting rel service --- sale  ################################")
+
+                self.suscription=service
+                print(f"################### rel {self.suscription}: service --- sale  ################################")
+
             print("sale is allready asociated into service, nothing to do")
                                          
             
@@ -309,12 +319,14 @@ class Sale(models.Model):
                 }            
             print("setting client service and total as sale values.........")  
             service = Service(**values)
-            print("adding sale relationship.........")  
-            service.save()      
-            service.sales.add(self, bulk= False) # funciona si lo creo uno por uno, pero al importar añade dos veces la venta al servicio
+             # funciona si lo creo uno por uno, pero al importar añade dos veces la venta al servicio
             print()
             print("################### saving service with new values ################################")
-            print(".........")  
+            service.save()  
+            print(".....SERVICE SAVED....")      
+            print("adding sale relationship.........")  
+
+            self.suscription=service
             
             
                 
