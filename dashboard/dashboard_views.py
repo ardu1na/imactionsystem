@@ -708,11 +708,11 @@ def ceo(request):
 @login_required(login_url='dashboard:login')
 def adjustment(request):
     
-    
+    """
     # update to new db
     sales = Sale.objects.all()
     for sale in sales:
-        sale.save() # end
+        sale.save() # end"""
         
     services = Service.objects.filter(state=True)
     
@@ -1018,11 +1018,10 @@ def clients(request):
     total_rr = 0
     for client in clients:
         if client.cancelled == "Active":
-            for sale in client.sales.filter(date__month=date.today().month, date__year=date.today().year):
-                if sale.cancelled == "Active":
-                    if sale.revenue == "RR":
-                        total_rr += sale.get_change
+            for service in client.services.all():
+                total_rr += service.total                
     total_rr_k = total_rr
+    
     
     clients_rr = []
     for client in clients_all.filter(cancelled="Active"):
@@ -1050,8 +1049,8 @@ def clients(request):
                 return HttpResponse("hacked from las except else form")
     
     
-    sales_rr=Sale.objects.filter(cancelled="Active").filter(revenue="RR", date__month=date.today().month, date__year=date.today().year)
-
+    #sales_rr=Sale.objects.filter(cancelled="Active").filter(revenue="RR", date__month=date.today().month, date__year=date.today().year)
+    services = Service.objects.all()
     s_seo = 0
     s_gads= 0
     s_fads= 0
@@ -1062,23 +1061,23 @@ def clients(request):
     s_other = 0
     
 
-    for sale in sales_rr:
+    for sale in services:
         if sale.service == "SEO":
-            s_seo += sale.get_change
+            s_seo += sale.total
         elif sale.service == "Google Ads":
-            s_gads += sale.get_change
+            s_gads += sale.total
         elif sale.service == "Facebook Ads":
-            s_fads += sale.get_change
+            s_fads += sale.total
         elif sale.service == "LinkedIn":
-            s_lin  += sale.get_change
+            s_lin  += sale.total
         elif sale.service == "Community Management":
-            s_cm  += sale.get_change
+            s_cm  += sale.total
         elif sale.service == "Combo":
-            s_combo  += sale.get_change
+            s_combo  += sale.total
         elif sale.service == "Web Plan":
-            s_webp += sale.get_change
+            s_webp += sale.total
         elif sale.service == "Others":
-            s_webp += sale.get_change
+            s_webp += sale.total
         else: pass
 
     get_incomes_by_service = [s_seo, s_gads, s_fads, s_lin, s_cm, s_combo, s_webp, s_other]
@@ -1089,20 +1088,19 @@ def clients(request):
     t4=0
     t5=0
 
-    for sale in sales_rr:
-        print(sale.id) 
+    for sale in services:
         
         if sale.client.tier == "I":
             
-            t1 += sale.get_change
+            t1 += sale.total
         elif sale.client.tier == "II":
-            t2 += sale.get_change
+            t2 += sale.total
         elif sale.client.tier == "III":
-            t3 += sale.get_change
+            t3 += sale.total
         elif sale.client.tier == "IV":
-            t4 += sale.get_change
+            t4 += sale.total
         elif sale.client.tier == "V":
-            t5 += sale.get_change
+            t5 += sale.total
         else: pass
     get_incomes_by_tier = [t1, t2, t3, t4, t5]      
     
@@ -1566,7 +1564,7 @@ def index(request):
                 wop=expense.wop,
             )
                 
-        sales_rr_list = Sale.objects.filter(revenue="RR", cancelled="Active", date__month=today.month-1, date__year=today.year)
+        sales_rr_list = Sale.objects.filter(revenue="RR", cancelled="Active", date__month=today.month-1, date__year=today.year).exclude(note="auto revenue sale")
         for sale in sales_rr_list:
             if sale.date.month != today.month:
                 update_rr = Sale.objects.create(
