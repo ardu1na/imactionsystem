@@ -15,19 +15,16 @@
 
 
         <div class="row">
-
-
-
-
-
             <div class="col-12">
                 <div class="card p-2">
                     <div class="card-header border-0 flex-wrap pb-0 mb-3">
-                   
+                        <form method="get">
+                        <button class="btn btn-primary" type="submit" name="accounts"> ADJ account  </button>
                         
-                </div> 
 
-                   
+                        <button class="btn btn-secondary" type="submit" name="services"> ADJ service  </button>
+                        </form>
+                    </div>                  
                   
                     <div class="card-body">
                        
@@ -36,6 +33,7 @@
                                     <thead>
                                         <tr>
                                             <th>ACCOUNT</th>
+
                                             <th>SERVICE</th>
                                             <th>LAST %</th>
 
@@ -51,10 +49,7 @@
                                     </thead>
                                     <tbody>
                                         {% for sale in services %}
-                                            <tr>
-
-
-                                               
+                                            <tr>                                               
                                                 <td>
                                                     <div class="d-flex align-items-center">
                                                         <a class="mb-0 fs-16 font-w500 client-item" href="{% url 'dashboard:editclient' id=sale.client.id %}">{{sale.client}}</a>
@@ -71,24 +66,15 @@
                                                 <td>{{sale.last_adj|floatformat:2|intcomma}}%</td>
                                                 <td>{{sale.adj_at|date:"d/m/Y"}}</td>
                                                
-
                                                 <td>
-                                                    <div class="d-flex flex-row">
-                                                                                                                                            
+                                                    <div class="d-flex flex-row">                                                                                                                                  
                                                             
                                                         <button type="button" class="py-2 px-3 m-2 btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal{{sale.id}}">
                                                             <i class="bi bi-envelope fs-4"></i>                                                </button> 
 
-
                                                             <div class="modal" id="exampleModal{{sale.id}}" >
                                                                 {% include 'dashboard/table/raicesale.html' %}
                                                             </div> 
-
-                                                            
-                                                        
-                                                                        
-                                                            
-
                                                     </div>                                        
                                                 </td>
                                             </tr>
@@ -96,8 +82,7 @@
                                     </tbody>
                                 </table>
                             </div>
-                           
-                    </div>
+                       </div>
                 </div>
             </div>
             
@@ -113,8 +98,4 @@
 {% endblock %}
 
 {% block additional_js %}
-
-
-  
-
 {% endblock %}

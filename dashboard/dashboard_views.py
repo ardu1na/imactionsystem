@@ -702,19 +702,34 @@ def ceo(request):
 
 
 
+@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
+@login_required(login_url='dashboard:login')
+def adj(request):
+        
+    services = Service.objects.filter(state=True)
+    accounts = Client.objects.filter(cancelled="Active")
+            
+    
+
+    context = {
+        'services': services,
+        'accounts': accounts,
+        "page_title":"ADJUSTMENTS",
+
+    }
+    return render (request, 'dashboard/table/adj.html', context)
+
 
 
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
 def adjustment(request):
-    
-    """
-    # update to new db
-    sales = Sale.objects.all()
-    for sale in sales:
-        sale.save() # end"""
-        
-    services = Service.objects.filter(state=True)
+
+    if request.method == 'GET':
+        if 'accounts' in request.GET:
+            services = Service.objects.filter(state=True).order_by('client').distinct('client')
+        else:
+            services = Service.objects.filter(state=True)
     
     if request.method == 'POST':
 
