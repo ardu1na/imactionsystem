@@ -37,10 +37,10 @@
                                 <tr>
                                     <th>ACCOUNT</th>                                    
                                     <th>SERVICES</th>
-                                    <th>LAST RR</th>
-                                    <th>LAST ADJ</th>
                                     <th>RR NOW</th>
                                     <th>ADJ %</th>
+                                    <th>LAST ADJ</th>
+
                                     <th>EMAIL DATE</th>
 
                                     <th></th>
@@ -56,21 +56,20 @@
                                         </td>
 
                                         <td>{% for service in client.services.all %} {{service.service}}{% if forloop.last %}{%else%}, {%endif%} {%endfor%}</td>
-                                        <td>${{sale.total_old|floatformat:2|intcomma}}</td>
-                                        <td>{{sale.adj_at_old|date:"d/m/Y"}}</td>
+                                     
 
 
                                         <td>${{client.total_rr|floatformat:2|intcomma}}</td>
-                                        <td>{{sale.last_adj|floatformat:2|intcomma}}%</td>
-                                        <td>{{sale.adj_at|date:"d/m/Y"}}</td>
+                                        <td>{{ client.services.latest.last_adj|floatformat:2|intcomma}}%</td>
+                                        <td>{{client.services.latest.last_adj|date:"d/m/Y"}}</td>
                                        
                                         <td>
                                             <div class="d-flex flex-row">                                                                                                                                  
                                                     
-                                                <button type="button" class="py-2 px-3 m-2 btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal{{sale.id}}">
+                                                <button type="button" class="py-2 px-3 m-2 btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal{{client.id}}">
                                                     <i class="bi bi-envelope fs-4"></i>                                                </button> 
 
-                                                    <div class="modal" id="exampleModal{{sale.id}}" >
+                                                    <div class="modal" id="exampleModal{{client.id}}" >
                                                         {% include 'dashboard/table/raicesale.html' %}
                                                     </div> 
                                             </div>                                        

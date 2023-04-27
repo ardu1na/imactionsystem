@@ -24,6 +24,17 @@ class AdjustmentForm(ModelForm):
             'last_adj' : TextInput(attrs={'class':"form-control",
             'id':"last_adj",
             'placeholder':"Adjustment %",}),}
+        
+        
+
+class AdjustAccount(forms.Form):
+    id = forms.IntegerField(widget=forms.HiddenInput())         
+    last_adj = forms.CharField(widget=TextInput(attrs={'class':"form-control",'id':"last_adj",'placeholder':"Adjustment %",}))
+    adj_at = forms.CharField(widget=TextInput(attrs={'class':"datetimepicker form-control",
+        'id':"PublishDateTimeTextbox",
+        'type':"date",
+        'placeholder':"Adjustment Date",}))
+        
 
 class SaleForm(ModelForm):
     

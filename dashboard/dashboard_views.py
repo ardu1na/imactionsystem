@@ -732,8 +732,10 @@ def adjustment(request):
             for i in clients:
                 if i.get_rr_client == True:
                     services.append(i)
+            raiceform = AdjustAccount()                
         else:
             services = Service.objects.filter(state=True)
+            raiceform = AdjustmentForm()                
     
     if request.method == 'POST':
         if "adjservice" in request.POST:
@@ -755,31 +757,28 @@ def adjustment(request):
                 print(raiceform.errors)
                 return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
             
-        """if "adjaccount" in request.POST:
+        if "adjaccount" in request.POST:
             client_id = request.POST.get('id')
             client = Client.objects.get(id=client_id)
             services = Service.objects.filter(client=client)
             
-            raiceform = AdjustmentForm(request.POST)
-            for service in services:
+            raiceform = AdjustAccount(request.POST)
+            adj_at=request.POST['adj_at']
+            last_adj = Decimal(request.POST['last_adj'])
                 
-                service.adj_at_old = service.adj_at
-                service.adj_old = service.last_adj
-                service.total_old = service.total 
-                service.save()
-            
+                          
             if raiceform.is_valid():
-                raiceform.save()                
-                service.total = Decimal(service.total + ((service.last_adj / 100) * service.total))
-                service.save()
+                for service in services:
+                    service.total = Decimal(service.total + ((last_adj / 100) * service.total))
+                    service.adj_at = adj_at
+                    service.save()
                 
                 return redirect('dashboard:adjustment')
             else: 
                 print(raiceform.errors)
-                return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")"""
+                return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
             
-    else:
-        raiceform = AdjustmentForm()                
+        
     
 
     context = {

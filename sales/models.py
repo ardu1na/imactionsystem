@@ -65,6 +65,7 @@ class Service(models.Model):
                    
         class Meta:
             unique_together = (('service', 'client'),) 
+            get_latest_by = ('adj_at')
             
         
 
