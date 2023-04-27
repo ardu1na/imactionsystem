@@ -61,7 +61,7 @@
 
                                         <td>${{client.total_rr|floatformat:2|intcomma}}</td>
                                         <td>{{ client.services.latest.last_adj|floatformat:2|intcomma}}%</td>
-                                        <td>{{client.services.latest.last_adj|date:"d/m/Y"}}</td>
+                                        <td>{{client.services.latest.adj_at|date:"d/m/Y"}}</td>
                                        
                                         <td>
                                             <div class="d-flex flex-row">                                                                                                                                  

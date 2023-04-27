@@ -768,9 +768,23 @@ def adjustment(request):
                 
                           
             if raiceform.is_valid():
+                
+                
+                
                 for service in services:
+                    
+                    
+                    service.adj_at_old = service.adj_at
+                    service.adj_old = service.last_adj
+                    service.total_old = service.total 
+                    service.save()
+                    
+                                          
+                        
+                        
                     service.total = Decimal(service.total + ((last_adj / 100) * service.total))
                     service.adj_at = adj_at
+                    service.last_adj = last_adj
                     service.save()
                 
                 return redirect('dashboard:adjustment')
