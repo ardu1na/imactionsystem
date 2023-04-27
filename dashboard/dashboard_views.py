@@ -750,6 +750,7 @@ def adjustment(request):
             if raiceform.is_valid():
                 raiceform.save()                
                 service.total = Decimal(service.total + ((service.last_adj / 100) * service.total))
+                service.email_sent = False
                 service.save()
                 
                 return redirect('dashboard:adjustment')
@@ -785,6 +786,7 @@ def adjustment(request):
                     service.total = Decimal(service.total + ((last_adj / 100) * service.total))
                     service.adj_at = adj_at
                     service.last_adj = last_adj
+                    service.email_sent = False
                     service.save()
                 
                 return redirect('dashboard:adjustment')
@@ -803,6 +805,26 @@ def adjustment(request):
     }
     return render (request, 'dashboard/table/adjustments.html', context)
 
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils import timezone
+
+def send_emails():
+    services_to_email = Service.objects.filter(adj_at__lte=timezone.now(), email_sent=False)
+    for service in services_to_email:
+        email_message = render_to_string('dashboard/email_template.html', {'service': service})
+
+        # enviar el correo electrónico
+        send_mail(
+            'Ajustes - IMACTIONS',
+            email_message,
+            'imactionsystem@gmail.com',
+            [service.client.admin_email],
+            fail_silently=False,
+        )
+
+        service.email_sent = True
+        service.save()
 
 
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())

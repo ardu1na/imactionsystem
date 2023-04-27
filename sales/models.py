@@ -50,6 +50,7 @@ class Service(models.Model):
         
         last_adj = models.DecimalField(default=0, decimal_places=2, max_digits=6)
         adj_at = models.DateField(null=True, blank=True)
+        email_sent = models.BooleanField(default=False)
         
         total_old = models.DecimalField(default=0, decimal_places=2, max_digits=30)
         adj_old =models.DecimalField(default=0, decimal_places=2, max_digits=6)
@@ -66,6 +67,11 @@ class Service(models.Model):
         class Meta:
             unique_together = (('service', 'client'),) 
             get_latest_by = ('adj_at')
+        
+        @property    
+        def get_diference(self):
+            d = self.total - self.total_old
+            return d
             
         
 

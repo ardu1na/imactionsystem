@@ -39,8 +39,6 @@
                                     <th>SERVICES</th>
                                     <th>RR NOW</th>
                                     <th>ADJ %</th>
-                                    <th>LAST ADJ</th>
-
                                     <th>EMAIL DATE</th>
 
                                     <th></th>
@@ -90,10 +88,12 @@
                                             <th>ACCOUNT</th>
                                             
                                             <th>SERVICE</th>
+                                            <th>LAST ADJ</th>
+
                                             <th>LAST %</th>
 
                                             <th>LAST PRICE</th>
-                                            <th>LAST ADJ</th>
+                                            <th>DIFERENCE</th>
 
                                             <th>PRICE NOW</th>
                                             <th>ADJ %</th>
@@ -107,15 +107,17 @@
                                             <tr>                                               
                                                 <td>
                                                     <div class="d-flex align-items-center">
-                                                        <a class="mb-0 fs-16 font-w500 client-item" href="#">{{sale.client}}</a>
+                                                        <a class="mb-0 fs-16 font-w500 client-item" href="{% url 'dashboard:editclient' id=sale.client.id %}">{{sale.client}}</a>
                                                     </div>
                                                 </td>
                                                 <td> <a class="mb-0 fs-16 font-w500"> {{sale.service}} </a> </td>
 
-                                                <td>{{sale.adj_old|floatformat:2|intcomma}}%</td>
-                                                <td>${{sale.total_old|floatformat:2|intcomma}}</td>
                                                 <td>{{sale.adj_at_old|date:"d/m/Y"}}</td>
 
+                                                <td>{{sale.adj_old|floatformat:2|intcomma}}%</td>
+                                                <td>${{sale.total_old|floatformat:2|intcomma}}</td>
+
+                                                <td>${{sale.get_diference|floatformat:2|intcomma}}</td>
 
                                                 <td>${{sale.total|floatformat:2|intcomma}}</td>
                                                 <td>{{sale.last_adj|floatformat:2|intcomma}}%</td>

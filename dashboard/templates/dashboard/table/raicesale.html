@@ -6,13 +6,13 @@
             <div class="modal-body text-center py-5">
                 <h3 class="fs-5 my-3">                       {% if 'accounts' in request.GET %}
                     {{client}} {% else %} {{sale.service}} {{sale.client}} {% endif %} </h3>
-                <h1 class="fs-5 my-3">SET PRICE ADJUSTMENT</h1>
+                <h1 class="fs-5 my-3">SET % ADJUSTMENT</h1>
 
                 <form method="post">
                     {% csrf_token %}
                     {{ raiceform.last_adj }}
                     <br>
-                    <p>Date of Adjustment and Notification</p>
+                    <p>Date of email Notification</p>
                     {{raiceform.adj_at}}
 
                     {% if 'accounts' in request.GET %}
