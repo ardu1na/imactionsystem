@@ -1,5 +1,6 @@
 from datetime import date
 from django.db import models
+from django.db.models import F
 from django.contrib import admin
 from customers.models import Client
 from decimal import Decimal
@@ -20,7 +21,52 @@ blue = last_blue.compra
 
 
 
+class Service(models.Model):
+            
+        SEO ='SEO'
+        GADS = 'Google Ads'
+        FADS = 'Facebook Ads'
+        LIKD = 'LinkedIn'
+        WEB_PLAN = 'Web Plan'
+        COMBO = 'Combo'
+        CM = 'Community Management'
+        EMKTG = 'Email Marketing'
+        OTHER_RR = 'Others RR'
+        SERVICE_CHOICES = (
+            (SEO, ('SEO')),
+            (GADS, ('Google Ads')),
+            (FADS, ('Facebook Ads')),
+            (LIKD, ('LinkedIn')),
+            (CM, ('Community Management')),
+            (WEB_PLAN, ('Web Plan')),
+            (COMBO, ('Combo')),
+            (OTHER_RR, ('Others RR')),
 
+        )
+        service = models.CharField(max_length=50, choices=SERVICE_CHOICES)
+        client = models.ForeignKey(Client, related_name="services", on_delete=models.CASCADE, null=True)
+        
+        total = models.DecimalField(default=0, decimal_places=2, max_digits=20)
+        
+        last_adj = models.DecimalField(default=0, decimal_places=2, max_digits=6)
+        adj_at = models.DateField(null=True, blank=True)
+        
+        total_old = models.DecimalField(default=0, decimal_places=2, max_digits=30)
+        adj_old =models.DecimalField(default=0, decimal_places=2, max_digits=6)
+        adj_at_old = models.DateField(null=True, blank=True)
+        
+        state = models.BooleanField(default=True)
+
+        
+        def __str__(self):
+            
+            return f"{self.client} - {self.service}"
+        
+                   
+        class Meta:
+            unique_together = (('service', 'client'),) 
+            
+        
 
 
 class Sale(models.Model):
@@ -97,9 +143,7 @@ class Sale(models.Model):
         (USD, ('USD')))
 
     client = models.ForeignKey(Client, related_name='sales', null=True, blank=True, on_delete=models.CASCADE, verbose_name="ACCOUNT")
-
-    raice = models.DecimalField(verbose_name="ADJUSTMENT", decimal_places=2, max_digits=12, null=True, blank=True)
-    raice_date = models.DateField(blank=True, null=True, default=date.today, verbose_name="DATE UPDATED")    
+   
     
     kind = models.CharField(max_length=50, choices=KIND_CHOICES, null=True, blank=False, default=None, verbose_name="KIND")
     
@@ -138,29 +182,153 @@ class Sale(models.Model):
         (YES, ('YES')),
         (NO, ('NO')),
         (DEBATIBLE, ('DEBATIBLE')),
-        )
-    
+        )    
     comment_can = models.CharField(max_length=500, blank=True, null=True, verbose_name="COMMENT")
     date_can = models.DateField(null=True, blank=True, verbose_name="DATE")
     fail_can = models.CharField(max_length=50, choices=FAIL_CHOICES, blank=False,default=None, null=True, verbose_name="DO WE FAIL?")
+    
+        
+    def delete(self, *args, **kwargs):
+        
+        servicio = self.suscription
+        servicio.total -= self.change
+        servicio.save()
+        super().delete(*args, **kwargs)    
         
     
+
     def save(self, *args, **kwargs):
+        
+        print("################### ################### ################### ################### ################### ")
+        print("################### ################### ################### ################### ################### ")
+        print()
+        print(f"################### { self } ################### ")
+        print()
+
+        print("start save sale instance ... ")
         self.change = self.get_change
         self.revenue = self.get_revenue()
-        super(Sale, self).save(*args, **kwargs)
+        print()
+        print()
+        print("asigning change value and revenue to sale instance ...")
+        print("################### ################### ################### ################### ################### ")
+        print("checking if sale is new or if already exists...")
+
+        
+        if self.pk:
+            print()
+            print("sale exists:")
+            print("checking if sale is CANCELLED...")
+
+            if self.cancelled != "Active":
+                print()
+                print("SALE CANCELLED!... setting new values into suscription ...")
+                print("take out sale value into client service")
+                print("save service...")
+                print("take out relationship...")
 
 
+                print("################### ################### ################### ################### ################### ")
+                print("###################                 SALE SAVED               ################### ")
+                
+                if self.suscription:
+                    self.suscription.total -= self.change
+                    self.suscription.save()
+                    self.suscription = None
+                    
+            else:
+                print( f" sale {self} is active")
+                print("check if sale is auto revenue")
+                if self.note != "auto revenue sale":
+                    print("it isnt")
 
-    @property
-    def get_previous(self, *args, **kwargs):
-        previous_sales = Sale.objects.filter(service=self.service, client=self.client).order_by('-raice_date')
-        if previous_sales:
-            return previous_sales[0]
+                    print("STARTING GET_SERVICE_OR UPDATE ...........")            
+                    self.get_service_or_update()
+                    print("END GET_SERVICE_OR UPDATE ...........")   
+                
+                print( f" saving sale")
+            super(Sale, self).save(*args, **kwargs)   
+            
+            print( f" sale saved")
+
         else:
-            return None
-        
-        
+            print()
+            print("sale is NEW:")
+            print("check if sale is auto revenue")
+            if self.note != "auto revenue sale":
+                print("it isnt")
+
+                print("STARTING GET_SERVICE_OR UPDATE ...........")            
+                self.get_service_or_update()
+                print("END GET_SERVICE_OR UPDATE ...........")            
+
+            print()
+            print("################### ################### ################### ################### ################### ")
+
+            print("###################                 SAVING CHANGES         ################### ")
+            print()
+            print("################### ################### ################### ################### ################### ")
+            super(Sale, self).save(*args, **kwargs)
+            print("###################                 SALE SAVED               ################### ")
+
+            
+      
+    
+    ################### 
+    def get_service_or_update (self, *args, **kwargs):  
+        print()
+        print("CHEKCING IF SERVICE WITH SAME SERVICE AND CLIENT DO EXISTS.......")
+        print(".........")                  
+        try:
+            service = Service.objects.get(
+                client=self.client, service=self.service) 
+            print(" IT EXISTS, checking if sale is already asociated.........")                  
+               
+            if not self.suscription:                
+                print(" sale is not asociated... setting relation and adding sale value into service")                  
+
+                #service.sales.add(self, bulk= False)
+                service.total += Decimal(self.change)
+                print()
+                print("################### saving service ################################")
+                print(".........")  
+                service.save()     
+                print(".....service saved....")  
+                print("################### setting rel service --- sale  ################################")
+
+                self.suscription=service
+                print(f"################### rel {self.suscription}: service --- sale  ################################")
+
+            print("sale is allready asociated into service, nothing to do")
+                                         
+            
+        except Service.DoesNotExist:       
+            print(" IT DONT EXISTS")                  
+            
+            values = {
+                "client": self.client,
+                "service": self.service,
+                "total": self.change,
+                }            
+            print("setting client service and total as sale values.........")  
+            service = Service(**values)
+            print()
+            print("################### saving service with new values ################################")
+            service.save()  
+            print(".....SERVICE SAVED....")      
+            print("adding sale relationship.........")  
+
+            self.suscription=service
+            
+            
+                
+    
+    
+    
+                        
+                    
+
+            
         
     @property
     def total(self):
@@ -199,3 +367,9 @@ class Sale(models.Model):
 
     class Meta:
         ordering = ['-date']
+        
+    suscription = models.ForeignKey(Service, related_name="sales", on_delete=models.CASCADE, null=True, blank=True)
+    
+    
+        
+        

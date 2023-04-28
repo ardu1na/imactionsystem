@@ -7,15 +7,18 @@
             <hr>
             {% for group in request.user.groups.all %}
             {% if group.name == "clients" %}
-            <li><a href="{% url 'dashboard:clients' %}">
+            <li><a  href="{% url 'dashboard:clients' %}" >
                 <i class="bi bi-people"></i> 
                 <span class="nav-text">CLIENTS</span></a>
 
-            </li>
-            <li><a href="{% url 'dashboard:adjustment' %}">
-                <i class="bi bi-arrow-up-circle-fill"></i>
-                <span class="nav-text">ADJUSTMENTS</span></a>
-                
+                    <ul aria-expanded="true">
+                        
+                        <li><a href="{% url 'dashboard:clients' %}"> Accounts </a></li>
+                        <li><a href="{% url 'dashboard:adjustment' %}"> Adjustments </a></li>                       
+
+    
+                    </ul>
+
             </li>
             {% endif %}
             {% endfor %}

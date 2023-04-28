@@ -3,7 +3,6 @@ from django.db import models
 from django.contrib import admin
 
 
-
 class BackUps(models.Model):
     date = models.DateField(default=date.today)
     
@@ -29,6 +28,17 @@ class ConfTier(models.Model):
 
 
 class Client(models.Model):
+    
+    @property
+    def get_service(self, service):
+        try:
+            service = self.services.get(service=service)
+        except:
+            service = None
+        return service
+    
+    
+    
     GOOGLE_ADS='Google Ads'
     FACEBOOK_ADS='Facebook Ads'
     SEO='SEO'
@@ -128,9 +138,8 @@ class Client(models.Model):
     # the params comes from ConfTier Model defined above
     @property
     def tier(self):
-        if self.total_rr <= ConfTier.objects.get(pk=1).tier_v:
-            return "V"
-        elif self.total_rr <= ConfTier.objects.get(pk=1).tier_iv:
+        
+        if self.total_rr <= ConfTier.objects.get(pk=1).tier_iv:
             return "IV"
         elif self.total_rr <= ConfTier.objects.get(pk=1).tier_iii:
             return "III"
@@ -138,7 +147,20 @@ class Client(models.Model):
             return "II"
         elif self.total_rr > ConfTier.objects.get(pk=1).tier_i:
             return "I"
+        else:
+            return "V"
    
+   
+    def save(self, *args, **kwargs):
+        if self.cancelled == "Cancelled":
+            for service in self.services.all():
+                service.state = False
+                service.save()   
+        
+        super(Client, self).save(*args, **kwargs)
+            
+            
+            
 
     @property
     def get_date(self):
@@ -167,15 +189,13 @@ class Client(models.Model):
                 total += sale.get_change
         return total
 
+
     @property
-    @admin.display(description="RR")
-    def rr(self):
+    def rr(self): 
         total = 0
         if self.cancelled =="Active":
-            for sale in self.sales.filter(date__month=date.today().month, date__year=date.today().year):
-                if sale.cancelled == "Active":
-                    if sale.revenue == "RR":
-                        total += sale.get_change
+            for sale in self.services.all():
+                        total += sale.total
         return '${:,.2f}'.format(total)
 
     
@@ -359,14 +379,71 @@ class Client(models.Model):
                         wp_total += sale.get_change
         return '${:,.2f}'.format(wp_total)
     
-    ##########
+    
+    @property        
+    def seo(self):
+        for service in self.services.all():
+            if service.service == "SEO":
+                return service
+                
+        
+    @property        
+    def gads(self):
+        for service in self.services.all():
+            if service.service == "Google Ads":
+                return service
+        
+    @property        
+    def fads(self):
+        for service in self.services.all():
+            if service.service == "Facebook Ads":
+                return service
+    
+    @property        
+    def linkd(self):
+        for service in self.services.all():
+            if service.service == "LinkedIn":
+                return service
+        
+    @property        
+    def wp(self):
+        for service in self.services.all():
+            if service.service == "Web Plan":
+                return service
+            
+    @property        
+    def combo(self):
+        for service in self.services.all():
+            if service.service == "Combo":
+                return service
 
+    @property    
+    def cm(self):
+        for service in self.services.all():
+            if service.service == "Community Management":
+                return service    
         
+    @property        
+    def emkg(self):
+        for service in self.services.all():
+            if service.service == "Email Marketing":
+                return service    
+        
+        
+    @property        
+    def otherr(self):
+        for service in self.services.all():
+            if service.service == "Others RR":
+                return service 
+                
+                
+
+    
 
 
-        
-        
-        
+    
+    
+    
         
         
         

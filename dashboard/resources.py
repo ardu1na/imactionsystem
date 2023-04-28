@@ -1,4 +1,4 @@
-from import_export import resources
+from import_export import resources, fields, widgets
 from import_export.fields import Field
 from import_export.widgets import ForeignKeyWidget
 
@@ -21,7 +21,7 @@ class HolidayResource(resources.ModelResource):
         model = Holiday
         
             
-
+"""
 class SaleResource(resources.ModelResource):
     
     client = Field(
@@ -31,8 +31,24 @@ class SaleResource(resources.ModelResource):
     
     
     class Meta:
-        model = Sale
+        model = Sale"""
         
+        
+class SaleResource(resources.ModelResource):
+    client = fields.Field(
+        column_name='client',
+        attribute='client',
+        widget=ForeignKeyWidget(Client, 'name')
+    )
+    
+    class Meta:
+        model = Sale
+
+
+
+
+
+
         
 class ClientResource(resources.ModelResource): 
     

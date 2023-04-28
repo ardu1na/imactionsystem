@@ -210,7 +210,6 @@
                                     </thead>
                                     <tbody>{% if clients %}
                                         {% for client in clients %}
-                                        {% if client.get_rr_client %}
                                         <tr>
                                             <td><input type="checkbox" name="selected_clients" value="{{ client.id }}" data-row-index="{{ forloop.counter0 }}"></td>
 
@@ -220,14 +219,70 @@
                                                 </div>
                                             </td>
                                             <td>{{client.tier}}</td>
-                                            <td>{{client.get_seo}}</td>
-                                            <td>{{client.get_gads}}</td>
-                                            <td>{{client.get_fads}}</td>
-                                            <td>{{client.get_lnkd}}</td>
-                                            <td>{{client.get_cm}}</td>
-                                            <td>{{client.get_wp}}</td>
-                                            <td>{{client.get_combo}}</td>
-                                            <td>{{client.get_other}}</td>
+
+                                            <td>
+                                                    {% if client.seo %}
+                                                            ${{client.seo.total|floatformat:2}}
+                                                    {% else %}
+                                                        $0
+                                                    {% endif %}
+                                            </td>
+                                            
+                                            <td>    
+                                                {% if client.gads %}
+                                                            ${{client.gads.total|floatformat:2}}
+                                                    {% else %}
+                                                        $0
+                                                {% endif %}                                                    
+                                            </td>  
+
+                                            <td>    
+                                                {% if client.fads %}
+                                                            ${{client.fads.total|floatformat:2}}
+                                                    {% else %}
+                                                        $0
+                                                {% endif %}                                                    
+                                            </td>    
+                                            <td>    
+                                                {% if client.linkd %}
+                                                            ${{client.linkd.total|floatformat:2}}
+                                                    {% else %}
+                                                        $0
+                                                {% endif %}                                                    
+                                            </td>
+                                            <td>    
+                                                {% if client.cm %}
+                                                            ${{client.cm.total|floatformat:2}}
+                                                    {% else %}
+                                                        $0
+                                                {% endif %}                                                    
+                                            </td>
+                                            
+                                            <td>    
+                                                {% if client.wp %}
+                                                            ${{client.wp.total|floatformat:2}}
+                                                    {% else %}
+                                                        $0
+                                                {% endif %}                                                    
+                                            </td>
+                                            
+                                            <td>    
+                                                {% if client.combo %}
+                                                            ${{client.combo.total|floatformat:2}}
+                                                    {% else %}
+                                                        $0
+                                                {% endif %}                                                    
+                                            </td>
+
+
+                                            <td>    
+                                                {% if client.otherr %}
+                                                            ${{client.otherr.total|floatformat:2}}
+                                                    {% else %}
+                                                        $0
+                                                {% endif %}                                                    
+                                            </td>
+
                                             <td><b>{{client.rr}}</b></td>  
                                             <td>{{client.wop}}</td>
                                   
@@ -245,7 +300,6 @@
                                                 </div>                                        
                                             </td>
                                         </tr>
-                                        {% endif %}
                                         {% endfor %}
                                         {%endif%}
                                     </tbody>

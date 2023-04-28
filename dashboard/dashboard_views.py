@@ -53,6 +53,9 @@ from django.contrib.auth.models import Group
 @user_passes_test(lambda user: user.groups.filter(name='admin').exists())   
 @login_required(login_url='dashboard:login')
 def activity(request):
+    
+    
+    
     ct = ContentType.objects.get_for_model(LastBlue)
     ct2 = ContentType.objects.get_for_model(CustomUser)
 
@@ -258,6 +261,8 @@ def expenses(request):
 @login_required(login_url='dashboard:login')
 def bi(request):
     sales = Sale.objects.all()
+    
+        
     clients = Client.objects.all()
     expenses = Expense.objects.all()
     employees = Employee.objects.all()
@@ -702,41 +707,42 @@ def ceo(request):
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
 def adjustment(request):
-    today=date.today()
     
+    """
+    # update to new db
+    sales = Sale.objects.all()
+    for sale in sales:
+        sale.save() # end"""
+        
+    services = Service.objects.filter(state=True)
     
-
-            
-
     if request.method == 'POST':
 
-            sale_id = request.POST.get('id')
-            sale = Sale.objects.get(id=sale_id)
-            raiceform = AdjustmentForm(request.POST, instance=sale)
+            service_id = request.POST.get('id')
+            service = Service.objects.get(id=service_id)
+            raiceform = AdjustmentForm(request.POST, instance=service)
+            service.adj_at_old = service.adj_at
+            service.adj_old = service.last_adj
+            service.total_old = service.total 
+            service.save()
+            
             if raiceform.is_valid():
-                sale.note = f"price adjusted from ${sale.price} on {today}"
+                raiceform.save()                
+                service.total = Decimal(service.total + ((service.last_adj / 100) * service.total))
+                service.save()
                 
-                sale.price = sale.price+((sale.raice/100)*sale.price)
-                sale.save()
-                raiceform.save()
                 return redirect('dashboard:adjustment')
             else: 
                 print(raiceform.errors)
-                return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")                
+                return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
     else:
-        services = Sale.objects.filter(cancelled="Active", revenue="RR")
-        sales_to_raice = []
-        for sale in services:
-            if sale.raice_date:
-                date_start_raice = sale.raice_date + relativedelta(months=3)
-                if date_start_raice.month <= today.month:
-                    sales_to_raice.append(sale)
-        raiceform = AdjustmentForm()    
+        raiceform = AdjustmentForm()                
+    
 
     context = {
-        'services': sales_to_raice,
+        'services': services,
         "page_title":"ADJUSTMENTS",
-        "raiceform": raiceform
+        'raiceform':raiceform,
 
     }
     return render (request, 'dashboard/table/adjustments.html', context)
@@ -780,6 +786,26 @@ def sales(request):
     
     sales = Sale.objects.filter(date__month=today.month, date__year=today.year).exclude(note="auto revenue sale")
     
+    """
+    #### FUNCIONES PARA LA NUEVA BASE DE DATOS
+    ssales = Sale.objects.all()
+    for ssale in ssales:
+        ssale.update_db_sales()
+    
+    
+    newservices= Service.objects.all()
+    for service in newservices: #COMO HACER ESTO EN EL MISMO MODELO
+        sales=service.sales.all()
+        if service.total == 0:
+            for sale in sales:
+                service.total += sale.change
+                service.save()
+
+    #### END FUNCIONES PARA LA NUEVA BASE DE DATOS"""
+    
+        
+        
+        
     if request.method == 'GET':
         addform = SaleForm()
         
@@ -983,19 +1009,22 @@ def editsale(request, id):
 @user_passes_test(lambda user: user.groups.filter(name='clients').exists())
 @login_required(login_url='dashboard:login')
 def clients(request):
-    clients = Client.objects.filter(cancelled="Active")
-      
+    clients_all = Client.objects.filter(cancelled="Active")
+    clients = []
+    for client in clients_all:
+        if client.get_rr_client == True:
+            clients.append(client)
+        
     total_rr = 0
     for client in clients:
         if client.cancelled == "Active":
-            for sale in client.sales.filter(date__month=date.today().month, date__year=date.today().year):
-                if sale.cancelled == "Active":
-                    if sale.revenue == "RR":
-                        total_rr += sale.get_change
+            for service in client.services.all():
+                total_rr += service.total                
     total_rr_k = total_rr
     
+    
     clients_rr = []
-    for client in clients.filter(cancelled="Active"):
+    for client in clients_all.filter(cancelled="Active"):
         if client.get_rr_client == True:
             clients_rr.append(client.id)
     c_rr_total = len(clients_rr)
@@ -1020,8 +1049,8 @@ def clients(request):
                 return HttpResponse("hacked from las except else form")
     
     
-    sales_rr=Sale.objects.filter(cancelled="Active").filter(revenue="RR", date__month=date.today().month, date__year=date.today().year)
-
+    #sales_rr=Sale.objects.filter(cancelled="Active").filter(revenue="RR", date__month=date.today().month, date__year=date.today().year)
+    services = Service.objects.all()
     s_seo = 0
     s_gads= 0
     s_fads= 0
@@ -1032,23 +1061,23 @@ def clients(request):
     s_other = 0
     
 
-    for sale in sales_rr:
+    for sale in services:
         if sale.service == "SEO":
-            s_seo += sale.get_change
+            s_seo += sale.total
         elif sale.service == "Google Ads":
-            s_gads += sale.get_change
+            s_gads += sale.total
         elif sale.service == "Facebook Ads":
-            s_fads += sale.get_change
+            s_fads += sale.total
         elif sale.service == "LinkedIn":
-            s_lin  += sale.get_change
+            s_lin  += sale.total
         elif sale.service == "Community Management":
-            s_cm  += sale.get_change
+            s_cm  += sale.total
         elif sale.service == "Combo":
-            s_combo  += sale.get_change
+            s_combo  += sale.total
         elif sale.service == "Web Plan":
-            s_webp += sale.get_change
+            s_webp += sale.total
         elif sale.service == "Others":
-            s_webp += sale.get_change
+            s_webp += sale.total
         else: pass
 
     get_incomes_by_service = [s_seo, s_gads, s_fads, s_lin, s_cm, s_combo, s_webp, s_other]
@@ -1059,17 +1088,19 @@ def clients(request):
     t4=0
     t5=0
 
-    for sale in sales_rr:
+    for sale in services:
+        
         if sale.client.tier == "I":
-            t1 += sale.get_change
+            
+            t1 += sale.total
         elif sale.client.tier == "II":
-            t2 += sale.get_change
+            t2 += sale.total
         elif sale.client.tier == "III":
-            t3 += sale.get_change
+            t3 += sale.total
         elif sale.client.tier == "IV":
-            t4 += sale.get_change
+            t4 += sale.total
         elif sale.client.tier == "V":
-            t5 += sale.get_change
+            t5 += sale.total
         else: pass
     get_incomes_by_tier = [t1, t2, t3, t4, t5]      
     
@@ -1533,7 +1564,7 @@ def index(request):
                 wop=expense.wop,
             )
                 
-        sales_rr_list = Sale.objects.filter(revenue="RR", cancelled="Active", date__month=today.month-1, date__year=today.year)
+        sales_rr_list = Sale.objects.filter(revenue="RR", cancelled="Active", date__month=today.month-1, date__year=today.year).exclude(note="auto revenue sale")
         for sale in sales_rr_list:
             if sale.date.month != today.month:
                 update_rr = Sale.objects.create(
