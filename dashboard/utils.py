@@ -16,9 +16,10 @@ from django.utils import timezone
 
 
 def adj_email(request):
-    inversion_actual = request.POST['inversion_actual']
-    ajuste_porcentaje = request.POST['ajuste_porcentaje']
-    correo_destinatario = request.POST['correo_destinatario']
+    if 'adjaccount' in request.POST:
+        inversion_actual = request.POST['inversion_actual']
+        ajuste_porcentaje = request.POST['ajuste_porcentaje']
+        correo_destinatario = request.POST['correo_destinatario']
     
     # Calcula el ajuste necesario
     inversion_ajustada = inversion_actual * (1 + ajuste_porcentaje / 100)

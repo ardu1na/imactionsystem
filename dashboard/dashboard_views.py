@@ -747,10 +747,16 @@ def adjustment(request):
             service.total_old = service.total 
             service.save()
             
+            
+            
             if raiceform.is_valid():
                 raiceform.save()                
                 service.total = Decimal(service.total + ((service.last_adj / 100) * service.total))
                 service.email_sent = False
+                inversion_actual = service.total_old
+                inversion_ajustada = service.total
+                diferencia = inversion_ajustada - inversion_actual
+                destinatario = service.client.admin_email
                 service.save()
                 
                 return redirect('dashboard:adjustment')
@@ -771,7 +777,8 @@ def adjustment(request):
             if raiceform.is_valid():
                 
                 
-                
+                inversion_actual = 0
+                inversion_ajustada = 0 
                 for service in services:
                     
                     
@@ -786,7 +793,13 @@ def adjustment(request):
                     service.total = Decimal(service.total + ((last_adj / 100) * service.total))
                     service.adj_at = adj_at
                     service.last_adj = last_adj
+                    
                     service.email_sent = False
+                    inversion_actual += service.total_old
+                    inversion_ajustada += service.total
+                    diferencia = inversion_ajustada - inversion_actual
+                    destinatario = service.client.admin_email
+                                        
                     service.save()
                 
                 return redirect('dashboard:adjustment')
@@ -794,8 +807,7 @@ def adjustment(request):
                 print(raiceform.errors)
                 return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
             
-        
-    
+
 
     context = {
         'services': services,
@@ -805,9 +817,112 @@ def adjustment(request):
     }
     return render (request, 'dashboard/table/adjustments.html', context)
 
+"""from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils import timezone
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils import timezone
+
+def send_emails(services):
+    services_to_email = services.filter(adj_at__lte=timezone.now(), email_sent=False)
+    for service in services_to_email:
+        email_message = render_to_string('dashboard/email_template.html', {'service': service})
+
+        # enviar el correo electrónico
+        send_mail(
+            'Ajustes - IMACTIONS',
+            email_message,
+            'imactionsystem@gmail.com',
+            [service.client.admin_email],
+            fail_silently=False,
+        )
+
+        service.email_sent = True
+        service.save()
+
+@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
+@login_required(login_url='dashboard:login')
+def adjustment(request):
+
+    if request.method == 'GET':
+        if 'accounts' in request.GET:
+            services = []
+            clients = Client.objects.filter(cancelled="Active")
+            for i in clients:
+                if i.get_rr_client == True:
+                    services.append(i)
+            raiceform = AdjustAccount()                
+        else:
+            services = Service.objects.filter(state=True)
+            raiceform = AdjustmentForm()                
+    
+    if request.method == 'POST':
+        if "adjservice" in request.POST:
+            service_id = request.POST.get('id')
+            service = Service.objects.get(id=service_id)
+            raiceform = AdjustmentForm(request.POST, instance=service)
+            service.adj_at_old = service.adj_at
+            service.adj_old = service.last_adj
+            service.total_old = service.total 
+            service.save()
+            
+            
+            
+            if raiceform.is_valid():
+                raiceform.save()                
+                service.total = Decimal(service.total + ((service.last_adj / 100) * service.total))
+                service.email_sent = False
+                inversion_actual = service.total_old
+                inversion_ajustada = service.total
+                diferencia = inversion_ajustada - inversion_actual
+                destinatario = service.client.admin_email
+                service.save()
+                
+                return redirect('dashboard:adjustment')
+            else: 
+                print(raiceform.errors)
+                return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
+            
+        if "adjaccount" in request.POST:
+            client_id = request.POST.get('id')
+            client = Client.objects.get(id=client_id)
+            services = Service.objects.filter(client=client)
+            
+            raiceform = AdjustAccount(request.POST)
+            adj_at=request.POST['adj_at']
+            last_adj = Decimal(request.POST['last_adj'])
+                
+                          
+            if raiceform.is_valid():
+                
+                
+                inversion_actual = 0
+                inversion_ajustada = 0 
+                for service in services:
+                    
+                    
+                    service.adj_at_old = service.adj_at
+                    service.adj_old = service.last_adj
+                    service.total_old = service.total 
+                    service.save()
+                    
+                                          
+                        
+                        
+                    service.total = Decimal(service.total + ((last_adj / 100) * service.total))
+                    service.adj_at = adj_at
+                    service.last_adj = last_adj
+                    
+                    service.email_sent = False
+                    inversion_actual += service.total_old
+                    inversion_ajustada += service.total
+                    diferencia = inversion_ajustada - inversion_actual
+                    destinatario = service.client.admin_email
+                                        
+                    service.save()
+                
+                return redirect('dashboard:
 
 def send_emails():
     services_to_email = Service.objects.filter(adj_at__lte=timezone.now(), email_sent=False)
@@ -825,6 +940,7 @@ def send_emails():
 
         service.email_sent = True
         service.save()
+"""
 
 
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
