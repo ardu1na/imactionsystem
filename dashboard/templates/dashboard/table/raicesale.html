@@ -4,18 +4,26 @@
     <div class="modal-content">
                
             <div class="modal-body text-center py-5">
-                <h3 class="fs-5 my-3"> {{sale.service}} {{sale.client}} </h3>
-                <h1 class="fs-5 my-3">SET PRICE ADJUSTMENT</h1>
+                <h3 class="fs-5 my-3">                       {% if 'accounts' in request.GET %}
+                    {{client}} {% else %} {{sale.service}} {{sale.client}} {% endif %} </h3>
+                <h1 class="fs-5 my-3">SET % ADJUSTMENT</h1>
 
                 <form method="post">
                     {% csrf_token %}
                     {{ raiceform.last_adj }}
                     <br>
-                    <p>Date of Adjustment and Notification</p>
+                    <p>Date of email Notification</p>
                     {{raiceform.adj_at}}
-                    <input type="hidden" name="id" value="{{ sale.id }}">
 
-                    <button type="submit"  class="shadow-sm btn btn-info fs-6 p-3 my-4">
+                    {% if 'accounts' in request.GET %}
+                    <input type="hidden" name="id" value="{{ client.id }}">
+                    {% else %}
+
+                    <input type="hidden" name="id" value="{{ sale.id }}">
+                    {% endif %} 
+
+
+                    <button type="submit"{% if 'accounts' in request.GET %} name="adjaccount"{%else%} name="adjservice"{%endif%} class="shadow-sm btn btn-info fs-6 p-3 my-4">
                         <i class="bi bi-envelope"></i> Send Notification and auto update Price
                     </button>
                 </form>

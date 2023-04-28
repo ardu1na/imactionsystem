@@ -702,22 +702,43 @@ def ceo(request):
 
 
 
+@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
+@login_required(login_url='dashboard:login')
+def adj(request):
+        
+    services = Service.objects.filter(state=True)
+    accounts = Client.objects.filter(cancelled="Active")
+            
+    
+
+    context = {
+        'services': services,
+        'accounts': accounts,
+        "page_title":"ADJUSTMENTS",
+
+    }
+    return render (request, 'dashboard/table/adj.html', context)
+
 
 
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
 def adjustment(request):
-    
-    """
-    # update to new db
-    sales = Sale.objects.all()
-    for sale in sales:
-        sale.save() # end"""
-        
-    services = Service.objects.filter(state=True)
+
+    if request.method == 'GET':
+        if 'accounts' in request.GET:
+            services = []
+            clients = Client.objects.filter(cancelled="Active")
+            for i in clients:
+                if i.get_rr_client == True:
+                    services.append(i)
+            raiceform = AdjustAccount()                
+        else:
+            services = Service.objects.filter(state=True)
+            raiceform = AdjustmentForm()                
     
     if request.method == 'POST':
-
+        if "adjservice" in request.POST:
             service_id = request.POST.get('id')
             service = Service.objects.get(id=service_id)
             raiceform = AdjustmentForm(request.POST, instance=service)
@@ -729,14 +750,51 @@ def adjustment(request):
             if raiceform.is_valid():
                 raiceform.save()                
                 service.total = Decimal(service.total + ((service.last_adj / 100) * service.total))
+                service.email_sent = False
                 service.save()
                 
                 return redirect('dashboard:adjustment')
             else: 
                 print(raiceform.errors)
                 return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
-    else:
-        raiceform = AdjustmentForm()                
+            
+        if "adjaccount" in request.POST:
+            client_id = request.POST.get('id')
+            client = Client.objects.get(id=client_id)
+            services = Service.objects.filter(client=client)
+            
+            raiceform = AdjustAccount(request.POST)
+            adj_at=request.POST['adj_at']
+            last_adj = Decimal(request.POST['last_adj'])
+                
+                          
+            if raiceform.is_valid():
+                
+                
+                
+                for service in services:
+                    
+                    
+                    service.adj_at_old = service.adj_at
+                    service.adj_old = service.last_adj
+                    service.total_old = service.total 
+                    service.save()
+                    
+                                          
+                        
+                        
+                    service.total = Decimal(service.total + ((last_adj / 100) * service.total))
+                    service.adj_at = adj_at
+                    service.last_adj = last_adj
+                    service.email_sent = False
+                    service.save()
+                
+                return redirect('dashboard:adjustment')
+            else: 
+                print(raiceform.errors)
+                return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
+            
+        
     
 
     context = {
@@ -747,6 +805,26 @@ def adjustment(request):
     }
     return render (request, 'dashboard/table/adjustments.html', context)
 
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils import timezone
+
+def send_emails():
+    services_to_email = Service.objects.filter(adj_at__lte=timezone.now(), email_sent=False)
+    for service in services_to_email:
+        email_message = render_to_string('dashboard/email_template.html', {'service': service})
+
+        # enviar el correo electrónico
+        send_mail(
+            'Ajustes - IMACTIONS',
+            email_message,
+            'imactionsystem@gmail.com',
+            [service.client.admin_email],
+            fail_silently=False,
+        )
+
+        service.email_sent = True
+        service.save()
 
 
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())

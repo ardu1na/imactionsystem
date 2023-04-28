@@ -58,8 +58,7 @@ urlpatterns = [
 
     path('adjustments/',dashboard_views.adjustment, name="adjustment"),
     path('adjustments/<int:id>/',dashboard_views.adjustment, name="adjustsale"),
-
-
+    path('adj/',dashboard_views.adj, name="adj"),
 
 
     

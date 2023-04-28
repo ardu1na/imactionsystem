@@ -175,18 +175,15 @@ class Client(models.Model):
     @property
     def get_rr_client(self):
         rr_client = False
-        if self.sales:
-            for sale in self.sales.all():
-                if sale.revenue == "RR" and sale.cancelled == "Active":
-                    rr_client = True
+        if self.services:
+            rr_client = True
         return rr_client
 
     @property
     def total_rr(self):
         total = 0
-        for sale in self.sales.filter(date__month=date.today().month, date__year=date.today().year):
-            if sale.revenue == "RR" and sale.cancelled == "Active":
-                total += sale.get_change
+        for service in self.services.filter(state=True):
+                total += service.total
         return total
 
 
