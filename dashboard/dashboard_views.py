@@ -732,11 +732,14 @@ def adjustment(request):
             for i in clients:
                 if i.get_rr_client == True:
                     services.append(i)
-            raiceform = AdjustAccount()                
-        else:
+        elif 'services' in request.GET:
             services = Service.objects.filter(state=True)
-            raiceform = AdjustmentForm()                
-    
+        else:
+            services = []                
+        raiceform = AdjustmentForm()
+        clients = Client.objects.filter(cancelled="Active")
+        select = SelectClient()
+
     if request.method == 'POST':
         if "adjservice" in request.POST:
             service_id = request.POST.get('id')
@@ -811,6 +814,8 @@ def adjustment(request):
 
     context = {
         'services': services,
+        'clients': clients,
+        'select': select,
         "page_title":"ADJUSTMENTS",
         'raiceform':raiceform,
 
