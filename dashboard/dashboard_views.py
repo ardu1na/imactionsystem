@@ -708,10 +708,11 @@ def adj(request):
         
     services = Service.objects.filter(state=True)
     accounts = Client.objects.filter(cancelled="Active")
-            
+    adjform = AdjForm()
     
 
     context = {
+        'adjform': adjform,
         'services': services,
         'accounts': accounts,
         "page_title":"ADJUSTMENTS",

@@ -24,31 +24,20 @@
                                    
                     <div class="card-body">
                         
+                        <form method="post">
+                            {% csrf_token %}
+                            <div id="typeform">
+                            {{adjform.type}}
+                            </div>
 
-                        <a class="btn btn-primary" href="#" id="account-btn"> ADJ account  </a>
-                        
-                        <a class="btn btn-secondary" href="#" id="service-btn"> ADJ service  </a>
-                        
-                        
+                            <div id="clientform" style="display:none;">
+                            {{adjform.client}}
+                            </div>
 
-                        <div id="select-account">
-                            title: search account
-                            searchbar
-
-                            <a class="btn btn-primary" href="#" id="account-adj"> ADJ  </a>
-
-
-                        </div>
-
-
-                        <div id="select-service">
-                            title: search service
-                            searchbar
-
-                            <a class="btn btn-primary" href="#" id="service-adj"> ADJ  </a>
-                            
-                        </div>
-
+                            <div id="serviceform" style="display:none;">
+                            {{adjform.service}}
+                            </div>
+                        </form>
 
                             
                     </div>
@@ -71,7 +60,21 @@
 
 {% block additional_js %}
 
+<script>
+    var type = document.getElementById("type");
+    var clientdiv = document.getElementById("clientform");
+    clientdiv.style.display = (type.value !== "---------") ? "none" : "block";
+    type.onchange=function(){
+    
+        if(this.value=="Account"){
+            clientdiv.style.display="block";  
+        }else if(this.value=="Service"){
+            clientdiv.style.display="block"; 
+        }else{
+            clientdiv.style.display="none";
+        }
+    }        
+</script>
 
-  
 
 {% endblock %}

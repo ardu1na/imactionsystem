@@ -72,7 +72,31 @@ class Service(models.Model):
         def get_diference(self):
             d = self.total - self.total_old
             return d
-            
+        
+        
+class Adj(models.Model):
+    A = "Account"
+    S = "Service"
+    ADJ_CHOICES = (
+        (A, ('Account')),
+        (S, ('Service')),
+    )
+    notice_date = models.DateField(null=True,blank=True)
+    adj_percent = models.DecimalField(decimal_places=2, max_digits=16)
+    
+    date_alert = models.DateField(null=True, blank=True)
+    
+    type = models.CharField(max_length=40, choices=ADJ_CHOICES)
+    service = models.ForeignKey(Service, on_delete=models.SET_NULL, related_name="adj", null=True, blank=True)
+    client = models.ForeignKey(Client, on_delete=models.SET_NULL, related_name="adj", null=True, blank=True)
+    
+    def __str__ (self):
+        if self.type == "Service":
+            client = self.service.client.name
+        else:
+            client = self.client.name
+        return f'Adj {self.type} {client} {self.notice_date}'
+        
         
 
 

@@ -1,23 +1,7 @@
 from django.forms import ModelForm, \
-TextInput, URLInput, EmailInput, Select, Textarea, ModelChoiceField
+TextInput, URLInput, EmailInput, Select, Textarea
 from customers.models import Client,  ConfTier
 
-class SelectClient(ModelForm):
-    client = ModelChoiceField(queryset=Client.objects.all(), widget=Select(attrs={'class':"default-select form-control wide mb-3",
-            'id':"client",
-            'placeholder':"client",}), empty_label = ' - ')
-    
-    class Meta:
-        model = Client
-        fields = ['name',]
-        
-        widgets = {
-         'name' : Select(attrs={
-                'class':"default-select form-control wide mb-3",
-                'id':"name",
-                'placeholder' : "name",
-                }
-            ),}
         
 
 class TierConf(ModelForm):

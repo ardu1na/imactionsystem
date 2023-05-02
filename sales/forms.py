@@ -2,7 +2,7 @@ from django.forms import ModelForm, \
 TextInput, Select, ModelChoiceField, Textarea
 from django import forms
 
-from sales.models import Sale, Service
+from sales.models import Sale, Service, Adj 
 from customers.models import Client
 
 
@@ -34,6 +34,55 @@ class AdjustAccount(forms.Form):
         'id':"PublishDateTimeTextbox",
         'type':"date",
         'placeholder':"Adjustment Date",}))
+    
+    
+class AdjForm(ModelForm):
+    
+    client = ModelChoiceField(
+                    queryset=Client.objects.all(),
+                    widget=Select(
+                        attrs={
+                                'class':"default-select form-control wide mb-3",
+                                'id':"client",
+                                'placeholder':"client",}),
+                    empty_label = ' - ')
+    
+    service = ModelChoiceField(
+                    queryset=Service.objects.all(),
+                    widget=Select(
+                        attrs={
+                            'class':"default-select form-control wide mb-3",
+                            'id':"service",
+                            'placeholder':"service",}),
+                    empty_label = ' - ')
+    
+    class Meta:
+        model = Adj
+        fields = ['notice_date', 'adj_percent', 'date_alert', 'type' ]
+        
+        widgets = {
+            
+            'notice_date' : TextInput(attrs={'class':"datetimepicker form-control",
+            'id':"PublishDateTimeTextbox",
+            'type':"date",
+            'placeholder':"Notice Date",}),
+
+            'date_alert' : TextInput(attrs={'class':"datetimepicker form-control",
+            'id':"PublishDateTimeTextbox",
+            'type':"date",
+            'placeholder':"Internal RemainderDate",}),
+ 
+            'adj_percent' : TextInput(attrs={'class':"form-control",
+            'id':"adj_percent",
+            'placeholder':"Adjustment %",}),
+
+            'type' : Select(attrs={
+                'class':"default-select form-control wide mb-3",
+                'id':"type",
+                'placeholder' : "type",
+                }
+            ),
+        }
         
 
 class SaleForm(ModelForm):
