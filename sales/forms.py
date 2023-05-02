@@ -37,16 +37,15 @@ class AdjustAccount(forms.Form):
     
     
 class AdjForm(ModelForm):
-    
-    client = ModelChoiceField(
-                    queryset=Client.objects.all(),
-                    widget=Select(
-                        attrs={
-                                'class':"default-select form-control wide mb-3",
-                                'id':"client",
-                                'placeholder':"client",}),
-                    empty_label = ' - ')
-    
+    client = forms.CharField(
+        widget=forms.TextInput(attrs={
+            'class': 'form-control wide mb-3',
+            'placeholder': 'Client',
+            'id': 'client',
+            'autocomplete': 'on',
+            'list': 'clients',
+        })
+    )
     service = ModelChoiceField(
                     queryset=Service.objects.all(),
                     widget=Select(

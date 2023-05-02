@@ -700,6 +700,15 @@ def ceo(request):
     
     return render(request,'dashboard/instructor/ceo.html',context)
 
+from django.http import JsonResponse
+from django.views.decorators.http import require_GET
+
+@require_GET
+def client_autocomplete(request):
+    q = request.GET.get('q', '')
+    clients = Client.objects.filter(name__icontains=q)
+    results = [{'id': c.pk, 'text': c.name} for c in clients]
+    return JsonResponse({'results': results})
 
 
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
@@ -714,7 +723,7 @@ def adj(request):
     context = {
         'adjform': adjform,
         'services': services,
-        'accounts': accounts,
+        'clients': accounts,
         "page_title":"ADJUSTMENTS",
 
     }
@@ -739,7 +748,7 @@ def adjustment(request):
             services = []                
         raiceform = AdjustmentForm()
         clients = Client.objects.filter(cancelled="Active")
-        select = SelectClient()
+        select = AdjForm()
 
     if request.method == 'POST':
         if "adjservice" in request.POST:

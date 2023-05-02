@@ -31,7 +31,13 @@
                             </div>
 
                             <div id="clientform" style="display:none;">
-                            {{adjform.client}}
+                                <input type="text" name="client" id="client" class="form-control" placeholder="Client" autocomplete="on" list="clients">
+                                    <datalist id="clients">
+                                    {% for client in clients %}
+                                    <option value="{{ client.name }}">
+                                    {% endfor %}
+                                    </datalist>
+
                             </div>
 
                             <div id="serviceform" style="display:none;">
@@ -75,6 +81,36 @@
         }
     }        
 </script>
+
+<script>
+    $(document).ready(function() {
+      var $clientField = $('#client');
+      var $clientForm = $('#clientform');
+      var $clientInput = $clientField.find('input');
+  
+      $clientInput.autocomplete({
+        source: '/client-autocomplete/',
+        minLength: 2,
+        select: function(event, ui) {
+          $clientInput.val(ui.item.value);
+          return false;
+        },
+        focus: function(event, ui) {
+          $clientInput.val(ui.item.value);
+          return false;
+        }
+      });
+  
+      $clientInput.on('input', function() {
+        if ($clientInput.val() === '') {
+          $clientForm.hide();
+        } else {
+          $clientForm.show();
+        }
+      });
+    });
+  </script>
+
 
 
 {% endblock %}
