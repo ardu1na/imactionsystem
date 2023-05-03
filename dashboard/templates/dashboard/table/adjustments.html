@@ -23,172 +23,279 @@
         <div class="row">
             <div class="col-12">
                 <div class="card p-2">
+                    
                     <div class="card-header border-0 flex-wrap pb-0 mb-3">
-                        <form method="get">
-                        <button class="btn btn-primary" type="submit" name="accounts"> ADJ account  </button>
+                        <button type="button" class="py-2 px-3 m-2 btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            <i class="bi bi-envelope fs-4"></i>                                                </button> 
+
+                            <div class="modal" id="exampleModal" >
+                                                                
+                                <!-- Modal -->
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                            
+                                            <div class="modal-body text-center py-5">
+                                                
+                                                <h1 class="fs-5 my-3">SET ADJUSTMENT</h1>
+
+                                                <form method="post">
+                                                    {% csrf_token %}
                         
-
-                        <button class="btn btn-secondary" type="submit" name="services"> ADJ service  </button>
-                        </form>
-
-
+                                                  
                         
+                                                    <div id="typeform">
+                                                    {{adjform.type}}
+                                                    </div>
+                        
+                                                    <div id="clientform" style="display:none;">
+                                                        <p>Select the client...</p>                 
+                        
+                                                        <input type="text" name="client" id="client" class="form-control" placeholder="Client" autocomplete="on" list="clients">
+                                                            <datalist id="clients">
+                                                            {% for client in clients %}
+                                                            <option id="{{client.id}}" value="{{ client.name }}">
+                                                            {% endfor %}
+                                                            </datalist>
+                        
+                                                    </div>
+                        
+                                                    <div id="serviceform" class="my-4" style="display:none;">
+                                                          <p>Select the service...</p>                 
+                                                          <select id="service" class="form-control" name="service">
+                                                                  {% for s in services %}
+                                                                    <option id="{{s.client.name}}" value="{{s.id}}"> {{s.service}}</option>
+                                                                  {% endfor %}
+                                                          </select>
+                                                    </div>
+                        
+                        
+                                                    <div id="dataform" class="my-5" style="display:none;">
+                                                        <hr>
+                                                        <div class="mt-4">
+                        
+                                                        <h4>Information</h4>                 
+                                                      </div>
+                        
+                                                        <div class="d-flex flex-row-reverse my-4">
+                                                          {{adjform.notice_date}} <span>Notice date<span>
+                                                        </div>
+                        
+                                                        <div class="d-flex flex-row-reverse my-4">
+                                                          {{adjform.adj_percent}}<span>Adust %<span>
+                                                        </div>
+                                                        <br>
+                                                        <hr>
+                                                        <div class="d-flex flex-row-reverse my-4">
+                                                          {{adjform.date_alert}}  <span>Email reminder<span>
+                                                        </div>
+                                                        
+                        
+                                                        <div class="d-flex flex-row-reverse">
+                        
+                                                        <button type="submit" class="btn btn-primary mt-5 mb-3 px-5 fs-3" name="adj"> Ok </button>
+                                                      </div>
+                        
+                                                    </div>
+                        
+                                                </form>
+
+                                                
+                                                <div class="form-floating mt-5">
+                                                    <a href="{% url 'dashboard:adjustment' %}" class="btn fs-7 mx-2">
+                                                        <i class="fa-solid fa-arrow-left me-2 fs-7"></i> Nop, go back
+                                                    </a>
+                                                
+                                                </div>
+                                            </div>
+
+                                    </div>
+                                </div>
+                            </div> 
                     </div>                  
                   
                     <div class="card-body">
 
-                        <div class="form-group mt-4">
-                               
-                            <div class="basic-form">
-                                <form method="get">
-
-                                    <label for="clientsearch">Search clients:</label>
-                                    {{select.name}}
-                                    {{select.client}}
-                                    
-                                </form>
-                            </div>
-                        </div>
-                          
-                        {% comment %}
-
                         <div class="table-responsive">
-                            
                             <table id="example4" class="display" style="min-width: 845px">
-                                {% if 'accounts' in request.GET %}
 
                                 <thead>
                                     <tr>
-                                        <th>ACCOUNT</th>                                    
-                                        <th>SERVICES</th>
-                                        <th>RR NOW</th>
-                                        <th>ADJ %</th>
-                                        <th>EMAIL DATE</th>
+                                        <th>CLIENT</th>
+                                        <th>A/S</th>                                    
 
-                                        <th></th>
+                                        <th>SERVICES</th>
+                                        <th>ADJ %</th>
+                                        <th>NOTICE DATE</th>
                                     </tr>
                                 </thead>
+
                                 <tbody>
-                                    {% for client in services %}
-                                        <tr>                                               
+                                    {% for adj in adjusts %}
+                                        <tr>    
+                                            
+                                           
                                             <td>
                                                 <div class="d-flex align-items-center">
-                                                    <a class="mb-0 fs-16 font-w500 client-item" href="{% url 'dashboard:editclient' id=client.id %}">{{client.name}}</a>
+                                                    <a class="mb-0 fs-16 font-w500 client-item" href="{% url 'dashboard:editclient' id=adj.client.id %}">{{adj.client.name}}</a>
                                                 </div>
                                             </td>
-
-                                            <td>{% for service in client.services.all %} {{service.service}}{% if forloop.last %}{%else%}, {%endif%} {%endfor%}</td>
-                                        
-
-
-                                            <td>${{client.total_rr|floatformat:2|intcomma}}</td>
-                                            <td>{{ client.services.latest.last_adj|floatformat:2|intcomma}}%</td>
-                                            <td>{{client.services.latest.adj_at|date:"d/m/Y"}}</td>
-                                        
                                             <td>
-                                                <div class="d-flex flex-row">                                                                                                                                  
-                                                        
-                                                    <button type="button" class="py-2 px-3 m-2 btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal{{client.id}}">
-                                                        <i class="bi bi-envelope fs-4"></i>                                                </button> 
-
-                                                        <div class="modal" id="exampleModal{{client.id}}" >
-                                                            {% include 'dashboard/table/raicesale.html' %}
-                                                        </div> 
-                                                </div>                                        
+                                                   {{adj.type}}
                                             </td>
+                                            <td>
+                                                {% if adj.type == "Account" %}
+                                                    {% for service in adj.client.services.all %}
+                                                     {{service.service}}{% if forloop.last %}{%else%} / {%endif%} 
+                                                    {%endfor%}
+                                                {% else %}
+                                                {{adj.service.service}}
+                                                {% endif %}
+                                            </td>
+                                        
+
+
+                                            <td>{{adj.adj_percent}} %</td>
+                                            <td>{{ adj.notice_date|date:"d/m/Y"}}</td>
+                                        
+                                           
                                         </tr>
                                     {% endfor %}
                                 </tbody>
 
-                                 {% else %}
-                            
-                                    <thead>
-                                        <tr>
-                                            <th>ACCOUNT</th>
-                                            
-                                            <th>SERVICE</th>
-                                            <th>LAST ADJ</th>
+                            </table>
+                        </div>
+                    </div>
 
-                                            <th>LAST %</th>
-
-                                            <th>LAST PRICE</th>
-                                            <th>DIFERENCE</th>
-
-                                            <th>PRICE NOW</th>
-                                            <th>ADJ %</th>
-                                            <th>EMAIL DATE</th>
-
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for sale in services %}
-                                            <tr>                                               
-                                                <td>
-                                                    <div class="d-flex align-items-center">
-                                                        <a class="mb-0 fs-16 font-w500 client-item" href="{% url 'dashboard:editclient' id=sale.client.id %}">{{sale.client}}</a>
-                                                    </div>
-                                                </td>
-                                                <td> <a class="mb-0 fs-16 font-w500"> {{sale.service}} </a> </td>
-
-                                                <td>{{sale.adj_at_old|date:"d/m/Y"}}</td>
-
-                                                <td>{{sale.adj_old|floatformat:2|intcomma}}%</td>
-                                                <td>${{sale.total_old|floatformat:2|intcomma}}</td>
-
-                                                <td>${{sale.get_diference|floatformat:2|intcomma}}</td>
-
-                                                <td>${{sale.total|floatformat:2|intcomma}}</td>
-                                                <td>{{sale.last_adj|floatformat:2|intcomma}}%</td>
-                                                <td>{{sale.adj_at|date:"d/m/Y"}}</td>
-                                               
-                                                <td>
-                                                    <div class="d-flex flex-row">                                                                                                                                  
-                                                            
-                                                        <button type="button" class="py-2 px-3 m-2 btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal{{sale.id}}">
-                                                            <i class="bi bi-envelope fs-4"></i>                                                </button> 
-
-                                                            <div class="modal" id="exampleModal{{sale.id}}" >
-                                                                {% include 'dashboard/table/raicesale.html' %}
-                                                            </div> 
-                                                    </div>                                        
-                                                </td>
-                                            </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                    {% endif %}
-
-                                </table>
-                            </div>
-                            {% endcomment %}
-
-                       </div>
                 </div>
             </div>
-            
-        </div>
-
-
-        
-
-
-  
-
+        </div>    
 
 {% endblock %}
 
 {% block additional_js %}
-<script>
-    $(document).ready(function() {
-      var availableTags = [
-        {% for client in clients %}
-        "{{client}}", 
-        {% endfor %}
-      ];
+
+
+
+<script>             
   
-      $("#clientsearch").autocomplete({
-        source: availableTags
-      });
-    });
+    var type = document.getElementById("type");
+  
+    // Create the first option
+    var option = document.createElement("option");
+    option.text = "Account/Service";
+    option.value = "";
+    option.disabled = true;
+    option.selected = true;
+    
+    // Add the first option to the dropdown list
+    type.add(option, 0);
+    
+  
+      var client = document.getElementById("client");
+      var service = document.getElementById("service");
+  
+      var clientdiv = document.getElementById("clientform");
+      var servicediv = document.getElementById("serviceform");
+      var datadiv = document.getElementById("dataform");
+  
+      clientdiv.style.display = (type.value !== "---------") ? "none" : "block";
+      servicediv.style.display = (type.value !== "---------") ? "none" : "block";
+  
+      type.onchange=function(){
+      
+          if(this.value=="Account"){
+              clientdiv.style.display="block";
+              servicediv.style.display="none";
+              datadiv.style.display="none"; 
+  
+          }else if(this.value=="Service"){
+              clientdiv.style.display="block";
+              datadiv.style.display="none"; 
+  
+          }else{
+              clientdiv.style.display="none";
+              servicediv.style.display="none";
+              datadiv.style.display="none"; 
+  
+          }
+      }     
+      
+      client.onchange=function(){
+        if(type.value=="Service"){
+        servicediv.style.display="block"; 
+      }else{
+        servicediv.style.display="none";
+        datadiv.style.display="block"; 
+      }
+      }
+  
+  
+      service.onchange=function(){
+       
+        datadiv.style.display="block"; 
+      }
+  
+  
+      
+      
+         
   </script>
+  
+  <script>
+      $(document).ready(function() {
+        var $clientField = $('#client');
+        var $clientForm = $('#clientform');
+        var $clientInput = $clientField.find('input');
+    
+        $clientInput.autocomplete({
+          source: '/client-autocomplete/',
+          minLength: 2,
+          select: function(event, ui) {
+            $clientInput.val(ui.item.value);
+            return false;
+          },
+          focus: function(event, ui) {
+            $clientInput.val(ui.item.value);
+            return false;
+          }
+        });
+    
+        $clientInput.on('input', function() {
+          if ($clientInput.val() === '') {
+            $clientForm.hide();
+          } else {
+            $clientForm.show();
+          }
+        });
+      });
+    </script>
+  
+    <script>// Get the client and service select fields
+      var $clientInput = $('#client');
+      var $serviceSelect = $('#service');
+      
+      // Add an event listener to the client input field to trigger the filterServices function
+      $clientInput.on('change', filterServices);
+      
+      function filterServices() {
+        // Get the name of the selected client
+        var clientName = $clientInput.val();
+      
+        // Loop through each option in the service select field and show/hide based on the selected client
+        $serviceSelect.find('option').each(function() {
+          var optionClientName = $(this).attr('id');
+          if (optionClientName === clientName) {
+            $(this).show();
+          } else {
+            $(this).hide();
+          }
+        });
+      
+        // Reset the service select field to show the first available option
+        $serviceSelect.val($serviceSelect.find('option:visible:first').val());
+      }
+      
+      
+   </script>
+
 {% endblock %}

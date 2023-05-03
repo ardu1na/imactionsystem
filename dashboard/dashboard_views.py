@@ -11,6 +11,9 @@ from django.http import HttpResponse, Http404, HttpResponseBadRequest
 from django.contrib.auth.decorators import login_required, permission_required 
 import pickle
 import mimetypes
+
+from django.http import JsonResponse
+from django.views.decorators.http import require_GET
 from django.db.models import Sum
 from datetime import datetime
 from decimal import Decimal
@@ -700,8 +703,6 @@ def ceo(request):
     
     return render(request,'dashboard/instructor/ceo.html',context)
 
-from django.http import JsonResponse
-from django.views.decorators.http import require_GET
 
 @require_GET
 def client_autocomplete(request):
@@ -760,7 +761,38 @@ def adj(request):
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
 def adjustment(request):
+    
+    services = Service.objects.filter(state=True)
+    clients = Client.objects.filter(cancelled="Active")
+    adjform = AdjForm()
+    adjusts = Adj.objects.all()
+    
+    if request.method == "POST" and "adj" in request.POST:
+        
+        adjform =AdjForm(request.POST)
 
+        if adjform.is_valid():
+            
+            instance = adjform.save(commit=False)
+            
+            client_name = adjform.cleaned_data['client']
+            client_instance = Client.objects.get(name=client_name)
+            instance.client = client_instance
+            
+
+            
+            if adjform.cleaned_data['type'] == "Service":
+                service_name = adjform.cleaned_data['service']
+                instance.service = service_name
+        
+            instance.save()
+            return redirect('dashboard:adjustment') 
+                
+                 
+        else:
+            print(adjform.errors) 
+    """    
+    
     if request.method == 'GET':
         if 'accounts' in request.GET:
             services = []
@@ -845,15 +877,15 @@ def adjustment(request):
             else: 
                 print(raiceform.errors)
                 return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
-            
+            """
 
 
     context = {
         'services': services,
         'clients': clients,
-        'select': select,
         "page_title":"ADJUSTMENTS",
-        'raiceform':raiceform,
+        'adjform':adjform,
+        'adjusts': adjusts,
 
     }
     return render (request, 'dashboard/table/adjustments.html', context)

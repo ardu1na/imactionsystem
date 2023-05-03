@@ -94,6 +94,8 @@ class Adj(models.Model):
     service = models.ForeignKey(Service, on_delete=models.SET_NULL, related_name="adj", null=True, blank=True)
     client = models.ForeignKey(Client, on_delete=models.SET_NULL, related_name="adj", null=True, blank=True)
     
+    created_at = models.DateField(auto_now_add=True)
+    
     def __str__ (self):
         if self.type == "Service":
             client = self.service.client.name
@@ -101,6 +103,9 @@ class Adj(models.Model):
             client = self.client.name
         return f'Adj {self.type} {client} {self.notice_date}'
         
+    class Meta:
+        ordering = ['-notice_date']
+
         
 
 

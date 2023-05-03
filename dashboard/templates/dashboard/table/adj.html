@@ -50,9 +50,9 @@
                             <div id="serviceform" class="my-4" style="display:none;">
                                   <p>Select the service...</p>                 
                                   <select id="service" class="form-control" name="service">
-                                          {%for s in services %}
+                                          {% for s in services %}
                                             <option id="{{s.client.name}}" value="{{s.id}}"> {{s.service}}</option>
-                                          {%endfor%}
+                                          {% endfor %}
                                   </select>
                             </div>
 
