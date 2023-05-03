@@ -47,13 +47,15 @@ class AdjForm(ModelForm):
         })
     )
     service = ModelChoiceField(
-                    queryset=Service.objects.all(),
-                    widget=Select(
-                        attrs={
-                            'class':"default-select form-control wide mb-3",
-                            'id':"service",
-                            'placeholder':"service",}),
-                    empty_label = ' - ')
+        queryset=Service.objects.filter(state=True),
+        widget=Select(
+            attrs={
+                'class': "default-select form-control wide mb-3",
+                'id': "service",
+                'placeholder': "service",
+            }
+        ),
+        empty_label=' - ')
     
     class Meta:
         model = Adj

@@ -711,6 +711,8 @@ def client_autocomplete(request):
     return JsonResponse({'results': results})
 
 
+
+
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
 def adj(request):

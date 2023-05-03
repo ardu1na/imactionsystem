@@ -34,15 +34,21 @@
                                 <input type="text" name="client" id="client" class="form-control" placeholder="Client" autocomplete="on" list="clients">
                                     <datalist id="clients">
                                     {% for client in clients %}
-                                    <option value="{{ client.name }}">
+                                    <option id="{{client.id}}" value="{{ client.name }}">
                                     {% endfor %}
                                     </datalist>
 
                             </div>
 
                             <div id="serviceform" style="display:none;">
-                            {{adjform.service}}
+                                                                
+                                  <select id="service" class="form-control" name="service">
+                                          {%for s in services %}
+                                            <option id="{{s.client.name}}" value="{{s.id}}"> {{s.service}}</option>
+                                          {%endfor%}
+                                  </select>
                             </div>
+
                         </form>
 
                             
@@ -69,15 +75,22 @@
 <script>
     var type = document.getElementById("type");
     var clientdiv = document.getElementById("clientform");
+    var servicediv = document.getElementById("serviceform");
+
     clientdiv.style.display = (type.value !== "---------") ? "none" : "block";
+    servicediv.style.display = (type.value !== "---------") ? "none" : "block";
+
     type.onchange=function(){
     
         if(this.value=="Account"){
             clientdiv.style.display="block";  
         }else if(this.value=="Service"){
-            clientdiv.style.display="block"; 
+            clientdiv.style.display="block";
+            servicediv.style.display="block"; 
         }else{
             clientdiv.style.display="none";
+            service.style.display="none";
+
         }
     }        
 </script>
@@ -111,6 +124,33 @@
     });
   </script>
 
-
+  <script>// Get the client and service select fields
+    var $clientInput = $('#client');
+    var $serviceSelect = $('#service');
+    
+    // Add an event listener to the client input field to trigger the filterServices function
+    $clientInput.on('change', filterServices);
+    
+    function filterServices() {
+      // Get the name of the selected client
+      var clientName = $clientInput.val();
+    
+      // Loop through each option in the service select field and show/hide based on the selected client
+      $serviceSelect.find('option').each(function() {
+        var optionClientName = $(this).attr('id');
+        if (optionClientName === clientName) {
+          $(this).show();
+        } else {
+          $(this).hide();
+        }
+      });
+    
+      // Reset the service select field to show the first available option
+      $serviceSelect.val($serviceSelect.find('option:visible:first').val());
+    }
+    
+    
+ </script>
+  
 
 {% endblock %}
