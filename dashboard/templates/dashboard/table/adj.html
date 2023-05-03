@@ -72,8 +72,11 @@
 
 {% block additional_js %}
 
-<script>
+<script>             
+
     var type = document.getElementById("type");
+    var client = document.getElementById("client");
+
     var clientdiv = document.getElementById("clientform");
     var servicediv = document.getElementById("serviceform");
 
@@ -86,13 +89,18 @@
             clientdiv.style.display="block";  
         }else if(this.value=="Service"){
             clientdiv.style.display="block";
-            servicediv.style.display="block"; 
         }else{
             clientdiv.style.display="none";
-            service.style.display="none";
-
         }
-    }        
+    }     
+    
+    client.onchange=function(){
+
+      servicediv.style.display="block"; 
+    }
+    
+    
+       
 </script>
 
 <script>
