@@ -26,6 +26,11 @@
                         
                         <form method="post">
                             {% csrf_token %}
+
+                            <div class="d-flex flex-row-reverse my-4">
+                              <h3> Adjustment </h3>
+                              </div>
+
                             <div id="typeform">
                             {{adjform.type}}
                             </div>
@@ -49,6 +54,23 @@
                                             <option id="{{s.client.name}}" value="{{s.id}}"> {{s.service}}</option>
                                           {%endfor%}
                                   </select>
+                            </div>
+
+
+                            <div id="dataform" class="my-5" style="display:none;">
+                              <hr>
+                              <h4>Information</h4>                 
+                              <div class="d-flex flex-row-reverse my-4">
+                                {{adjform.notice_date}}  <span>Notice Date<span>
+                                </div>
+                                {{adjform.adj_percent}}
+
+                                <p>Email reminder</p>                 
+
+                              {{adjform.date_alert}}
+
+                              <button type="submit" class="btn btn-dark my-4 px-3 fs-4" name="adj"> Ok </button>
+
                             </div>
 
                         </form>
@@ -89,10 +111,12 @@
   type.add(option, 0);
   
 
-      var client = document.getElementById("client");
+    var client = document.getElementById("client");
+    var service = document.getElementById("service");
 
     var clientdiv = document.getElementById("clientform");
     var servicediv = document.getElementById("serviceform");
+    var datadiv = document.getElementById("dataform");
 
     clientdiv.style.display = (type.value !== "---------") ? "none" : "block";
     servicediv.style.display = (type.value !== "---------") ? "none" : "block";
@@ -102,13 +126,16 @@
         if(this.value=="Account"){
             clientdiv.style.display="block";
             servicediv.style.display="none";
-  
+            datadiv.style.display="none"; 
+
         }else if(this.value=="Service"){
             clientdiv.style.display="block";
+            datadiv.style.display="none"; 
 
         }else{
             clientdiv.style.display="none";
             servicediv.style.display="none";
+            datadiv.style.display="none"; 
 
         }
     }     
@@ -118,8 +145,17 @@
       servicediv.style.display="block"; 
     }else{
       servicediv.style.display="none";
+      datadiv.style.display="block"; 
     }
-  }
+    }
+
+
+    service.onchange=function(){
+     
+      datadiv.style.display="block"; 
+    }
+
+
     
     
        

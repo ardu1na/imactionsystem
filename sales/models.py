@@ -15,9 +15,13 @@ class LastBlue (models.Model):
     def get_blue(self):
         return self.compra
 
+last_blue = 0
+try:
+    last_blue =  LastBlue.objects.get(pk=1)
+    blue = last_blue.compra
 
-last_blue = LastBlue.objects.get(pk=1)
-blue = last_blue.compra
+except:
+    blue = 0
 
 
 

@@ -5,7 +5,7 @@ from unfold.admin import ModelAdmin
 from import_export.admin import ImportExportModelAdmin
 
 from dashboard.resources import SaleResource
-from sales.models import Sale, LastBlue, Service
+from sales.models import Sale, LastBlue, Service, Adj
 
 class SaleInline(admin.StackedInline):
     model = Sale
@@ -27,3 +27,6 @@ class SaleAdmin(ModelAdmin, ImportExportModelAdmin):
 admin.site.register(Sale, SaleAdmin)
 
 admin.site.register(LastBlue)
+class AdjAdmin(ModelAdmin):
+    pass
+admin.site.register(Adj, AdjAdmin)

@@ -55,7 +55,9 @@ class AdjForm(ModelForm):
                 'placeholder': "service",
             }
         ),
-        empty_label=' - ')
+        empty_label=' - ',
+        required=False  
+    )
     
     class Meta:
         model = Adj

@@ -721,12 +721,36 @@ def adj(request):
     accounts = Client.objects.filter(cancelled="Active")
     adjform = AdjForm()
     
+    if request.method == "POST" and "adj" in request.POST:
+        
+        adjform =AdjForm(request.POST)
+
+        if adjform.is_valid():
+            
+            instance = adjform.save(commit=False)
+            
+            client_name = adjform.cleaned_data['client']
+            client_instance = Client.objects.get(name=client_name)
+            instance.client = client_instance
+            
+
+            
+            if adjform.cleaned_data['type'] == "Service":
+                service_name = adjform.cleaned_data['service']
+                instance.service = service_name
+        
+            instance.save() 
+                
+                 
+        else:
+            print(adjform)
+            print(adjform.errors)
+    
 
     context = {
         'adjform': adjform,
         'services': services,
         'clients': accounts,
-        "page_title":"ADJUSTMENTS",
 
     }
     return render (request, 'dashboard/table/adj.html', context)
