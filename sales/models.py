@@ -86,7 +86,7 @@ class Adj(models.Model):
     
     date_alert = models.DateField(null=True, blank=True)
     
-    type = models.CharField(max_length=40, choices=ADJ_CHOICES)
+    type = models.CharField(max_length=40, default=None, verbose_name="Account/Service", choices=ADJ_CHOICES, blank=False, null=False)
     service = models.ForeignKey(Service, on_delete=models.SET_NULL, related_name="adj", null=True, blank=True)
     client = models.ForeignKey(Client, on_delete=models.SET_NULL, related_name="adj", null=True, blank=True)
     

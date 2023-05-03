@@ -40,7 +40,7 @@ class AdjForm(ModelForm):
     client = forms.CharField(
         widget=forms.TextInput(attrs={
             'class': 'form-control wide mb-3',
-            'placeholder': 'Client',
+            'placeholder': 'type client name...',
             'id': 'client',
             'autocomplete': 'on',
             'list': 'clients',
@@ -81,6 +81,7 @@ class AdjForm(ModelForm):
                 'class':"default-select form-control wide mb-3",
                 'id':"type",
                 'placeholder' : "type",
+                'empty_label': "Account/Service"
                 }
             ),
         }

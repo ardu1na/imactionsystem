@@ -31,6 +31,8 @@
                             </div>
 
                             <div id="clientform" style="display:none;">
+                                <p>Select the client...</p>                 
+
                                 <input type="text" name="client" id="client" class="form-control" placeholder="Client" autocomplete="on" list="clients">
                                     <datalist id="clients">
                                     {% for client in clients %}
@@ -40,8 +42,8 @@
 
                             </div>
 
-                            <div id="serviceform" style="display:none;">
-                                                                
+                            <div id="serviceform" class="my-4" style="display:none;">
+                                  <p>Select the service...</p>                 
                                   <select id="service" class="form-control" name="service">
                                           {%for s in services %}
                                             <option id="{{s.client.name}}" value="{{s.id}}"> {{s.service}}</option>
@@ -73,9 +75,21 @@
 {% block additional_js %}
 
 <script>             
+  
+  var type = document.getElementById("type");
 
-    var type = document.getElementById("type");
-    var client = document.getElementById("client");
+  // Create the first option
+  var option = document.createElement("option");
+  option.text = "Account/Service";
+  option.value = "";
+  option.disabled = true;
+  option.selected = true;
+  
+  // Add the first option to the dropdown list
+  type.add(option, 0);
+  
+
+      var client = document.getElementById("client");
 
     var clientdiv = document.getElementById("clientform");
     var servicediv = document.getElementById("serviceform");
@@ -86,18 +100,26 @@
     type.onchange=function(){
     
         if(this.value=="Account"){
-            clientdiv.style.display="block";  
+            clientdiv.style.display="block";
+            servicediv.style.display="none";
+  
         }else if(this.value=="Service"){
             clientdiv.style.display="block";
+
         }else{
             clientdiv.style.display="none";
+            servicediv.style.display="none";
+
         }
     }     
     
     client.onchange=function(){
-
+      if(type.value=="Service"){
       servicediv.style.display="block"; 
+    }else{
+      servicediv.style.display="none";
     }
+  }
     
     
        
