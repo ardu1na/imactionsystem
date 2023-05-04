@@ -17,199 +17,251 @@
 {% block content %}
 
 
- <!-- edit tier CONFIRMATION -->
- <div class="my-3">
-    {% if 'changed' in request.GET %}
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        ☑ TIER parameters changed successfully!
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+<div class="row">
+    <div class="col-xl-9 col-xxl-9 col-lg-9 col-m-9">
+        <div class="row">
+            <div class="col-xl-6 col-xxl-6 col-lg-6">
+                <div class="widget-stat card">
+                    <div class="card-body  p-4">
+                        <div class="media ai-icon">
+                            <span class="me-3 bgl-info text-info">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trending-up"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>                            </span>
+
+                            </span>
+                            <div class="media-body">
+                                <p class="mb-1">RR</p>
+                                <h4 class="mb-0">$ {{rr_t_clients|floatformat:2}} </h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>    
+            </div>
+            <div class="col-xl-6 col-xxl-6 col-lg-6">
+                <div class="widget-stat card">
+                    <div class="card-body  p-4">
+                        <div class="media ai-icon">
+                            <span class="me-3 bgl-success text-success">
+                                <svg id="icon-customers" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                            </span>
+                            <div class="media-body">
+                                <p class="mb-1">RR CLIENTS</p>
+                                <h4 class="mb-0">{{rr_q_clients}} </h4>
+                            </div>
+                        </div>                                
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xl-6 col-xxl-6 col-lg-6">
+                <div class="widget-stat card">
+                    <div class="card-body  p-4">
+                        <div class="media ai-icon">
+                            <span class="me-3 bgl-primary text-primary">
+                                <svg id="icon-revenue" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-dollar-sign">
+                                    <line x1="12" y1="1" x2="12" y2="23"></line>
+                                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                </svg>
+                            </span>
+                            <div class="media-body">
+                                <p class="mb-1">Sales RR {{month}}</p>
+                                <h4 class="mb-0">{{rr_this|floatformat:2}}</h4>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+    
+            <div class="col-xl-6 col-xxl-6 col-lg-6">
+                <div class="widget-stat card">
+                    <div class="card-body  p-4">
+                        <div class="media ai-icon">
+                            <span class="me-3 bgl-warning text-warning">
+                                <svg id="icon-revenue" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-dollar-sign">
+                                    <line x1="12" y1="1" x2="12" y2="23"></line>
+                                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                </svg>
+                            </span>
+                            <div class="media-body">
+                                <p class="mb-1">One Off {{month}}</p>
+                                <h4 class="mb-0">{{one_this|floatformat:2}} </h4>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>  
+
+        <div class="row">
+            <div class="col-xl-6 col-xxl-6 col-lg-6">
+                <div class="widget-stat card">
+                    <div class="card-body  p-4">
+                        <div class="media ai-icon">
+                            <span class="me-3 bgl-danger text-danger">
+                                <i class="bi bi-dash-circle"></i>
+
+
+                            </span>
+                            <div class="media-body">
+                                <p class="mb-1">Cancellations {{month}}</p>
+                                <h4 class="mb-0">{{cancell_q}} </h4>
+                            </div>
+                        </div>                        
+                    </div>
+                </div>  
+            </div>   
+            <div class="col-xl-6 col-xxl-6 col-lg-6">
+
+                <div class="widget-stat card">
+                    <div class="card-body  p-4">
+                        <div class="media ai-icon">
+                            <span class="me-3 bgl-secondary text-secondary">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-repeat"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>                          </span>
+
+                            </span>
+                            <div class="media-body">
+                                <p class="mb-1">BALANCE</p>
+                                <h4 class="mb-0">$ {{balance|floatformat:2}} </h4>
+                            </div>
+                        </div>
+                    </div>
+                </div> 
+            </div>   
+ 
+        </div>
     </div>
-    {% endif %}
+
+         
+
+     
+
+
+    <div class="col-xl-3 col-xxl-3 col-lg-3">
+        <div class="card dlab-join-card h-auto">
+            <div class="card-body">
+                <div class="dlab-media d-flex justify-content-between">
+                    <div class="dlab-content">
+                        <h4 class="py-4"> Hi, {{request.user}}.</h4>
+                            <h3> {{hour}}</h3>
+                        <h5 class="py-4"> Blue  $ {{blue}}.</h5>
+
+                    </div>	
+                    <div class="dlab-icon">
+                        <img src="{% static 'dashboard/images/vector/calpng.png' %}" alt="" class="cal-img">
+                        <img src="{% static 'dashboard/images/vector/book.png' %}" alt="" class="book-img">
+                    </div>
+                </div>
+            </div>
+        </div>  
+        
+              
+        
+    </div>   
+
+
+</div>
+
+<div class="row">
+
+
+    <div class="col-xl-4 col-xxl-4 col-m-4">
+
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">ACCOUNTS BY SERVICE </h4>
+            </div>
+            <div class="card-body">
+                <canvas id="cbys"></canvas>
+
+            </div>
+        </div>
+    </div>
+
+    
+    
+
+    <div class="col-xl-8 col-xxl-8 col-m-8">
+        <div class="card">
+            <div class="card-header border-0 flex-wrap mt-4">
+                <h4>RR by Service</h4>
+                <form method="get">
+                    <div class="d-flex flex-row-reverese">
+                        <select id='date-dropdown' name="year" class="form-control">
+                        </select>
+                        <span><input type="submit" class="btn btn-outline-dark ms-2"></span>
+                    </div>
+                </form>
+            </div>
+            <div class="card-body">
+                <div id="LineChart"></div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 
 
-        <div class="row">
-            <div class="col-xl-6 col-xxl-12">
-                <div class="row">
+<div class="row">
+    <div class="col-xl-8 col-xxl-8 col-m-8">
 
-                    <div class="col-xl-12 col-xxl-6">
-                        <div class="card dlab-join-card h-auto">
-                            <div class="card-body">
-                                <div class="dlab-media d-flex justify-content-between">
-                                    <div class="dlab-content">
-                                        <div class="d-flex flex-row-reverse">
+        <div class="card score-active">
 
-                                        <h3> {{hour}}</h3>
-                                    </div>	
+            <div class="card-header border-0 pb-2 flex-wrap">
+                <h4>RR SALES</h4>
 
-                                        <h4 class="py-3"> Blue: ${{blue}}</h4>
-                                    </div>	
-                                    <div class="dlab-icon">
-                                        <img src="{% static 'dashboard/images/vector/calpng.png' %}" alt="" class="cal-img">
-                                        <img src="{% static 'dashboard/images/vector/book.png' %}" alt="" class="book-img">
-                                    </div>
-                                </div>
-                            </div>
+                <div class="d-flex">
+                    <div class="round weekly d-flex" id="dzOldSeries">
+                        <div>
+                            <input type="checkbox" id="checkbox1" name="radio" value="weekly" />
+                            <label for="checkbox1" class="checkmark"></label>
+                        </div>
+                        <div>
+                            <span class="fs-14">This Year</span>
                         </div>
                     </div>
 
-
-                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
-                        <div class="card">
-                            <div class="card-header">
-                                <h4 class="card-title">ACCOUNTS BY TIER </h4>
-                            </div>
-                            <div class="card-body">
-                                <canvas id="pie_chart"></canvas>
-                            </div>
+                    <div class="round d-flex" id="dzNewSeries">
+                        <div>
+                            <input type="checkbox" id="checkbox2" name="radio" value="monthly" />
+                            <label for="checkbox2" class="checkmark"></label>
                         </div>
+                        <div>
+                            <span class="fs-14">Last Year</span>
+                        </div>	
                     </div>
-
-                    <div class="col-xl-12 bt-order">
-                        <div class="row">
-                            <div class="col-xl-4 col-sm-6">
-                                <div class="dlab-cource bg-secondary">
-                                    <div class="d-flex align-items-center">
-                                        <span class="course-icon">
-                                            <svg width="23" height="23" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M19 0.25H4C3.00544 0.25 2.05161 0.645088 1.34835 1.34835C0.645088 2.05161 0.25 3.00544 0.25 4V19C0.25 19.9946 0.645088 20.9484 1.34835 21.6517C2.05161 22.3549 3.00544 22.75 4 22.75H19C19.9946 22.75 20.9484 22.3549 21.6517 21.6517C22.3549 20.9484 22.75 19.9946 22.75 19V4C22.75 3.00544 22.3549 2.05161 21.6517 1.34835C20.9484 0.645088 19.9946 0.25 19 0.25ZM16.875 8.5125L11.1625 16.0125C11.0461 16.1638 10.8965 16.2864 10.7253 16.3709C10.5542 16.4554 10.3659 16.4995 10.175 16.5C9.98513 16.501 9.79753 16.4588 9.62643 16.3765C9.45532 16.2942 9.30522 16.174 9.1875 16.025L6.1375 12.1375C6.03655 12.0078 5.96212 11.8595 5.91848 11.7011C5.87484 11.5426 5.86283 11.3772 5.88314 11.2141C5.90346 11.051 5.95569 10.8935 6.03687 10.7506C6.11804 10.6077 6.22657 10.4822 6.35625 10.3812C6.61815 10.1774 6.95032 10.0859 7.27968 10.1269C7.44276 10.1472 7.60025 10.1994 7.74314 10.2806C7.88604 10.3618 8.01155 10.4703 8.1125 10.6L10.15 13.2L14.875 6.95C14.9751 6.81868 15.1002 6.70836 15.2429 6.62536C15.3857 6.54235 15.5434 6.48828 15.7071 6.46622C15.8707 6.44417 16.0371 6.45457 16.1968 6.49682C16.3564 6.53908 16.5062 6.61237 16.6375 6.7125C16.7688 6.81263 16.8791 6.93765 16.9621 7.08042C17.0451 7.22318 17.0992 7.3809 17.1213 7.54456C17.1433 7.70823 17.1329 7.87463 17.0907 8.03427C17.0484 8.19392 16.9751 8.34368 16.875 8.475V8.5125Z" fill="var(--secondary)"/>
-                                            </svg>
-                                        </span>	
-                                        <div class="ms-2">
-                                            <h4 class="mb-0">$ {{total_rr}}</h4>
-                                            <span>RR</span>
-                                        </div>
-                                    </div>
-                                    <img src="{% static 'dashboard/images/vector/check.png' %}" alt="">
-                                </div>
-                            </div>
-
-                            <div class="col-xl-4 col-sm-6">
-                                <div class="dlab-cource">
-                                    <div class="d-flex align-items-center">
-                                        <span class="course-icon">
-                                            <svg width="23" height="23" viewBox="0 0 21 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M14.3201 4.65852H2.86175C2.35544 4.6591 1.87003 4.8592 1.51201 5.21494C1.15399 5.57068 0.952605 6.053 0.952026 6.55609V24.5829C0.952032 24.7573 1.00037 24.9282 1.09175 25.077C1.18312 25.2259 1.31399 25.3468 1.47 25.4266C1.626 25.5063 1.80111 25.5418 1.97609 25.5292C2.15108 25.5166 2.31918 25.4563 2.46195 25.355L8.5901 21.005L14.72 25.355C14.8628 25.4563 15.0309 25.5166 15.2058 25.5292C15.3808 25.5418 15.5559 25.5063 15.7119 25.4265C15.8679 25.3468 15.9988 25.2258 16.0901 25.077C16.1815 24.9282 16.2298 24.7572 16.2298 24.5829V6.55609C16.2292 6.053 16.0278 5.57068 15.6698 5.21494C15.3118 4.8592 14.8264 4.6591 14.3201 4.65852V4.65852Z" fill="#21262E"/>
-                                                <path d="M18.1395 0.863403H5.72635C5.4731 0.863403 5.23023 0.963364 5.05116 1.14129C4.87209 1.31923 4.77148 1.56055 4.77148 1.81218C4.77148 2.06382 4.87209 2.30514 5.05116 2.48307C5.23023 2.661 5.4731 2.76096 5.72635 2.76096H18.1395V20.7878C18.1395 21.0394 18.2401 21.2808 18.4192 21.4587C18.5983 21.6366 18.8412 21.7366 19.0944 21.7366C19.3476 21.7366 19.5905 21.6366 19.7696 21.4587C19.9487 21.2808 20.0493 21.0394 20.0493 20.7878V2.76096C20.0487 2.25788 19.8473 1.77556 19.4893 1.41982C19.1313 1.06408 18.6459 0.863979 18.1395 0.863403V0.863403Z" fill="#21262E"/>
-                                            </svg>
-                                        </span>	
-                                        <div class="ms-2">
-                                            <h4 class="mb-0">{{c_rr_total}}</h4>
-                                            <span>RR ACCOUNTS</span>
-                                        </div>
-                                    </div>
-                                    <img src="{% static 'dashboard/images/vector/bookmarks.png' %}" class="bookmarks" alt="">
-                                </div>
-                            </div>
-
-                            
-                        </div>
-                    </div>
-                </div>
+                </div>                                
             </div>
 
-            <div class="col-xl-6 col-xxl-12">
-                <div class="row">
-                    <div class="col-xl-12">
-                        <div class="card score-active">
-                            <div class="card-header border-0 pb-2 flex-wrap">
-                                <h4>RR SALES</h4>
+            <div class="card-body pb-1 custome-tooltip pt-0">
+                <div id="chartBar" class="chartBar"></div>
+            </div>        
 
-                                <div class="d-flex">
-                                    <div class="round weekly d-flex" id="dzOldSeries">
-                                        <div>
-                                            <input type="checkbox" id="checkbox1" name="radio" value="weekly" />
-                                            <label for="checkbox1" class="checkmark"></label>
-                                        </div>
-                                        <div>
-                                            <span class="fs-14">This Year</span>
-                                        </div>
-                                    </div>
+        </div>
+    </div>
 
-                                    <div class="round d-flex" id="dzNewSeries">
-                                        <div>
-                                            <input type="checkbox" id="checkbox2" name="radio" value="monthly" />
-                                            <label for="checkbox2" class="checkmark"></label>
-                                        </div>
-                                        <div>
-                                            <span class="fs-14">Last Year</span>
-                                        </div>	
-                                    </div>
-                                </div>
+        <div class="col-xl-4 col-xxl-4 col-m-4">
 
-                                
-                            </div>
-                            <div class="card-body pb-1 custome-tooltip pt-0">
-                                <div id="chartBar" class="chartBar"></div>
-                            </div>                            
-                        </div>
-                    </div>               
-                    
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">ACCOUNTS BY TIER </h4>
+                </div>
+                <div class="card-body">
+                    <canvas id="pie_chart"></canvas>
                 </div>
             </div>
+        </div>       
+           
+    </div>
+   
+</div>
 
-
-
-            <div class="col-xl-6 col-xxl-12">
-                <div class="row">
-                    <div class="col-xl-12">
-                        <div class="card score-active">
-                            <div class="card-header border-0 pb-2 flex-wrap">
-                                <h4>ONE OFF SALES</h4>
-
-                                <div class="d-flex">
-                                    <div class="round weekly d-flex" id="dzOldSeriess">
-                                        <div>
-                                            <input type="checkbox" id="checkbox3" name="radio" value="weekly" />
-                                            <label for="checkbox3" class="checkmark"></label>
-                                        </div>
-                                        <div>
-                                            <span class="fs-14">This Year</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="round d-flex" id="dzNewSeriess">
-                                        <div>
-                                            <input type="checkbox" id="checkbox4" name="radio" value="monthly" />
-                                            <label for="checkbox4" class="checkmark"></label>
-                                        </div>
-                                        <div>
-                                            <span class="fs-14">Last Year</span>
-                                        </div>	
-                                    </div>
-                                </div>
-
-                                
-                            </div>
-                            <div class="card-body pb-1 custome-tooltip pt-0">
-                                <div id="chartLine" class="chartBar"></div>
-                            </div>                            
-                        </div>
-                    </div>               
-                    
-                </div>
-            </div>
-            
-            <div class="col-xl-12">
-                <div class="card">
-                    <div class="card-header border-0 flex-wrap">
-                        <h4>RR by Service</h4>
-                        <form method="get">
-                            <div class="d-flex flex-row-reverese">
-                                <select id='date-dropdown' name="year" class="form-control">
-                                </select>
-                                <span><input type="submit" class="btn btn-outline-dark ms-2"></span>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="card-body">
-                        <div id="LineChart"></div>
-                    </div>
-                </div>
-            </div>
-
-        </div>	
 
 {% endblock %}
 
@@ -616,7 +668,7 @@
 			plotOptions: {
 				bar: {
 					horizontal: false,
-					columnWidth: '40%',
+					columnWidth: '80%',
 					
 					endingShape: "rounded",
 					startingShape: "rounded",
@@ -633,7 +685,7 @@
 				width:8,
 				colors:["#fff"]
 			},
-			colors:['#FEC64F', '#e35b17', '#17e3e3', '#e31739', '#171ee3', '#c417e3', '#14b57d'],
+			colors:['#FF6384', '#36A2EB', '#FF6384', '#9966FF', '#FFCE56', '#FF9900', '#4BC0C0'],
 			xaxis: {
 				show: true,
 				axisBorder: {
@@ -750,7 +802,7 @@
 				},
 				options: {
 					plugins:{
-						legend: false, 
+						legend: true, 
 					},	
 					responsive: true, 
 					
@@ -806,4 +858,57 @@
         selectField.value = selectedYear;
     }
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{% static 'js/pie-chart.js' %}"></script>
+<script>
+
+
+document.addEventListener("DOMContentLoaded", function(event) {
+    var ctx = document.getElementById("cbys").getContext("2d");
+    var data = {
+      labels: ["SEO", "Google Ads", "Facebook Ads", "LinkedIn", "Web Plan", "Combo", "Community Management", "Email Marketing", "Others RR"],
+      datasets: [
+        {
+          data: [{{seo_clients}}, {{gads_clients}}, {{fads_clients}}, {{lkdn_clients}}, {{wp_clients}}, {{combo_clients}}, {{cm_clients}}, {{emk_clients}}, {{other_clients}}],
+          backgroundColor: [
+            "#FF6384",
+            "#36A2EB",
+            "#FFCE56",
+            "#4BC0C0",
+            "#9966FF",
+            "#FF9900",
+            "#FF6384",
+            "#36A2EB",
+            "#FFCE56"
+          ],
+          hoverBackgroundColor: [
+            "#FF6384",
+            "#36A2EB",
+            "#FFCE56",
+            "#4BC0C0",
+            "#9966FF",
+            "#FF9900",
+            "#FF6384",
+            "#36A2EB",
+            "#FFCE56"
+          ]
+        }
+      ]
+    };
+  
+    var options = {
+      responsive: true,
+      maintainAspectRatio: false
+    };
+  
+    var myPieChart = new Chart(ctx,{
+      type: 'pie',
+      data: data,
+      options: options
+    });
+  });
+
+</script>
+
 {% endblock %}
