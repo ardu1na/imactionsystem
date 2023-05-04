@@ -2,7 +2,7 @@ from django.forms import ModelForm, \
 TextInput, URLInput, EmailInput, Select, Textarea
 from customers.models import Client,  ConfTier
 
-
+        
 
 class TierConf(ModelForm):
     class Meta:

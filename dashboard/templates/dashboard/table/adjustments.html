@@ -5,156 +5,419 @@
 
 {% block additional_css %}
 
+        
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+
+
 {% endblock %}
 
 {% block content %}
 
+<div class="modal" id="exampleModal" >
+                                                                
+<!-- Modal -->
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+                
+                <div class="modal-body text-center py-5">
+                    
+                    <h1 class="fs-5 my-3">SET ADJUSTMENT</h1>
+
+                    <form method="post">
+                        {% csrf_token %}
+
+                      
+
+                        <div id="typeform">
+                        {{adjform.type}}
+                        </div>
+
+                        <div id="clientform" style="display:none;">
+                            <p>Select the client...</p>                 
+
+                            <input type="text" name="client" id="client" class="form-control" placeholder="Client" autocomplete="on" list="clients">
+                                <datalist id="clients">
+                                {% for client in clients %}
+                                <option id="{{client.id}}" value="{{ client.name }}">
+                                {% endfor %}
+                                </datalist>
+
+                        </div>
+
+                        <div id="serviceform" class="my-4" style="display:none;">
+                              <p>Select the service...</p>                 
+                              <select id="service" class="form-control" name="service">
+                                      {% for s in services %}
+                                        <option id="{{s.client.name}}" value="{{s.id}}"> {{s.service}}</option>
+                                      {% endfor %}
+                              </select>
+                        </div>
 
 
-        <!-- row -->
+                          <div id="dataform" class="my-5" style="display:none;">
+                            <hr>
+                            <div class="mt-4">
+
+                            <h4>Information</h4>                 
+                          </div>
+
+                            <div class="d-flex flex-row-reverse my-4">
+                              {{adjform.notice_date}} <span>Notice date<span>
+                            </div>
+                            <p>(15 days before email reminder)</p>
+
+                            <div class="d-flex flex-row-reverse my-4">
+                              {{adjform.adj_percent}}<span>Adust %<span>
+                            </div>
+                            <br>
+                            
+
+                            <div class="d-flex flex-row-reverse">
+
+                              <button type="submit" class="btn btn-primary mt-5 mb-3 px-5 fs-3" name="adj"> Ok </button>
+                            </div>
+
+                        </div>
+
+                    </form>
+
+                    
+                    <div class="form-floating mt-5">
+                        <a href="{% url 'dashboard:adjustment' %}" class="btn fs-7 mx-2">
+                            <i class="fa-solid fa-arrow-left me-2 fs-7"></i> cancel
+                        </a>
+                    
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+<!-- end modal -->
+
+        <!-- main -->
 
 
         <div class="row">
-            <div class="col-12">
-                <div class="card p-2">
-                    <div class="card-header border-0 flex-wrap pb-0 mb-3">
-                        <form method="get">
-                        <button class="btn btn-primary" type="submit" name="accounts"> ADJ account  </button>
-                        
+            <div class="col-12">               
 
-                        <button class="btn btn-secondary" type="submit" name="services"> ADJ service  </button>
-                        </form>
-                    </div>                  
-                  
-                    <div class="card-body">
-                       {% if 'accounts' in request.GET %}
-
-
-
-                       <div class="table-responsive">
-                        <table id="example4" class="display" style="min-width: 845px">
-                            <thead>
-                                <tr>
-                                    <th>ACCOUNT</th>                                    
-                                    <th>SERVICES</th>
-                                    <th>RR NOW</th>
-                                    <th>ADJ %</th>
-                                    <th>EMAIL DATE</th>
-
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for client in services %}
-                                    <tr>                                               
-                                        <td>
-                                            <div class="d-flex align-items-center">
-                                                <a class="mb-0 fs-16 font-w500 client-item" href="{% url 'dashboard:editclient' id=client.id %}">{{client.name}}</a>
-                                            </div>
-                                        </td>
-
-                                        <td>{% for service in client.services.all %} {{service.service}}{% if forloop.last %}{%else%}, {%endif%} {%endfor%}</td>
-                                     
-
-
-                                        <td>${{client.total_rr|floatformat:2|intcomma}}</td>
-                                        <td>{{ client.services.latest.last_adj|floatformat:2|intcomma}}%</td>
-                                        <td>{{client.services.latest.adj_at|date:"d/m/Y"}}</td>
-                                       
-                                        <td>
-                                            <div class="d-flex flex-row">                                                                                                                                  
-                                                    
-                                                <button type="button" class="py-2 px-3 m-2 btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal{{client.id}}">
-                                                    <i class="bi bi-envelope fs-4"></i>                                                </button> 
-
-                                                    <div class="modal" id="exampleModal{{client.id}}" >
-                                                        {% include 'dashboard/table/raicesale.html' %}
-                                                    </div> 
-                                            </div>                                        
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+                    {% if adjusts %}
+                    <div class="d-flex flex-row-reverse">                   
+                      <button type="button" class="py-2 px-4 fs-2 mb-2 btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                       <i class="bi bi-envelope me-3 fs-3"></i>    
+                                  New                         </button> 
+                    </div>
+                    
+              <div class="card p-2">
+                    
+                  <div class="d-flex justify-content-between m-3">
+                    <div id="incomediv">
+                      <span class="mt-3 fs-2"><a id="income">0</a>  </span>
                     </div>
 
 
+                        <form id="date-filter-form">
 
-                       {% else %}
-                            <div class="table-responsive">
-                                <table id="example4" class="display" style="min-width: 845px">
-                                    <thead>
-                                        <tr>
-                                            <th>ACCOUNT</th>
+                          <div class="col-lg-6 col-l-6 col-m-6 ">
+
+                            <div class="form-group ">
+                            <select id="month" name="month" class="form-control-lg wide px-4">
+                                <option value="">MONTH</option>
+                                <option value="01">January</option>
+                                <option value="02">February</option>
+                                <option value="03">March</option>
+                                <option value="04">April</option>
+                                <option value="05">May</option>
+                                <option value="06">June</option>
+                                <option value="07">July</option>
+                                <option value="08">August</option>
+                                <option value="09">September</option>
+                                <option value="10">October</option>
+                                <option value="11">November</option>
+                                <option value="12">December</option>
+                            </select>
+                            </div> 
+                          </div>     
+                        </form>
+                      
+
+                      </div>
+                           
+                  
+                    <div class="card-body mt-4">
+                       
+
+                        <div class="table-responsive">
+                            <table id="example4" class="display" style="min-width: 845px">
+
+                                <thead>
+                                    <tr>
+                                        <th>CLIENT</th>
+                                        <th>A/S</th>                                    
+
+                                        <th>SERVICES</th>
+                                        <th>ADJ %</th>
+
+                                        <th>OLD VALUE</th>
+                                        <th>NEW VALUE</th>
+
+                                        <th>DIFFERENCE</th>
+                                        <th>NOTICE DATE</th>
+
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    {% for adj in adjusts %}
+                                        <tr>    
                                             
-                                            <th>SERVICE</th>
-                                            <th>LAST ADJ</th>
+                                           
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <a class="mb-0 fs-16 font-w500 client-item" href="{% url 'dashboard:editclient' id=adj.client.id %}">{{adj.client.name}}</a>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                   {{adj.type}}
+                                            </td>
+                                            <td>
+                                                {% if adj.type == "Account" %}
+                                                    {% for service in adj.client.services.all %}
+                                                     {{service.service}}{% if forloop.last %}{%else%} / {%endif%} 
+                                                    {%endfor%}
+                                                {% else %}
+                                                {{adj.service.service}}
+                                                {% endif %}
+                                            </td>
+                                        
 
-                                            <th>LAST %</th>
 
-                                            <th>LAST PRICE</th>
-                                            <th>DIFERENCE</th>
+                                            <td>{{adj.adj_percent}} %</td>
 
-                                            <th>PRICE NOW</th>
-                                            <th>ADJ %</th>
-                                            <th>EMAIL DATE</th>
+                                            <td>$ {{adj.old_value|floatformat:2}}</td>
 
-                                            <th></th>
+                                            <td>$ {{adj.new_value|floatformat:2}}</td>
+
+                                            <td>$ {{adj.dif|floatformat:2}} </td>
+
+                                            <td>{{ adj.notice_date|date:"d/m/Y"}}</td>
+
+                                           
                                         </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for sale in services %}
-                                            <tr>                                               
-                                                <td>
-                                                    <div class="d-flex align-items-center">
-                                                        <a class="mb-0 fs-16 font-w500 client-item" href="{% url 'dashboard:editclient' id=sale.client.id %}">{{sale.client}}</a>
-                                                    </div>
-                                                </td>
-                                                <td> <a class="mb-0 fs-16 font-w500"> {{sale.service}} </a> </td>
+                                    {% endfor %}
+                                </tbody>
 
-                                                <td>{{sale.adj_at_old|date:"d/m/Y"}}</td>
+                            </table>
+                        </div>
+                    </div>
 
-                                                <td>{{sale.adj_old|floatformat:2|intcomma}}%</td>
-                                                <td>${{sale.total_old|floatformat:2|intcomma}}</td>
-
-                                                <td>${{sale.get_diference|floatformat:2|intcomma}}</td>
-
-                                                <td>${{sale.total|floatformat:2|intcomma}}</td>
-                                                <td>{{sale.last_adj|floatformat:2|intcomma}}%</td>
-                                                <td>{{sale.adj_at|date:"d/m/Y"}}</td>
-                                               
-                                                <td>
-                                                    <div class="d-flex flex-row">                                                                                                                                  
-                                                            
-                                                        <button type="button" class="py-2 px-3 m-2 btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal{{sale.id}}">
-                                                            <i class="bi bi-envelope fs-4"></i>                                                </button> 
-
-                                                            <div class="modal" id="exampleModal{{sale.id}}" >
-                                                                {% include 'dashboard/table/raicesale.html' %}
-                                                            </div> 
-                                                    </div>                                        
-                                                </td>
-                                            </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                        {% endif %}
-
-                       </div>
                 </div>
+                {% else %}
+                
+                <div class="d-flex flex-row ">
+
+                     <button type="button" class="py-2 px-4 fs-1 m-2 btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    <i class="bi bi-envelope me-3 fs-2"></i>                       Start adjustments                         </button> 
+
+                </div>
+
+                {% endif %}
+
             </div>
-            
-        </div>
-
-
-        
-
-
-  
-
+        </div>    
 
 {% endblock %}
 
 {% block additional_js %}
+
+
+
+<script>             
+  
+    var type = document.getElementById("type");
+  
+    // Create the first option
+    var option = document.createElement("option");
+    option.text = "Account/Service";
+    option.value = "";
+    option.disabled = true;
+    option.selected = true;
+    
+    // Add the first option to the dropdown list
+    type.add(option, 0);
+    
+  
+      var client = document.getElementById("client");
+      var service = document.getElementById("service");
+  
+      var clientdiv = document.getElementById("clientform");
+      var servicediv = document.getElementById("serviceform");
+      var datadiv = document.getElementById("dataform");
+  
+      clientdiv.style.display = (type.value !== "---------") ? "none" : "block";
+      servicediv.style.display = (type.value !== "---------") ? "none" : "block";
+  
+      type.onchange=function(){
+      
+          if(this.value=="Account"){
+              clientdiv.style.display="block";
+              servicediv.style.display="none";
+  
+          }else if(this.value=="Service"){
+              clientdiv.style.display="block";
+              servicediv.style.display="block"; 
+
+  
+          }else{
+              clientdiv.style.display="none";
+              servicediv.style.display="none";
+              datadiv.style.display="none"; 
+  
+          }
+      }     
+      
+      client.onchange=function(){
+        if(type.value=="Service"){
+        servicediv.style.display="block"; 
+      }else{
+        servicediv.style.display="none";
+        datadiv.style.display="block"; 
+      }
+      }
+  
+  
+      service.onchange=function(){
+       
+        datadiv.style.display="block"; 
+      }
+  
+  
+      
+      
+         
+  </script>
+  
+  <script>
+      $(document).ready(function() {
+        var $clientField = $('#client');
+        var $clientForm = $('#clientform');
+        var $clientInput = $clientField.find('input');
+    
+        $clientInput.autocomplete({
+          source: '/client-autocomplete/',
+          minLength: 2,
+          select: function(event, ui) {
+            $clientInput.val(ui.item.value);
+            return false;
+          },
+          focus: function(event, ui) {
+            $clientInput.val(ui.item.value);
+            return false;
+          }
+        });
+    
+        $clientInput.on('input', function() {
+          if ($clientInput.val() === '') {
+            $clientForm.hide();
+          } else {
+            $clientForm.show();
+          }
+        });
+      });
+    </script>
+  
+    <script>// Get the client and service select fields
+      var $clientInput = $('#client');
+      var $serviceSelect = $('#service');
+      
+      // Add an event listener to the client input field to trigger the filterServices function
+      $clientInput.on('change', filterServices);
+      
+      function filterServices() {
+        // Get the name of the selected client
+        var clientName = $clientInput.val();
+      
+        // Loop through each option in the service select field and show/hide based on the selected client
+        $serviceSelect.find('option').each(function() {
+          var optionClientName = $(this).attr('id');
+          if (optionClientName === clientName) {
+            $(this).show();
+          } else {
+            $(this).hide();
+          }
+        });
+      
+        // Reset the service select field to show the first available option
+        $serviceSelect.val($serviceSelect.find('option:visible:first').val());
+      }
+      
+      
+   </script>
+
+
+   
+
+<script>
+  if ( $.fn.dataTable.isDataTable( '#example4' ) ) {
+      table = $('#example4').DataTable();
+      $('#date-filter-form').on('change', 'select', function() {
+          var month = $('#month').val();
+          var date = '/' + month ;
+          table.search(date).draw();
+      });
+  }
+  else {
+      table = $('#example4').DataTable( {
+          paging: false
+      } );
+  }
+
+
+</script>
+<script>
+
+  
+  function updateIncome() {
+    var month = document.getElementById("month");
+    if (month.value === "") {
+      document.getElementById("income").textContent = "";
+      document.getElementById("income").classList.remove("badge", "light", "badge-xl", "badge-secondary", "fs-2", "p-3"); // remove classes when income is empty
+      return;
+    }
+    var income = 0;
+    var rows = document.querySelectorAll("#example4 tbody tr");
+    if (!$('tr.odd td.dataTables_empty').is(':visible')) {
+      for (var i = 0; i < rows.length; i++) {
+        var dif = parseFloat(rows[i].querySelector("td:nth-child(7)").textContent.replace(/[^0-9.-]+/g,""));
+        income += dif;
+      }
+      document.getElementById("income").textContent = "New Income: $" + income.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+      document.getElementById("income").classList.add("badge", "light", "badge-xl", "badge-secondary", "fs-2", "p-3"); // add classes when income is not empty
+    } else {
+      document.getElementById("income").textContent = "";
+      document.getElementById("income").classList.remove("badge", "light", "badge-xl", "badge-secondary", "fs-2", "p-3"); // remove classes when income is empty
+    }
+  }
+  
+
+  document.addEventListener("DOMContentLoaded", function() {
+    updateIncome();
+  });
+
+  // Call updateIncome function whenever the table is redrawn
+  $('#example4').on('draw.dt', function() {
+    updateIncome();
+  });
+
+  // Call updateIncome function whenever the month select changes
+  document.getElementById("month").addEventListener("change", function() {
+    updateIncome();
+  });
+</script>
+
+
 {% endblock %}

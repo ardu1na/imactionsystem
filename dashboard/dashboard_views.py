@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from dashboard.models import Configurations
 from django.contrib import messages
 from django.urls import reverse
@@ -11,6 +11,14 @@ from django.http import HttpResponse, Http404, HttpResponseBadRequest
 from django.contrib.auth.decorators import login_required, permission_required 
 import pickle
 import mimetypes
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils import timezone
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils import timezone
+from django.http import JsonResponse
+from django.views.decorators.http import require_GET
 from django.db.models import Sum
 from datetime import datetime
 from decimal import Decimal
@@ -30,8 +38,6 @@ try:
     from .services import compra as b_compra
 except: pass
 
-from dateutil.relativedelta import relativedelta
-from django.utils import timezone
 
 from django.http import HttpResponse
     
@@ -46,7 +52,6 @@ from itertools import chain
 from django.core.paginator import Paginator
 
 from django.contrib.auth.decorators import user_passes_test
-from django.contrib.auth.models import Group
 
    
     
@@ -701,6 +706,15 @@ def ceo(request):
     return render(request,'dashboard/instructor/ceo.html',context)
 
 
+@require_GET
+def client_autocomplete(request):
+    q = request.GET.get('q', '')
+    clients = Client.objects.filter(name__icontains=q)
+    results = [{'id': c.pk, 'text': c.name} for c in clients]
+    return JsonResponse({'results': results})
+
+
+
 
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
@@ -708,13 +722,38 @@ def adj(request):
         
     services = Service.objects.filter(state=True)
     accounts = Client.objects.filter(cancelled="Active")
+    adjform = AdjForm()
+    
+    if request.method == "POST" and "adj" in request.POST:
+        
+        adjform =AdjForm(request.POST)
+
+        if adjform.is_valid():
             
+            instance = adjform.save(commit=False)
+            
+            client_name = adjform.cleaned_data['client']
+            client_instance = Client.objects.get(name=client_name)
+            instance.client = client_instance
+            
+
+            
+            if adjform.cleaned_data['type'] == "Service":
+                service_name = adjform.cleaned_data['service']
+                instance.service = service_name
+        
+            instance.save() 
+                
+                 
+        else:
+            print(adjform)
+            print(adjform.errors)
     
 
     context = {
+        'adjform': adjform,
         'services': services,
-        'accounts': accounts,
-        "page_title":"ADJUSTMENTS",
+        'clients': accounts,
 
     }
     return render (request, 'dashboard/table/adj.html', context)
@@ -724,107 +763,62 @@ def adj(request):
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
 def adjustment(request):
-
-    if request.method == 'GET':
-        if 'accounts' in request.GET:
-            services = []
-            clients = Client.objects.filter(cancelled="Active")
-            for i in clients:
-                if i.get_rr_client == True:
-                    services.append(i)
-            raiceform = AdjustAccount()                
-        else:
-            services = Service.objects.filter(state=True)
-            raiceform = AdjustmentForm()                
     
-    if request.method == 'POST':
-        if "adjservice" in request.POST:
-            service_id = request.POST.get('id')
-            service = Service.objects.get(id=service_id)
-            raiceform = AdjustmentForm(request.POST, instance=service)
-            service.adj_at_old = service.adj_at
-            service.adj_old = service.last_adj
-            service.total_old = service.total 
-            service.save()
-            
-            if raiceform.is_valid():
-                raiceform.save()                
-                service.total = Decimal(service.total + ((service.last_adj / 100) * service.total))
-                service.email_sent = False
-                service.save()
-                
-                return redirect('dashboard:adjustment')
-            else: 
-                print(raiceform.errors)
-                return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
-            
-        if "adjaccount" in request.POST:
-            client_id = request.POST.get('id')
-            client = Client.objects.get(id=client_id)
-            services = Service.objects.filter(client=client)
-            
-            raiceform = AdjustAccount(request.POST)
-            adj_at=request.POST['adj_at']
-            last_adj = Decimal(request.POST['last_adj'])
-                
-                          
-            if raiceform.is_valid():
-                
-                
-                
-                for service in services:
-                    
-                    
-                    service.adj_at_old = service.adj_at
-                    service.adj_old = service.last_adj
-                    service.total_old = service.total 
-                    service.save()
-                    
-                                          
-                        
-                        
-                    service.total = Decimal(service.total + ((last_adj / 100) * service.total))
-                    service.adj_at = adj_at
-                    service.last_adj = last_adj
-                    service.email_sent = False
-                    service.save()
-                
-                return redirect('dashboard:adjustment')
-            else: 
-                print(raiceform.errors)
-                return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
-            
+    services = Service.objects.filter(state=True)
+    clients = Client.objects.filter(cancelled="Active")
+    adjform = AdjForm()
+    adjusts = Adj.objects.all()
+    if request.method == "POST" and "adj" in request.POST:
         
-    
+        adjform =AdjForm(request.POST)
+
+        if adjform.is_valid():
+            
+            instance = adjform.save(commit=False)
+            
+            client_name = adjform.cleaned_data['client']
+            client_instance = Client.objects.get(name=client_name)
+            instance.client = client_instance
+            
+
+            adj_percent = adjform.cleaned_data['adj_percent']
+
+            if adjform.cleaned_data['type'] == "Service":
+                service = adjform.cleaned_data['service']
+                instance.service = service
+                
+                instance.old_value = service.total
+                new = Decimal(service.total + ((adj_percent / 100) * service.total))
+                instance.new_value = new
+                instance.dif = new - service.total               
+                
+            elif adjform.cleaned_data['type'] == "Account":
+                services = client_instance.services.filter(state=True)
+                total_services = 0
+                for service in services:
+                    total_services += service.total
+                
+                instance.old_value = total_services
+                new = Decimal(total_services + ((adj_percent / 100) * total_services))
+                instance.new_value = new
+                instance.dif = new - total_services          
+        
+            instance.save()
+            return redirect('dashboard:adjustment') 
+                
+                 
+        else:
+            print(adjform.errors) 
 
     context = {
         'services': services,
+        'clients': clients,
         "page_title":"ADJUSTMENTS",
-        'raiceform':raiceform,
+        'adjform':adjform,
+        'adjusts': adjusts,
 
     }
     return render (request, 'dashboard/table/adjustments.html', context)
-
-from django.core.mail import send_mail
-from django.template.loader import render_to_string
-from django.utils import timezone
-
-def send_emails():
-    services_to_email = Service.objects.filter(adj_at__lte=timezone.now(), email_sent=False)
-    for service in services_to_email:
-        email_message = render_to_string('dashboard/email_template.html', {'service': service})
-
-        # enviar el correo electrónico
-        send_mail(
-            'Ajustes - IMACTIONS',
-            email_message,
-            'imactionsystem@gmail.com',
-            [service.client.admin_email],
-            fail_silently=False,
-        )
-
-        service.email_sent = True
-        service.save()
 
 
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
@@ -1642,7 +1636,7 @@ def index(request):
                 wop=expense.wop,
             )
                 
-        sales_rr_list = Sale.objects.filter(revenue="RR", cancelled="Active", date__month=today.month-1, date__year=today.year).exclude(note="auto revenue sale")
+        """sales_rr_list = Sale.objects.filter(revenue="RR", cancelled="Active", date__month=today.month-1, date__year=today.year).exclude(note="auto revenue sale")
         for sale in sales_rr_list:
             if sale.date.month != today.month:
                 update_rr = Sale.objects.create(
@@ -1660,7 +1654,7 @@ def index(request):
                     cancelled="Active",               
                         
                 )        
-    
+    """
         
     clients = Client.objects.all()
     
@@ -1706,10 +1700,147 @@ def index(request):
             
     except:
        blue = last_blue.compra
+       
+       
+       
+       
+       
+    ##############################################    ##############################################
 
+    print("##############################################")
+    print("##############################################")
+    print("##############################################  ADJUSTMENTS")
+
+    #  internal reminder ----adjust client------ for email send 
+    print("#######################################")
+    print("####################################### REMINDER ")
+    
+    remind_list = Adj.objects.filter(
+                        adj_done=False,
+                        remind_sent = False,
+                        email_date__lte=today
+                    )
+    if remind_list:
+        for adj in remind_list:
+            if adj.type == "Service":
+                service = adj.service
+                print(f"######################################### REMIND found -------- --- - -- - > {adj.type} {service} ######")
+                print(f"######################################### values- - > OLD {service.total} NEW {adj.new_value} ######")
+                
+                email_message = render_to_string('dashboard/email_adjust_service_template.html', {'adj': adj})
+                actual = Decimal(adj.old_value)
+                con = Decimal(adj.new_value)
+                ajuste = Decimal(adj.dif)
+                
+                send_mail(
+                    subject='Aviso: IMPORTANTE',
+                    message=f'Hola estimado, {adj.client.name} ( * para uso interno: {adj.service.service}) \n El motivo de este email es para comunicarte un ajuste por inflación.\n\n Inversión actual: ${actual} \n Inversión con ajuste: ${con} \n Ajuste: ${ajuste} \n\n El ajuste se hará en el próximo pago. \n Cualquier duda no dejes de consultarnos. \n Saludos, \n\n Imactions \n www.imactions.agency',
+                    html_message=email_message,
+                    from_email='systemimactions@gmail.com',
+                    recipient_list=['hola@imactions.com'],
+                    fail_silently=False,
+                )
+                print (f" adjust -- {adj} - {service} -- EMAIL reminder SEND")
+                adj.remind_sent = True
+                adj.save()
+
+
+                
+            elif adj.type == "Account":
+                client = adj.client
+                print(f"######################################### REMIND found -------- --- - -- - > {adj.type}: {client} ######")
+                services = client.services.filter(state=True)
+                services_list = []
+                for service in services:
+                    print(f"{service}")
+                    services_list.append(service.service)
+                    
+                    
+                email_message = render_to_string('dashboard/email_adjust_account_template.html', {'adj': adj, 'services': services})
+                actual = Decimal(adj.old_value)
+                con = Decimal(adj.new_value)
+                ajuste = Decimal(adj.dif)
+                send_mail(
+                    subject='Aviso: IMPORTANTE',
+                    message=f'Hola estimado, {adj.client.name} ( * para uso interno: {services_list}) \n El motivo de este email es para comunicarte un ajuste por inflación.\n\n  \n Inversión actual: ${actual} \n Inversión con ajuste: ${con} \n Ajuste: ${ajuste} \n\n El ajuste se hará en el próximo pago. \n Cualquier duda no dejes de consultarnos. \n Saludos, \n\n Imactions \n www.imactions.agency',
+                    html_message=email_message,
+                    from_email='systemimactions@gmail.com',
+                    recipient_list=['hola@imactions.com'],
+                    fail_silently=False,
+                )
+                print (f" adjust -- {adj} - {client} -- EMAIL reminder SEND")
+                adj.remind_sent = True
+                adj.save()
+                    
+                    
+                    
+                    
+    print("##############         end reminders             ###############")
+
+                
+                
+
+
+    # adjust services script from adjustment view
+    print("")
+
+    print("#######################################")
+    print("####################################### ADJUST SERVICES ")
+
+    adj_list = Adj.objects.filter(
+                        adj_done=False,
+                        notice_date__lte=today
+                    )
+    if adj_list:
+        print(f"############################### adjust list:\n {adj_list}")
+        print("##############################################")
+        for adj in adj_list:
+            if adj.type == "Service":
+                service = adj.service
+                print(f"######################################### item found -------- --- - -- - > {adj.type} ######")
+                print(f"{service}")
+                print(f"######################################### old value-- - > {service.total} ######")
+                service.total = adj.new_value
+                
+                service.save() 
+                print(f"######################################### new value-- - > {service.total} ######")
+                adj.adj_done = True
+                adj.save()
+                print(f"###### Adjust {service} done ---- > {adj.adj_done} ######")
+            elif adj.type == "Account":
+                client = adj.client
+                print(f"######################################### item found -------- --- - -- - > {adj.type}: {client} ######")
+                services = client.services.filter(state=True)
+                for service in services:
+                    print(f"{service}")
+                    print(f"######################################### old value-- - > {service.total} ######")
+                    
+                    
+                    service.total = Decimal(service.total + ((adj.adj_percent / 100) * service.total))
+
+                    service.save() 
+                    print(f"######################################### new value-- - > {service.total} ######")
+                adj.adj_done = True
+                adj.save()
+                print(f"###### Adjust {client} done ---- > {adj.adj_done}######")
+        print("")
+        print(f"############################### done with adjustments ")
+        print("############################################################################################")
+    else:
+        print(f"############################### nothing to adjust ")
     
     
     
+    
+    
+    
+    
+    
+    
+
+    ##############################################
+    ##############################################
+
     # GRAPHS rr   
     sales_rr_current_year = Sale.objects.filter(revenue="RR").filter(cancelled="Active")\
                                         .filter(date__year=datetime.now().date().year)

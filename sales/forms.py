@@ -2,10 +2,10 @@ from django.forms import ModelForm, \
 TextInput, Select, ModelChoiceField, Textarea
 from django import forms
 
-from sales.models import Sale, Service
+from sales.models import Sale, Service, Adj 
 from customers.models import Client
 
-
+"""
 class AdjustmentForm(ModelForm):
     id = forms.IntegerField(widget=forms.HiddenInput())
 
@@ -25,7 +25,6 @@ class AdjustmentForm(ModelForm):
             'id':"last_adj",
             'placeholder':"Adjustment %",}),}
         
-        
 
 class AdjustAccount(forms.Form):
     id = forms.IntegerField(widget=forms.HiddenInput())         
@@ -33,7 +32,57 @@ class AdjustAccount(forms.Form):
     adj_at = forms.CharField(widget=TextInput(attrs={'class':"datetimepicker form-control",
         'id':"PublishDateTimeTextbox",
         'type':"date",
-        'placeholder':"Adjustment Date",}))
+        'placeholder':"Adjustment Date",})) """
+    
+    
+class AdjForm(ModelForm):
+    client = forms.CharField(
+        widget=forms.TextInput(attrs={
+            'class': 'form-control wide mb-3',
+            'placeholder': 'type client name...',
+            'id': 'client',
+            'autocomplete': 'on',
+            'list': 'clients',
+        })
+    )
+    service = ModelChoiceField(
+        queryset=Service.objects.filter(state=True),
+        widget=Select(
+            attrs={
+                'class': "default-select form-control wide mb-3",
+                'id': "service",
+                'placeholder': "service",
+            }
+        ),
+        empty_label=' - ',
+        required=False  
+    )
+    
+    class Meta:
+        model = Adj
+        fields = ['notice_date', 'adj_percent',  'type' ]
+        
+        widgets = {
+            
+            'notice_date' : TextInput(attrs={'class':"datetimepicker form-control",
+            'id':"PublishDateTimeTextbox",
+            'type':"date",
+            'placeholder':"Notice Date",}),
+
+      
+ 
+            'adj_percent' : TextInput(attrs={'class':"form-control",
+            'id':"adj_percent",
+            'placeholder':"Adjustment %",}),
+
+            'type' : Select(attrs={
+                'class':"default-select form-control wide mb-3",
+                'id':"type",
+                'placeholder' : "type",
+                'empty_label': "Account/Service"
+                }
+            ),
+        }
         
 
 class SaleForm(ModelForm):
