@@ -1672,6 +1672,21 @@ def index(request):
         cancellations.append(client)
     cancell_q = len(cancellations)
        
+       
+    #######################################################################################
+
+    #  % clients by service    -  pie chart data
+              
+    seo_clients = Service.objects.filter(service="SEO", state=True).count()
+    gads_clients = Service.objects.filter(service="Google Ads", state=True).count()
+    fads_clients = Service.objects.filter(service="Facebook Ads", state=True).count()
+    lkdn_clients = Service.objects.filter(service="LinkedIn", state=True).count()
+    wp_clients = Service.objects.filter(service="Web Plan", state=True).count()
+    combo_clients = Service.objects.filter(service="Combo", state=True).count()
+    cm_clients = Service.objects.filter(service="Community Management", state=True).count()
+    emk_clients = Service.objects.filter(service="Email Marketing", state=True).count()
+    other_clients = Service.objects.filter(service="Others RR", state=True).count()              
+       
     
     #######################################################################################
 
@@ -2739,6 +2754,17 @@ def index(request):
         "month":month,
         "one_this":oneoff_s_thism,
         "cancell_q": cancell_q,
+        
+        "seo_clients": seo_clients,
+        "gads_clients": gads_clients,
+        "fads_clients": fads_clients,
+        "lkdn_clients": lkdn_clients,
+        "wp_clients": wp_clients,
+        "combo_clients": combo_clients,
+        "cm_clients": cm_clients,
+        "emk_clients": emk_clients,
+        "other_clients": other_clients,
+        
         "blue": blue,
         "hour": datetime.now(),
         "c_rr_total": c_rr_total,

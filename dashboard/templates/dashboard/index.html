@@ -24,15 +24,13 @@
                 <div class="widget-stat card">
                     <div class="card-body  p-4">
                         <div class="media ai-icon">
-                            <span class="me-3 bgl-primary text-primary">
-                                <svg id="icon-revenue" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-dollar-sign">
-                                    <line x1="12" y1="1" x2="12" y2="23"></line>
-                                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                                </svg>
+                            <span class="me-3 bgl-info text-info">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trending-up"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>                            </span>
+
                             </span>
                             <div class="media-body">
                                 <p class="mb-1">RR</p>
-                                <h4 class="mb-0">{{rr_t_clients|floatformat:2}} </h4>
+                                <h4 class="mb-0">$ {{rr_t_clients|floatformat:2}} </h4>
                             </div>
                         </div>
                     </div>
@@ -63,7 +61,7 @@
                 <div class="widget-stat card">
                     <div class="card-body  p-4">
                         <div class="media ai-icon">
-                            <span class="me-3 bgl-info text-info">
+                            <span class="me-3 bgl-primary text-primary">
                                 <svg id="icon-revenue" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-dollar-sign">
                                     <line x1="12" y1="1" x2="12" y2="23"></line>
                                     <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
@@ -106,10 +104,9 @@
                     <div class="card-body  p-4">
                         <div class="media ai-icon">
                             <span class="me-3 bgl-danger text-danger">
-                                <svg id="icon-revenue" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-dollar-sign">
-                                    <line x1="12" y1="1" x2="12" y2="23"></line>
-                                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                                </svg>
+                                <i class="bi bi-dash-circle"></i>
+
+
                             </span>
                             <div class="media-body">
                                 <p class="mb-1">Cancellations {{month}}</p>
@@ -124,12 +121,8 @@
                 <div class="widget-stat card">
                     <div class="card-body  p-4">
                         <div class="media ai-icon">
-                            <span class="me-3 bgl-info text-info">
-                                <svg id="icon-revenue" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-dollar-sign">
-                                    <line x1="12" y1="1" x2="12" y2="23"></line>
-                                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                                </svg>
-                            </span>
+                            <span class="me-3 bgl-dark text-dark">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M 16 3 C 8.832031 3 3 8.832031 3 16 C 3 23.167969 8.832031 29 16 29 C 23.167969 29 29 23.167969 29 16 C 29 8.832031 23.167969 3 16 3 Z M 16 5 C 22.085938 5 27 9.914063 27 16 C 27 22.085938 22.085938 27 16 27 C 9.914063 27 5 22.085938 5 16 C 5 9.914063 9.914063 5 16 5 Z M 16 11.09375 L 15.28125 11.78125 L 9.28125 17.78125 L 10.71875 19.21875 L 16 13.9375 L 21.28125 19.21875 L 22.71875 17.78125 L 16.71875 11.78125 Z"/></svg>                            </span>
                             <div class="media-body">
                                 <p class="mb-1">Blue today</p>
                                 <h4 class="mb-0">{{blue}} </h4>
@@ -141,12 +134,17 @@
         </div>
     </div>
 
+         
+
+     
+
+
     <div class="col-xl-3 col-xxl-3 col-lg-3">
         <div class="card dlab-join-card h-auto">
             <div class="card-body">
                 <div class="dlab-media d-flex justify-content-between">
                     <div class="dlab-content">
-                        <h4 class="py-4"> Welcome {{request.user}}</h4>
+                        <h4 class="py-4"> Hi, {{request.user}}.</h4>
                             <h3> {{hour}}</h3>
                     </div>	
                     <div class="dlab-icon">
@@ -155,13 +153,56 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>           
         
-    </div>         
+    </div>   
+
 
 </div>
+
 <div class="row">
-    <div class="col-xl-6 col-xxl-6 col-m-6">
+
+
+    <div class="col-xl-4 col-xxl-4 col-m-4">
+
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">ACCOUNTS BY SERVICE </h4>
+            </div>
+            <div class="card-body">
+                <canvas id="cbys"></canvas>
+
+            </div>
+        </div>
+    </div>
+
+    
+    
+
+    <div class="col-xl-8 col-xxl-8 col-m-8">
+        <div class="card">
+            <div class="card-header border-0 flex-wrap mt-4">
+                <h4>RR by Service</h4>
+                <form method="get">
+                    <div class="d-flex flex-row-reverese">
+                        <select id='date-dropdown' name="year" class="form-control">
+                        </select>
+                        <span><input type="submit" class="btn btn-outline-dark ms-2"></span>
+                    </div>
+                </form>
+            </div>
+            <div class="card-body">
+                <div id="LineChart"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+<div class="row">
+    <div class="col-xl-8 col-xxl-8 col-m-8">
 
         <div class="card score-active">
 
@@ -198,76 +239,20 @@
         </div>
     </div>
 
-    <div class="col-xl-6 col-xxl-6 col-m-6">
-    
-            <div class="card score-active">
-                <div class="card-header border-0 pb-2 flex-wrap">
-                    <h4>ONE OFF SALES</h4>
+        <div class="col-xl-4 col-xxl-4 col-m-4">
 
-                    <div class="d-flex">
-                        <div class="round weekly d-flex" id="dzOldSeriess">
-                            <div>
-                                <input type="checkbox" id="checkbox3" name="radio" value="weekly" />
-                                <label for="checkbox3" class="checkmark"></label>
-                            </div>
-                            <div>
-                                <span class="fs-14">This Year</span>
-                            </div>
-                        </div>
-
-                        <div class="round d-flex" id="dzNewSeriess">
-                            <div>
-                                <input type="checkbox" id="checkbox4" name="radio" value="monthly" />
-                                <label for="checkbox4" class="checkmark"></label>
-                            </div>
-                            <div>
-                                <span class="fs-14">Last Year</span>
-                            </div>	
-                        </div>
-                    </div>
-
-                    
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">ACCOUNTS BY TIER </h4>
                 </div>
-                <div class="card-body pb-1 custome-tooltip pt-0">
-                    <div id="chartLine" class="chartBar"></div>
-                </div>                            
+                <div class="card-body">
+                    <canvas id="pie_chart"></canvas>
+                </div>
             </div>
+        </div>       
+           
     </div>
    
-</div>
-<div class="row">
-
-    <div class="col-xl-9 col-xxl-9 col-m-9">
-        <div class="card">
-            <div class="card-header border-0 flex-wrap mt-4">
-                <h4>RR by Service</h4>
-                <form method="get">
-                    <div class="d-flex flex-row-reverese">
-                        <select id='date-dropdown' name="year" class="form-control">
-                        </select>
-                        <span><input type="submit" class="btn btn-outline-dark ms-2"></span>
-                    </div>
-                </form>
-            </div>
-            <div class="card-body">
-                <div id="LineChart"></div>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="col-xl-3 col-xxl-3 col-m-3">
-
-        <div class="card">
-            <div class="card-header">
-                <h4 class="card-title">ACCOUNTS BY TIER </h4>
-            </div>
-            <div class="card-body">
-                <canvas id="pie_chart"></canvas>
-            </div>
-        </div>
-    </div>
-
 </div>
 
 
@@ -810,7 +795,7 @@
 				},
 				options: {
 					plugins:{
-						legend: false, 
+						legend: true, 
 					},	
 					responsive: true, 
 					
@@ -866,4 +851,57 @@
         selectField.value = selectedYear;
     }
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{% static 'js/pie-chart.js' %}"></script>
+<script>
+
+
+document.addEventListener("DOMContentLoaded", function(event) {
+    var ctx = document.getElementById("cbys").getContext("2d");
+    var data = {
+      labels: ["SEO", "Google Ads", "Facebook Ads", "LinkedIn", "Web Plan", "Combo", "Community Management", "Email Marketing", "Others RR"],
+      datasets: [
+        {
+          data: [{{seo_clients}}, {{gads_clients}}, {{fads_clients}}, {{lkdn_clients}}, {{wp_clients}}, {{combo_clients}}, {{cm_clients}}, {{emk_clients}}, {{other_clients}}],
+          backgroundColor: [
+            "#FF6384",
+            "#36A2EB",
+            "#FFCE56",
+            "#4BC0C0",
+            "#9966FF",
+            "#FF9900",
+            "#FF6384",
+            "#36A2EB",
+            "#FFCE56"
+          ],
+          hoverBackgroundColor: [
+            "#FF6384",
+            "#36A2EB",
+            "#FFCE56",
+            "#4BC0C0",
+            "#9966FF",
+            "#FF9900",
+            "#FF6384",
+            "#36A2EB",
+            "#FFCE56"
+          ]
+        }
+      ]
+    };
+  
+    var options = {
+      responsive: true,
+      maintainAspectRatio: false
+    };
+  
+    var myPieChart = new Chart(ctx,{
+      type: 'pie',
+      data: data,
+      options: options
+    });
+  });
+
+</script>
+
 {% endblock %}
