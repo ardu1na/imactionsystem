@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from dashboard.models import Configurations
 from django.contrib import messages
 from django.urls import reverse
@@ -33,8 +33,6 @@ try:
     from .services import compra as b_compra
 except: pass
 
-from dateutil.relativedelta import relativedelta
-from django.utils import timezone
 
 from django.http import HttpResponse
     
@@ -49,7 +47,6 @@ from itertools import chain
 from django.core.paginator import Paginator
 
 from django.contrib.auth.decorators import user_passes_test
-from django.contrib.auth.models import Group
 
    
     
@@ -1907,19 +1904,55 @@ def index(request):
     print("##############################################")
     print("##############################################  ADJUSTMENTS")
 
-    # adjust services script from adjustment view
+    #  internal reminder ----adjust client------ for email send 
+    print("#######################################")
+    print("####################################### REMINDER ")
+    
+    remind_list = Adj.objects.filter(
+                        adj_done=False,
+                        remind_sent = False,
+                        email_date__lte=today
+                    )
+    if remind_list:
+        for adj in remind_list:
+            if adj.type == "Service":
+                service = adj.service
+                print(f"######################################### REMIND found -------- --- - -- - > {adj.type} {service} ######")
+                print(f"######################################### values- - > OLD {service.total} NEW {adj.new_value} ######")
+                
+                ## send_email()
+                ## adj.email_send = True
+                ## adj.save()
+                ## print (f" adjust -- {adj} - {service} -- EMAIL reminder SEND")
+                
+            elif adj.type == "Account":
+                client = adj.client
+                print(f"######################################### item found -------- --- - -- - > {adj.type}: {client} ######")
+                services = client.services.filter(state=True)
+                for service in services:
+                    print(f"{service}")  
+                ## send_email()
+                ## adj.email_send = True
+                ## adj.save()
+                ## print (f" adjust -- {adj} -- EMAIL reminder SEND")
+    print("##############         end reminders             ###############")
 
+                
+                
+
+
+    # adjust services script from adjustment view
+    print("")
+
+    print("#######################################")
+    print("####################################### ADJUST SERVICES ")
 
     adj_list = Adj.objects.filter(
                         adj_done=False,
                         notice_date__lte=today
                     )
-    
-
-    print(adj_list)
     if adj_list:
         print(f"############################### adjust list:\n {adj_list}")
-        print("##############################################")
         print("##############################################")
         for adj in adj_list:
             if adj.type == "Service":
@@ -1933,7 +1966,7 @@ def index(request):
                 print(f"######################################### new value-- - > {service.total} ######")
                 adj.adj_done = True
                 adj.save()
-                print(f"###### Adjust {service} done ---- > {adj.adj_done}######")
+                print(f"###### Adjust {service} done ---- > {adj.adj_done} ######")
             elif adj.type == "Account":
                 client = adj.client
                 print(f"######################################### item found -------- --- - -- - > {adj.type}: {client} ######")

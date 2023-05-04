@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, timedelta
 from django.db import models
 from django.db.models import F
 from django.contrib import admin
@@ -103,10 +103,20 @@ class Adj(models.Model):
         ordering = ['-notice_date']
 
     notice_date = models.DateField(null=True,blank=True)
-
     adj_done = models.BooleanField(default=False)
+
+    email_date = models.DateField(null=True, blank=True)
     remind_sent = models.BooleanField(default=False)
+    
+
+   
+    def save(self, *args, **kwargs):
+        if self.notice_date:
+            fifteen_days_before = self.notice_date - timedelta(days=15)
+            self.email_date =   fifteen_days_before
         
+        super(Adj, self).save(*args, **kwargs)
+                    
 
 
 class Sale(models.Model):
