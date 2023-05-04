@@ -66,6 +66,7 @@
                             <div class="d-flex flex-row-reverse my-4">
                               {{adjform.notice_date}} <span>Notice date<span>
                             </div>
+                            <p>(15 days before email reminder)</p>
 
                             <div class="d-flex flex-row-reverse my-4">
                               {{adjform.adj_percent}}<span>Adust %<span>
@@ -234,11 +235,11 @@
           if(this.value=="Account"){
               clientdiv.style.display="block";
               servicediv.style.display="none";
-              datadiv.style.display="none"; 
   
           }else if(this.value=="Service"){
               clientdiv.style.display="block";
-              datadiv.style.display="none"; 
+              servicediv.style.display="block"; 
+
   
           }else{
               clientdiv.style.display="none";
