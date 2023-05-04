@@ -11,7 +11,12 @@ from django.http import HttpResponse, Http404, HttpResponseBadRequest
 from django.contrib.auth.decorators import login_required, permission_required 
 import pickle
 import mimetypes
-
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils import timezone
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils import timezone
 from django.http import JsonResponse
 from django.views.decorators.http import require_GET
 from django.db.models import Sum
@@ -1919,22 +1924,41 @@ def index(request):
                 service = adj.service
                 print(f"######################################### REMIND found -------- --- - -- - > {adj.type} {service} ######")
                 print(f"######################################### values- - > OLD {service.total} NEW {adj.new_value} ######")
-                
-                ## send_email()
-                ## adj.email_send = True
-                ## adj.save()
-                ## print (f" adjust -- {adj} - {service} -- EMAIL reminder SEND")
+                email_message = render_to_string('dashboard/email_adjust_service_template.html', {'adj': adj,})
+                send_mail(
+                    'Aviso: IMPORTANTE',
+                    email_message,
+                    'systemimactions@gmail.com',
+                    ['aprendizajenaturalconciente@gmail.com',], # FOR CLIENT REMINDER OR NOTICE: [service.client.admin_email],
+                    fail_silently=False,)
+                print (f" adjust -- {adj} - {service} -- EMAIL reminder SEND")
+                # adj.email_send = True
+                # adj.save()
+
+
                 
             elif adj.type == "Account":
                 client = adj.client
-                print(f"######################################### item found -------- --- - -- - > {adj.type}: {client} ######")
+                print(f"######################################### REMIND found -------- --- - -- - > {adj.type}: {client} ######")
                 services = client.services.filter(state=True)
                 for service in services:
-                    print(f"{service}")  
-                ## send_email()
-                ## adj.email_send = True
-                ## adj.save()
-                ## print (f" adjust -- {adj} -- EMAIL reminder SEND")
+                    print(f"{service}") 
+                    
+                    
+                email_message = render_to_string('dashboard/email_adjust_account_template.html', {'adj': adj, 'services': services})
+                send_mail(
+                    'Aviso: IMPORTANTE',
+                    email_message,
+                    'systemimactions@gmail.com',
+                    ['aprendizajenaturalconciente@gmail.com',], # FOR CLIENT REMINDER OR NOTICE: [service.client.admin_email],
+                    fail_silently=False,)
+                print (f" adjust -- {adj} - {client} -- EMAIL reminder SEND")
+                    # adj.email_send = True
+                    # adj.save() 
+                    
+                    
+                    
+                    
     print("##############         end reminders             ###############")
 
                 

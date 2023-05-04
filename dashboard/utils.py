@@ -43,7 +43,9 @@ def adj_email(request):
 
 
 def export_holidays():
-    holiday_resource = HolidayResource()
+    pass
+
+"""  holiday_resource = HolidayResource()
     data = holiday_resource.export()
     current_date = datetime.now().strftime('%Y-%m-%d')
     filename = f"holidays_{current_date}.xlsx"
@@ -59,12 +61,14 @@ def export_holidays():
         to=["hola@imactions.com"]
     )
     email.attach(filename, response.getvalue(), 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    email.send()
+    email.send()"""
 
 
 
 
 def export_sales():
+    pass
+"""
     sale_resource = SaleResource()
     data = sale_resource.export()
     current_date = datetime.now().strftime('%Y-%m-%d')
@@ -82,9 +86,11 @@ def export_sales():
     )
     email.attach(filename, response.getvalue(), 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     email.send()
-
+"""
 
 def export_clients():
+    pass
+"""
     client_resource = ClientResource()
     data = client_resource.export()
     current_date = datetime.now().strftime('%Y-%m-%d')
@@ -102,10 +108,12 @@ def export_clients():
     email.attach(filename, response.getvalue(), 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     email.send()
     
-    
+"""    
     
 
 def export_employees ():
+    pass
+"""
     employee_resource = EmployeeResource()
     data = employee_resource.export()
     current_date = datetime.now().strftime('%Y-%m-%d')
@@ -121,9 +129,11 @@ def export_employees ():
         to=["hola@imactions.com"]
     )
     email.attach(filename, response.getvalue(), 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    email.send()
+    email.send()"""
     
 def export_expenses ():
+    pass
+"""
     expense_resource = ExpenseResource()
     data = expense_resource.export()
     current_date = datetime.now().strftime('%Y-%m-%d')
@@ -140,3 +150,4 @@ def export_expenses ():
     )
     email.attach(filename, response.getvalue(), 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     email.send()
+"""
