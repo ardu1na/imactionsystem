@@ -11,3 +11,4 @@ env/
 .env
 frontend/
 .vscode
+dashboard/utils.py
