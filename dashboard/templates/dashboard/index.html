@@ -116,21 +116,24 @@
                     </div>
                 </div>  
             </div>   
- 
             <div class="col-xl-6 col-xxl-6 col-lg-6">
+
                 <div class="widget-stat card">
                     <div class="card-body  p-4">
                         <div class="media ai-icon">
-                            <span class="me-3 bgl-dark text-dark">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M 16 3 C 8.832031 3 3 8.832031 3 16 C 3 23.167969 8.832031 29 16 29 C 23.167969 29 29 23.167969 29 16 C 29 8.832031 23.167969 3 16 3 Z M 16 5 C 22.085938 5 27 9.914063 27 16 C 27 22.085938 22.085938 27 16 27 C 9.914063 27 5 22.085938 5 16 C 5 9.914063 9.914063 5 16 5 Z M 16 11.09375 L 15.28125 11.78125 L 9.28125 17.78125 L 10.71875 19.21875 L 16 13.9375 L 21.28125 19.21875 L 22.71875 17.78125 L 16.71875 11.78125 Z"/></svg>                            </span>
+                            <span class="me-3 bgl-secondary text-secondary">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-repeat"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>                          </span>
+
+                            </span>
                             <div class="media-body">
-                                <p class="mb-1">Blue today</p>
-                                <h4 class="mb-0">{{blue}} </h4>
+                                <p class="mb-1">BALANCE</p>
+                                <h4 class="mb-0">$ {{balance|floatformat:2}} </h4>
                             </div>
-                        </div>                        
+                        </div>
                     </div>
-                </div>   
+                </div> 
             </div>   
+ 
         </div>
     </div>
 
@@ -146,6 +149,8 @@
                     <div class="dlab-content">
                         <h4 class="py-4"> Hi, {{request.user}}.</h4>
                             <h3> {{hour}}</h3>
+                        <h5 class="py-4"> Blue  $ {{blue}}.</h5>
+
                     </div>	
                     <div class="dlab-icon">
                         <img src="{% static 'dashboard/images/vector/calpng.png' %}" alt="" class="cal-img">
@@ -153,7 +158,9 @@
                     </div>
                 </div>
             </div>
-        </div>           
+        </div>  
+        
+              
         
     </div>   
 

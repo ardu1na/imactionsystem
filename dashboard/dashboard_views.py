@@ -1642,6 +1642,23 @@ def index(request):
             rr_t_clients += service.total
     
     rr_q_clients = len(rr_q_clients_list)
+    
+    
+    #######################################################################################
+    # BALANCE --- $
+    outcome = 0
+    expenses = Expense.objects.filter(date__month=today.month, date__year=today.year)
+    salaries = Salary.objects.filter(period__month=today.month, period__year=today.year)
+    for salary in salaries:
+        if salary.employee.rol != "CEO":
+            outcome +=  salary.employee.get_total
+        else:
+            outcome += salary.employee.get_total_ceo
+    for e in expenses:
+        outcome += e.value
+    balance = rr_t_clients - outcome
+
+    #######################################################################################
 
     #######################################################################################
 
@@ -2748,6 +2765,7 @@ def index(request):
     
     context={
         "page_title":"Dashboard",
+        "balance": balance,
         "rr_t_clients": rr_t_clients,
         "rr_q_clients": rr_q_clients,
         "rr_this":rr_s_thism,

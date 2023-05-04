@@ -115,9 +115,7 @@ class Employee(models.Model):
         social = self.get_white()/2
         return social
     
-    def get_total (self):
-        total = self.get_white() + self.get_social() + self.get_nigga()
-        return total
+    
     
     
     def get_paypal (self):
@@ -154,6 +152,10 @@ class Employee(models.Model):
         return c
     
     
+    def get_total (self):
+        total = self.get_white() + self.get_social() + self.get_nigga()
+        return total
+    
     def get_total_ceo (self):
         wages  = Salary.objects.filter(employee=self.pk).latest() 
 
@@ -173,6 +175,11 @@ class Employee(models.Model):
     
     def __str__ (self):
         return self.name
+    
+    
+    
+    
+    
     
 class Holiday (models.Model):
     JAN = 'January'
