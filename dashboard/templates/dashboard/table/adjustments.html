@@ -374,6 +374,29 @@
 
 
 </script>
+<script>
+  function updateIncome() {
+    var income = 0;
+    var rows = document.querySelectorAll("#example4 tbody tr");
+    for (var i = 0; i < rows.length; i++) {
+      var dif = parseFloat(rows[i].querySelector("td:nth-child(7)").textContent.replace(/[^0-9.-]+/g,""));
+      income += dif;
+    }
+    document.getElementById("income").textContent = income.toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", function() {
+    updateIncome();
+  });
+
+  // Call updateIncome function whenever the table is redrawn
+  $('#example4').on('draw.dt', function() {
+    updateIncome();
+  });
+</script>
 
 
 {% endblock %}
