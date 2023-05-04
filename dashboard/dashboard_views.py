@@ -53,7 +53,8 @@ from django.core.paginator import Paginator
 
 from django.contrib.auth.decorators import user_passes_test
 
-   
+today = date.today()
+
     
 @user_passes_test(lambda user: user.groups.filter(name='admin').exists())   
 @login_required(login_url='dashboard:login')
@@ -885,7 +886,6 @@ def adjustment(request):
 def sales(request):
     
     services = ['SEO','Google Ads','Facebook Ads','Web Design', 'Hosting', 'LinkedIn', 'SSL certificate','Web Plan','Combo', 'Community Management', 'Email Marketing', 'Others', 'Others RR']
-    today = date.today()
     this_month = date.today().month
     month_name = date(1900, this_month, 1).strftime('%B')
     
@@ -1260,13 +1260,13 @@ def clients(request):
 @user_passes_test(lambda user: user.groups.filter(Q(name='sales')).exists())
 @login_required(login_url='dashboard:login')
 def cancellations(request):
-    clients_cancelled = Client.objects.filter(cancelled="Cancelled")
-    sales_cancelled = Sale.objects.filter(cancelled="Cancelled").filter(revenue="RR")
     
-    today = date.today()
-    this_month = date.today().month
+    
+    this_month = today.month
     month = date(1900, this_month, 1).strftime('%B')
     
+    clients_cancelled = Client.objects.filter(cancelled="Cancelled")
+    sales_cancelled = Sale.objects.filter(cancelled="Cancelled").filter(revenue="RR")
     sales_this_month = sales_cancelled.filter(date_can__month=today.month, client__cancelled="Active")
     clients_this_month = clients_cancelled.filter(date_can__month=today.month)
 
@@ -1621,7 +1621,60 @@ def download_config(request):
 
 @login_required(login_url='dashboard:login')
 def index(request):
-    today = date.today()
+    
+    #######################################################################################
+    ############ CARDS ON DEMAND BY THE CLIENT
+    #######################################################################################
+    
+    
+    
+    #######################################################################################
+    # RR CLIENTS --- $
+    rr_t_clients = 0
+    rr_q_clients_list = []
+
+    clients = Client.objects.filter(cancelled="Active")
+    for client in clients:
+        if client.total_rr > 0 and client not in rr_q_clients_list:
+            rr_q_clients_list.append(client)
+        services = client.services.filter(state=True)
+        for service in services:
+            rr_t_clients += service.total
+    
+    rr_q_clients = len(rr_q_clients_list)
+
+    #######################################################################################
+
+    # SALES RR THIS MONTH --- $
+    # SALES 1OFF THIS MONTH --- $
+    this_month = today.month
+    month = date(1900, this_month, 1).strftime('%B')
+    rr_s_thism = 0
+    oneoff_s_thism = 0
+    sales_this_m = Sale.objects.filter(date__month=today.month, date__year=today.year, cancelled="Active")
+    if sales_this_m:
+        for sale in sales_this_m:
+            if sale.revenue == "RR":
+                rr_s_thism += sale.change
+            else:
+                oneoff_s_thism += sale.change
+    #######################################################################################
+
+    # CANCELL THIS MONTH --- Q
+    clients_cancelled = Client.objects.filter(cancelled="Cancelled")
+    sales_cancelled = Sale.objects.filter(cancelled="Cancelled").filter(revenue="RR")
+    sales_c_this_m = sales_cancelled.filter(date_can__month=today.month, date_can__year=today.year, client__cancelled="Active")
+    clients_c_this_m = clients_cancelled.filter(date_can__month=today.month, date_can__year=today.year)
+    cancellations = []
+    for sale in sales_c_this_m:
+        cancellations.append(sale)
+    for client in clients_c_this_m:
+        cancellations.append(client)
+    cancell_q = len(cancellations)
+       
+    
+    #######################################################################################
+
     try :
         last_backup = BackUps.objects.get(id=1)
         if last_backup.date.month != today.month:
@@ -1695,25 +1748,6 @@ def index(request):
                 wop=expense.wop,
             )
                 
-        """sales_rr_list = Sale.objects.filter(revenue="RR", cancelled="Active", date__month=today.month-1, date__year=today.year).exclude(note="auto revenue sale")
-        for sale in sales_rr_list:
-            if sale.date.month != today.month:
-                update_rr = Sale.objects.create(
-                    client=sale.client,
-                    kind= sale.kind,
-                    date=today,
-                    comments=sale.comments,
-                    revenue=sale.revenue,
-                    service=sale.service,
-                    price=sale.price,
-                    currency=sale.currency,
-                    note="auto revenue sale",
-                    cost=sale.cost,
-                    status="FC",
-                    cancelled="Active",               
-                        
-                )        
-    """
         
     clients = Client.objects.all()
     
@@ -2699,6 +2733,12 @@ def index(request):
     
     context={
         "page_title":"Dashboard",
+        "rr_t_clients": rr_t_clients,
+        "rr_q_clients": rr_q_clients,
+        "rr_this":rr_s_thism,
+        "month":month,
+        "one_this":oneoff_s_thism,
+        "cancell_q": cancell_q,
         "blue": blue,
         "hour": datetime.now(),
         "c_rr_total": c_rr_total,
