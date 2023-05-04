@@ -112,8 +112,9 @@
               <div class="card p-2">
                     
                   <div class="d-flex justify-content-between m-3">
-
-                    <span class="badge light badge-xl badge-secondary mt-3 fs-3"> new income: $<a id="income">0</a>  </span>
+                    <div id="incomediv">
+                      <span class="mt-3 fs-2"><a id="income">income $0</a>  </span>
+                    </div>
 
 
                         <form id="date-filter-form">
@@ -375,17 +376,33 @@
 
 </script>
 <script>
+
+  
   function updateIncome() {
+    var month = document.getElementById("month");
+    if (month.value === "") {
+      document.getElementById("income").textContent = "";
+      return;
+    }
     var income = 0;
     var rows = document.querySelectorAll("#example4 tbody tr");
-    for (var i = 0; i < rows.length; i++) {
-      var dif = parseFloat(rows[i].querySelector("td:nth-child(7)").textContent.replace(/[^0-9.-]+/g,""));
-      income += dif;
-    }
-    document.getElementById("income").textContent = income.toLocaleString('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    });
+    
+    
+      if (!$('tr.odd td.dataTables_empty').is(':visible')) {
+        for (var i = 0; i < rows.length; i++) {
+          var dif = parseFloat(rows[i].querySelector("td:nth-child(7)").textContent.replace(/[^0-9.-]+/g,""));
+          income += dif;
+        }
+        document.getElementById("income").textContent = "New Income: $" + income.toLocaleString('en-US', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        });
+        ;
+      } else {
+        document.getElementById("income").textContent = "";
+      }
+    
+   
   }
 
   document.addEventListener("DOMContentLoaded", function() {
@@ -394,6 +411,11 @@
 
   // Call updateIncome function whenever the table is redrawn
   $('#example4').on('draw.dt', function() {
+    updateIncome();
+  });
+
+  // Call updateIncome function whenever the month select changes
+  document.getElementById("month").addEventListener("change", function() {
     updateIncome();
   });
 </script>
