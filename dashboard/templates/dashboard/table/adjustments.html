@@ -100,22 +100,49 @@
 
 
         <div class="row">
-            <div class="col-12">
-
-                
+            <div class="col-12">               
 
                     {% if adjusts %}
-
-                    <button type="button" class="py-2 px-4 fs-3 m-2 btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                        <i class="bi bi-envelope me-3 fs-4"></i>                        New                         </button> 
-                        
-                <div class="card p-2">
+                    <div class="d-flex flex-row-reverse">                   
+                      <button type="button" class="py-2 px-4 fs-2 mb-2 btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                       <i class="bi bi-envelope me-3 fs-3"></i>    
+                                  New                         </button> 
+                    </div>
                     
-                    <div class="card-header border-0 flex-wrap pb-0">
-                        
+              <div class="card p-2">
+                    
+                  <div class="d-flex justify-content-between m-3">
 
-                            
-                    </div>                  
+                    <span class="badge light badge-xl badge-secondary mt-3 fs-3"> new income: $<a id="income">0</a>  </span>
+
+
+                        <form id="date-filter-form">
+
+                          <div class="col-lg-6 col-l-6 col-m-6 ">
+
+                            <div class="form-group ">
+                            <select id="month" name="month" class="form-control-lg wide px-4">
+                                <option value="">MONTH</option>
+                                <option value="01">January</option>
+                                <option value="02">February</option>
+                                <option value="03">March</option>
+                                <option value="04">April</option>
+                                <option value="05">May</option>
+                                <option value="06">June</option>
+                                <option value="07">July</option>
+                                <option value="08">August</option>
+                                <option value="09">September</option>
+                                <option value="10">October</option>
+                                <option value="11">November</option>
+                                <option value="12">December</option>
+                            </select>
+                            </div> 
+                          </div>     
+                        </form>
+                      
+
+                      </div>
+                           
                   
                     <div class="card-body mt-4">
                        
@@ -326,5 +353,27 @@
       
       
    </script>
+
+
+   
+
+<script>
+  if ( $.fn.dataTable.isDataTable( '#example4' ) ) {
+      table = $('#example4').DataTable();
+      $('#date-filter-form').on('change', 'select', function() {
+          var month = $('#month').val();
+          var date = '/' + month ;
+          table.search(date).draw();
+      });
+  }
+  else {
+      table = $('#example4').DataTable( {
+          paging: false
+      } );
+  }
+
+
+</script>
+
 
 {% endblock %}
