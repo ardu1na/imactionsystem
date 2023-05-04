@@ -1927,13 +1927,15 @@ def index(request):
                 email_message = render_to_string('dashboard/email_adjust_service_template.html', {'adj': adj,})
                 send_mail(
                     'Aviso: IMPORTANTE',
+                    
                     email_message,
                     'systemimactions@gmail.com',
                     ['aprendizajenaturalconciente@gmail.com',], # FOR CLIENT REMINDER OR NOTICE: [service.client.admin_email],
-                    fail_silently=False,)
+                    fail_silently=False,
+                    )
                 print (f" adjust -- {adj} - {service} -- EMAIL reminder SEND")
-                # adj.email_send = True
-                # adj.save()
+                adj.remind_sent = True
+                adj.save()
 
 
                 
@@ -1953,8 +1955,8 @@ def index(request):
                     ['aprendizajenaturalconciente@gmail.com',], # FOR CLIENT REMINDER OR NOTICE: [service.client.admin_email],
                     fail_silently=False,)
                 print (f" adjust -- {adj} - {client} -- EMAIL reminder SEND")
-                    # adj.email_send = True
-                    # adj.save() 
+                adj.remind_sent = True
+                adj.save()
                     
                     
                     
