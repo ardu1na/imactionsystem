@@ -97,7 +97,7 @@ class Adj(models.Model):
             client = self.service.client.name
         else:
             client = self.client.name
-        return f'Adj {self.type} {client} {self.notice_date}'
+        return f'{self.type}: {client} - {self.notice_date}'
         
     class Meta:
         ordering = ['-notice_date']

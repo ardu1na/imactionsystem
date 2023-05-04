@@ -759,6 +759,65 @@ def adj(request):
     return render (request, 'dashboard/table/adj.html', context)
 
 
+@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
+@login_required(login_url='dashboard:login')
+def deleteadj(request, id):
+    adj = Adj.objects.get(id=id)
+    adj.delete()
+    return redirect(reverse('dashboard:adjustment')+ "?deleted")
+
+@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
+@login_required(login_url='dashboard:login')
+def editadj(request, id):  
+      
+    adj = Adj.objects.get(id=id)
+
+    if request.method == "GET":
+        
+        adjform = ChangeAdj(instance=adj)
+        context = {
+            'adjform': adjform,
+            'adj': adj,
+            'id': id,
+            }
+        return render (request, 'dashboard/table/editadj.html', context)
+
+    
+    if request.method == 'POST':
+        adjform = ChangeAdj(request.POST, instance=adj)
+        
+        if adjform.is_valid():
+            instance = adjform.save(commit=False)
+            
+            
+            client_instance = adj.client
+            
+
+            adj_percent = adjform.cleaned_data['adj_percent']
+
+            if adj.type == "Service":
+                service = adj.service
+                new = Decimal(service.total + ((adj_percent / 100) * service.total))
+                instance.new_value = new
+                instance.dif = new - service.total               
+                
+            elif adj.type == "Account":
+                services = client_instance.services.filter(state=True)
+                total_services = 0
+                for service in services:
+                    total_services += service.total
+                
+                new = Decimal(total_services + ((adj_percent / 100) * total_services))
+                instance.new_value = new
+                instance.dif = new - total_services          
+        
+            instance.save()
+            return redirect('dashboard:adjustment')
+        else: 
+            print(adjform.errors)
+            return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
+        
+        
 
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')

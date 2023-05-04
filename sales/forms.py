@@ -84,6 +84,29 @@ class AdjForm(ModelForm):
             ),
         }
         
+        
+    
+class ChangeAdj(ModelForm):
+    
+    class Meta:
+        model = Adj
+        fields = ['notice_date', 'adj_percent' ]
+        
+        widgets = {
+            
+            'notice_date' : TextInput(attrs={'class':"datetimepicker form-control",
+            'id':"PublishDateTimeTextbox",
+            'type':"date",
+            'placeholder':"Notice Date",}),
+
+      
+ 
+            'adj_percent' : TextInput(attrs={'class':"form-control",
+            'id':"adj_percent",
+            'placeholder':"Adjustment %",}),
+
+            
+        }
 
 class SaleForm(ModelForm):
     
