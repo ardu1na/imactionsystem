@@ -56,7 +56,7 @@ class Service(models.Model):
         state = models.BooleanField(default=True)
 
         created_at = models.DateField(auto_now_add=True)
-
+        updated_at = models.DateField(auto_now=True)
         def __str__(self):
             
             return f"{self.client} - {self.service}"
@@ -77,11 +77,12 @@ class Adj(models.Model):
         (S, ('Service')),
     )
     created_at = models.DateField(auto_now_add=True)
+    updated_at = models.DateField(auto_now=True)
 
     
     type = models.CharField(max_length=40, default=None, verbose_name="Account/Service", choices=ADJ_CHOICES, blank=False, null=False)
-    service = models.ForeignKey(Service, on_delete=models.SET_NULL, related_name="adj", null=True, blank=True)
-    client = models.ForeignKey(Client, on_delete=models.SET_NULL, related_name="adj", null=True, blank=True)
+    service = models.ForeignKey(Service, on_delete=models.CASCADE, related_name="adj", null=True, blank=True)
+    client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name="adj", null=True, blank=True)
        
     adj_percent = models.DecimalField(decimal_places=2, max_digits=16)
 

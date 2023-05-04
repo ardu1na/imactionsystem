@@ -85,7 +85,7 @@
                     
                     <div class="form-floating mt-5">
                         <a href="{% url 'dashboard:adjustment' %}" class="btn fs-7 mx-2">
-                            <i class="fa-solid fa-arrow-left me-2 fs-7"></i> Nop, go back
+                            <i class="fa-solid fa-arrow-left me-2 fs-7"></i> cancel
                         </a>
                     
                     </div>
@@ -129,7 +129,13 @@
 
                                         <th>SERVICES</th>
                                         <th>ADJ %</th>
+
+                                        <th>OLD VALUE</th>
+                                        <th>NEW VALUE</th>
+
+                                        <th>DIFFERENCE</th>
                                         <th>NOTICE DATE</th>
+
                                     </tr>
                                 </thead>
 
@@ -159,8 +165,15 @@
 
 
                                             <td>{{adj.adj_percent}} %</td>
+
+                                            <td>$ {{adj.old_value|floatformat:2}}</td>
+
+                                            <td>$ {{adj.new_value|floatformat:2}}</td>
+
+                                            <td>$ {{adj.dif|floatformat:2}} </td>
+
                                             <td>{{ adj.notice_date|date:"d/m/Y"}}</td>
-                                        
+
                                            
                                         </tr>
                                     {% endfor %}

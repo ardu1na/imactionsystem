@@ -766,7 +766,6 @@ def adjustment(request):
     clients = Client.objects.filter(cancelled="Active")
     adjform = AdjForm()
     adjusts = Adj.objects.all()
-    
     if request.method == "POST" and "adj" in request.POST:
         
         adjform =AdjForm(request.POST)
@@ -1897,10 +1896,78 @@ def index(request):
             
     except:
        blue = last_blue.compra
+       
+       
+       
+       
+       
+    ##############################################    ##############################################
 
+    print("##############################################")
+    print("##############################################")
+    print("##############################################  ADJUSTMENTS")
+
+    # adjust services script from adjustment view
+
+
+    adj_list = Adj.objects.filter(
+                        adj_done=False,
+                        notice_date__lte=today
+                    )
+    
+
+    print(adj_list)
+    if adj_list:
+        print(f"############################### adjust list:\n {adj_list}")
+        print("##############################################")
+        print("##############################################")
+        for adj in adj_list:
+            if adj.type == "Service":
+                service = adj.service
+                print(f"######################################### item found -------- --- - -- - > {adj.type} ######")
+                print(f"{service}")
+                print(f"######################################### old value-- - > {service.total} ######")
+                service.total = adj.new_value
+                
+                service.save() 
+                print(f"######################################### new value-- - > {service.total} ######")
+                adj.adj_done = True
+                adj.save()
+                print(f"###### Adjust {service} done ---- > {adj.adj_done}######")
+            elif adj.type == "Account":
+                client = adj.client
+                print(f"######################################### item found -------- --- - -- - > {adj.type}: {client} ######")
+                services = client.services.filter(state=True)
+                for service in services:
+                    print(f"{service}")
+                    print(f"######################################### old value-- - > {service.total} ######")
+                    
+                    
+                    service.total = Decimal(service.total + ((adj.adj_percent / 100) * service.total))
+
+                    service.save() 
+                    print(f"######################################### new value-- - > {service.total} ######")
+                adj.adj_done = True
+                adj.save()
+                print(f"###### Adjust {client} done ---- > {adj.adj_done}######")
+        print("")
+        print(f"############################### done with adjustments ")
+        print("############################################################################################")
+    else:
+        print(f"############################### nothing to adjust ")
     
     
     
+    
+    
+    
+    
+    
+    
+
+    ##############################################
+    ##############################################
+
     # GRAPHS rr   
     sales_rr_current_year = Sale.objects.filter(revenue="RR").filter(cancelled="Active")\
                                         .filter(date__year=datetime.now().date().year)
