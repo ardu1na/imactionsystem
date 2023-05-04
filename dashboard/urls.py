@@ -58,6 +58,9 @@ urlpatterns = [
 
     path('adjustments/',dashboard_views.adjustment, name="adjustment"),
     path('adjustments/<int:id>/',dashboard_views.adjustment, name="adjustsale"),
+    path('adjustment/<int:id>/delete/', dashboard_views.deleteadj, name="canceladj"),
+    path('adjustment/<int:id>/change/', dashboard_views.editadj, name="editadj"),
+
     path('adj/',dashboard_views.adj, name="adj"),
     path('client-autocomplete/', dashboard_views.client_autocomplete, name='client_autocomplete'),
 
