@@ -1636,7 +1636,7 @@ def index(request):
                 wop=expense.wop,
             )
                 
-        sales_rr_list = Sale.objects.filter(revenue="RR", cancelled="Active", date__month=today.month-1, date__year=today.year).exclude(note="auto revenue sale")
+        """sales_rr_list = Sale.objects.filter(revenue="RR", cancelled="Active", date__month=today.month-1, date__year=today.year).exclude(note="auto revenue sale")
         for sale in sales_rr_list:
             if sale.date.month != today.month:
                 update_rr = Sale.objects.create(
@@ -1654,7 +1654,7 @@ def index(request):
                     cancelled="Active",               
                         
                 )        
-    
+    """
         
     clients = Client.objects.all()
     
