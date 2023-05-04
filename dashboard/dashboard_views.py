@@ -809,79 +809,6 @@ def adjustment(request):
                  
         else:
             print(adjform.errors) 
-    """
-
-    if request.method == 'POST':
-        if "adjservice" in request.POST:
-            service_id = request.POST.get('id')
-            service = Service.objects.get(id=service_id)
-            raiceform = AdjustmentForm(request.POST, instance=service)
-            service.adj_at_old = service.adj_at
-            service.adj_old = service.last_adj
-            service.total_old = service.total 
-            service.save()
-            
-            
-            
-            if raiceform.is_valid():
-                raiceform.save()                
-                service.total = Decimal(service.total + ((service.last_adj / 100) * service.total))
-                service.email_sent = False
-                inversion_actual = service.total_old
-                inversion_ajustada = service.total
-                diferencia = inversion_ajustada - inversion_actual
-                destinatario = service.client.admin_email
-                service.save()
-                
-                return redirect('dashboard:adjustment')
-            else: 
-                print(raiceform.errors)
-                return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
-            
-        if "adjaccount" in request.POST:
-            client_id = request.POST.get('id')
-            client = Client.objects.get(id=client_id)
-            services = Service.objects.filter(client=client)
-            
-            raiceform = AdjustAccount(request.POST)
-            adj_at=request.POST['adj_at']
-            last_adj = Decimal(request.POST['last_adj'])
-                
-                          
-            if raiceform.is_valid():
-                
-                
-                inversion_actual = 0
-                inversion_ajustada = 0 
-                for service in services:
-                    
-                    
-                    service.adj_at_old = service.adj_at
-                    service.adj_old = service.last_adj
-                    service.total_old = service.total 
-                    service.save()
-                    
-                                          
-                        
-                        
-                    service.total = Decimal(service.total + ((last_adj / 100) * service.total))
-                    service.adj_at = adj_at
-                    service.last_adj = last_adj
-                    
-                    service.email_sent = False
-                    inversion_actual += service.total_old
-                    inversion_ajustada += service.total
-                    diferencia = inversion_ajustada - inversion_actual
-                    destinatario = service.client.admin_email
-                                        
-                    service.save()
-                
-                return redirect('dashboard:adjustment')
-            else: 
-                print(raiceform.errors)
-                return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
-            """
-
 
     context = {
         'services': services,
@@ -892,131 +819,6 @@ def adjustment(request):
 
     }
     return render (request, 'dashboard/table/adjustments.html', context)
-
-"""from django.core.mail import send_mail
-from django.template.loader import render_to_string
-from django.utils import timezone
-from django.core.mail import send_mail
-from django.template.loader import render_to_string
-from django.utils import timezone
-
-def send_emails(services):
-    services_to_email = services.filter(adj_at__lte=timezone.now(), email_sent=False)
-    for service in services_to_email:
-        email_message = render_to_string('dashboard/email_template.html', {'service': service})
-
-        # enviar el correo electrónico
-        send_mail(
-            'Ajustes - IMACTIONS',
-            email_message,
-            'imactionsystem@gmail.com',
-            [service.client.admin_email],
-            fail_silently=False,
-        )
-
-        service.email_sent = True
-        service.save()
-
-@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
-@login_required(login_url='dashboard:login')
-def adjustment(request):
-
-    if request.method == 'GET':
-        if 'accounts' in request.GET:
-            services = []
-            clients = Client.objects.filter(cancelled="Active")
-            for i in clients:
-                if i.get_rr_client == True:
-                    services.append(i)
-            raiceform = AdjustAccount()                
-        else:
-            services = Service.objects.filter(state=True)
-            raiceform = AdjustmentForm()                
-    
-    if request.method == 'POST':
-        if "adjservice" in request.POST:
-            service_id = request.POST.get('id')
-            service = Service.objects.get(id=service_id)
-            raiceform = AdjustmentForm(request.POST, instance=service)
-            service.adj_at_old = service.adj_at
-            service.adj_old = service.last_adj
-            service.total_old = service.total 
-            service.save()
-            
-            
-            
-            if raiceform.is_valid():
-                raiceform.save()                
-                service.total = Decimal(service.total + ((service.last_adj / 100) * service.total))
-                service.email_sent = False
-                inversion_actual = service.total_old
-                inversion_ajustada = service.total
-                diferencia = inversion_ajustada - inversion_actual
-                destinatario = service.client.admin_email
-                service.save()
-                
-                return redirect('dashboard:adjustment')
-            else: 
-                print(raiceform.errors)
-                return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
-            
-        if "adjaccount" in request.POST:
-            client_id = request.POST.get('id')
-            client = Client.objects.get(id=client_id)
-            services = Service.objects.filter(client=client)
-            
-            raiceform = AdjustAccount(request.POST)
-            adj_at=request.POST['adj_at']
-            last_adj = Decimal(request.POST['last_adj'])
-                
-                          
-            if raiceform.is_valid():
-                
-                
-                inversion_actual = 0
-                inversion_ajustada = 0 
-                for service in services:
-                    
-                    
-                    service.adj_at_old = service.adj_at
-                    service.adj_old = service.last_adj
-                    service.total_old = service.total 
-                    service.save()
-                    
-                                          
-                        
-                        
-                    service.total = Decimal(service.total + ((last_adj / 100) * service.total))
-                    service.adj_at = adj_at
-                    service.last_adj = last_adj
-                    
-                    service.email_sent = False
-                    inversion_actual += service.total_old
-                    inversion_ajustada += service.total
-                    diferencia = inversion_ajustada - inversion_actual
-                    destinatario = service.client.admin_email
-                                        
-                    service.save()
-                
-                return redirect('dashboard:
-
-def send_emails():
-    services_to_email = Service.objects.filter(adj_at__lte=timezone.now(), email_sent=False)
-    for service in services_to_email:
-        email_message = render_to_string('dashboard/email_template.html', {'service': service})
-
-        # enviar el correo electrónico
-        send_mail(
-            'Ajustes - IMACTIONS',
-            email_message,
-            'imactionsystem@gmail.com',
-            [service.client.admin_email],
-            fail_silently=False,
-        )
-
-        service.email_sent = True
-        service.save()
-"""
 
 
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
@@ -1924,15 +1726,20 @@ def index(request):
                 service = adj.service
                 print(f"######################################### REMIND found -------- --- - -- - > {adj.type} {service} ######")
                 print(f"######################################### values- - > OLD {service.total} NEW {adj.new_value} ######")
-                email_message = render_to_string('dashboard/email_adjust_service_template.html', {'adj': adj,})
+                
+                email_message = render_to_string('dashboard/email_adjust_service_template.html', {'adj': adj})
+                actual = Decimal(adj.old_value)
+                con = Decimal(adj.new_value)
+                ajuste = Decimal(adj.dif)
+                
                 send_mail(
-                    'Aviso: IMPORTANTE',
-                    
-                    email_message,
-                    'systemimactions@gmail.com',
-                    ['aprendizajenaturalconciente@gmail.com',], # FOR CLIENT REMINDER OR NOTICE: [service.client.admin_email],
+                    subject='Aviso: IMPORTANTE',
+                    message=f'Hola estimado, {adj.client.name} ( * para uso interno: {adj.service.service}) \n El motivo de este email es para comunicarte un ajuste por inflación.\n\n\n Inversión actual: ${actual} \n Inversión con ajuste: ${con} \n Ajuste: ${ajuste} \n\n\n El ajuste se hará en el próximo pago. \n Cualquier duda no dejes de consultarnos. \n Saludos, \n\n\n Imactions \n www.imactions.agency',
+                    html_message=email_message,
+                    from_email='systemimactions@gmail.com',
+                    recipient_list=['aprendizajenaturalconciente@gmail.com'],
                     fail_silently=False,
-                    )
+                )
                 print (f" adjust -- {adj} - {service} -- EMAIL reminder SEND")
                 adj.remind_sent = True
                 adj.save()
@@ -1943,17 +1750,24 @@ def index(request):
                 client = adj.client
                 print(f"######################################### REMIND found -------- --- - -- - > {adj.type}: {client} ######")
                 services = client.services.filter(state=True)
+                services_list = []
                 for service in services:
-                    print(f"{service}") 
+                    print(f"{service}")
+                    services_list.append(service.service)
                     
                     
                 email_message = render_to_string('dashboard/email_adjust_account_template.html', {'adj': adj, 'services': services})
+                actual = Decimal(adj.old_value)
+                con = Decimal(adj.new_value)
+                ajuste = Decimal(adj.dif)
                 send_mail(
-                    'Aviso: IMPORTANTE',
-                    email_message,
-                    'systemimactions@gmail.com',
-                    ['aprendizajenaturalconciente@gmail.com',], # FOR CLIENT REMINDER OR NOTICE: [service.client.admin_email],
-                    fail_silently=False,)
+                    subject='Aviso: IMPORTANTE',
+                    message=f'Hola estimado, {adj.client.name} ( * para uso interno: {services_list}) \n El motivo de este email es para comunicarte un ajuste por inflación.\n\n  \n Inversión actual: ${actual} \n Inversión con ajuste: ${con} \n Ajuste: ${ajuste} \n\n\n El ajuste se hará en el próximo pago. \n Cualquier duda no dejes de consultarnos. \n Saludos, \n\n\n Imactions \n www.imactions.agency',
+                    html_message=email_message,
+                    from_email='systemimactions@gmail.com',
+                    recipient_list=['aprendizajenaturalconciente@gmail.com'],
+                    fail_silently=False,
+                )
                 print (f" adjust -- {adj} - {client} -- EMAIL reminder SEND")
                 adj.remind_sent = True
                 adj.save()
