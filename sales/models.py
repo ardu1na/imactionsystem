@@ -51,18 +51,12 @@ class Service(models.Model):
         client = models.ForeignKey(Client, related_name="services", on_delete=models.CASCADE, null=True)
         
         total = models.DecimalField(default=0, decimal_places=2, max_digits=20)
-        
-        last_adj = models.DecimalField(default=0, decimal_places=2, max_digits=6)
-        adj_at = models.DateField(null=True, blank=True)
-        email_sent = models.BooleanField(default=False)
-        
-        total_old = models.DecimalField(default=0, decimal_places=2, max_digits=30)
-        adj_old =models.DecimalField(default=0, decimal_places=2, max_digits=6)
-        adj_at_old = models.DateField(null=True, blank=True)
+               
         
         state = models.BooleanField(default=True)
 
-        
+        created_at = models.DateField(auto_now_add=True)
+
         def __str__(self):
             
             return f"{self.client} - {self.service}"
@@ -70,13 +64,10 @@ class Service(models.Model):
                    
         class Meta:
             unique_together = (('service', 'client'),) 
-            get_latest_by = ('adj_at')
-        
-        @property    
-        def get_diference(self):
-            d = self.total - self.total_old
-            return d
-        
+            get_latest_by = ('created_at')
+            
+            
+      
         
 class Adj(models.Model):
     A = "Account"
@@ -85,16 +76,20 @@ class Adj(models.Model):
         (A, ('Account')),
         (S, ('Service')),
     )
-    notice_date = models.DateField(null=True,blank=True)
-    adj_percent = models.DecimalField(decimal_places=2, max_digits=16)
-    
-    date_alert = models.DateField(null=True, blank=True)
+    created_at = models.DateField(auto_now_add=True)
+
     
     type = models.CharField(max_length=40, default=None, verbose_name="Account/Service", choices=ADJ_CHOICES, blank=False, null=False)
     service = models.ForeignKey(Service, on_delete=models.SET_NULL, related_name="adj", null=True, blank=True)
     client = models.ForeignKey(Client, on_delete=models.SET_NULL, related_name="adj", null=True, blank=True)
-    
-    created_at = models.DateField(auto_now_add=True)
+       
+    adj_percent = models.DecimalField(decimal_places=2, max_digits=16)
+
+    old_value = models.DecimalField(default=0, max_digits=40, decimal_places=2)
+    new_value = models.DecimalField(default=0, max_digits=40, decimal_places=2)
+    dif = models.DecimalField(default=0, max_digits=40, decimal_places=2)
+                
+            
     
     def __str__ (self):
         if self.type == "Service":
@@ -106,6 +101,10 @@ class Adj(models.Model):
     class Meta:
         ordering = ['-notice_date']
 
+    notice_date = models.DateField(null=True,blank=True)
+
+    adj_done = models.BooleanField(default=False)
+    remind_sent = models.BooleanField(default=False)
         
 
 
@@ -238,38 +237,11 @@ class Sale(models.Model):
     
 
     def save(self, *args, **kwargs):
-        
-        print("################### ################### ################### ################### ################### ")
-        print("################### ################### ################### ################### ################### ")
-        print()
-        print(f"################### { self } ################### ")
-        print()
-
-        print("start save sale instance ... ")
         self.change = self.get_change
         self.revenue = self.get_revenue()
-        print()
-        print()
-        print("asigning change value and revenue to sale instance ...")
-        print("################### ################### ################### ################### ################### ")
-        print("checking if sale is new or if already exists...")
-
-        
         if self.pk:
-            print()
-            print("sale exists:")
-            print("checking if sale is CANCELLED...")
 
             if self.cancelled != "Active":
-                print()
-                print("SALE CANCELLED!... setting new values into suscription ...")
-                print("take out sale value into client service")
-                print("save service...")
-                print("take out relationship...")
-
-
-                print("################### ################### ################### ################### ################### ")
-                print("###################                 SALE SAVED               ################### ")
                 
                 if self.suscription:
                     self.suscription.total -= self.change
@@ -277,39 +249,14 @@ class Sale(models.Model):
                     self.suscription = None
                     
             else:
-                print( f" sale {self} is active")
-                print("check if sale is auto revenue")
-                if self.note != "auto revenue sale":
-                    print("it isnt")
-
-                    print("STARTING GET_SERVICE_OR UPDATE ...........")            
+                if self.note != "auto revenue sale":     
                     self.get_service_or_update()
-                    print("END GET_SERVICE_OR UPDATE ...........")   
-                
-                print( f" saving sale")
             super(Sale, self).save(*args, **kwargs)   
-            
-            print( f" sale saved")
-
         else:
-            print()
-            print("sale is NEW:")
-            print("check if sale is auto revenue")
             if self.note != "auto revenue sale":
-                print("it isnt")
-
-                print("STARTING GET_SERVICE_OR UPDATE ...........")            
+                     
                 self.get_service_or_update()
-                print("END GET_SERVICE_OR UPDATE ...........")            
-
-            print()
-            print("################### ################### ################### ################### ################### ")
-
-            print("###################                 SAVING CHANGES         ################### ")
-            print()
-            print("################### ################### ################### ################### ################### ")
             super(Sale, self).save(*args, **kwargs)
-            print("###################                 SALE SAVED               ################### ")
 
             
       

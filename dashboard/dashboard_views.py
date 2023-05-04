@@ -780,10 +780,27 @@ def adjustment(request):
             instance.client = client_instance
             
 
-            
+            adj_percent = adjform.cleaned_data['adj_percent']
+
             if adjform.cleaned_data['type'] == "Service":
-                service_name = adjform.cleaned_data['service']
-                instance.service = service_name
+                service = adjform.cleaned_data['service']
+                instance.service = service
+                
+                instance.old_value = service.total
+                new = Decimal(service.total + ((adj_percent / 100) * service.total))
+                instance.new_value = new
+                instance.dif = new - service.total               
+                
+            elif adjform.cleaned_data['type'] == "Account":
+                services = client_instance.services.filter(state=True)
+                total_services = 0
+                for service in services:
+                    total_services += service.total
+                
+                instance.old_value = total_services
+                new = Decimal(total_services + ((adj_percent / 100) * total_services))
+                instance.new_value = new
+                instance.dif = new - total_services          
         
             instance.save()
             return redirect('dashboard:adjustment') 
@@ -791,22 +808,7 @@ def adjustment(request):
                  
         else:
             print(adjform.errors) 
-    """    
-    
-    if request.method == 'GET':
-        if 'accounts' in request.GET:
-            services = []
-            clients = Client.objects.filter(cancelled="Active")
-            for i in clients:
-                if i.get_rr_client == True:
-                    services.append(i)
-        elif 'services' in request.GET:
-            services = Service.objects.filter(state=True)
-        else:
-            services = []                
-        raiceform = AdjustmentForm()
-        clients = Client.objects.filter(cancelled="Active")
-        select = AdjForm()
+    """
 
     if request.method == 'POST':
         if "adjservice" in request.POST:

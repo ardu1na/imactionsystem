@@ -5,7 +5,7 @@ from django import forms
 from sales.models import Sale, Service, Adj 
 from customers.models import Client
 
-
+"""
 class AdjustmentForm(ModelForm):
     id = forms.IntegerField(widget=forms.HiddenInput())
 
@@ -25,7 +25,6 @@ class AdjustmentForm(ModelForm):
             'id':"last_adj",
             'placeholder':"Adjustment %",}),}
         
-        
 
 class AdjustAccount(forms.Form):
     id = forms.IntegerField(widget=forms.HiddenInput())         
@@ -33,7 +32,7 @@ class AdjustAccount(forms.Form):
     adj_at = forms.CharField(widget=TextInput(attrs={'class':"datetimepicker form-control",
         'id':"PublishDateTimeTextbox",
         'type':"date",
-        'placeholder':"Adjustment Date",}))
+        'placeholder':"Adjustment Date",})) """
     
     
 class AdjForm(ModelForm):
@@ -61,7 +60,7 @@ class AdjForm(ModelForm):
     
     class Meta:
         model = Adj
-        fields = ['notice_date', 'adj_percent', 'date_alert', 'type' ]
+        fields = ['notice_date', 'adj_percent',  'type' ]
         
         widgets = {
             
@@ -70,10 +69,7 @@ class AdjForm(ModelForm):
             'type':"date",
             'placeholder':"Notice Date",}),
 
-            'date_alert' : TextInput(attrs={'class':"datetimepicker form-control",
-            'id':"PublishDateTimeTextbox",
-            'type':"date",
-            'placeholder':"Internal RemainderDate",}),
+      
  
             'adj_percent' : TextInput(attrs={'class':"form-control",
             'id':"adj_percent",
