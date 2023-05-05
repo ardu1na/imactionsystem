@@ -1,7 +1,8 @@
-<p>Hola estimado, {{adj.client.name}} </p>
+<p> [ {{adj.client.name}} {{adj.client.admin_email}} {{adj.notice_date}} ]</p>
+<br>
+<p>Estimado cliente, </p>
 <p>El motivo de este email es para comunicarte un ajuste por inflación.</p>
 <br>
-
 {% if services|length > 1 %}
     <p> Servicios: </p>
     {% for s in services %}
@@ -9,7 +10,6 @@
     {% endfor %}
 {% endif %}
 <br>
-
 <p>Inversión actual: ${{adj.old_value|floatformat:2}}</p>
 <p>Inversión con ajuste: ${{adj.new_value|floatformat:2}}</p>
 <p>Ajuste: ${{adj.dif|floatformat:2}}</p>
@@ -18,6 +18,5 @@
 <p>Cualquier duda no dejes de consultarnos.</p>
 <p>Saludos,</p>
 <br>
-
 <p>Imactions</p>
 <p>www.imactions.agency</p>
