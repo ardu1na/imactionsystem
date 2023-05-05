@@ -867,7 +867,7 @@
 document.addEventListener("DOMContentLoaded", function(event) {
     var ctx = document.getElementById("cbys").getContext("2d");
     var data = {
-      labels: ["SEO", "Google Ads", "Facebook Ads", "LinkedIn", "Web Plan", "Combo", "Community Management", "Email Marketing", "Others RR"],
+      labels: ["SEO {{s_c|floatformat:0}}%", "Google Ads {{g_c|floatformat:0}}%", "Facebook Ads {{f_c|floatformat:0}}%", "LinkedIn {{l_c|floatformat:0}}%", "Web Plan {{w_c|floatformat:0}}%", "Combo {{co_c|floatformat:0}}%", "Community Management {{cm_c|floatformat:0}}%", "Email Marketing {{e_c|floatformat:0}}%", "Others RR {{o_c|floatformat:0}}%"],
       datasets: [
         {
           data: [{{seo_clients}}, {{gads_clients}}, {{fads_clients}}, {{lkdn_clients}}, {{wp_clients}}, {{combo_clients}}, {{cm_clients}}, {{emk_clients}}, {{other_clients}}],

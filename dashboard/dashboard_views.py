@@ -1690,9 +1690,16 @@ def index(request):
        
        
     #######################################################################################
-
+    clients = Client.objects.filter(cancelled="Active")
+    
+    clients_rr = []
+    for client in clients:
+        if client.get_rr_client == True:
+            clients_rr.append(client)
+    c_rr_total = len(clients_rr)
+    
     #  % clients by service    -  pie chart data
-              
+               
     seo_clients = Service.objects.filter(service="SEO", state=True).count()
     gads_clients = Service.objects.filter(service="Google Ads", state=True).count()
     fads_clients = Service.objects.filter(service="Facebook Ads", state=True).count()
@@ -1701,8 +1708,31 @@ def index(request):
     combo_clients = Service.objects.filter(service="Combo", state=True).count()
     cm_clients = Service.objects.filter(service="Community Management", state=True).count()
     emk_clients = Service.objects.filter(service="Email Marketing", state=True).count()
-    other_clients = Service.objects.filter(service="Others RR", state=True).count()              
-       
+    other_clients = Service.objects.filter(service="Others RR", state=True).count() 
+    
+    s_c = 0
+    g_c = 0
+    f_c = 0
+    l_c = 0
+    w_c = 0
+    co_c = 0
+    cm_c = 0
+    e_c = 0             
+    o_c = 0   
+    
+    try:
+        s_c = (seo_clients*100)/c_rr_total
+        g_c = (gads_clients*100)/c_rr_total
+        f_c = (fads_clients*100)/c_rr_total
+        l_c = (lkdn_clients*100)/c_rr_total
+        w_c = (wp_clients*100)/c_rr_total
+        co_c = (combo_clients*100)/c_rr_total
+        cm_c = (cm_clients*100)/c_rr_total
+        e_c = (emk_clients*100)/c_rr_total
+        o_c = (other_clients*100)/c_rr_total
+
+    except:
+        pass
     
     #######################################################################################
 
@@ -2802,6 +2832,16 @@ def index(request):
         "cm_clients": cm_clients,
         "emk_clients": emk_clients,
         "other_clients": other_clients,
+        
+        "s_c": s_c,
+        "g_c": g_c,
+        "f_c": f_c,
+        "l_c": l_c,
+        "w_c": w_c,
+        "co_c": co_c,
+        "cm_c": cm_c,
+        "e_c": e_c,
+        "o_c": o_c,
         
         "blue": blue,
         "hour": datetime.now(),
