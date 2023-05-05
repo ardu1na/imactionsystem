@@ -519,8 +519,7 @@ def employeesold(request):
     return render(request,'dashboard/instructor/employeesold.html',context)
 
 
-@user_passes_test(lambda user: user.groups.filter(name='employees').exists())
-@login_required(login_url='dashboard:login')
+@user_passes_test(lambda user: user.groups.filter(name='admin').exists())
 def employees(request):
     staff = Employee.objects.exclude(rol="CEO").filter(active="Yes")
     ceo = Employee.objects.filter(rol="CEO")        
@@ -1651,9 +1650,9 @@ def index(request):
     salaries = Salary.objects.filter(period__month=today.month, period__year=today.year)
     for salary in salaries:
         if salary.employee.rol != "CEO":
-            outcome +=  salary.employee.get_total
+            outcome +=  salary.employee.get_total()
         else:
-            outcome += salary.employee.get_total_ceo
+            outcome += salary.employee.get_total_ceo()
     for e in expenses:
         outcome += e.value
     balance = rr_t_clients - outcome
