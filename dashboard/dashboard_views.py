@@ -1779,39 +1779,60 @@ def index(request):
                 wop=expense.wop,
             )
                 
-        
-    clients = Client.objects.all()
+    ####################################################################
+    ####################################################################
+    #######################                 GET CLIENTS RR    ##########
+
+    clients = Client.objects.filter(cancelled="Active")
     
     clients_rr = []
-    for client in clients.filter(cancelled="Active"):
+    for client in clients:
         if client.get_rr_client == True:
-            clients_rr.append(client.id)
+            clients_rr.append(client)
     c_rr_total = len(clients_rr)
 
-    total_rr = 0
     
+    ####################################################################
+    ###############################################
+    ############### CLIENTS BY TIER PieCHART
+        
+    n_clients = len(clients_rr)
     i = 0
     ii = 0
     iii = 0
     iv = 0
-    v = 0
+    for client in clients_rr:
+        if client.tier == "I":
+            i += 1
+        elif client.tier == "II":
+            ii += 1
+        elif client.tier == "III":
+            iii += 1
+        elif client.tier == "IV":
+            iv += 1
+    t_i = 0
+    t_ii = 0
+    t_iii = 0
+    t_iv = 0
+    try:
+        t_i = (i*100)/n_clients
+        t_ii = (ii*100)/n_clients
+        t_iii = (iii*100)/n_clients
+        t_iv = (iv*100)/n_clients
+    except:
+        pass
     
+
+####################################################################
+    total_rr = 0
+
     for client in clients:
         if client.cancelled == "Active":
             for sale in client.sales.all():
                 if sale.cancelled == "Active":
                     if sale.revenue == "RR":
                         total_rr += sale.get_change
-            if client.tier == "I":
-                i += 1
-            elif client.tier == "II":
-                ii += 1
-            elif client.tier == "III":
-                iii += 1
-            elif client.tier == "IV":
-                iv += 1
-            elif client.tier == "V":
-                v += 1
+            
 
     
     last_blue = LastBlue.objects.get(pk=1) 
@@ -2923,7 +2944,10 @@ def index(request):
         "ii" : ii,
         "iii" : iii,
         "iv" : iv,
-        "v" : v,
+        "t_i" : t_i,
+        "t_ii" : t_ii,
+        "t_iii" : t_iii,
+        "t_iv" : t_iv,
         
         
     }
