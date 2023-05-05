@@ -778,27 +778,27 @@
 						data: [{{i}}, {{ii}}, {{iii}}, {{iv}}, {{v}}],
 						borderWidth: 0, 
 						backgroundColor: [
-							"rgba(235, 129, 83, .9)",
-							"rgba(235, 129, 83, .7)",
-							"rgba(235, 129, 83, .5)",
-                            
-							"rgba(0,0,0,0.07)"
-						],
-						hoverBackgroundColor: [
-							"rgba(235, 129, 83, .9)",
-							"rgba(235, 129, 83, .7)",
-							"rgba(235, 129, 83, .5)",
-							"rgba(0,0,0,0.07)"
-						]
-
-					}],
-					labels: [
-						"TIER I",
-						"TIER II",
-						"TIER III", 
-						"TIER IV",
-                        "TIER V"
-					]
+                            "rgba(255, 99, 132, 1)",
+                            "rgba(54, 162, 235, 1)",
+                            "rgba(255, 206, 86, 1)",
+                            "rgba(75, 192, 192, 1)",
+                            "rgba(153, 102, 255, 1)"
+                        ],
+                        hoverBackgroundColor: [
+                            "rgba(255, 99, 132, 0.8)",
+                            "rgba(54, 162, 235, 0.8)",
+                            "rgba(255, 206, 86, 0.8)",
+                            "rgba(75, 192, 192, 0.8)",
+                            "rgba(153, 102, 255, 0.8)"
+                        ]
+    
+                    }],
+                    labels: [
+                        "TIER I {{t_i|floatformat:0}}%",
+                        "TIER II {{t_ii|floatformat:0}}%",
+                        "TIER III {{t_iii|floatformat:0}}%", 
+                        "TIER IV {{t_iv|floatformat:0}}%",
+                    ]
 				},
 				options: {
 					plugins:{
@@ -867,7 +867,7 @@
 document.addEventListener("DOMContentLoaded", function(event) {
     var ctx = document.getElementById("cbys").getContext("2d");
     var data = {
-      labels: ["SEO", "Google Ads", "Facebook Ads", "LinkedIn", "Web Plan", "Combo", "Community Management", "Email Marketing", "Others RR"],
+      labels: ["SEO {{s_c|floatformat:0}}%", "Google Ads {{g_c|floatformat:0}}%", "Facebook Ads {{f_c|floatformat:0}}%", "LinkedIn {{l_c|floatformat:0}}%", "Web Plan {{w_c|floatformat:0}}%", "Combo {{co_c|floatformat:0}}%", "Community Management {{cm_c|floatformat:0}}%", "Email Marketing {{e_c|floatformat:0}}%", "Others RR {{o_c|floatformat:0}}%"],
       datasets: [
         {
           data: [{{seo_clients}}, {{gads_clients}}, {{fads_clients}}, {{lkdn_clients}}, {{wp_clients}}, {{combo_clients}}, {{cm_clients}}, {{emk_clients}}, {{other_clients}}],

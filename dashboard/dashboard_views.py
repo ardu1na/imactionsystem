@@ -1690,9 +1690,16 @@ def index(request):
        
        
     #######################################################################################
-
+    clients = Client.objects.filter(cancelled="Active")
+    
+    clients_rr = []
+    for client in clients:
+        if client.get_rr_client == True:
+            clients_rr.append(client)
+    c_rr_total = len(clients_rr)
+    
     #  % clients by service    -  pie chart data
-              
+               
     seo_clients = Service.objects.filter(service="SEO", state=True).count()
     gads_clients = Service.objects.filter(service="Google Ads", state=True).count()
     fads_clients = Service.objects.filter(service="Facebook Ads", state=True).count()
@@ -1701,8 +1708,31 @@ def index(request):
     combo_clients = Service.objects.filter(service="Combo", state=True).count()
     cm_clients = Service.objects.filter(service="Community Management", state=True).count()
     emk_clients = Service.objects.filter(service="Email Marketing", state=True).count()
-    other_clients = Service.objects.filter(service="Others RR", state=True).count()              
-       
+    other_clients = Service.objects.filter(service="Others RR", state=True).count() 
+    
+    s_c = 0
+    g_c = 0
+    f_c = 0
+    l_c = 0
+    w_c = 0
+    co_c = 0
+    cm_c = 0
+    e_c = 0             
+    o_c = 0   
+    
+    try:
+        s_c = (seo_clients*100)/c_rr_total
+        g_c = (gads_clients*100)/c_rr_total
+        f_c = (fads_clients*100)/c_rr_total
+        l_c = (lkdn_clients*100)/c_rr_total
+        w_c = (wp_clients*100)/c_rr_total
+        co_c = (combo_clients*100)/c_rr_total
+        cm_c = (cm_clients*100)/c_rr_total
+        e_c = (emk_clients*100)/c_rr_total
+        o_c = (other_clients*100)/c_rr_total
+
+    except:
+        pass
     
     #######################################################################################
 
@@ -1779,39 +1809,60 @@ def index(request):
                 wop=expense.wop,
             )
                 
-        
-    clients = Client.objects.all()
+    ####################################################################
+    ####################################################################
+    #######################                 GET CLIENTS RR    ##########
+
+    clients = Client.objects.filter(cancelled="Active")
     
     clients_rr = []
-    for client in clients.filter(cancelled="Active"):
+    for client in clients:
         if client.get_rr_client == True:
-            clients_rr.append(client.id)
+            clients_rr.append(client)
     c_rr_total = len(clients_rr)
 
-    total_rr = 0
     
+    ####################################################################
+    ###############################################
+    ############### CLIENTS BY TIER PieCHART
+        
+    n_clients = len(clients_rr)
     i = 0
     ii = 0
     iii = 0
     iv = 0
-    v = 0
+    for client in clients_rr:
+        if client.tier == "I":
+            i += 1
+        elif client.tier == "II":
+            ii += 1
+        elif client.tier == "III":
+            iii += 1
+        elif client.tier == "IV":
+            iv += 1
+    t_i = 0
+    t_ii = 0
+    t_iii = 0
+    t_iv = 0
+    try:
+        t_i = (i*100)/n_clients
+        t_ii = (ii*100)/n_clients
+        t_iii = (iii*100)/n_clients
+        t_iv = (iv*100)/n_clients
+    except:
+        pass
     
+
+####################################################################
+    total_rr = 0
+
     for client in clients:
         if client.cancelled == "Active":
             for sale in client.sales.all():
                 if sale.cancelled == "Active":
                     if sale.revenue == "RR":
                         total_rr += sale.get_change
-            if client.tier == "I":
-                i += 1
-            elif client.tier == "II":
-                ii += 1
-            elif client.tier == "III":
-                iii += 1
-            elif client.tier == "IV":
-                iv += 1
-            elif client.tier == "V":
-                v += 1
+            
 
     
     last_blue = LastBlue.objects.get(pk=1) 
@@ -1858,7 +1909,7 @@ def index(request):
                 
                 send_mail(
                     subject='Aviso: IMPORTANTE',
-                    message=f'Hola estimado, {adj.client.name} ( * para uso interno: {adj.service.service}) \n El motivo de este email es para comunicarte un ajuste por inflación.\n\n Inversión actual: ${actual} \n Inversión con ajuste: ${con} \n Ajuste: ${ajuste} \n\n El ajuste se hará en el próximo pago. \n Cualquier duda no dejes de consultarnos. \n Saludos, \n\n Imactions \n www.imactions.agency',
+                    message=f'({adj.notice_date} {adj.client.name} {adj.client.admin_email} {adj.service.service}) \n Estimado cliente,  \n  El motivo de este email es para comunicarte un ajuste por inflación.\n Inversión actual: ${actual} \n Inversión con ajuste: ${con} \n Ajuste: ${ajuste} \n El ajuste se hará en el próximo pago. \n Cualquier duda no dejes de consultarnos. \n Saludos, \n Imactions \n www.imactions.agency',
                     html_message=email_message,
                     from_email='systemimactions@gmail.com',
                     recipient_list=['hola@imactions.com'],
@@ -1886,7 +1937,7 @@ def index(request):
                 ajuste = Decimal(adj.dif)
                 send_mail(
                     subject='Aviso: IMPORTANTE',
-                    message=f'Hola estimado, {adj.client.name} ( * para uso interno: {services_list}) \n El motivo de este email es para comunicarte un ajuste por inflación.\n\n  \n Inversión actual: ${actual} \n Inversión con ajuste: ${con} \n Ajuste: ${ajuste} \n\n El ajuste se hará en el próximo pago. \n Cualquier duda no dejes de consultarnos. \n Saludos, \n\n Imactions \n www.imactions.agency',
+                    message=f'({adj.notice_date} {adj.client.name} {adj.client.admin_email} {services_list}) \n Estimado cliente, \n El motivo de este email es para comunicarte un ajuste por inflación.\n  \n Inversión actual: ${actual} \n Inversión con ajuste: ${con} \n Ajuste: ${ajuste} \n El ajuste se hará en el próximo pago. \n Cualquier duda no dejes de consultarnos. \n Saludos, \n Imactions \n www.imactions.agency',
                     html_message=email_message,
                     from_email='systemimactions@gmail.com',
                     recipient_list=['hola@imactions.com'],
@@ -2782,6 +2833,16 @@ def index(request):
         "emk_clients": emk_clients,
         "other_clients": other_clients,
         
+        "s_c": s_c,
+        "g_c": g_c,
+        "f_c": f_c,
+        "l_c": l_c,
+        "w_c": w_c,
+        "co_c": co_c,
+        "cm_c": cm_c,
+        "e_c": e_c,
+        "o_c": o_c,
+        
         "blue": blue,
         "hour": datetime.now(),
         "c_rr_total": c_rr_total,
@@ -2923,7 +2984,10 @@ def index(request):
         "ii" : ii,
         "iii" : iii,
         "iv" : iv,
-        "v" : v,
+        "t_i" : t_i,
+        "t_ii" : t_ii,
+        "t_iii" : t_iii,
+        "t_iv" : t_iv,
         
         
     }
