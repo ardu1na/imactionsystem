@@ -220,38 +220,25 @@
             <div class="widget-timeline style-3 px-5 ">
                 <ul id="loglist" class="timeline-active my-4">
                     {% for e in activity %}
-                    <li class="d-flex aligns-baseline ">
-                        {% if e.get_event_type_display %}
+                    <li class="d-flex aligns-baseline mt-3">
                         <div class="panel">
+                            
                             <a class="timeline-panel text-muted d-flex aligns-center">
-                                <h4 class="font-w400 time">{{e.datetime|date:"H:i \h\s, D j/n"}}</h4>
 
-                                {% if e.get_event_type_display == "Update" %} <div class="badge badge-xl badge-warning fs-6"> <i class="fa-solid fa-pen-to-square"></i> </div>
-                                    {% elif e.get_event_type_display == "Create" %} <div class="badge badge-xl badge-secondary fs-6"><i class="fa fa-plus"></i> </div>
-                                    {% elif e.get_event_type_display == "Delete" %} <div class="badge badge-xl badge-primary fs-6"> <i class="fa-solid fa-trash fs-7"></i> </div>
-                                    {% endif %}
-                                <h4 class="mb-0"><strong> {{e.user}} </strong> {{e.get_event_type_display}} {{e.content_type.model}} 
-                                    {% if e.get_event_type_display == "Update" %} <strong class="text-warning"> {{e.object_repr}}</strong>
-                                    {% elif e.get_event_type_display == "Create" %} <strong class="text-secondary"> {{e.object_repr}}</strong>
-                                    {% elif e.get_event_type_display == "Delete" %} <strong class="text-primary"> {{e.object_repr}}</strong>
-                                    {% endif %}                                        
-                                </h4>
-
-                            </a>                                
-                        </div>
-                        {% else %}
-                        <div class="panel">
-                            <a class="timeline-panel text-muted d-flex aligns-center">
-                                {% if e.get_login_type_display == "Login" %} <div class="badge badge-xl badge-secondary fs-6"> <i class="fa-solid fa-right-to-bracket"></i></div>
-                                {% elif e.get_login_type_display == "Logout" %} <div class="badge badge-xl badge-primary fs-6"> <i class="fa-solid fa-right-to-bracket fa-flip-horizontal"></i> </div>
+                                {% if e.get_event_type_display == "Update" %} <div class="badge badge-xl badge-warning fs-5"> <i class="fa-solid fa-pen-to-square"></i> </div>
+                                {% elif e.get_event_type_display == "Create" %} <div class="badge badge-xl badge-secondary fs-5"><i class="fa fa-plus"></i> </div>
+                                {% elif e.get_event_type_display == "Delete" %} <div class="badge badge-xl badge-primary fs-5"> <i class="fa-solid fa-trash fs-7"></i> </div>
                                 {% endif %}
-                                <h4 class="mb-0"><strong> {{e.user}} </strong> {{e.get_login_type_display}}                             
-                                </h4>
-                            </a>                                
-                        </div>	
-                        <h4 class="font-w400 time">{{e.datetime}}</h4>
 
-                        {%endif%}	
+
+                               
+                                    <h4><strong> {{e.user}} </strong> {{e.get_event_type_display}} {{e.content_type.model}} {% if e.get_event_type_display == "Update" %} <strong class="text-warning">    {{e.object_repr}} </strong>
+                                        {% elif e.get_event_type_display == "Create" %} <strong class="text-secondary"> {{e.object_repr}}</strong>
+                                        {% elif e.get_event_type_display == "Delete" %} <strong class="text-primary"> {{e.object_repr}}</strong>
+                                        {% endif %}                                        
+                                      {{e.datetime|date:"H:i \h\s, j N"}}</h4>
+                                </a>
+                        </div>                        
                     </li>
                     {% endfor %}
                 </ul>
