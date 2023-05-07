@@ -1622,8 +1622,15 @@ def download_config(request):
 def index(request):
     
     #######################################################################################
-    ############ CARDS ON DEMAND BY THE CLIENT
-    #######################################################################################
+    # card activity
+    ct = ContentType.objects.get_for_model(LastBlue)
+    ct2 = ContentType.objects.get_for_model(CustomUser)
+
+    events = CRUDEvent.objects.exclude(content_type=ct).exclude(content_type=ct2)
+    
+    
+    last_act = events[:7]
+
     
     
     
@@ -2815,6 +2822,8 @@ def index(request):
     
     context={
         "page_title":"Dashboard",
+        
+        "activity": last_act[:7],
         "balance": balance,
         "rr_t_clients": rr_t_clients,
         "rr_q_clients": rr_q_clients,
