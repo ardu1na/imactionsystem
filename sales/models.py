@@ -165,20 +165,8 @@ class Sale(models.Model):
         (OTHER_RR, ('Others RR')),
 
     )
+    
 
-    def get_revenue(self):
-        if self.service == 'SEO' or self.service == 'Google Ads' or self.service == 'Community Management' \
-        or self.service == 'Facebook Ads' or self.service == 'Web Plan' or self.service == 'LinkedIn' \
-        or self.service == 'Combo' or self.service == 'Others RR':
-            return ("RR")
-        else:
-            return ("OneOff")
-
-    RR = 'RR'
-    OneOff = 'OneOff'
-    REVENUE_CHOICES=(
-        (RR, ("RR")),
-        (OneOff, ("OneOff")),)
 
     CANCELLED = "Cancelled"
     ACTIVE = "Active"
@@ -203,7 +191,6 @@ class Sale(models.Model):
     
     comments =models.CharField(max_length=500, null=True, blank=True, verbose_name="COMMENTS")
     
-    revenue = models.CharField(max_length=20, null=True, blank=False, default=None, choices=REVENUE_CHOICES, help_text="Leave blank to automatically fill", verbose_name="REVENUE")
     
     service = models.CharField(max_length=50, choices=SERVICE_CHOICES, verbose_name="SERVICE", blank=False, default=None)
     
@@ -246,6 +233,20 @@ class Sale(models.Model):
         super().delete(*args, **kwargs)    
         
     
+    def get_revenue(self):
+        if self.service == 'SEO' or self.service == 'Google Ads' or self.service == 'Community Management' \
+        or self.service == 'Facebook Ads' or self.service == 'Web Plan' or self.service == 'LinkedIn' \
+        or self.service == 'Combo' or self.service == 'Others RR':
+            return ("RR")
+        else:
+            return ("OneOff")
+
+    RR = 'RR'
+    OneOff = 'OneOff'
+    REVENUE_CHOICES=(
+        (RR, ("RR")),
+        (OneOff, ("OneOff")),)
+    revenue = models.CharField(max_length=20, null=True, blank=False, default=None, choices=REVENUE_CHOICES, help_text="Leave blank to automatically fill", verbose_name="REVENUE")
 
     def save(self, *args, **kwargs):
         self.change = self.get_change
@@ -260,11 +261,11 @@ class Sale(models.Model):
                     self.suscription = None
                     
             else:
-                if self.note != "auto revenue sale":     
+                if self.note != "auto revenue sale" and self.revenue == "RR":     
                     self.get_service_or_update()
             super(Sale, self).save(*args, **kwargs)   
         else:
-            if self.note != "auto revenue sale":
+            if self.note != "auto revenue sale" and self.revenue == "RR":
                      
                 self.get_service_or_update()
             super(Sale, self).save(*args, **kwargs)
