@@ -1053,20 +1053,20 @@ def clients(request):
     clients_all = Client.objects.filter(cancelled="Active")
     clients = []
     for client in clients_all:
-        if client.get_rr_client == True:
+        if client.services.filter(state=True).exists():
             clients.append(client)
         
     total_rr = 0
     for client in clients:
         if client.cancelled == "Active":
-            for service in client.services.all():
+            for service in client.services.filter(state=True):
                 total_rr += service.total                
     total_rr_k = total_rr
     
     
     clients_rr = []
     for client in clients_all.filter(cancelled="Active"):
-        if client.get_rr_client == True:
+        if client.services.filter(state=True).exists():
             clients_rr.append(client.id)
     c_rr_total = len(clients_rr)
 
@@ -1269,7 +1269,7 @@ def editclient(request, id):
                 clientedit = editform.save(commit=False)
                 if clientedit.cancelled == "Cancelled":
                     for sale in clientedit.services.all():
-                        sale.cancelled = "Cancelled"
+                        sale.state = False
                         sale.comment_can = clientedit.comment_can
                         sale.fail_can = clientedit.fail_can
                         sale.date_can = clientedit.date_can
@@ -1330,105 +1330,6 @@ def addclientsale(request, id):
         
         
         
-
-
-@login_required(login_url='dashboard:login')
-def backup_clients(request):
-        
-    # query
-    queryset = Client.objects.all()
-    
-    # get fields of model
-    options = Client._meta
-    fields = [field.name for field in options.fields]
-    # ['id', 'name', 'last_name']...
-    # build response
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'atachment; filename="backupclients.csv"'
-
-    # writer
-    writer = csv.writer(response)
-    # writing header
-    writer.writerow([options.get_field(field).verbose_name for field in fields])
-
-    # writing data
-    for obj in queryset:
-        writer.writerow([getattr(obj, field) for field in fields])
-    
-    return response
-
-
-def handle_uploaded_file(file):
-    clients = []
-    with open(file, "r") as csv_file:
-        data = list(csv.reader(csv_file, delimiter=","))
-        print("from function")
-        for row in data[1:]:
-            clients.append(
-                Client(
-                    id=row[0],
-                    name=row[1],
-                    business_name=row[2],
-                    source=row[3],
-                    date=row[4],
-                    website=row[5],
-                    email=row[6],
-                    email_2=row[7],
-                    email_admin=row[8],
-                    phone_number=row[9],
-                    phone_2=row[10],
-                    landing_page=row[11],
-                    cancelled=row[12],
-                    comment_can=row[13],
-                    date_can=row[14],
-                    fail_can=row[15]             
-                )
-            )
-    if len(clients) > 0:
-        Client.objects.bulk_create(clients)
-    
-
-@login_required(login_url='dashboard:login')
-def import_clients(request):
-    
-    if request.method == 'POST':
-        form = UploadFileForm(request.POST, request.FILES)
-        if form.is_valid():
-            handle_uploaded_file(request.FILES['file'])
-            return HttpResponse('uploaded')
-        else:
-            print (form.errors)
-    else:
-        form = UploadFileForm()
-    return render(request, 'dashboard/instructor/uploadbackup.html', {'form': form})
-
-
-@login_required(login_url='dashboard:login')
-def backup_sales(request):
-        
-    # query
-    queryset = Sale.objects.all()
-    
-    # get fields of model
-    options = Sale._meta
-    fields = [field.name for field in options.fields]
-    # ['id', 'name', 'last_name']...
-    # build response
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'atachment; filename="backupsales.csv"'
-
-    # writer
-    writer = csv.writer(response)
-    # writing header
-    writer.writerow([options.get_field(field).verbose_name for field in fields])
-
-    # writing data
-    for obj in queryset:
-        writer.writerow([getattr(obj, field) for field in fields])
-    
-    return response
-
-
 
 
 
