@@ -191,7 +191,7 @@ class Client(models.Model):
     def rr(self): 
         total = 0
         if self.cancelled =="Active":
-            for sale in self.services.all():
+            for sale in self.services.filter(state=True):
                         total += sale.total
         return '${:,.2f}'.format(total)
 
@@ -379,57 +379,57 @@ class Client(models.Model):
     
     @property        
     def seo(self):
-        for service in self.services.all():
+        for service in self.services.filter(state=True):
             if service.service == "SEO":
                 return service
                 
         
     @property        
     def gads(self):
-        for service in self.services.all():
+        for service in self.services.filter(state=True):
             if service.service == "Google Ads":
                 return service
         
     @property        
     def fads(self):
-        for service in self.services.all():
+        for service in self.services.filter(state=True):
             if service.service == "Facebook Ads":
                 return service
     
     @property        
     def linkd(self):
-        for service in self.services.all():
+        for service in self.services.filter(state=True):
             if service.service == "LinkedIn":
                 return service
         
     @property        
     def wp(self):
-        for service in self.services.all():
+        for service in self.services.filter(state=True):
             if service.service == "Web Plan":
                 return service
             
     @property        
     def combo(self):
-        for service in self.services.all():
+        for service in self.services.filter(state=True):
             if service.service == "Combo":
                 return service
 
     @property    
     def cm(self):
-        for service in self.services.all():
+        for service in self.services.filter(state=True):
             if service.service == "Community Management":
                 return service    
         
     @property        
     def emkg(self):
-        for service in self.services.all():
+        for service in self.services.filter(state=True):
             if service.service == "Email Marketing":
                 return service    
         
         
     @property        
     def otherr(self):
-        for service in self.services.all():
+        for service in self.services.filter(state=True):
             if service.service == "Others RR":
                 return service 
                 

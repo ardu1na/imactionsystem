@@ -142,30 +142,28 @@
                             </thead>
                             <tbody>
                                 
-                                {% if sales_cancelled %}
-                                    {% for sale in sales_cancelled %}
+                                {% if services_cancelled %}
+                                    {% for service in services_cancelled %}
                                     <tr>
-                                        <td> {% if sale.date_can %} {{sale.date_can|date:"d/m/Y"}}
+                                        <td> {% if service.date_can %} {{service.date_can|date:"d/m/Y"}}
                                             {% else %} add date !! {% endif %}</td>
                                         
 
                                         <td>
                                             <div class="d-flex align-items-center">
-                                                <a class="mb-0 fs-16 font-w500"  href="{% url 'dashboard:editclient' id=sale.client.id %}">{{sale.client}}</a>
+                                                <a class="mb-0 fs-16 font-w500"  href="{% url 'dashboard:editclient' id=service.client.id %}">{{service.client}}</a>
                                             </div>
                                         </td>
-                                        <td> {% if sale.client.cancelled == "Cancelled" %} ACCOUNT 
+                                        <td> {% if service.client.cancelled == "Cancelled" %} ACCOUNT 
                                               {% else %} SERVICE {% endif %}
                                         </td>
                                         <td>
-                                            {% if sale.revenue == "RR" %}
-                                           <a href="{% url 'dashboard:editsale' id=sale.id %}"> {{sale.service}} </a>
-                                            {% endif %} 
+                                           <a> {{service.service}} </a>
                                         </td>
-                                        <td>${{sale.change|floatformat:2|intcomma}}</td>
-                                        <td>{{sale.fail_can}}</td>
+                                        <td>${{service.total|floatformat:2|intcomma}}</td>
+                                        <td>{{service.fail_can}}</td>
                                         <td><div class="d-flex align-items-center">
-                                            {{sale.comment_can|truncatechars:25}}</div></td>    
+                                            {{service.comment_can|truncatechars:25}}</div></td>    
                                     {% endfor %}
                                 {%endif%}
 

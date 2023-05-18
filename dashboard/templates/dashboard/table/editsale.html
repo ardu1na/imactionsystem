@@ -78,36 +78,13 @@
                                                     {{editform.status}}
                                                 </div>
 
-                                                <div class="form-group my-3">
-                                                    <div class="fs-5 ml-4">
-                                                        Adjustment Date
-                                                    </div>
-                                                    {{editform.raice_date}}
-                                                </div>
+
 
                                                 
-                                                <div class="form-group my-5">
-                                                    <div class="fs-4 ml-0">
-                                                        Cancel sale? 
-                                                    </div>
-                                                    {{editform.cancelled}} 
-                                                </div>
 
-                                                <div class="my-4" id="cancelation">
-                                                    <h4>Cancellation</h4>
-                                                    <div class="form-group mb-5 d-flex flex-row">
-                                                        {{editform.date_can}}
-                                                    </div>
-                                                    <div class="form-group mb-5 d-flex flex-row">
-                                                        {{editform.comment_can}}
-                                                    </div>
-                                                    <div class="form-group my-5 d-flex flex-row">
-                                                        <div class="fs-4 ml-4">
-                                                            Do we fail? 
-                                                        </div>
-                                                        {{editform.fail_can}}
-                                                    </div>
-                                                </div>
+
+
+
                                             </div>
                                         </div>       
 
@@ -137,20 +114,6 @@
 
 
 
-
-<script>
-    var can = document.getElementById("cancelled");
-    var info = document.getElementById("cancelation");
-    info.style.display = (can.value === "Active") ? "none" : "block";
-    can.onchange=function(){
-    
-        if(this.value=="Active"){
-            info.style.display="none";  
-        }else{
-            info.style.display="block";
-        }
-    }        
-</script>
 
 
 {% endblock %}

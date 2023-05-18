@@ -27,45 +27,59 @@ except:
 
 class Service(models.Model):
             
-        SEO ='SEO'
-        GADS = 'Google Ads'
-        FADS = 'Facebook Ads'
-        LIKD = 'LinkedIn'
-        WEB_PLAN = 'Web Plan'
-        COMBO = 'Combo'
-        CM = 'Community Management'
-        EMKTG = 'Email Marketing'
-        OTHER_RR = 'Others RR'
-        SERVICE_CHOICES = (
-            (SEO, ('SEO')),
-            (GADS, ('Google Ads')),
-            (FADS, ('Facebook Ads')),
-            (LIKD, ('LinkedIn')),
-            (CM, ('Community Management')),
-            (WEB_PLAN, ('Web Plan')),
-            (COMBO, ('Combo')),
-            (OTHER_RR, ('Others RR')),
+    SEO ='SEO'
+    GADS = 'Google Ads'
+    FADS = 'Facebook Ads'
+    LIKD = 'LinkedIn'
+    WEB_PLAN = 'Web Plan'
+    COMBO = 'Combo'
+    CM = 'Community Management'
+    EMKTG = 'Email Marketing'
+    OTHER_RR = 'Others RR'
+    SERVICE_CHOICES = (
+        (SEO, ('SEO')),
+        (GADS, ('Google Ads')),
+        (FADS, ('Facebook Ads')),
+        (LIKD, ('LinkedIn')),
+        (CM, ('Community Management')),
+        (WEB_PLAN, ('Web Plan')),
+        (COMBO, ('Combo')),
+        (OTHER_RR, ('Others RR')),
 
-        )
-        service = models.CharField(max_length=50, choices=SERVICE_CHOICES)
-        client = models.ForeignKey(Client, related_name="services", on_delete=models.CASCADE, null=True)
-        
-        total = models.DecimalField(default=0, decimal_places=2, max_digits=20)
-               
-        
-        state = models.BooleanField(default=True)
+    )
+    service = models.CharField(max_length=50, choices=SERVICE_CHOICES)
+    client = models.ForeignKey(Client, related_name="services", on_delete=models.CASCADE, null=True)
+    
+    total = models.DecimalField(default=0, decimal_places=2, max_digits=20)
+            
+    
 
-        created_at = models.DateField(auto_now_add=True)
-        updated_at = models.DateField(auto_now=True)
-        def __str__(self):
-            
-            return f"{self.client} - {self.service}"
+    created_at = models.DateField(auto_now_add=True)
+    updated_at = models.DateField(auto_now=True)
+    def __str__(self):
         
-                   
-        class Meta:
-            unique_together = (('service', 'client'),) 
-            get_latest_by = ('created_at')
+        return f"{self.client} - {self.service}"
+    
+                
+    class Meta:
+        unique_together = (('service', 'client'),) 
+        get_latest_by = ('created_at')
             
+            
+    YES = 'YES'
+    NO = 'NO'
+    DEBATIBLE = 'DEBATIBLE'
+
+    FAIL_CHOICES = (
+        (YES, ('YES')),
+        (NO, ('NO')),
+        (DEBATIBLE, ('DEBATIBLE')),
+        ) 
+    
+    state = models.BooleanField(default=True)   
+    comment_can = models.CharField(max_length=500, blank=True, null=True, verbose_name="COMMENT")
+    date_can = models.DateField(null=True, blank=True, verbose_name="DATE")
+    fail_can = models.CharField(max_length=50, choices=FAIL_CHOICES, blank=False,default=None, null=True, verbose_name="DO WE FAIL?")
             
       
         
@@ -168,11 +182,11 @@ class Sale(models.Model):
     
 
 
-    CANCELLED = "Cancelled"
+    """CANCELLED = "Cancelled"
     ACTIVE = "Active"
     CANCELLED_CHOICES = (
         (CANCELLED, ('Cancelled')),
-        (ACTIVE, ('Active')))
+        (ACTIVE, ('Active')))"""
     
     ARS = "ARS"
     USD = "USD"
@@ -199,7 +213,7 @@ class Sale(models.Model):
     note = models.CharField(max_length=400, null=True, blank=True, verbose_name="NOTES")
     cost = models.IntegerField(default=0, verbose_name="COST")
     status = models.CharField(max_length=5, choices=S_CHOICES, null=True, blank=False, default=None, verbose_name="STATUS $")
-    cancelled = models.CharField(default='Active', max_length=50, choices=CANCELLED_CHOICES, blank=False)
+    # cancelled = models.CharField(default='Active', max_length=50, choices=CANCELLED_CHOICES, blank=False)
     change = models.DecimalField(default=0, verbose_name="PRICE", decimal_places=2, max_digits=12, null=True, blank=True)
     
     @property
@@ -211,18 +225,7 @@ class Sale(models.Model):
         else:
             return self.price
         
-    YES = 'YES'
-    NO = 'NO'
-    DEBATIBLE = 'DEBATIBLE'
-
-    FAIL_CHOICES = (
-        (YES, ('YES')),
-        (NO, ('NO')),
-        (DEBATIBLE, ('DEBATIBLE')),
-        )    
-    comment_can = models.CharField(max_length=500, blank=True, null=True, verbose_name="COMMENT")
-    date_can = models.DateField(null=True, blank=True, verbose_name="DATE")
-    fail_can = models.CharField(max_length=50, choices=FAIL_CHOICES, blank=False,default=None, null=True, verbose_name="DO WE FAIL?")
+    
     
         
     def delete(self, *args, **kwargs):
@@ -253,16 +256,8 @@ class Sale(models.Model):
         self.revenue = self.get_revenue()
         if self.pk:
 
-            if self.cancelled != "Active":
-                
-                if self.suscription:
-                    self.suscription.total -= self.change
-                    self.suscription.save()
-                    self.suscription = None
-                    
-            else:
-                if self.note != "auto revenue sale" and self.revenue == "RR":     
-                    self.get_service_or_update()
+            if self.note != "auto revenue sale" and self.revenue == "RR":     
+                self.get_service_or_update()
             super(Sale, self).save(*args, **kwargs)   
         else:
             if self.note != "auto revenue sale" and self.revenue == "RR":

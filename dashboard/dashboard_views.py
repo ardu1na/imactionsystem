@@ -13,10 +13,8 @@ import pickle
 import mimetypes
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
-from django.utils import timezone
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
-from django.utils import timezone
 from django.http import JsonResponse
 from django.views.decorators.http import require_GET
 from django.db.models import Sum
@@ -259,79 +257,6 @@ def expenses(request):
     }
 
     return render(request,'dashboard/table/expenses.html', context)
-
-
-
-
-@user_passes_test(lambda user: user.groups.filter(name='admin').exists())
-@login_required(login_url='dashboard:login')
-def bi(request):
-    sales = Sale.objects.all()
-    
-        
-    clients = Client.objects.all()
-    expenses = Expense.objects.all()
-    employees = Employee.objects.all()
-    combined_list = list(chain(sales, clients, expenses, employees))
-    
-    #services = ["Google Ads", "SEO","Facebook Ads","Web Design", "Hosting", "LinkedIn", "SSL certificate","Web Plan","Combo", "Community Management", "Email Marketing", "Others", "Others RR"]
-    kind = ["Upsell", "New Client", "Cross Sell"]
-    revenue = ["RR", "OneOff"]
-    cancelled = ["Cancelled", "Active"]
-    
-    services = ["Google Ads", "SEO","Facebook Ads","Web Design", "Hosting", "LinkedIn", "SSL certificate","Web Plan","Combo", "Community Management", "Email Marketing", "Others", "Others RR"]
-
-    
-
-    if request.GET.getlist('service'):
-        selected_services = request.GET.getlist('service')
-        sales = sales.filter(service__in=selected_services)
-    else:
-        selected_services = services
-        sales = Sale.objects.all()
-
-        if request.GET.getlist('kind'):
-            selected_kinds = request.GET.getlist('kind')
-            sales = sales.filter(kind__in=selected_kinds)
-
-        if request.GET.getlist('revenue'):
-            selected_revenues = request.GET.getlist('revenue')
-            sales = sales.filter(revenue__in=selected_revenues)
-
-        if request.GET.getlist('cancelled'):
-            selected_cancelled = request.GET.getlist('cancelled')
-            sales = sales.filter(cancelled__in=selected_cancelled)
-    
-    
-    # Annotate the sales queryset with the total amount for each service
-    totals = sales.values('service').annotate(total_amount=Sum('change')).order_by('service')
-
-    # Create a dictionary mapping each service to its index in the `services` list
-    service_index = {service: index for index, service in enumerate(services)}
-
-    # Sort the totals by the index of the service in the `services` list
-    # Annotate the sales queryset with the total amount and count for each service
-    totals = sales.values('service').annotate(total_amount=Sum('change'), count=Count('id')).order_by('service')
-
-    # Create a new list of labels with the count of sales for each service
-    labels = [f"{total['service']} ({total['count']})" for total in totals]
-
-    # Extract the total amounts and labels in the correct order
-    total_amounts = [total['total_amount'] for total in totals]
-   
-    context={
-        "page_title": "BUSINESS INTELLIGENCE",
-        "data": combined_list,
-        "services": services,
-        "kind": kind,
-        "revenue": revenue,
-        "cancelled": cancelled,
-        "sales":sales,
-        "labels": labels,
-        "total_amounts": total_amounts
-    }
-
-    return render(request,'dashboard/table/bi.html', context)
 
 
 
@@ -888,7 +813,7 @@ def sales(request):
     this_month = date.today().month
     month_name = date(1900, this_month, 1).strftime('%B')
     
-    sales_this_month = Sale.objects.filter(date__month=today.month, date__year=today.year, revenue="RR", cancelled="Active").exclude(note="auto revenue sale")
+    sales_this_month = Sale.objects.filter(date__month=today.month, date__year=today.year, revenue="RR").exclude(note="auto revenue sale")
     
     total_amount = sales_this_month.aggregate(Sum('change'))['change__sum']
     
@@ -897,42 +822,24 @@ def sales(request):
             return '{:,.0f}'.format(total_amount)
         except: return 0
 
-    sales1_this_month = Sale.objects.filter(date__month=today.month, date__year=today.year, revenue="OneOff", cancelled="Active").exclude(note="auto revenue sale")
+    sales1_this_month = Sale.objects.filter(date__month=today.month, date__year=today.year, revenue="OneOff").exclude(note="auto revenue sale")
     total1_amount = sales1_this_month.aggregate(Sum('change'))['change__sum']
     def get_total1_format():
         try:
             return '{:,.0f}'.format(total1_amount)
         except: return 0
         
-    clients_this_month = Sale.objects.filter(date__month=today.month, date__year=today.year, kind="New Client", cancelled="Active").exclude(note="auto revenue sale")
+    clients_this_month = Sale.objects.filter(date__month=today.month, date__year=today.year, kind="New Client").exclude(note="auto revenue sale")
     total_clients = clients_this_month.count()
     
     
-    upsell_this_month = Sale.objects.filter(date__month=today.month, date__year=today.year, kind="Upsell", cancelled="Active").exclude(note="auto revenue sale")
+    upsell_this_month = Sale.objects.filter(date__month=today.month, date__year=today.year, kind="Upsell").exclude(note="auto revenue sale")
     total_upsell_this_month = upsell_this_month.count()
     
-    crosssell_this_month = Sale.objects.filter(date__month=today.month, date__year=today.year, kind="Cross Sell", cancelled="Active").exclude(note="auto revenue sale")
+    crosssell_this_month = Sale.objects.filter(date__month=today.month, date__year=today.year, kind="Cross Sell").exclude(note="auto revenue sale")
     total_crosssell_this_month = crosssell_this_month.count()
     
     sales = Sale.objects.filter(date__month=today.month, date__year=today.year).exclude(note="auto revenue sale")
-    
-    """
-    #### FUNCIONES PARA LA NUEVA BASE DE DATOS
-    ssales = Sale.objects.all()
-    for ssale in ssales:
-        ssale.update_db_sales()
-    
-    
-    newservices= Service.objects.all()
-    for service in newservices: #COMO HACER ESTO EN EL MISMO MODELO
-        sales=service.sales.all()
-        if service.total == 0:
-            for sale in sales:
-                service.total += sale.change
-                service.save()
-
-    #### END FUNCIONES PARA LA NUEVA BASE DE DATOS"""
-    
         
         
         
@@ -951,7 +858,7 @@ def sales(request):
     
 
     
-    sales_by_service =Sale.objects.filter(cancelled="Active", date__month=today.month, date__year=today.year).exclude(note="auto revenue sale")
+    sales_by_service =Sale.objects.filter(date__month=today.month, date__year=today.year).exclude(note="auto revenue sale")
 
     s_seo = 0
     s_gads= 0
@@ -1029,7 +936,7 @@ def sales(request):
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
 def salesdata(request):
-    sales_rr_current_year = Sale.objects.filter(revenue="RR").filter(cancelled="Active")\
+    sales_rr_current_year = Sale.objects.filter(revenue="RR")\
                                         .filter(date__year=datetime.now().date().year)
     total_rr_this_year = 0
     for s in sales_rr_current_year:
@@ -1136,26 +1043,30 @@ def editsale(request, id):
             return redirect('dashboard:editsale', id=editsale.id)
         else: return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
 
+
+
+
+
 @user_passes_test(lambda user: user.groups.filter(name='clients').exists())
 @login_required(login_url='dashboard:login')
 def clients(request):
     clients_all = Client.objects.filter(cancelled="Active")
     clients = []
     for client in clients_all:
-        if client.get_rr_client == True:
+        if client.services.filter(state=True).exists():
             clients.append(client)
         
     total_rr = 0
     for client in clients:
         if client.cancelled == "Active":
-            for service in client.services.all():
+            for service in client.services.filter(state=True):
                 total_rr += service.total                
     total_rr_k = total_rr
     
     
     clients_rr = []
     for client in clients_all.filter(cancelled="Active"):
-        if client.get_rr_client == True:
+        if client.services.filter(state=True).exists():
             clients_rr.append(client.id)
     c_rr_total = len(clients_rr)
 
@@ -1179,8 +1090,7 @@ def clients(request):
                 return HttpResponse("hacked from las except else form")
     
     
-    #sales_rr=Sale.objects.filter(cancelled="Active").filter(revenue="RR", date__month=date.today().month, date__year=date.today().year)
-    services = Service.objects.all()
+    services = Service.objects.filter(state=True)
     s_seo = 0
     s_gads= 0
     s_fads= 0
@@ -1265,12 +1175,12 @@ def cancellations(request):
     month = date(1900, this_month, 1).strftime('%B')
     
     clients_cancelled = Client.objects.filter(cancelled="Cancelled")
-    sales_cancelled = Sale.objects.filter(cancelled="Cancelled").filter(revenue="RR")
-    sales_this_month = sales_cancelled.filter(date_can__month=today.month, client__cancelled="Active")
+    services_cancelled = Service.objects.filter(state=False)
+    services_this_month = services_cancelled.filter(date_can__month=today.month, client__cancelled="Active")
     clients_this_month = clients_cancelled.filter(date_can__month=today.month)
 
 
-    total_amount = sales_cancelled.filter(date_can__month=today.month).aggregate(Sum('change'))['change__sum']
+    total_amount = services_cancelled.filter(date_can__month=today.month).aggregate(Sum('total'))['total__sum']
     def get_total_format():
         try:
             return '{:,.0f}'.format(total_amount)
@@ -1278,9 +1188,9 @@ def cancellations(request):
     
     context={
         "clients_cancelled": clients_cancelled,
-        "sales_cancelled" : sales_cancelled,
+        "services_cancelled" : services_cancelled,
         "month" : month,
-        "sales" : sales_this_month.count(),
+        "sales" : services_this_month.count(),
         "clients": clients_this_month.count(),
         "total": get_total_format,       
         "page_title":"Cancellations"
@@ -1338,31 +1248,52 @@ def editclient(request, id):
 
     if request.method == "GET":
         sales = editclient.sales.exclude(note="auto revenue sale")
+        services = editclient.services.filter(state=True)
         editform = EditClientForm(instance=editclient)
+        cancelform = CancellService()
         context = {
             'editform': editform,
             'editclient': editclient,
+            'cancelform': cancelform,
             'id': id,
             'sales': sales,
+            'services': services,
             }
         return render (request, 'dashboard/instructor/editclient.html', context)
 
     
     if request.method == 'POST':
-        editform = EditClientForm(request.POST, instance=editclient)
-        if editform.is_valid():
-            clientedit = editform.save(commit=False)
-            if clientedit.cancelled == "Cancelled":
-                for sale in clientedit.sales.all():
-                    sale.cancelled = "Cancelled"
-                    sale.comment_can = clientedit.comment_can
-                    sale.fail_can = clientedit.fail_can
-                    sale.date_can = clientedit.date_can
-                    sale.save()
-            clientedit.save()
-            return redirect('dashboard:editclient', id=clientedit.id)
-        else: return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
-        
+        if 'editclient' in request.POST:
+            editform = EditClientForm(request.POST, instance=editclient)
+            if editform.is_valid():
+                clientedit = editform.save(commit=False)
+                if clientedit.cancelled == "Cancelled":
+                    for sale in clientedit.services.all():
+                        sale.state = False
+                        sale.comment_can = clientedit.comment_can
+                        sale.fail_can = clientedit.fail_can
+                        sale.date_can = clientedit.date_can
+                        sale.save()
+                clientedit.save()
+                return redirect('dashboard:editclient', id=clientedit.id)
+            else: return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
+            
+        if 'cancelservice' in request.POST:
+            
+            cancelform = CancellService(request.POST)
+            if cancelform.is_valid():
+                id = cancelform.cleaned_data['id']
+                instance = Service.objects.get(id=id)
+                instance.state = False
+                instance.comment_can = cancelform.cleaned_data['comment_can']
+                instance.date_can = cancelform.cleaned_data['date_can']
+                instance.fail_can = cancelform.cleaned_data['fail_can']
+                instance.save()
+                return redirect('dashboard:editclient', id=instance.client.id)
+
+            else:
+                print(cancelform.errors)
+                return HttpResponse(f"something get wrong: {cancelform.errors}")    
         
         
         
@@ -1400,135 +1331,6 @@ def addclientsale(request, id):
         
         
 
-
-@login_required(login_url='dashboard:login')
-def backup_clients(request):
-        
-    # query
-    queryset = Client.objects.all()
-    
-    # get fields of model
-    options = Client._meta
-    fields = [field.name for field in options.fields]
-    # ['id', 'name', 'last_name']...
-    # build response
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'atachment; filename="backupclients.csv"'
-
-    # writer
-    writer = csv.writer(response)
-    # writing header
-    writer.writerow([options.get_field(field).verbose_name for field in fields])
-
-    # writing data
-    for obj in queryset:
-        writer.writerow([getattr(obj, field) for field in fields])
-    
-    return response
-
-
-def handle_uploaded_file(file):
-    clients = []
-    with open(file, "r") as csv_file:
-        data = list(csv.reader(csv_file, delimiter=","))
-        print("from function")
-        for row in data[1:]:
-            clients.append(
-                Client(
-                    id=row[0],
-                    name=row[1],
-                    business_name=row[2],
-                    source=row[3],
-                    date=row[4],
-                    website=row[5],
-                    email=row[6],
-                    email_2=row[7],
-                    email_admin=row[8],
-                    phone_number=row[9],
-                    phone_2=row[10],
-                    landing_page=row[11],
-                    cancelled=row[12],
-                    comment_can=row[13],
-                    date_can=row[14],
-                    fail_can=row[15]             
-                )
-            )
-    if len(clients) > 0:
-        Client.objects.bulk_create(clients)
-    
-
-@login_required(login_url='dashboard:login')
-def import_clients(request):
-    
-    if request.method == 'POST':
-        form = UploadFileForm(request.POST, request.FILES)
-        if form.is_valid():
-            handle_uploaded_file(request.FILES['file'])
-            return HttpResponse('uploaded')
-        else:
-            print (form.errors)
-    else:
-        form = UploadFileForm()
-    return render(request, 'dashboard/instructor/uploadbackup.html', {'form': form})
-
-
-@login_required(login_url='dashboard:login')
-def backup_sales(request):
-        
-    # query
-    queryset = Sale.objects.all()
-    
-    # get fields of model
-    options = Sale._meta
-    fields = [field.name for field in options.fields]
-    # ['id', 'name', 'last_name']...
-    # build response
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'atachment; filename="backupsales.csv"'
-
-    # writer
-    writer = csv.writer(response)
-    # writing header
-    writer.writerow([options.get_field(field).verbose_name for field in fields])
-
-    # writing data
-    for obj in queryset:
-        writer.writerow([getattr(obj, field) for field in fields])
-    
-    return response
-
-
-@login_required(login_url='dashboard:login')
-def import_sales(request):
-
-    sales = []
-    with open("backupsales.csv", "r") as csv_file:
-        data = list(csv.reader(csv_file, delimiter=","))
-        for row in data[1:]:
-            sales.append(
-                Sale(
-                    id=row[0],
-                    client=row[1],
-                    kind=row[2],
-                    date=row[3],
-                    total=row[4],
-                    comments=row[5],
-                    revenue=row[6],
-                    service=row[7],
-                    price=row[8],
-                    note=row[9],
-                    cost=row[10],
-                    status=row[11],
-                    cancelled=row[12],
-                    comment_can=row[13],
-                    date_can=row[14],
-                    fail_can=row[15]             
-                )
-            )
-    if len(sales) > 0:
-        Sale.objects.bulk_create(sales)
-    
-    return HttpResponse("Successfully imported")
 
 
 
@@ -1674,7 +1476,7 @@ def index(request):
     month = date(1900, this_month, 1).strftime('%B')
     rr_s_thism = 0
     oneoff_s_thism = 0
-    sales_this_m = Sale.objects.filter(date__month=today.month, date__year=today.year, cancelled="Active")
+    sales_this_m = Sale.objects.filter(date__month=today.month, date__year=today.year)
     if sales_this_m:
         for sale in sales_this_m:
             if sale.revenue == "RR":
@@ -1685,7 +1487,7 @@ def index(request):
 
     # CANCELL THIS MONTH --- Q
     clients_cancelled = Client.objects.filter(cancelled="Cancelled")
-    sales_cancelled = Sale.objects.filter(cancelled="Cancelled").filter(revenue="RR")
+    sales_cancelled = Service.objects.filter(state=False)
     sales_c_this_m = sales_cancelled.filter(date_can__month=today.month, date_can__year=today.year, client__cancelled="Active")
     clients_c_this_m = clients_cancelled.filter(date_can__month=today.month, date_can__year=today.year)
     cancellations = []
@@ -1865,10 +1667,8 @@ def index(request):
 
     for client in clients:
         if client.cancelled == "Active":
-            for sale in client.sales.all():
-                if sale.cancelled == "Active":
-                    if sale.revenue == "RR":
-                        total_rr += sale.get_change
+            for sale in client.services.filter(state=True):
+                total_rr += sale.total
             
 
     
@@ -2024,7 +1824,7 @@ def index(request):
     ##############################################
 
     # GRAPHS rr   
-    sales_rr_current_year = Sale.objects.filter(revenue="RR").filter(cancelled="Active")\
+    sales_rr_current_year = Sale.objects.filter(revenue="RR")\
                                         .filter(date__year=datetime.now().date().year)
     total_rr_this_year = 0
     for s in sales_rr_current_year:
@@ -2071,7 +1871,7 @@ def index(request):
             diciembre +=sale.get_change
             
             
-    sales_rr_last_year = Sale.objects.filter(revenue="RR").filter(cancelled="Active")\
+    sales_rr_last_year = Sale.objects.filter(revenue="RR")\
                                         .filter(date__year=datetime.now().date().year-1)
     total_rr_last_year = 0
     for s in sales_rr_last_year:
@@ -2120,7 +1920,7 @@ def index(request):
             
             
     # GRAPHS ONEOFF   
-    sales_one_current_year = Sale.objects.filter(revenue="OneOff").filter(cancelled="Active")\
+    sales_one_current_year = Sale.objects.filter(revenue="OneOff")\
                                         .filter(date__year=datetime.now().date().year)
     total_one_this_year = 0
     for s in sales_one_current_year:
@@ -2167,7 +1967,7 @@ def index(request):
             diciembre_o +=sale.get_change
             
             
-    sales_one_last_year = Sale.objects.filter(revenue="OneOff").filter(cancelled="Active")\
+    sales_one_last_year = Sale.objects.filter(revenue="OneOff")\
                                         .filter(date__year=datetime.now().date().year-1)
     total_one_last_year = 0
     for s in sales_one_last_year:
@@ -2219,7 +2019,7 @@ def index(request):
     if request.method == 'GET':
         year = request.GET.get('year')
         if year:
-            sales_seo_current_year = Sale.objects.filter(service="SEO").filter(cancelled="Active")\
+            sales_seo_current_year = Sale.objects.filter(service="SEO")\
                                         .filter(date__year=year)
         
             enero_seo = 0
@@ -2262,7 +2062,7 @@ def index(request):
                     diciembre_seo +=sale.get_change
                     
                     
-            sales_combo_current_year = Sale.objects.filter(service="Combo").filter(cancelled="Active")\
+            sales_combo_current_year = Sale.objects.filter(service="Combo")\
                                                 .filter(date__year=year)
                 
             enero_combo = 0
@@ -2305,7 +2105,7 @@ def index(request):
                     diciembre_combo +=sale.get_change
                     
                     
-            sales_fads_current_year = Sale.objects.filter(service="Facebook Ads").filter(cancelled="Active")\
+            sales_fads_current_year = Sale.objects.filter(service="Facebook Ads")\
                                                 .filter(date__year=year)
                 
             enero_fads = 0
@@ -2348,7 +2148,7 @@ def index(request):
                     diciembre_fads +=sale.get_change
                     
                     
-            sales_wp_current_year = Sale.objects.filter(service="Web Plan").filter(cancelled="Active")\
+            sales_wp_current_year = Sale.objects.filter(service="Web Plan")\
                                                 .filter(date__year=year)
                 
             enero_wp = 0
@@ -2391,7 +2191,7 @@ def index(request):
                     diciembre_wp +=sale.get_change
                     
                                 
-            sales_gads_current_year = Sale.objects.filter(service="Google Ads").filter(cancelled="Active")\
+            sales_gads_current_year = Sale.objects.filter(service="Google Ads")\
                                                 .filter(date__year=year)
                 
             enero_gads = 0
@@ -2434,7 +2234,7 @@ def index(request):
                     diciembre_gads +=sale.get_change
                     
                     
-            sales_cm_current_year = Sale.objects.filter(service="Community Management").filter(cancelled="Active")\
+            sales_cm_current_year = Sale.objects.filter(service="Community Management")\
                                                 .filter(date__year=year)
                 
             enero_cm = 0
@@ -2478,7 +2278,7 @@ def index(request):
                     
             
             
-            sales_lk_current_year = Sale.objects.filter(service="LinkedIn").filter(cancelled="Active")\
+            sales_lk_current_year = Sale.objects.filter(service="LinkedIn")\
                                                 .filter(date__year=year)
                 
             enero_lk = 0
@@ -2522,7 +2322,7 @@ def index(request):
                     
         else:
             
-            sales_seo_current_year = Sale.objects.filter(service="SEO").filter(cancelled="Active")
+            sales_seo_current_year = Sale.objects.filter(service="SEO")
             
             enero_seo = 0
             febrero_seo = 0
@@ -2564,7 +2364,7 @@ def index(request):
                     diciembre_seo +=sale.get_change
                     
                     
-            sales_combo_current_year = Sale.objects.filter(service="Combo").filter(cancelled="Active")
+            sales_combo_current_year = Sale.objects.filter(service="Combo")
                 
             enero_combo = 0
             febrero_combo = 0
@@ -2606,7 +2406,7 @@ def index(request):
                     diciembre_combo +=sale.get_change
                     
                     
-            sales_fads_current_year = Sale.objects.filter(service="Facebook Ads").filter(cancelled="Active")
+            sales_fads_current_year = Sale.objects.filter(service="Facebook Ads")
                 
             enero_fads = 0
             febrero_fads = 0
@@ -2648,7 +2448,7 @@ def index(request):
                     diciembre_fads +=sale.get_change
                     
                     
-            sales_wp_current_year = Sale.objects.filter(service="Web Plan").filter(cancelled="Active")
+            sales_wp_current_year = Sale.objects.filter(service="Web Plan")
                 
             enero_wp = 0
             febrero_wp = 0
@@ -2690,7 +2490,7 @@ def index(request):
                     diciembre_wp +=sale.get_change
                     
                                 
-            sales_gads_current_year = Sale.objects.filter(service="Google Ads").filter(cancelled="Active")
+            sales_gads_current_year = Sale.objects.filter(service="Google Ads")
                 
             enero_gads = 0
             febrero_gads = 0
@@ -2732,7 +2532,7 @@ def index(request):
                     diciembre_gads +=sale.get_change
                     
                     
-            sales_cm_current_year = Sale.objects.filter(service="Community Management").filter(cancelled="Active")
+            sales_cm_current_year = Sale.objects.filter(service="Community Management")
                 
             enero_cm = 0
             febrero_cm = 0
@@ -2775,7 +2575,7 @@ def index(request):
                     
             
             
-            sales_lk_current_year = Sale.objects.filter(service="LinkedIn").filter(cancelled="Active")
+            sales_lk_current_year = Sale.objects.filter(service="LinkedIn")
                 
             enero_lk = 0
             febrero_lk = 0

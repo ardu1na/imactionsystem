@@ -1,39 +1,10 @@
-from django.forms import ModelForm, \
-TextInput, Select, ModelChoiceField, Textarea
+from django.forms import ModelForm, CheckboxInput,\
+TextInput, Select, ModelChoiceField, Textarea, HiddenInput, IntegerField
 from django import forms
 
 from sales.models import Sale, Service, Adj 
 from customers.models import Client
 
-"""
-class AdjustmentForm(ModelForm):
-    id = forms.IntegerField(widget=forms.HiddenInput())
-
-    class Meta:
-        model = Service
-        fields = ['last_adj', 'adj_at']
-        
-        
-        widgets = {
-            
-            'adj_at' : TextInput(attrs={'class':"datetimepicker form-control",
-            'id':"PublishDateTimeTextbox",
-            'type':"date",
-            'placeholder':"Adjustment Date",}),
-
-            'last_adj' : TextInput(attrs={'class':"form-control",
-            'id':"last_adj",
-            'placeholder':"Adjustment %",}),}
-        
-
-class AdjustAccount(forms.Form):
-    id = forms.IntegerField(widget=forms.HiddenInput())         
-    last_adj = forms.CharField(widget=TextInput(attrs={'class':"form-control",'id':"last_adj",'placeholder':"Adjustment %",}))
-    adj_at = forms.CharField(widget=TextInput(attrs={'class':"datetimepicker form-control",
-        'id':"PublishDateTimeTextbox",
-        'type':"date",
-        'placeholder':"Adjustment Date",})) """
-    
     
 class AdjForm(ModelForm):
     client = forms.CharField(
@@ -119,7 +90,7 @@ class SaleForm(ModelForm):
     class Meta:
         model = Sale
         
-        exclude = ['sale_id', 'cancelled', 'comment_can', 'date_can', 'fail_can', 'revenue', 'change']
+        exclude = ['sale_id', 'revenue', 'change']
         
         
         widgets = {
@@ -189,7 +160,7 @@ class ClientSaleForm(ModelForm):
     class Meta:
         model = Sale
         
-        exclude = ['id', 'cancelled', 'comment_can', 'date_can', 'fail_can', 'revenue', 'client', 'change']
+        exclude = ['id',  'revenue', 'client', 'change']
         
         
         
@@ -247,12 +218,43 @@ class ClientSaleForm(ModelForm):
             'status' : Select(attrs={
                 'class':"default-select form-control wide mb-3",
                 'id':"status",
-                'placeholder' : "Status"
+                'placeholder' : "Status",
+               
                 }
             ),
 
         }
 
+
+class CancellService(ModelForm):
+    
+    id = IntegerField(widget=HiddenInput())
+    
+    class Meta:
+        model = Service
+        fields = ['comment_can', 'fail_can', 'date_can']
+        
+        
+        widgets = {
+                
+            
+            'date_can' : TextInput(attrs={'class':"datetimepicker form-control",
+            'id':"PublishDateTimeTextbox",
+            'type':"date",
+            'placeholder':"Cancellation date",}),
+            
+            'fail_can' : Select(attrs={
+            'class':"default-select form-control wide mb-3",
+            'id':"fail_can",
+            'placeholder':"Do we fail?",}),
+            
+            'comment_can' : Textarea(attrs={
+                'class':"form-control",
+                'id':"comment_can",
+                'placeholder' : "Comment"
+                }
+            ),
+        }
 
 class EditSaleForm(ModelForm):
     
@@ -320,26 +322,5 @@ class EditSaleForm(ModelForm):
                 }
             ),
             
-            'cancelled' : Select(attrs={
-                'class':"default-select form-control wide mb-3",
-            'id':"cancelled",
-            'placeholder':"Cancelled?",}),
-            
-            'date_can' : TextInput(attrs={'class':"datetimepicker form-control",
-            'id':"PublishDateTimeTextbox",
-            'type':"date",
-            'placeholder':"Cancellation date",}),
-            
-            'fail_can' : Select(attrs={
-                'class':"default-select form-control wide mb-3",
-            'id':"fail_can",
-            'placeholder':"Do we fail?",}),
-            
-            'comment_can' : Textarea(attrs={
-                'class':"form-control",
-                'id':"comment_can",
-                'placeholder' : "Comment"
-                }
-            ),
 
         }
