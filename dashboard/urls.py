@@ -45,7 +45,6 @@ urlpatterns = [
     path('clients/deleteclients/', dashboard_views.delete_clients, name="deleteclients"),
 
 
-    path('bi/', dashboard_views.bi, name="bi"),
 
 
     path('cancellations/', dashboard_views.cancellations, name="cancellations"),
