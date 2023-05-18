@@ -1277,8 +1277,23 @@ def editclient(request, id):
                 clientedit.save()
                 return redirect('dashboard:editclient', id=clientedit.id)
             else: return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
+            
         if 'cancelservice' in request.POST:
-            pass    
+            
+            cancelform = CancellService(request.POST)
+            if cancelform.is_valid():
+                id = cancelform.cleaned_data['id']
+                instance = Service.objects.get(id=id)
+                instance.state = False
+                instance.comment_can = cancelform.cleaned_data['comment_can']
+                instance.date_can = cancelform.cleaned_data['date_can']
+                instance.fail_can = cancelform.cleaned_data['fail_can']
+                instance.save()
+                return redirect('dashboard:editclient', id=instance.client.id)
+
+            else:
+                print(cancelform.errors)
+                return HttpResponse(f"something get wrong: {cancelform.errors}")    
         
         
         

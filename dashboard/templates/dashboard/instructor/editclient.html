@@ -347,43 +347,55 @@
                                                    
                                                 ${{service.total|floatformat:2}} </p>
                                                 
-                                                
+                                                <div class="form-floating my-2 d-flex flex-row-reverse">                                                
+                                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancell{{service.id}}">Cancell Service
+                                                    </button>
+                                                </div>                                                
 
+                                                <!-- START modal cancell service -->
+                                                <div class="modal fade " id="cancell{{service.id}}" tabindex="-1" aria-labelledby="cancell{{service.id}}Label" aria-hidden="true">
+                                                    <div class="modal-dialog modal-dialog-centered">
+                                                        <div class="modal-content">
 
-                                                <div class="form-group my-5">
-                                                    <form method="post"> {% csrf_token %}
+                                                            <div class="modal-header">
+                                                                <h1 class="modal-title fs-5" id="cancell{{service.id}}Label">{{service.client}} {{service.service}} ${{service.total}}</h1>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>       
 
+                                                            <form  method="post">
+                                                            {% csrf_token %}
+                                                                <div class="modal-body">
+                                                                
+                                                                
+                                                                    <input type="hidden" name="id" value="{{ service.id }}">
+                                                                    
+                                                                    <div class="form-group mb-5 d-flex flex-row">
+                                                                        {{cancelform.date_can}}
+                                                                    </div>
+                                                                    <div class="form-group mb-5 d-flex flex-row">
+                                                                        {{cancelform.comment_can}}
+                                                                    </div>
+                                                                    <div class="form-group my-5 d-flex flex-row">
+                                                                        <div class="fs-4 ml-4">
+                                                                            Do we fail? 
+                                                                        </div>
+                                                                        {{cancelform.fail_can}}
+                                                                    </div>
+                                                                    <div class="form-floating my-3 text-center">
 
-                                                        <input type="hidden" name="id" value="{{ service.id }}">
+                                                                        <button type="submit" name="cancelservice" class="btn btn-danger"> Cancell </button>
+            
+                                                                    </div>
 
-                                                        
-                                                        <div class="form-group my-5">
-                                                            <div class="fs-4 ml-0">
-                                                                Service cancelled? 
-                                                            </div>
-                                                            {{cancelform.state}} 
-                                                        </div>
-
-                                                        <div class="my-4" id="cancelservice">
-                                                            <h4>Cancellation</h4>
-                                                            <div class="form-group mb-5 d-flex flex-row">
-                                                                {{cancelform.date_can}}
-                                                            </div>
-                                                            <div class="form-group mb-5 d-flex flex-row">
-                                                                {{cancelform.comment_can}}
-                                                            </div>
-                                                            <div class="form-group my-5 d-flex flex-row">
-                                                                <div class="fs-4 ml-4">
-                                                                    Do we fail? 
+                                                            
                                                                 </div>
-                                                                {{cancelform.fail_can}}
-                                                            </div>
+                                                            </form>
                                                         </div>
-
-                                                        <button type="submit" name="cancelservice" class="btn btn-danger"> Cancell </button>
-                                                    </form>
+                                                    </div>
                                                 </div>
+                                                <!-- END modal  -->
 
+                                                    
                                                                                                     
                                                                                                          
             
@@ -450,6 +462,8 @@
 <!-- NEWMODAL -->
 <script>
     const deleteclient = new bootstrap.Modal('#deleteclient',   {keyboard: true}    )
+    const cancell = new bootstrap.Modal('#cancell',   {keyboard: true}    )
+
 </script>
 
 {% endblock %}

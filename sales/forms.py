@@ -218,7 +218,8 @@ class ClientSaleForm(ModelForm):
             'status' : Select(attrs={
                 'class':"default-select form-control wide mb-3",
                 'id':"status",
-                'placeholder' : "Status"
+                'placeholder' : "Status",
+               
                 }
             ),
 
@@ -231,14 +232,11 @@ class CancellService(ModelForm):
     
     class Meta:
         model = Service
-        fields = ['state','comment_can', 'fail_can', 'date_can']
+        fields = ['comment_can', 'fail_can', 'date_can']
         
         
         widgets = {
-                'state' : CheckboxInput(attrs={
-                'class':"form-control",
-                'id':"state",
-                'placeholder':"Active?",}),
+                
             
             'date_can' : TextInput(attrs={'class':"datetimepicker form-control",
             'id':"PublishDateTimeTextbox",
@@ -246,7 +244,7 @@ class CancellService(ModelForm):
             'placeholder':"Cancellation date",}),
             
             'fail_can' : Select(attrs={
-                'class':"default-select form-control wide mb-3",
+            'class':"default-select form-control wide mb-3",
             'id':"fail_can",
             'placeholder':"Do we fail?",}),
             
