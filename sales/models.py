@@ -182,11 +182,6 @@ class Sale(models.Model):
     
 
 
-    """CANCELLED = "Cancelled"
-    ACTIVE = "Active"
-    CANCELLED_CHOICES = (
-        (CANCELLED, ('Cancelled')),
-        (ACTIVE, ('Active')))"""
     
     ARS = "ARS"
     USD = "USD"
@@ -254,38 +249,16 @@ class Sale(models.Model):
     
     def save(self, *args, **kwargs):                                    
 
-        if self.pk:
-                        
-            if self.suscription:   
-                old_total = self.change
-                self.suscription.total -= old_total
-                self.suscription.save()
-                
-                super().save(*args, **kwargs)
-                
-                self.suscription.total += self.change
-                self.suscription.save()
-                
-            elif self.suscription is None and self.revenue == "RR":
-                     
-                self.get_service_or_update()
-            
+
+        self.change = self.get_change
+        self.revenue = self.get_revenue()
+
+
+        if self.suscription is None and self.revenue == "RR":
                     
-                
-            super(Sale, self).save(*args, **kwargs)
+            self.get_service_or_update()
+            
 
-             
-        else:
-            self.change = self.get_change
-            self.revenue = self.get_revenue()
-
-            super().save(*args, **kwargs)
-
-            if self.suscription is None and self.revenue == "RR":
-                     
-                self.get_service_or_update()
-                
-           
         super(Sale, self).save(*args, **kwargs)
 
 
@@ -325,7 +298,6 @@ class Sale(models.Model):
             service = Service(**values)
             service.save()  
             self.suscription=service
-            super().save(*args, **kwargs)           
                 
     
     

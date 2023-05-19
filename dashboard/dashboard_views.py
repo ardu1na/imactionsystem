@@ -1039,7 +1039,19 @@ def editsale(request, id):
     if request.method == 'POST':
         editform = EditSaleForm(request.POST, instance=editsale)
         if editform.is_valid():
-            editform.save()
+            try:
+                service = editsale.suscription
+                antiguo = editsale.change
+                service.total -= antiguo
+                service.save()
+                editform.save()
+                service.total += editsale.change
+                service.save()
+            except:
+                editform.save()
+    
+                
+                
             return redirect('dashboard:editsale', id=editsale.id)
         else: return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
 
