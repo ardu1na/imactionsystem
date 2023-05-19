@@ -1040,8 +1040,7 @@ def editsale(request, id):
         editform = EditSaleForm(request.POST, instance=editsale)
         if editform.is_valid():
             antiguo = editsale.change
-            print(f'precio anterior de la venta: {antiguo}') ### ACA NO PRINTEA MÁS 
-            
+            print(f'precio anterior de la venta: {antiguo}') 
             sale = editform.save() 
             if service is not None:
                 print(f'total atual del servicio {service.total}')
@@ -1056,13 +1055,13 @@ def editsale(request, id):
 
                 service.total += sale.change
 
-                service.save() ## siempre suma el valor, no resta el viejo
+                service.save() 
                 print(service.total)
                 
                 
             else:
                 print("not service asocciated")
-            sale.save() ## SI GUARDA
+            sale.save() 
                 
                 
             return redirect('dashboard:editsale', id=editsale.id)
