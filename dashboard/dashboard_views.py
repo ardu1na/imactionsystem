@@ -1024,7 +1024,7 @@ def deletesale(request, id):
 def editsale(request, id):
     
     editsale = Sale.objects.get(id=id)
-
+    service = editsale.suscription
     if request.method == "GET":
         
         editform = EditSaleForm(instance=editsale)
@@ -1039,17 +1039,30 @@ def editsale(request, id):
     if request.method == 'POST':
         editform = EditSaleForm(request.POST, instance=editsale)
         if editform.is_valid():
-            try:
-                service = editsale.suscription
-                antiguo = editsale.change
+            antiguo = editsale.change
+            print(f'precio anterior de la venta: {antiguo}') ### ACA NO PRINTEA MÁS 
+            
+            sale = editform.save() 
+            if service is not None:
+                print(f'total atual del servicio {service.total}')
                 service.total -= antiguo
+                
+                print(f'restar el valor viejo de la venta: {antiguo}')
                 service.save()
-                editform.save()
-                service.total += editsale.change
-                service.save()
-            except:
-                editform.save()
-    
+                print(f'SERVICIO GUARDADO total sin precio antiguo {service.total}')
+
+                print(f'precio nueva de la venta: {sale.change}')
+                print(f'sumar el nuevo valor al nuevo total {service.total}+ {sale.change}')
+
+                service.total += sale.change
+
+                service.save() ## siempre suma el valor, no resta el viejo
+                print(service.total)
+                
+                
+            else:
+                print("not service asocciated")
+            sale.save() ## SI GUARDA
                 
                 
             return redirect('dashboard:editsale', id=editsale.id)
