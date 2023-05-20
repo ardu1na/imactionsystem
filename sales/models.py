@@ -266,9 +266,12 @@ class Sale(models.Model):
         
     def delete(self, *args, **kwargs):
     # update asociated suscription values           
-        suscription = self.suscription
-        suscription.total -= self.change
-        suscription.save()
+        try:
+            suscription = self.suscription
+            suscription.total -= self.change
+            suscription.save()
+        except:
+            pass
         super().delete(*args, **kwargs)    
         
               
