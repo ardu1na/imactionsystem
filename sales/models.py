@@ -182,11 +182,6 @@ class Sale(models.Model):
     
 
 
-    """CANCELLED = "Cancelled"
-    ACTIVE = "Active"
-    CANCELLED_CHOICES = (
-        (CANCELLED, ('Cancelled')),
-        (ACTIVE, ('Active')))"""
     
     ARS = "ARS"
     USD = "USD"
@@ -251,70 +246,61 @@ class Sale(models.Model):
         (OneOff, ("OneOff")),)
     revenue = models.CharField(max_length=20, null=True, blank=False, default=None, choices=REVENUE_CHOICES, help_text="Leave blank to automatically fill", verbose_name="REVENUE")
 
-    def save(self, *args, **kwargs):
+    
+    def save(self, *args, **kwargs):                                    
+
+
         self.change = self.get_change
         self.revenue = self.get_revenue()
-        if self.pk:
 
-            if self.note != "auto revenue sale" and self.revenue == "RR":     
-                self.get_service_or_update()
-            super(Sale, self).save(*args, **kwargs)   
-        else:
-            if self.note != "auto revenue sale" and self.revenue == "RR":
-                     
-                self.get_service_or_update()
-            super(Sale, self).save(*args, **kwargs)
 
+        if self.suscription is None and self.revenue == "RR":
+                    
+            self.get_service_or_update()
+            
+
+        super(Sale, self).save(*args, **kwargs)
+
+
+
+        
+    def delete(self, *args, **kwargs):
+    # update asociated suscription values           
+        try:
+            suscription = self.suscription
+            suscription.total -= self.change
+            suscription.save()
+        except:
+            pass
+        super().delete(*args, **kwargs)    
+        
+              
+            
             
       
     
     ################### 
     def get_service_or_update (self, *args, **kwargs):  
-        print()
-        print("CHEKCING IF SERVICE WITH SAME SERVICE AND CLIENT DO EXISTS.......")
-        print(".........")                  
+                
         try:
             service = Service.objects.get(
                 client=self.client, service=self.service) 
-            print(" IT EXISTS, checking if sale is already asociated.........")                  
                
             if not self.suscription:                
-                print(" sale is not asociated... setting relation and adding sale value into service")                  
-
-                #service.sales.add(self, bulk= False)
                 service.total += Decimal(self.change)
-                print()
-                print("################### saving service ################################")
-                print(".........")  
                 service.save()     
-                print(".....service saved....")  
-                print("################### setting rel service --- sale  ################################")
-
-                self.suscription=service
-                print(f"################### rel {self.suscription}: service --- sale  ################################")
-
-            print("sale is allready asociated into service, nothing to do")
-                                         
+                self.suscription=service                              
             
-        except Service.DoesNotExist:       
-            print(" IT DONT EXISTS")                  
+        except Service.DoesNotExist:                  
             
             values = {
                 "client": self.client,
                 "service": self.service,
                 "total": self.change,
                 }            
-            print("setting client service and total as sale values.........")  
             service = Service(**values)
-            print()
-            print("################### saving service with new values ################################")
             service.save()  
-            print(".....SERVICE SAVED....")      
-            print("adding sale relationship.........")  
-
             self.suscription=service
-            
-            
                 
     
     

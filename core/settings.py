@@ -49,8 +49,10 @@ ALLOWED_HOSTS = ['http://2000.58.98.179','200.58.98.179', 'app.imactions.agency'
 
 INSTALLED_APPS = [
 
+
     'unfold',
     'unfold.contrib.filters',
+    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

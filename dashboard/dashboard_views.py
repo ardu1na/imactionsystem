@@ -1024,7 +1024,7 @@ def deletesale(request, id):
 def editsale(request, id):
     
     editsale = Sale.objects.get(id=id)
-
+    service = editsale.suscription
     if request.method == "GET":
         
         editform = EditSaleForm(instance=editsale)
@@ -1039,7 +1039,31 @@ def editsale(request, id):
     if request.method == 'POST':
         editform = EditSaleForm(request.POST, instance=editsale)
         if editform.is_valid():
-            editform.save()
+            antiguo = editsale.change
+            print(f'precio anterior de la venta: {antiguo}') 
+            sale = editform.save() 
+            if service is not None:
+                print(f'total atual del servicio {service.total}')
+                service.total -= antiguo
+                
+                print(f'restar el valor viejo de la venta: {antiguo}')
+                service.save()
+                print(f'SERVICIO GUARDADO total sin precio antiguo {service.total}')
+
+                print(f'precio nueva de la venta: {sale.change}')
+                print(f'sumar el nuevo valor al nuevo total {service.total}+ {sale.change}')
+
+                service.total += sale.change
+
+                service.save() 
+                print(service.total)
+                
+                
+            else:
+                print("not service asocciated")
+            sale.save() 
+                
+                
             return redirect('dashboard:editsale', id=editsale.id)
         else: return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
 
