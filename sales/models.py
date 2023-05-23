@@ -208,7 +208,6 @@ class Sale(models.Model):
     note = models.CharField(max_length=400, null=True, blank=True, verbose_name="NOTES")
     cost = models.IntegerField(default=0, verbose_name="COST")
     status = models.CharField(max_length=5, choices=S_CHOICES, null=True, blank=False, default=None, verbose_name="STATUS $")
-    # cancelled = models.CharField(default='Active', max_length=50, choices=CANCELLED_CHOICES, blank=False)
     change = models.DecimalField(default=0, verbose_name="PRICE", decimal_places=2, max_digits=12, null=True, blank=True)
     
     @property
@@ -220,17 +219,7 @@ class Sale(models.Model):
         else:
             return self.price
         
-    
-    
         
-    def delete(self, *args, **kwargs):
-        
-        servicio = self.suscription
-        servicio.total -= self.change
-        servicio.save()
-        super().delete(*args, **kwargs)    
-        
-    
     def get_revenue(self):
         if self.service == 'SEO' or self.service == 'Google Ads' or self.service == 'Community Management' \
         or self.service == 'Facebook Ads' or self.service == 'Web Plan' or self.service == 'LinkedIn' \
@@ -261,21 +250,9 @@ class Sale(models.Model):
 
         super(Sale, self).save(*args, **kwargs)
 
-
-
         
-    def delete(self, *args, **kwargs):
-    # update asociated suscription values           
-        try:
-            suscription = self.suscription
-            suscription.total -= self.change
-            suscription.save()
-        except:
-            pass
-        super().delete(*args, **kwargs)    
+    
         
-              
-            
             
       
     

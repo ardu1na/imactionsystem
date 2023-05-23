@@ -1,12 +1,13 @@
 
 from django.contrib import admin
 
+from import_export.admin import ImportExportModelAdmin
 
-
+from unfold.admin import ModelAdmin
 from sales.models import Sale, LastBlue, Service, Adj
 
 
-class SaleAdmin(admin.ModelAdmin):
+class SaleAdmin(ModelAdmin, ImportExportModelAdmin):
     list_display = ['service', 'client', 'change', 'note']
     search_fields = ['note',]
 admin.site.register(Sale, SaleAdmin)

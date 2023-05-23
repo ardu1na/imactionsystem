@@ -1015,6 +1015,30 @@ def salesdata(request):
 @login_required(login_url='dashboard:login')
 def deletesale(request, id):
     sale = Sale.objects.get(id=id)
+    # update asociated suscription values       
+    print("look for service asociated")
+
+    try:
+
+        servicio = sale.suscription
+        print(f"service finded {servicio}, sustracting sale price {sale.change} from service total {servicio.total}")
+
+        servicio.total -= sale.change
+        print(f'new total: {servicio.total}')
+        if servicio.total < 1:
+            print("service total is less than 1, deleting service...")
+            servicio.delete()
+            print("done")
+        else: 
+            print("service total is biggetr than 1, saving service")
+            servicio.save()
+            print("done")
+        
+    except:
+        print("cant find associated service")
+        pass
+    print("deleting the sale")
+    
     sale.delete()
     return redirect(reverse('dashboard:sales')+ "?deleted")
 
@@ -1247,6 +1271,32 @@ def delete_clients(request):
 def delete_sales(request):
     if request.method == 'POST' and 'delete' in request.POST:
         selected_ids = request.POST.getlist('selected_sales')
+        # update asociated suscription values    
+        for sale in Sale.objects.filter(id__in= selected_ids):
+            print(f"deleting {sale}")       
+            print("look for service asociated")
+        
+            try:
+
+                servicio = sale.suscription
+                print(f"service finded {servicio}, sustracting sale price {sale.change} from service total {servicio.total}")
+
+                servicio.total -= sale.change
+                print(f'new total: {servicio.total}')
+                if servicio.total < 1:
+                    print("service total is less than 1, deleting service...")
+                    servicio.delete()
+                    print("done")
+                else: 
+                    print("service total is biggetr than 1, saving service")
+                    servicio.save()
+                    print("done")
+                
+            except:
+                print("cant find associated service")
+                pass
+            print("deleting the sale")
+        
         Sale.objects.filter(id__in=selected_ids).delete()
         return redirect('dashboard:sales')
     else:

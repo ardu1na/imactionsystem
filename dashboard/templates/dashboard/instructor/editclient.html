@@ -312,7 +312,7 @@
                                                     <span class="badge light badge-warning">
                                                         {{sale.status|default_if_none:"?"}}
                                                     </span> 
-                                                {% endif %} ${{sale.get_change}} </p>
+                                                {% endif %} ${{sale.change|floatformat:2}} </p>
                                                 
                                                 {% if sale.note %}
                                                 <p> {{sale.note}} </p>
