@@ -1,6 +1,5 @@
 from datetime import date, timedelta
 from django.db import models
-from django.db.models import F
 from django.contrib import admin
 from customers.models import Client
 from decimal import Decimal
@@ -95,7 +94,9 @@ class Adj(models.Model):
 
     
     type = models.CharField(max_length=40, default=None, verbose_name="Account/Service", choices=ADJ_CHOICES, blank=False, null=False)
+    
     service = models.ForeignKey(Service, on_delete=models.CASCADE, related_name="adj", null=True, blank=True)
+    
     client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name="adj", null=True, blank=True)
        
     adj_percent = models.DecimalField(decimal_places=2, max_digits=16)
