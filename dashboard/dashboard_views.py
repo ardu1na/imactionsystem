@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from dashboard.models import Configurations
 from django.contrib import messages
 from django.urls import reverse
@@ -21,7 +21,6 @@ from django.db.models import Sum
 from datetime import datetime
 from decimal import Decimal
 from django.db.models import Q
-from django.db.models import Count
 from customers.models import *
 from customers.forms import *
 from sales.models import *
@@ -30,8 +29,6 @@ from expenses.models import *
 from expenses.forms import * 
 from dashboard.users.models import CustomUser
 from dashboard.utils import *
-import csv
-from dashboard.forms import UploadFileForm
 try: 
     from .services import compra as b_compra
 except: pass
@@ -637,6 +634,48 @@ def client_autocomplete(request):
     clients = Client.objects.filter(name__icontains=q)
     results = [{'id': c.pk, 'text': c.name} for c in clients]
     return JsonResponse({'results': results})
+
+
+
+
+
+
+@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
+@login_required(login_url='dashboard:login')
+def editservice(request, id):
+        
+    editservice = get_object_or_404(Service, id=id)
+    editform = EditService(instance=editservice)
+
+
+    if request.method == "POST":
+        
+        editform = EditService(request.POST, instance = editservice)
+
+        if editform.is_valid():
+            
+            editform.save()
+                             
+        else:
+            print(editform)
+            print(editform.errors)
+
+
+    context = {
+        'editform': editform,
+        'editservice': editservice,
+
+    }
+                    
+    return render (request, 'dashboard/table/editservice.html', context)
+            
+   
+
+
+
+
+
+
 
 
 

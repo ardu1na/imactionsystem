@@ -43,6 +43,7 @@ urlpatterns = [
     path('clients/editclient/<int:id>/', dashboard_views.editclient, name="editclient"),
     path('clients/addclientsale/<int:id>/', dashboard_views.addclientsale, name="addclientsale"),
     path('clients/deleteclients/', dashboard_views.delete_clients, name="deleteclients"),
+    path('services/<int:id>/', dashboard_views.editservice, name="editservice"),
 
 
 
@@ -54,6 +55,9 @@ urlpatterns = [
     path('sales/editsale/<int:id>/', dashboard_views.editsale, name="editsale"),
     path('salesdata/',dashboard_views.salesdata, name="salesdata"),
     path('sales/deletesales/', dashboard_views.delete_sales, name="deletesales"),
+
+
+
 
     path('adjustments/',dashboard_views.adjustment, name="adjustment"),
     path('adjustments/<int:id>/',dashboard_views.adjustment, name="adjustsale"),
