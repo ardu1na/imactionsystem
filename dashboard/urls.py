@@ -44,6 +44,7 @@ urlpatterns = [
     path('clients/addclientsale/<int:id>/', dashboard_views.addclientsale, name="addclientsale"),
     path('clients/deleteclients/', dashboard_views.delete_clients, name="deleteclients"),
     path('services/<int:id>/', dashboard_views.editservice, name="editservice"),
+    path('services/<int:id>/restore/', dashboard_views.restoreservice, name="restoreservice"),
 
 
 

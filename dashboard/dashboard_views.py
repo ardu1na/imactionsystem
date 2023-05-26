@@ -645,24 +645,8 @@ def client_autocomplete(request):
 def editservice(request, id):
         
     editservice = get_object_or_404(Service, id=id)
-    editform = EditService(instance=editservice)
-
-
-    if request.method == "POST":
-        
-        editform = EditService(request.POST, instance = editservice)
-
-        if editform.is_valid():
-            
-            editform.save()
-                             
-        else:
-            print(editform)
-            print(editform.errors)
-
 
     context = {
-        'editform': editform,
         'editservice': editservice,
 
     }
@@ -675,6 +659,21 @@ def editservice(request, id):
 
 
 
+
+
+
+@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
+@login_required(login_url='dashboard:login')
+def restoreservice(request, id):
+        
+    editservice = get_object_or_404(Service, id=id)
+    client_id = editservice.client.id
+    editservice.state = True
+    editservice.save()
+    print(f'Service {editservice} restored.')
+                   
+    return redirect ('dashboard:editclient', id=client_id)
+            
 
 
 
@@ -1361,7 +1360,7 @@ def editclient(request, id):
 
     if request.method == "GET":
         sales = editclient.sales.exclude(note="auto revenue sale")
-        services = editclient.services.filter(state=True)
+        services = editclient.services.all()
         editform = EditClientForm(instance=editclient)
         cancelform = CancellService()
         context = {

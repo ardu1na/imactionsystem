@@ -258,13 +258,7 @@ class CancellService(ModelForm):
 
 
 
-class EditService(ModelForm):
-    
-    class Meta:
-        model = Service
-        fields = ['state', ]
-        
-        
+
 
 
 
