@@ -269,7 +269,7 @@ def deleteexpense(request, id):
 
 
 
-@user_passes_test(lambda user: user.groups.filter(name='employees').exists())
+@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
 def editemployee(request, id):
     

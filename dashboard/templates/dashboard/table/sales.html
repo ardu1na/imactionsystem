@@ -228,7 +228,7 @@
 
 
                                                
-                                                <td> <a class="mb-0 fs-16 font-w500" href="{% url 'dashboard:editsale' id=sale.id %}"> {{sale.service}} </a> </td>
+                                                <td> <a class="mb-0 fs-16 font-w500" href="{% url 'dashboard:editsale' id=sale.id %}"> {{sale.service}} </a> {% if sale.suscription.state == False %} (cancelled) {% endif %}</td>
                                                 <td>
                                                     <div class="d-flex align-items-center">
                                                         <a class="mb-0 fs-16 font-w500 client-item" href="{% url 'dashboard:editclient' id=sale.client.id %}">{{sale.client}}</a>

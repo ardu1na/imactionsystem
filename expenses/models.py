@@ -5,8 +5,11 @@ from django.db import models
 
 from sales.models import LastBlue
 
-#last_blue = LastBlue.objects.get(pk=1)
-blue = 1 #last_blue.compra
+try:
+    last_blue = LastBlue.objects.get(pk=1)
+    blue = last_blue.compra
+except:
+    blue = 390
 
 
 
@@ -77,6 +80,8 @@ class Employee(models.Model):
     rol = models.CharField(max_length=15, choices=ROL_CHOICES, blank=False, null=True,  verbose_name="ROL", default=None)
     
     name = models.CharField(max_length=150, verbose_name="NAME")
+    
+    dob = models.DateField(null=True, blank=True)
     
     address = models.CharField(max_length=250, verbose_name="ADDRESS", blank=True, null=True)
     email = models.EmailField(blank=True, null=True, verbose_name="EMAIL")
