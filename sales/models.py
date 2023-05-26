@@ -204,13 +204,13 @@ class Sale(models.Model):
     
     service = models.CharField(max_length=50, choices=SERVICE_CHOICES, verbose_name="SERVICE", blank=False, default=None)
     
-    price = models.DecimalField(default=0, verbose_name="PRICE", decimal_places=2, max_digits=12)
-    currency = models.CharField(max_length=50, default="ARS", choices=COIN_CHOICES, null=True, blank=False, verbose_name="CURRENCY")
+    
     note = models.CharField(max_length=400, null=True, blank=True, verbose_name="NOTES")
     cost = models.IntegerField(default=0, verbose_name="COST")
     status = models.CharField(max_length=5, choices=S_CHOICES, null=True, blank=False, default=None, verbose_name="STATUS $")
     change = models.DecimalField(default=0, verbose_name="PRICE", decimal_places=2, max_digits=12, null=True, blank=True)
-    
+    price = models.DecimalField(default=0, verbose_name="PRICE", decimal_places=2, max_digits=12)
+    currency = models.CharField(max_length=50, default="ARS", choices=COIN_CHOICES, null=True, blank=False, verbose_name="CURRENCY")
     @property
     def get_change(self):
         change = 0

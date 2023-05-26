@@ -167,7 +167,10 @@ def expenses(request):
             
     without_wages = 0
     for expense in expenses:
-        without_wages += expense.value
+        if expense.change > 0:
+            without_wages += expense.change
+        else:
+            without_wages += expense.value
     
     all_bonus = 0
     wages_staff = 0
@@ -193,15 +196,34 @@ def expenses(request):
     
     for expense in expenses:
         if expense.category == "Empresa":
-            empresa += expense.value
+            if expense.change > 0:
+                empresa += expense.change
+            else:
+                empresa += expense.value
+    
         if expense.category == "Lead Gen":
-            lead_gen += expense.value
+            if expense.change > 0:
+                lead_gen += expense.change
+            else:
+                lead_gen += expense.value
+            
         if expense.category == "Office":
-            office += expense.value
+            if expense.change > 0:
+                office += expense.change
+            else:
+                office += expense.value
+            
         if expense.category == "Other":
-            other += expense.value
+            if expense.change > 0:
+                other += expense.change
+            else:
+                other += expense.value
+            
         if expense.category == "Tax":
-            tax += expense.value    
+            if expense.change > 0:
+                tax += expense.change
+            else:
+                tax += expense.value
             
             
     all = empresa + lead_gen + office + tax + other + wages_staff + wages_ceo
@@ -1587,7 +1609,10 @@ def index(request):
         else:
             outcome += salary.employee.get_total_ceo()
     for e in expenses:
-        outcome += e.value
+        if e.change > 0:
+            outcome += e.change
+        else:
+            outcome += e.value
     balance = rr_t_clients - outcome
 
     #######################################################################################
@@ -1739,6 +1764,7 @@ def index(request):
                 category=expense.category,
                 concept=expense.concept,
                 value=expense.value,
+                currency=expense.currency,
                 wop=expense.wop,
             )
                 

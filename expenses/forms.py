@@ -61,6 +61,10 @@ class ExpenseForm(ModelForm):
         
         widgets = {
             
+            'currency' : Select(attrs={'class':"default-select form-control wide mb-3",
+            'id':"currency",
+            'placeholder':"Currency",}),
+                       
             'date' : TextInput(attrs={'class':"datetimepicker form-control",
             'id':"PublishDateTimeTextbox",
             'type':"date",

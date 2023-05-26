@@ -49,6 +49,13 @@
                                 
                                     {{addform.value}}
                                 </div>
+
+                                <div class="form-group my-3">
+                                    <div class="fs-5 ml-4">
+                                        Currrency
+                                    </div>
+                                    {{addform.currency}}
+                                </div>
                                 <div class="form-group my-3">
                                     <div class="fs-5 ml-4">
                                         WOP
@@ -203,7 +210,7 @@
                                             <a class="mb-0 fs-16 font-w500" href="{% url 'dashboard:editexpense' id=expense.id %}">{{expense.category}}</a>
                                         </td>
                                         <td> {{expense.concept|truncatechars:25}} </td>
-                                        <td>${{expense.value|floatformat:2|intcomma}}</td>
+                                        <td>{% if expense.currency == "ARS" %}${{expense.value|floatformat:2|intcomma}}{% else %}{{expense.value|floatformat:2|intcomma}} USD{% endif  %}</td>
                                         <td>{{expense.wop}}</td>   
         
                                         <td>

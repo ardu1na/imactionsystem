@@ -262,7 +262,29 @@ class Expense(models.Model):
     date = models.DateField(default=date.today)
     category = models.CharField(max_length=80, default=None, choices=EXP_CHOICES, blank=False, verbose_name="CATEGORY")
     concept = models.CharField(max_length=150, verbose_name="CONCEPT", blank=True, null=True)
+    
     value = models.DecimalField(decimal_places=2, max_digits=15, blank= True, null= True, verbose_name="VALUE")
+    
+    
+    ARS = "ARS"
+    USD = "USD"
+    COIN_CHOICES = (
+        (ARS, ('ARS')),
+        (USD, ('USD')))
+    
+    currency = models.CharField(max_length=50, default="ARS", choices=COIN_CHOICES, null=True, blank=False, verbose_name="CURRENCY")
+
+    change = models.DecimalField(default=0, verbose_name="PRICE", decimal_places=2, max_digits=12, null=True, blank=True)
+
+    @property
+    def get_change(self):
+        change = 0
+        if self.currency == "USD":
+            change = self.value*Decimal(blue)
+            return change
+        else:
+            return self.value
+        
     wop = models.CharField(max_length=80, default=None, blank= False, choices=WOP_CHOICES, verbose_name="WOP")
 
     def __str__ (self):
@@ -271,3 +293,11 @@ class Expense(models.Model):
 
     class Meta:
         ordering = ['-date']
+        
+    
+    
+    def save(self, *args, **kwargs):                                    
+
+        self.change = self.get_change         
+
+        super(Expense, self).save(*args, **kwargs)
