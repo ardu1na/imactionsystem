@@ -1535,6 +1535,18 @@ def download_config(request):
 @login_required(login_url='dashboard:login')
 def index(request):
     
+    
+    
+    ###############
+    # birthdays
+    bds = []
+    employees = Employee.objects.filter(active="Yes")
+    for e in employees:
+        try:
+            if today.month == e.dob.month and today.day == e.dob.day:
+                bds.append(e)
+        except:
+            pass
     #######################################################################################
     # card activity
     ct = ContentType.objects.get_for_model(LastBlue)
@@ -2734,7 +2746,7 @@ def index(request):
     
     context={
         "page_title":"Dashboard",
-        
+        "bds" : bds,        
         "activity": last_act[:7],
         "balance": balance,
         "rr_t_clients": rr_t_clients,
