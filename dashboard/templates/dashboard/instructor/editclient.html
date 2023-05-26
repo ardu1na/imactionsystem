@@ -343,8 +343,8 @@
 
                                             <li class="list-group-item">
                                                 <a class="mb-4 d-flex flex-row-reverse"> {% if service.state == False %}
-                                                    ( cancelled ) 
-                                                    {% endif %} {{service.created_at|date:"d/m/Y"}}</a>
+                                                    ( cancelled ) {{service.date_can|date:"d/m/Y"}} {% else %}
+                                                     {{service.created_at|date:"d/m/Y"}}{% endif %}</a>
 
                                                 <h4 href="{% url 'dashboard:editservice' id=service.id %}">{{service.service}}</h4> 
                                                 

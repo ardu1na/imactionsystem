@@ -29,45 +29,34 @@
                                                     <div class="fs-5 ml-4">
                                                         Created at: {{editservice.created_at}}
                                                     </div>
-                                                    
+                                                    <br>
                                                     <div class="fs-5 ml-4">
-                                                        Value ${{editservice.total|floatformat:2}} 
+                                                        Value <strong>${{editservice.total|floatformat:2}}</strong> 
                                                     </div>
-
-                                                    {% if editservice.sales|length > 0 %}
-                                                    <div class="fs-5 ml-4">
-                                                        Sale{% if editservice.sales|length == 1 %}{% else %}s{% endif %}:  
-                                                        {% for sale in editservice.sales %}
-                                                        <a href="{% url 'dashboard:editsale' id=sale.id %}">
-                                                        {{sale.date|date:"d/m/Y"}} ${{sale.change|floatformat:2}}</a>
-                                                        {% endfor %} 
-                                                    </div>
-                                                    {% endif %}
-
-                                                    {% if editservice.adj|length > 0 %}
-                                                    <div class="fs-5 ml-4">
-                                                        Adjustment{% if editservice.adj|length == 1 %}{% else %}s{% endif %}:  
-                                                        {% for a in editservice.adj %}
-                                                        {{a.adj_percent}}% 
-                                                        {{a.notice_date|date:"d/m/Y"}} ${{a.new_value|floatformat:2}}
-
-                                                        {% endfor %} 
-                                                    </div>
-                                                    {% endif %}
-
+                                                    <br>
+                                                   
+                                                
+                                                    <br>
                                                     {% if editservice.state == False %}
                                                     <div class="fs-5 ml-4">
-                                                       {% if editservice.client.cancelled == "Cancelled" %}Account {% else %} Service {% endif %} cancelled  
+                                                       {% if editservice.client.cancelled == "Cancelled" %}
+                                                       <strong>Account cancelled </strong>{% if editservice.client.date_can %}<span class="mx-2">at {{editservice.client.date_can|date:"d/m/Y"}}</span>{% endif %} 
+                                                       <p class="my-4">{{editservice.client.comment_cam}}</p>
+                                                       {% else %} 
+                                                       <strong>Service cancelled</strong>{% if editservice.date_can %}<span class="mx-2">at {{editservice.date_can|date:"d/m/Y"}}</span>{% endif %}
                                                         
-
-                                                       <div class="form-floating my-2 d-flex flex-row-reverse">                                     {% if service.state == False %}
+                                                       <p class="my-4">{{editservice.client.comment_cam}}</p>
+                                                       
+                                                       {% endif %} 
                                                         
-                                                        <a href="{% url 'dashboard:restoreservice' id=service.id %}" class="btn btn-success px-3 fs-3">Restore Service
+                                                        {% if editservice.client.cancelled == "Active" %}
+                                                       <div class="form-floating my-2 d-flex flex-row-reverse">             
+                                                        
+                                                        <a href="{% url 'dashboard:restoreservice' id=editservice.id %}" class="btn btn-success px-3 fs-3">Restore Service
                                                         </a>
-                                                        {% endif %}
-                                                        
                                                     </div>
                                                                                                        
+                                                    {% endif %}
                                                     </div>
                                                     {% endif %}
                                                 </div>
