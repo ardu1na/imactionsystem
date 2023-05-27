@@ -2,7 +2,7 @@ from import_export import resources, fields, widgets
 from import_export.fields import Field
 from import_export.widgets import ForeignKeyWidget
 
-from sales.models import Sale
+from sales.models import Sale, Adj, Service
 from customers.models import Client
 from expenses.models import Expense, Employee, Holiday
    
@@ -41,9 +41,49 @@ class SaleResource(resources.ModelResource):
         widget=ForeignKeyWidget(Client, 'name')
     )
     
+    suscription = fields.Field(
+        column_name='suscription',
+        attribute='suscription',
+        widget=ForeignKeyWidget(Service, 'service')
+    )
+    
     class Meta:
         model = Sale
 
+
+
+
+
+class ServiceResource(resources.ModelResource):
+    client = fields.Field(
+        column_name='client',
+        attribute='client',
+        widget=ForeignKeyWidget(Client, 'name')
+    )
+    
+    class Meta:
+        model = Service
+
+
+
+
+
+
+class AdjResource(resources.ModelResource):
+    client = fields.Field(
+        column_name='client',
+        attribute='client',
+        widget=ForeignKeyWidget(Client, 'name')
+    )
+    
+    service = fields.Field(
+        column_name='service',
+        attribute='service',
+        widget=ForeignKeyWidget(Service, 'service')
+    )
+    
+    class Meta:
+        model = Adj
 
 
 
