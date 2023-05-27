@@ -90,7 +90,7 @@ class SaleForm(ModelForm):
     class Meta:
         model = Sale
         
-        exclude = ['sale_id', 'revenue', 'change']
+        exclude = ['sale_id', 'revenue', 'change', 'suscription']
         
         
         widgets = {
@@ -150,6 +150,74 @@ class SaleForm(ModelForm):
 
         }
 
+
+
+
+class SaleForm2(ModelForm):
+        
+
+    class Meta:
+        model = Sale
+        
+        exclude = ['sale_id', 'revenue', 'change', 'client', 'suscription']
+        
+        
+        widgets = {
+            
+            'date' : TextInput(attrs={'class':"datetimepicker form-control",
+            'id':"PublishDateTimeTextbox",
+            'type':"date",
+            'placeholder':"Date",}),
+
+            'kind' : Select(attrs={'class':"default-select form-control wide mb-3",
+            'id':"kind",
+            'placeholder':"Kind",}),
+
+            'comments' : TextInput(attrs={'class':"form-control",
+            'id':"comments",
+            'placeholder':"Comments",}),
+
+            'service' : Select(attrs={
+                'class':"default-select form-control wide mb-3",
+                'id':"service",
+                'placeholder' : "Service",
+                }
+            ),
+
+
+            'price' : TextInput(attrs={
+                'class':"form-control",
+                'id':"price",
+                'placeholder' : "Price"
+                }
+            ),
+            
+            'currency' : Select(attrs={'class':"default-select form-control wide mb-3",
+            'id':"currency",
+            'placeholder':"Currency",}),
+
+            'note' : TextInput(attrs={
+                'class':"form-control",
+                'id':"note",
+                'placeholder' : "Notes"
+                }
+            ),
+
+            'cost' : TextInput(attrs={
+                'class':"form-control",
+                'id':"cost",
+                'placeholder' : "Cost"
+                }
+            ),
+
+            'status' : Select(attrs={
+                'class':"default-select form-control wide mb-3",
+                'id':"status",
+                'placeholder' : "Status"
+                }
+            ),
+
+        }
 
 
 class ClientSaleForm(ModelForm):

@@ -704,6 +704,9 @@ def restoreservice(request, id):
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
 def adj(request):
+    
+    
+    
         
     services = Service.objects.filter(state=True)
     accounts = Client.objects.filter(cancelled="Active")
@@ -868,7 +871,7 @@ def adjustment(request):
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
 def sales(request):
-    
+    clients = Client.objects.all()
     services = ['SEO','Google Ads','Facebook Ads','Web Design', 'Hosting', 'LinkedIn', 'SSL certificate','Web Plan','Combo', 'Community Management', 'Email Marketing', 'Others', 'Others RR']
     this_month = date.today().month
     month_name = date(1900, this_month, 1).strftime('%B')
@@ -904,19 +907,31 @@ def sales(request):
         
         
     if request.method == 'GET':
-        addform = SaleForm()
-        
+        initial_data = {}
+        client_id = request.GET.get('client')
+        if client_id:
+            initial_data['client'] = client_id
+        addform = SaleForm2(initial=initial_data)
+
     if request.method == 'POST':
         if "addsale" in request.POST:
-            addform = SaleForm(request.POST)
-            print(addform.errors)
-            if addform.is_valid():
-                addform.save()
-                return redirect(reverse('dashboard:sales')+ "?added")
-            else:
-                return HttpResponse("hacked from las except else form")
-    
+            client_name = request.POST.get('client')
+            addform = SaleForm2(request.POST)
 
+            if addform.is_valid():
+                instance = addform.save(commit=False)
+                client_instance = Client.objects.get(name=client_name)
+                instance.client = client_instance
+                instance.save()
+                return redirect(reverse('dashboard:sales') + "?added")
+            else:
+               
+                return HttpResponse(f"Ups! Something went wrong: {addform.errors}")
+
+                
+            
+            
+            
     
     sales_by_service =Sale.objects.filter(date__month=today.month, date__year=today.year).exclude(note="auto revenue sale")
 
@@ -967,6 +982,7 @@ def sales(request):
 
                 
     context={
+        "clients": clients,
         "page_title":"SALES",
         "sales" : sales,
         "sales_this_month" : get_total_format,
