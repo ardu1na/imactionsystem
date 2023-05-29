@@ -1,22 +1,12 @@
+
 from django.contrib import admin
 
-from unfold.admin import ModelAdmin
 from import_export.admin import ImportExportModelAdmin
 
-from dashboard.resources import SaleResource
+from unfold.admin import ModelAdmin
 from sales.models import Sale, LastBlue, Service, Adj
 
-class SaleInline(admin.StackedInline):
-    model = Sale
-    extra = 0
-
-
-class ServiceAdmin(ModelAdmin):
-    inlines = [SaleInline,]
-    extra= 0
-admin.site.register(Service, ServiceAdmin)
-
-
+from dashboard.resources import *
 
 class SaleAdmin(ModelAdmin, ImportExportModelAdmin):
     list_display = ['service', 'client', 'change', 'note']
@@ -25,7 +15,22 @@ class SaleAdmin(ModelAdmin, ImportExportModelAdmin):
 
 admin.site.register(Sale, SaleAdmin)
 
+class SaleInline(admin.StackedInline):
+    model = Sale
+    extra = 0
+
+
+class ServiceAdmin(ModelAdmin, ImportExportModelAdmin):
+    inlines = [SaleInline,]
+    extra= 0
+    resource_class = ServiceResource
+
+admin.site.register(Service, ServiceAdmin)
+    
+    
+
 admin.site.register(LastBlue)
-class AdjAdmin(ModelAdmin):
-    pass
+
+class AdjAdmin(ModelAdmin, ImportExportModelAdmin):
+    resource_class = AdjResource
 admin.site.register(Adj, AdjAdmin)
