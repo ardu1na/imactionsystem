@@ -4,9 +4,20 @@ from import_export.widgets import ForeignKeyWidget
 
 from sales.models import Sale, Adj, Service
 from customers.models import Client
-from expenses.models import Expense, Employee, Holiday
+from expenses.models import Expense, Employee, Holiday, Salary
    
 
+class SalaryResource(resources.ModelResource):
+    
+    employee = Field(
+        column_name='employee',
+        attribute='employee',
+        widget=ForeignKeyWidget(model=Employee, field='name'))
+    
+    
+    class Meta:
+        model = Salary
+        
 
 
 class HolidayResource(resources.ModelResource):
@@ -32,7 +43,7 @@ class SaleResource(resources.ModelResource):
     
     class Meta:
         model = Sale"""
-        
+"""
         
 class SaleResource(resources.ModelResource):
     client = fields.Field(
@@ -49,8 +60,18 @@ class SaleResource(resources.ModelResource):
     
     class Meta:
         model = Sale
+"""
 
-
+class SaleResource(resources.ModelResource):
+    client = fields.Field(
+        column_name='client',
+        attribute='client',
+        widget=ForeignKeyWidget(Client, 'name')
+    )
+    
+    class Meta:
+        model = Sale
+        exclude = ('suscription',)
 
 
 

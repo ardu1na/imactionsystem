@@ -14,7 +14,6 @@ import mimetypes
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.core.mail import send_mail
-from django.template.loader import render_to_string
 from django.http import JsonResponse
 from django.views.decorators.http import require_GET
 from django.db.models import Sum
@@ -50,49 +49,70 @@ from django.contrib.auth.decorators import user_passes_test
 
 today = date.today()
 
-    
+
+
+
+
+
+
+
+
+
+######################## AJAX REQUEST
+
+
+@require_GET
+def client_autocomplete(request):
+    q = request.GET.get('q', '')
+    clients = Client.objects.filter(name__icontains=q)
+    results = [{'id': c.pk, 'text': c.name} for c in clients]
+    return JsonResponse({'results': results})
+
+
+
+
+######################################################################################################################################
+## HISTORIAL DE CAMBIOS
+
 @user_passes_test(lambda user: user.groups.filter(name='admin').exists())   
 @login_required(login_url='dashboard:login')
 def activity(request):
     
-    
-    
+    # Registro de actividad en el ERP
+    # exceptuando cambios en la cotización del blue y usuarios.
     ct = ContentType.objects.get_for_model(LastBlue)
     ct2 = ContentType.objects.get_for_model(CustomUser)
-
     events = CRUDEvent.objects.exclude(content_type=ct).exclude(content_type=ct2)
-    
     logs = LoginEvent.objects.all()
-    
-    combined_list = list(chain(events, logs))
-    
+    combined_list = list(chain(events, logs))     
     paginator = Paginator(combined_list, 20) # Show 20 elements per page.
     elements = paginator.get_page(request.GET.get('page'))
-
     context={
         "page_title":"Activity",
         "events" : events,
         "logs" : logs,
-        "list" : elements,
-
-    }
+        "list" : elements,}
     return render(request,'dashboard/activity.html',context)
 
+######################################################################################################################################
 
+
+## CONFIGURACIONES Y AJUSTES 
 
 @login_required(login_url='dashboard:login')
 def setting (request):
+    # pestaña principal de acceso a configuraciones
     context = {
             "page_title": "SETTINGS",
             }
     return render (request, 'dashboard/table/settings.html', context)
 
 
-
 @user_passes_test(lambda user: user.groups.filter(name='admin').exists())
 @login_required(login_url='dashboard:login')
 def conf(request):
     
+    # ajuste de parámetros de valor del cliente (tier)    
     tier = ConfTier.objects.get(id=1)
 
     if request.method == "GET":
@@ -106,7 +126,6 @@ def conf(request):
             }
         return render (request, 'dashboard/table/conf.html', context)
 
-    
     if request.method == 'POST':
         form = TierConf(request.POST, instance=tier)
         print(form.errors)
@@ -114,15 +133,21 @@ def conf(request):
             tier = form.save()
                       
             return redirect(reverse('dashboard:index')+ "?changed")
-        else: return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
+        else:
+            return HttpResponse(
+                f"Ups! Something went wrong. You should go back, update the page and try again. \n \n {form.errors}")
+        
         
 
+##############################################################################################################################################################
 
 
+## EXPENSES CRUD
 
 @user_passes_test(lambda user: user.groups.filter(name='expenses').exists())
 @login_required(login_url='dashboard:login')
 def editexpense(request, id):
+    # EXPENSE DETAIL . EDIT INSTANCE
     editexpense = Expense.objects.get(id=id)
     
     if request.method == "GET":
@@ -142,12 +167,18 @@ def editexpense(request, id):
         if form.is_valid():
             form.save()
             return redirect ('dashboard:editexpense', id=editexpense.id)
-        else: return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
+        else:
+            return HttpResponse(
+                f"Ups! Something went wrong. You should go back, update the page and try again.\n \n {form.errors}"
+                )
+        
+        
         
 @user_passes_test(lambda user: user.groups.filter(name='expenses').exists())
 @login_required(login_url='dashboard:login')
 def expenses(request):
-    today = date.today()
+    
+    # EXPENSES + SALARIES -- OF CURRENT MONTH
 
     expenses = Expense.objects.filter(date__month=today.month, date__year= today.year)
     employees = Employee.objects.filter(active="Yes").exclude(rol="CEO")
@@ -155,7 +186,9 @@ def expenses(request):
     
     if request.method == 'GET':
         addform = ExpenseForm()
-        
+    
+    
+    # nueva expense    
     if request.method == 'POST':
         if "addexpense" in request.POST:
             addform = ExpenseForm(request.POST)
@@ -163,8 +196,12 @@ def expenses(request):
                 addform.save()
                 return redirect(reverse('dashboard:expenses')+ "?added")
             else:
-                return HttpResponse("hacked from las except else form")
-            
+                return HttpResponse(
+                    f"Ups! Something went wrong. You should go back, update the page and try again.\n \n {addform.errors}")
+    
+    
+    ###############################################        
+    ## CALCULOS PARA LAS CARDS      
     without_wages = 0
     for expense in expenses:
         if expense.change > 0:
@@ -176,23 +213,24 @@ def expenses(request):
     wages_staff = 0
     wages_ceo = 0
     
-    for i in ceo:
-        wages_ceo += i.get_total_ceo()
-        all_bonus += i.get_aguinaldo_mensual()
-        
-    for employee in employees:
-        wages_staff += employee.get_total()
-        all_bonus += employee.get_aguinaldo_mensual()
-        
-    
+    try:
+        for i in ceo:
+            wages_ceo += i.get_total_ceo()
+            all_bonus += i.get_aguinaldo_mensual()
+            
+        for employee in employees:
+            wages_staff += employee.get_total()
+            all_bonus += employee.get_aguinaldo_mensual()
+    except: pass               
     with_wages = without_wages + wages_staff + wages_ceo
+        
     
+    ## DATA PARA EL GRÁFICO    
     empresa = 0
     lead_gen = 0
     office = 0
     other = 0
     tax = 0
-
     
     for expense in expenses:
         if expense.category == "Empresa":
@@ -200,31 +238,26 @@ def expenses(request):
                 empresa += expense.change
             else:
                 empresa += expense.value
-    
         if expense.category == "Lead Gen":
             if expense.change > 0:
                 lead_gen += expense.change
             else:
-                lead_gen += expense.value
-            
+                lead_gen += expense.value    
         if expense.category == "Office":
             if expense.change > 0:
                 office += expense.change
             else:
-                office += expense.value
-            
+                office += expense.value  
         if expense.category == "Other":
             if expense.change > 0:
                 other += expense.change
             else:
-                other += expense.value
-            
+                other += expense.value           
         if expense.category == "Tax":
             if expense.change > 0:
                 tax += expense.change
             else:
-                tax += expense.value
-            
+                tax += expense.value            
             
     all = empresa + lead_gen + office + tax + other + wages_staff + wages_ceo
     
@@ -254,8 +287,6 @@ def expenses(request):
         "all_bonus" : all_bonus,
         "employees" : employees,
         "ceo" : ceo,     
-
-
         #chart data  
         "empresa" : empresa,
         "lead_gen" : lead_gen,
@@ -271,15 +302,11 @@ def expenses(request):
         "other1" : other1,
         "tax1" : tax1,
         "wages_ceo1" : wages_ceo1,
-        "wages_staff1" : wages_staff1,
-
-    }
-
+        "wages_staff1" : wages_staff1,}
     return render(request,'dashboard/table/expenses.html', context)
 
 
-
-
+## borrar expense
 @user_passes_test(lambda user: user.groups.filter(name='expenses').exists())
 @login_required(login_url='dashboard:login')
 def deleteexpense(request, id):
@@ -288,180 +315,26 @@ def deleteexpense(request, id):
     return redirect(reverse('dashboard:expenses')+ "?deleted")
 
 
-
-
-
-@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
-@login_required(login_url='dashboard:login')
-def editemployee(request, id):
-    
-    editemployee = Employee.objects.get(id=id)
-    holidays = Holiday.objects.filter(employee=editemployee)
-    salaries = Salary.objects.filter(employee=editemployee)
-
-            
-    if request.method == "GET":
-        
-        editform = EditEmployeeForm(instance=editemployee)
-        wage_instance = Salary.objects.filter(employee=editemployee).first()
-        editwageform = EditWageForm(instance=wage_instance) if wage_instance else EditWageForm()
-        holydayform = HolidayEmployeeForm()
-        raice = RaiceForm()
-
-        context = {
-            'raice': raice,
-            'holidayform'  : holydayform,
-            'editform': editform,
-            'editwageform': editwageform,
-            'editemployee': editemployee,
-            'id': id,
-            'holidays': holidays,
-            'salaries': salaries,
-            }
-        
-        return render (request, 'dashboard/instructor/editemployee.html', context)
-
-    
-    if request.method == 'POST':
-        
-        if "raice" in request.POST:
-            raice = RaiceForm(request.POST)
-            print (raice)
-            if raice.is_valid():
-                raice_nigga = raice.cleaned_data['nigga']
-                raice_salary = raice.cleaned_data['salary']
-                
-                last_wage = Salary.objects.filter(employee=editemployee.pk).last()
-                last_wage.salary = last_wage.salary + (last_wage.salary*Decimal(raice_salary))/100
-                last_wage.nigga = Decimal(raice_nigga)
-                last_wage.raice = Decimal(raice_salary)
-                last_wage.save()
-                return redirect(reverse('dashboard:editemployee', kwargs={'id': editemployee.id}) + '#pay')
-            else:
-                print (editform)
-
-                print(editform.errors)
-                return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
-        
-        
-        if "editemployee" in request.POST:
-            editform = EditEmployeeForm(request.POST, instance=editemployee)
-            print (editform)
-            if editform.is_valid():
-                editform.save()
-                return redirect('dashboard:editemployee', id=editemployee.id)
-            else:
-                print (editform)
-
-                print(editform.errors)
-                return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
-        
-        if "holiday" in request.POST:
-            
-            holydayform = HolidayEmployeeForm(request.POST)
-            if holydayform.is_valid():
-                holiday = holydayform.save(commit=False)
-                holiday.employee = editemployee
-                holiday.save()
-                return redirect(reverse('dashboard:editemployee', kwargs={'id': editemployee.id}) + '#holiday')
-            else:
-                print (holydayform)
-                print(holydayform.errors)
-                return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
-
-        
-        if "editwage" in request.POST:
-            wage_instance = Salary.objects.filter(employee=editemployee).last()
-            editwageform = EditWageForm(request.POST, instance=wage_instance) if wage_instance else EditWageForm(request.POST)
-            if editwageform.is_valid():
-                wage = editwageform.save(commit=False)
-                wage.employee = editemployee
-                wage.save()
-                return redirect(reverse('dashboard:editemployee', kwargs={'id': editemployee.id}) + '#pay')
-            else: 
-                print (editwageform)
-                print(editwageform.errors)
-                return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
-
-
-
-
-    
-@user_passes_test(lambda user: user.groups.filter(name='employees').exists())
+# historial de una expensa    
+@user_passes_test(lambda user: user.groups.filter(name='expenses').exists())
 @login_required(login_url='dashboard:login')
 def expenseshistory(request, id):
-    
     editexpense = Expense.objects.get(id=id)
-    same_expense = Expense.objects.filter(concept=editexpense.concept)
-    
-    
-
+    same_expense = Expense.objects.filter(concept=editexpense.concept)   
     context = {
             'editexpense' : editexpense,
             'same_expense': same_expense,
             'id': id,
             'page_title':'Expense History',
-
-            
             }
-        
     return render (request, 'dashboard/instructor/expenseshistory.html', context)
 
-@user_passes_test(lambda user: user.groups.filter(name='admin').exists())
-@login_required(login_url='dashboard:login')
-def editholiday(request, id):
-    
-    editholiday = Holiday.objects.get(id=id)
-    editemployee = editholiday.employee
-    
-    
-    if request.method == "GET":
-                
-        holyday_instance = Holiday.objects.filter(employee=editemployee).last()
-        holydayform = HolidayEmployeeForm(instance=holyday_instance) if holyday_instance else HolidayEmployeeForm()
-
-        context = {
-            'holidayform'  : holydayform,
-            'editemployee': editemployee,
-            'id': id
-            }
-        
-        return render (request, 'dashboard/instructor/editholiday.html', context)
-
-
-    if request.method == 'POST':
-                
-        if "holiday" in request.POST:
-            holyday_instance = Holiday.objects.filter(employee=editemployee).last()
-            holydayform = HolidayEmployeeForm(request.POST, instance=holyday_instance) if holyday_instance else HolidayEmployeeForm(request.POST)
-            if holydayform.is_valid():
-                holiday = holydayform.save(commit=False)
-                holiday.employee = editemployee
-                holiday.save()
-                return redirect('dashboard:editemployee', id=editemployee.id)
-            else:
-                print (holydayform)
-                print(holydayform.errors)
-                return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
 
 
 
-@user_passes_test(lambda user: user.groups.filter(name='employees').exists())
-@login_required(login_url='dashboard:login')
-def employeesold(request):
-    
-    old =Employee.objects.filter(active="No")
-                              
-          
-    context={
-        
-        "page_title":"STAFF OLD",
-        "old": old,
-        
-    }
-    
-    return render(request,'dashboard/instructor/employeesold.html',context)
 
+########################################################################################################################################################
+## EMPLOYEES
 
 @user_passes_test(lambda user: user.groups.filter(name='admin').exists())
 def employees(request):
@@ -485,21 +358,19 @@ def employees(request):
                 salary.save()
                 return redirect(reverse('dashboard:employees')+ "?added")
             else:
-                return HttpResponse("hacked from las except else form") 
-            
+                return HttpResponse(
+                    f"Ups! Something get wrong with the form. Please go back, reload the page and try again. \n \n {addform.errors}")           
+    
+    # cards data
     total_white = 0
     total_nigga = 0
-    total_total = 0
-    
-    
+    total_total = 0    
     for employee in staff:
         try:
-            total_white += employee.get_white()
-        
+            total_white += employee.get_white()        
             total_nigga += employee.get_nigga()
             total_total += employee.get_total()
-        except:
-            pass     
+        except: pass     
           
     context={
         "staff": staff,
@@ -512,13 +383,143 @@ def employees(request):
         "white": total_white,
         "nigga": total_nigga,
         "total": total_total,        
-        "page_title":"WAGES STAFF",
+        "page_title":"WAGES STAFF",}
+    return render(request,'dashboard/instructor/employees.html', context)
+
+
+# listado de empleados antiguos
+@user_passes_test(lambda user: user.groups.filter(name='employees').exists())
+@login_required(login_url='dashboard:login')
+def employeesold(request):
+    old =Employee.objects.filter(active="No")                                
+    context={        
+        "page_title":"STAFF OLD",
+        "old": old,}
+    return render(request,'dashboard/instructor/employeesold.html',context)
+
+
+# eliminar un empleado
+@user_passes_test(lambda user: user.groups.filter(name='employees').exists())
+@login_required(login_url='dashboard:login')
+def deleteemployee(request, id):
+    employee = Employee.objects.get(id=id)
+    id = employee.id
+    employee.delete()
+    return redirect(reverse('dashboard:employees')+ "?deleted")
+
+
+## detalle de un EMPLEADO
+@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
+@login_required(login_url='dashboard:login')
+def editemployee(request, id):
+    # employee detail    
+    editemployee = Employee.objects.get(id=id)
+    holidays = Holiday.objects.filter(employee=editemployee)
+    salaries = Salary.objects.filter(employee=editemployee)
+            
+    if request.method == "GET":      
+        editform = EditEmployeeForm(instance=editemployee)
+        wage_instance = Salary.objects.filter(employee=editemployee).first()
+        editwageform = EditWageForm(instance=wage_instance) if wage_instance else EditWageForm()
+        holydayform = HolidayEmployeeForm()
+        raice = RaiceForm()
+        context = {
+            'raice': raice,
+            'holidayform'  : holydayform,
+            'editform': editform,
+            'editwageform': editwageform,
+            'editemployee': editemployee,
+            'id': id,
+            'holidays': holidays,
+            'salaries': salaries,
+            }       
+        return render (request, 'dashboard/instructor/editemployee.html', context)
+
+    # edit employee
+    if request.method == 'POST':
+        # para modificar el salario
+        if "editwage" in request.POST:
+            wage_instance = Salary.objects.filter(employee=editemployee).last()
+            editwageform = EditWageForm(request.POST, instance=wage_instance) if wage_instance else EditWageForm(request.POST)
+            if editwageform.is_valid():
+                wage = editwageform.save(commit=False)
+                wage.employee = editemployee
+                wage.save()
+                return redirect(reverse('dashboard:editemployee', kwargs={'id': editemployee.id}) + '#pay')
+            else: 
+                return HttpResponse(f"Ups! Something went wrong. You should go back, update the page and try again. \n \n {editwageform.errors}")
+
+        # para aumentar el salario con porcentajes
+        if "raice" in request.POST:
+            raice = RaiceForm(request.POST)
+            print (raice)
+            if raice.is_valid():
+                raice_nigga = raice.cleaned_data['nigga']
+                raice_salary = raice.cleaned_data['salary']
+                
+                last_wage = Salary.objects.filter(employee=editemployee.pk).last()
+                last_wage.salary = last_wage.salary + (last_wage.salary*Decimal(raice_salary))/100
+                last_wage.nigga = Decimal(raice_nigga)
+                last_wage.raice = Decimal(raice_salary)
+                last_wage.save()
+                return redirect(reverse('dashboard:editemployee', kwargs={'id': editemployee.id}) + '#pay')
+            else:
+                return HttpResponse(f"Ups! Something went wrong. You should go back, update the page and try again. \n \n {raice.errors}")
         
-    }
-    
-    return render(request,'dashboard/instructor/employees.html',context)
+        # detalles del empleado
+        if "editemployee" in request.POST:
+            editform = EditEmployeeForm(request.POST, instance=editemployee)
+            print (editform)
+            if editform.is_valid():
+                editform.save()
+                return redirect('dashboard:editemployee', id=editemployee.id)
+            else:
+                return HttpResponse(f"Ups! Something went wrong. You should go back, update the page and try again. \n \n {editform.errors}")
+        
+        # vacaciones
+        if "holiday" in request.POST:
+            holydayform = HolidayEmployeeForm(request.POST)
+            if holydayform.is_valid():
+                holiday = holydayform.save(commit=False)
+                holiday.employee = editemployee
+                holiday.save()
+                return redirect(reverse('dashboard:editemployee', kwargs={'id': editemployee.id}) + '#holiday')
+            else:
+                return HttpResponse(f"Ups! Something went wrong. You should go back, update the page and try again. \n \n {holydayform.errors}")
 
 
+
+# detalle de una vacacion
+@user_passes_test(lambda user: user.groups.filter(name='admin').exists())
+@login_required(login_url='dashboard:login')
+def editholiday(request, id):
+    editholiday = Holiday.objects.get(id=id)
+    editemployee = editholiday.employee      
+    if request.method == "GET":          
+        holyday_instance = Holiday.objects.filter(employee=editemployee).last()
+        holydayform = HolidayEmployeeForm(instance=holyday_instance) if holyday_instance else HolidayEmployeeForm()
+        context = {
+            'holidayform'  : holydayform,
+            'editemployee': editemployee,
+            'id': id}
+        return render (request, 'dashboard/instructor/editholiday.html', context)
+
+    # editar una vacacion
+    if request.method == 'POST':                
+        if "holiday" in request.POST:
+            holyday_instance = Holiday.objects.filter(employee=editemployee).last()
+            holydayform = HolidayEmployeeForm(request.POST, instance=holyday_instance) if holyday_instance else HolidayEmployeeForm(request.POST)
+            if holydayform.is_valid():
+                holiday = holydayform.save(commit=False)
+                holiday.employee = editemployee
+                holiday.save()
+                return redirect('dashboard:editemployee', id=editemployee.id)
+            else:
+                return HttpResponse(
+                    f"Ups! Something went wrong. You should go back, update the page and try again. \n \n {holydayform.errors}")
+
+
+# borrar una vacación
 @user_passes_test(lambda user: user.groups.filter(name='employees').exists())
 @login_required(login_url='dashboard:login')
 def deleteholiday(request, id):
@@ -531,101 +532,18 @@ def deleteholiday(request, id):
     else:
         return redirect(reverse('dashboard:editemployee', kwargs={'id': employeeid}) + '#holiday')
 
-@user_passes_test(lambda user: user.groups.filter(name='employees').exists())
-@login_required(login_url='dashboard:login')
-def deleteemployee(request, id):
-    employee = Employee.objects.get(id=id)
-    id = employee.id
-    employee.delete()
-    return redirect(reverse('dashboard:employees')+ "?deleted")
 
 
-@user_passes_test(lambda user: user.groups.filter(name='admin').exists())
-@login_required(login_url='dashboard:login')
-def deleteceo(request, id):
-    employee = Employee.objects.get(id=id)
-    employee.delete()
-    return redirect(reverse('dashboard:ceo')+ "?deleted")
+############ CEO
 
-@user_passes_test(lambda user: user.groups.filter(name='admin').exists())
-@login_required(login_url='dashboard:login')
-def editceo(request, id):
-    
-    editemployee = Employee.objects.get(id=id)
-    holidays = Holiday.objects.filter(employee=editemployee)
-    salaries = Salary.objects.filter(employee=editemployee).order_by('-period')
-
-    if request.method == "GET":
-        
-        editform = EditEmployeeForm(instance=editemployee)
-        wage_instance = Salary.objects.filter(employee=editemployee).last()
-        editwageform = EditWageCeo(instance=wage_instance) if wage_instance else EditWageCeo()
-        holydayform = HolidayEmployeeForm()
-
-        context = {
-            'holidayform'  : holydayform,
-            'editform': editform,
-            'editwageform': editwageform,
-            'editemployee': editemployee,
-            'id': id,
-            'holidays': holidays,
-            'salaries': salaries,
-            }
-        
-        return render (request, 'dashboard/instructor/editceo.html', context)
-
-    
-    if request.method == 'POST':
-        if "editemployee" in request.POST:
-            editform = EditEmployeeForm(request.POST, instance=editemployee)
-            print (editform)
-            if editform.is_valid():
-                editform.save()
-                return redirect('dashboard:editceo', id=editemployee.id)
-            else:
-                print (editform)
-
-                print(editform.errors)
-                return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
-        
-        if "holiday" in request.POST:
-            
-            holydayform = HolidayEmployeeForm(request.POST)
-            if holydayform.is_valid():
-                holiday = holydayform.save(commit=False)
-                holiday.employee = editemployee
-                holiday.save()
-                return redirect(reverse('dashboard:editceo', kwargs={'id': editemployee.id}) + '#holiday')
-            else:
-                print (holydayform)
-                print(holydayform.errors)
-                return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
-
-        
-        if "editwage" in request.POST:
-            wage_instance = Salary.objects.filter(employee=editemployee).last()
-            editwageform = EditWageCeo(request.POST, instance=wage_instance) if wage_instance else EditWageCeo(request.POST)
-            if editwageform.is_valid():
-                wage = editwageform.save(commit=False)
-                wage.employee = editemployee
-                wage.save()
-                return redirect(reverse('dashboard:editceo', kwargs={'id': editemployee.id}) + '#pay')
-            else: 
-                print (editwageform)
-                print(editwageform.errors)
-                return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
-
-
-
+# lista de ceo
 @user_passes_test(lambda user: user.groups.filter(name='admin').exists())
 @login_required(login_url='dashboard:login')
 def ceo(request):
-    ceo = Employee.objects.filter(rol="CEO")        
-    
+    ceo = Employee.objects.filter(rol="CEO")           
     if request.method == 'GET':
         addform = CeoForm()
-        salaryform = CeoSalaryForm()           
-        
+        salaryform = CeoSalaryForm()                   
     if request.method == 'POST':
         if "addemployee" in request.POST:
             addform = CeoForm(request.POST)
@@ -637,77 +555,123 @@ def ceo(request):
                 salary.save()
                 return redirect(reverse('dashboard:ceo')+ "?added")
             else:
-                return HttpResponse("hacked from las except else form")                            
-    
-              
+                return HttpResponse(
+                    f"Ups! Something get wrong. \n\n {addform.errors}")                                     
     context={
         "ceo": ceo,
         "ceo_form": addform,
         "salary_form": salaryform,        
-        "page_title":"WAGES CEO",
-    }
-    
+        "page_title":"WAGES CEO",}
     return render(request,'dashboard/instructor/ceo.html',context)
 
 
-@require_GET
-def client_autocomplete(request):
-    q = request.GET.get('q', '')
-    clients = Client.objects.filter(name__icontains=q)
-    results = [{'id': c.pk, 'text': c.name} for c in clients]
-    return JsonResponse({'results': results})
+# borrar ceo
+@user_passes_test(lambda user: user.groups.filter(name='admin').exists())
+@login_required(login_url='dashboard:login')
+def deleteceo(request, id):
+    employee = Employee.objects.get(id=id)
+    employee.delete()
+    return redirect(reverse('dashboard:ceo')+ "?deleted")
+
+
+# ver detalle editar ceo
+@user_passes_test(lambda user: user.groups.filter(name='admin').exists())
+@login_required(login_url='dashboard:login')
+def editceo(request, id):   
+    editemployee = Employee.objects.get(id=id)
+    holidays = Holiday.objects.filter(employee=editemployee)
+    salaries = Salary.objects.filter(employee=editemployee).order_by('-period')
+    if request.method == "GET":       
+        editform = EditEmployeeForm(instance=editemployee)
+        wage_instance = Salary.objects.filter(employee=editemployee).last()
+        editwageform = EditWageCeo(instance=wage_instance) if wage_instance else EditWageCeo()
+        holydayform = HolidayEmployeeForm()
+        context = {
+            'holidayform'  : holydayform,
+            'editform': editform,
+            'editwageform': editwageform,
+            'editemployee': editemployee,
+            'id': id,
+            'holidays': holidays,
+            'salaries': salaries,
+            }      
+        return render (request, 'dashboard/instructor/editceo.html', context)
+    
+    if request.method == 'POST':
+        # editar datos generales de ceo
+        if "editemployee" in request.POST:
+            editform = EditEmployeeForm(request.POST, instance=editemployee)
+            print (editform)
+            if editform.is_valid():
+                editform.save()
+                return redirect('dashboard:editceo', id=editemployee.id)
+            else:
+                return HttpResponse(
+                    f"Ups! Something went wrong. You should go back, update the page and try again. \n\n {editform.errors}")
+        # nueva vacacion
+        if "holiday" in request.POST:
+            holydayform = HolidayEmployeeForm(request.POST)
+            if holydayform.is_valid():
+                holiday = holydayform.save(commit=False)
+                holiday.employee = editemployee
+                holiday.save()
+                return redirect(reverse('dashboard:editceo', kwargs={'id': editemployee.id}) + '#holiday')
+            else:
+                return HttpResponse(
+                    f"Ups! Something went wrong. You should go back, update the page and try again. \n\n {holydayform.errors}")
+        # editar salario        
+        if "editwage" in request.POST:
+            wage_instance = Salary.objects.filter(employee=editemployee).last()
+            editwageform = EditWageCeo(request.POST, instance=wage_instance) if wage_instance else EditWageCeo(request.POST)
+            if editwageform.is_valid():
+                wage = editwageform.save(commit=False)
+                wage.employee = editemployee
+                wage.save()
+                return redirect(reverse('dashboard:editceo', kwargs={'id': editemployee.id}) + '#pay')
+            else: 
+                return HttpResponse(
+                    f"Ups! Something went wrong. You should go back, update the page and try again. \n\n {editwageform.errors}")
 
 
 
 
+#######################################################################################################################################################3
+## SERVICES
+# un servicio es la suscripción mensual (de una sale RR)
 
 
+# ver detalle de un servicio
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
-def editservice(request, id):
-        
+def editservice(request, id):   
     editservice = get_object_or_404(Service, id=id)
-
     context = {
         'editservice': editservice,
-
-    }
-                    
+    }                   
     return render (request, 'dashboard/table/editservice.html', context)
-            
-   
 
 
-
-
-
-
-
-
+# restaurar un servicio cancelado
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
-def restoreservice(request, id):
-        
+def restoreservice(request, id):        
     editservice = get_object_or_404(Service, id=id)
     client_id = editservice.client.id
     editservice.state = True
     editservice.save()
-    print(f'Service {editservice} restored.')
-                   
+    print(f'Service {editservice} restored.')                  
     return redirect ('dashboard:editclient', id=client_id)
             
 
 
 
 
-
+#####################################################################################################################################
+## AJUSTES
+# ajustes a los servicios
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
-def adj(request):
-    
-    
-    
-        
+def adj(request):      
     services = Service.objects.filter(state=True)
     accounts = Client.objects.filter(cancelled="Active")
     adjform = AdjForm()
@@ -868,6 +832,18 @@ def adjustment(request):
     return render (request, 'dashboard/table/adjustments.html', context)
 
 
+
+
+
+
+
+
+
+
+
+#####################################################################################################################################
+## VENTAS
+
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
 def sales(request):
@@ -902,7 +878,7 @@ def sales(request):
     crosssell_this_month = Sale.objects.filter(date__month=today.month, date__year=today.year, kind="Cross Sell").exclude(note="auto revenue sale")
     total_crosssell_this_month = crosssell_this_month.count()
     
-    sales = Sale.objects.filter(date__month=today.month, date__year=today.year).exclude(note="auto revenue sale")
+    sales = Sale.objects.filter(date__month=today.month, date__year=today.year)
         
         
         

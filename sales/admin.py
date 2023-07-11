@@ -8,29 +8,23 @@ from sales.models import Sale, LastBlue, Service, Adj
 
 from dashboard.resources import *
 
-class SaleAdmin(ModelAdmin, ImportExportModelAdmin):
-    list_display = ['service', 'client', 'change', 'note']
-    search_fields = ['note',]
-    resource_class = SaleResource
-
-admin.site.register(Sale, SaleAdmin)
-
-class SaleInline(admin.StackedInline):
-    model = Sale
-    extra = 0
 
 
-class ServiceAdmin(admin.ModelAdmin):
-    inlines = [SaleInline,]
+class ServiceAdmin(ImportExportModelAdmin):
     extra= 0
     resource_class = ServiceResource
 
 admin.site.register(Service, ServiceAdmin)
     
     
+class SaleAdmin(ImportExportModelAdmin):
+    list_display = ['service', 'client', 'change', 'note']
+    search_fields = ['note',]
+    resource_class = SaleResource
+admin.site.register(Sale, SaleAdmin)
 
 admin.site.register(LastBlue)
 
-class AdjAdmin(admin.ModelAdmin):
+class AdjAdmin(ImportExportModelAdmin):
     resource_class = AdjResource
 admin.site.register(Adj, AdjAdmin)
