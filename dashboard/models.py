@@ -1,6 +1,17 @@
 from django.db import models
 
 
+class LastBlue (models.Model):
+    venta = models.DecimalField(
+                max_digits=15, decimal_places=2
+                                 )
+    date_updated = models.DateTimeField(auto_now=True)
+    
+    @property
+    def get_blue(self):
+        return self.venta
+
+
 class Configurations(models.Model):
     INPUT_TYPE_CHOICES = (
         ('','Select InputType'),

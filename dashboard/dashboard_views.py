@@ -1812,20 +1812,32 @@ def index(request):
             for sale in client.services.filter(state=True):
                 total_rr += sale.total
             
+    
+    
+        
 
+    last_blue = 490
+    try:
+        last_blue =  LastBlue.objects.get(pk=1)
+        blue = last_blue.venta
     
-    last_blue = LastBlue.objects.get(pk=1) 
-    
+    except:
+        last_blue = LastBlue.objects.create(
+            venta = 490
+        )
+
     try:
         blue = b_venta
         if last_blue.venta != b_venta:
                 last_blue.venta = b_venta
         last_blue.save()
-            
+        
     except:
-       blue = last_blue.venta
-       
-       
+        blue = last_blue.venta
+    
+    
+    
+
        
        
        

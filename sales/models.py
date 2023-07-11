@@ -5,15 +5,7 @@ from customers.models import Client
 from decimal import Decimal
 from expenses.models import Employee
 
-class LastBlue (models.Model):
-    venta = models.DecimalField(
-                max_digits=15, decimal_places=2
-                                 )
-    date_updated = models.DateTimeField(auto_now=True)
-    
-    @property
-    def get_blue(self):
-        return self.venta
+from dashboard.models import LastBlue
 
 last_blue = 0
 try:

@@ -3,15 +3,17 @@ from decimal import Decimal
 
 from django.db import models
 
-from sales.models import LastBlue
+from dashboard.models import LastBlue
 
+
+
+last_blue = 0
 try:
-    last_blue = LastBlue.objects.get(pk=1)
-    blue = last_blue.compra
+    last_blue =  LastBlue.objects.get(pk=1)
+    blue = last_blue.venta
+
 except:
-    blue = 390
-
-
+    blue = 0
 
 
 
