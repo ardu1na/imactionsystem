@@ -1815,26 +1815,31 @@ def index(request):
     
     
         
-
+        
+        
+    #######################################################################################    
+    # ACTUALIZACIÓN DEL DOLAR BLUE
+    # ESTO TIENE QUE IR A UN CRONJOB'
     last_blue = 490
     try:
         last_blue =  LastBlue.objects.get(pk=1)
         blue = last_blue.venta
-    
+    # si aun  no se creo ningún valor de cotización crearlo
     except:
         last_blue = LastBlue.objects.create(
             venta = 490
         )
-
+    # solicitar a la api de dolarhoy para mantener actualizado el valor de la venta
+    # b_venta viene de dashboard.services.py
     try:
         blue = b_venta
         if last_blue.venta != b_venta:
                 last_blue.venta = b_venta
         last_blue.save()
         
-    except:
+    except: # si la api no esta disponible devolver el ultimo valor guardado en la db
         blue = last_blue.venta
-    
+    #############33
     
     
 
