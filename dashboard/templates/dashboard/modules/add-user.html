@@ -16,7 +16,7 @@
           <div class="col-xl-12 col-lg-12">
              <div class="card">
                 <div class="card-header">
-                   <h4 class="card-title">New User Form</h4>
+                   <h4 class="card-title">User Form</h4>
                 </div>
                 <div class="card-body">
                    <div class="basic-form">
@@ -24,8 +24,7 @@
                          {% csrf_token %}
                          <div class="row">
 
-
-                        <div class="row col-md-6">
+                        <div class="row">
                             <div class="mb-3 col-md-6">
                                <label class="form-label">First Name {% if form.first_name.field.required %}<span class="text-danger">*</span> {% endif %}</label>
                                {{ form.first_name|attr:"type:text"|attr:"class:form-control"|attr:"placeholder:First Name" }}
@@ -41,7 +40,7 @@
                                </div>
                             </div>
                             <div class="mb-3 col-md-12">
-                              <label class="form-label">UserName {% if form.username.field.required %}<span class="text-danger">*</span> {% endif %}</label>
+                              <label class="form-label">User Name {% if form.username.field.required %}<span class="text-danger">*</span> {% endif %}</label>
                               {{ form.username|attr:"type:text"|attr:"class:form-control"|attr:"placeholder:username" }}
                               <div class="text-danger w-100 d-block mt-1">
                               {{ form.username.errors }}
@@ -54,33 +53,17 @@
                               {{ form.email.errors }}
                               </div>
                            </div>
-
-
-
                         </div>
-
-
-                        
-
-
-
-
                         
                         <div class="row">
-                              <div class="mb-3 col-md-4 custom-user">
+                              <div class="mb-3 custom-user">
                                  <label class="form-label">Permissions {% if form.groups.field.required %}<span class="text-danger">*</span>{% endif %}</label>
-                                 {{ form.groups|attr:"class:multi-select form-control"|attr:"name:groups[]" }}
+                                 {{ form.groups|attr:"class:multi-select form-control-lg"|attr:"name:groups[]" }}
                                  <div class="text-danger w-100 d-block mt-1">
                                  {{ form.groups.errors }}
                                  </div>
-                              </div>
-                              
-                            
+                              </div>                          
                         </div>
-
-                       
-
-                          
 
                      {% if form.password1 %}
                             <div class="mb-3 col-md-6">
@@ -131,28 +114,6 @@
 
 
 {% block additional_js %}
-
-
-
-
-<script>
-   function readURL(input) {
-
-      if (input.files && input.files[0]) {
-            var reader = new FileReader();
-            reader.onload = function(e) {
-               $('#imagePreview').css('background-image', 'url('+e.target.result +')');
-               $('#imagePreview').hide();
-               $('#imagePreview').fadeIn(650);
-            }
-            reader.readAsDataURL(input.files[0]);
-      }
-   }
-   $("#id_avatar").change(function() {
-      readURL(this);
-   });
-</script> 
-
 
 <script>
    $(".multi-select").select2({
