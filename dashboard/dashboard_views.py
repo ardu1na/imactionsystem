@@ -1884,18 +1884,20 @@ def index(request):
                 actual = Decimal(adj.old_value)
                 con = Decimal(adj.new_value)
                 ajuste = Decimal(adj.dif)
-                send_mail(
-                    subject='Aviso: IMPORTANTE',
-                    message=f'({adj.notice_date} {adj.client.name} {adj.client.admin_email} {services_list}) \n Estimado cliente, \n El motivo de este email es para comunicarte un ajuste por inflación.\n  \n Inversión actual: ${actual} \n Inversión con ajuste: ${con} \n Ajuste: ${ajuste} \n El ajuste se hará en el próximo pago. \n Cualquier duda no dejes de consultarnos. \n Saludos, \n Imactions \n www.imactions.agency',
-                    html_message=email_message,
-                    from_email='systemimactions@gmail.com',
-                    recipient_list=['hola@imactions.com'],
-                    fail_silently=False,
-                )
-                print (f" adjust -- {adj} - {client} -- EMAIL reminder SEND")
-                adj.remind_sent = True
-                adj.save()
-                    
+                try:
+                    send_mail(
+                        subject='Aviso: IMPORTANTE',
+                        message=f'({adj.notice_date} {adj.client.name} {adj.client.admin_email} {services_list}) \n Estimado cliente, \n El motivo de este email es para comunicarte un ajuste por inflación.\n  \n Inversión actual: ${actual} \n Inversión con ajuste: ${con} \n Ajuste: ${ajuste} \n El ajuste se hará en el próximo pago. \n Cualquier duda no dejes de consultarnos. \n Saludos, \n Imactions \n www.imactions.agency',
+                        html_message=email_message,
+                        from_email='systemimactions@gmail.com',
+                        recipient_list=['hola@imactions.com'],
+                        fail_silently=False,
+                    )
+                    print (f" adjust -- {adj} - {client} -- EMAIL reminder SEND")
+                    adj.remind_sent = True
+                    adj.save()
+                except:
+                    print("cant send email you must be in dev")
                     
                     
                     
