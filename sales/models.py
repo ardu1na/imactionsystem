@@ -6,18 +6,19 @@ from decimal import Decimal
 
 
 class LastBlue (models.Model):
-    compra = models.DecimalField(max_digits=15, decimal_places=2
+    venta = models.DecimalField(
+                max_digits=15, decimal_places=2
                                  )
     date_updated = models.DateTimeField(auto_now=True)
     
     @property
     def get_blue(self):
-        return self.compra
+        return self.venta
 
 last_blue = 0
 try:
     last_blue =  LastBlue.objects.get(pk=1)
-    blue = last_blue.compra
+    blue = last_blue.venta
 
 except:
     blue = 0

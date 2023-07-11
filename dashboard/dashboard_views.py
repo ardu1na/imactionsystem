@@ -29,7 +29,7 @@ from expenses.forms import *
 from dashboard.users.models import CustomUser
 from dashboard.utils import *
 try: 
-    from .services import compra as b_compra
+    from .services import venta as b_venta
 except: pass
 
 
@@ -1817,13 +1817,13 @@ def index(request):
     last_blue = LastBlue.objects.get(pk=1) 
     
     try:
-        blue = b_compra
-        if last_blue.compra != b_compra:
-                last_blue.compra = b_compra
+        blue = b_venta
+        if last_blue.venta != b_venta:
+                last_blue.venta = b_venta
         last_blue.save()
             
     except:
-       blue = last_blue.compra
+       blue = last_blue.venta
        
        
        

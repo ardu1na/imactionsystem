@@ -40,7 +40,7 @@
                                </div>
                             </div>
                             <div class="mb-3 col-md-12">
-                              <label class="form-label">User Name {% if form.username.field.required %}<span class="text-danger">*</span> {% endif %}</label>
+                              <label class="form-label">Username {% if form.username.field.required %}<span class="text-danger">*</span> {% endif %}</label>
                               {{ form.username|attr:"type:text"|attr:"class:form-control"|attr:"placeholder:username" }}
                               <div class="text-danger w-100 d-block mt-1">
                               {{ form.username.errors }}
