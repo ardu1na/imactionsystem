@@ -3,7 +3,7 @@ from django.db import models
 from django.contrib import admin
 from customers.models import Client
 from decimal import Decimal
-
+from expenses.models import Employee
 
 class LastBlue (models.Model):
     venta = models.DecimalField(
@@ -192,7 +192,9 @@ class Sale(models.Model):
         (USD, ('USD')))
 
     client = models.ForeignKey(Client, related_name='sales', null=True, blank=True, on_delete=models.CASCADE, verbose_name="ACCOUNT")
-   
+    
+    sales_rep = models.ForeignKey(Employee, related_name='sales', null=True, blank=True, on_delete=models.CASCADE, verbose_name="SALES REP")
+    
     
     kind = models.CharField(max_length=50, choices=KIND_CHOICES, null=True, blank=False, default=None, verbose_name="KIND")
     
