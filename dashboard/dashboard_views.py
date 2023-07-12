@@ -11,7 +11,6 @@ from django.http import HttpResponse, Http404, HttpResponseBadRequest
 from django.contrib.auth.decorators import login_required, permission_required 
 import pickle
 import mimetypes
-from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.core.mail import send_mail
 from django.http import JsonResponse
@@ -813,6 +812,54 @@ def editadj(request, id):
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
 def adjustment(request):
+    
+    # adjust services script from adjustment view
+    print("")
+
+    print("#######################################")
+    print("####################################### ADJUST SERVICES ")
+
+    adj_list = Adj.objects.filter(
+                        adj_done=False,
+                        notice_date__lte=today
+                    )
+    if adj_list:
+        print(f"############################### adjust list:\n {adj_list}")
+        print("##############################################")
+        for adj in adj_list:
+            if adj.type == "Service":
+                service = adj.service
+                print(f"######################################### item found -------- --- - -- - > {adj.type} ######")
+                print(f"{service}")
+                print(f"######################################### old value-- - > {service.total} ######")
+                service.total = adj.new_value
+                
+                service.save() 
+                print(f"######################################### new value-- - > {service.total} ######")
+                adj.adj_done = True
+                adj.save()
+                print(f"###### Adjust {service} done ---- > {adj.adj_done} ######")
+            elif adj.type == "Account":
+                client = adj.client
+                print(f"######################################### item found -------- --- - -- - > {adj.type}: {client} ######")
+                services = client.services.filter(state=True)
+                for service in services:
+                    print(f"{service}")
+                    print(f"######################################### old value-- - > {service.total} ######")
+                    
+                    
+                    service.total = Decimal(service.total + ((adj.adj_percent / 100) * service.total))
+
+                    service.save() 
+                    print(f"######################################### new value-- - > {service.total} ######")
+                adj.adj_done = True
+                adj.save()
+                print(f"###### Adjust {client} done ---- > {adj.adj_done}######")
+        print("")
+        print(f"############################### done with adjustments ")
+        print("############################################################################################")
+    else:
+        print(f"############################### nothing to adjust ")
     
     services = Service.objects.filter(state=True)
     clients = Client.objects.filter(cancelled="Active")
@@ -1911,19 +1958,20 @@ def index(request):
                 actual = Decimal(adj.old_value)
                 con = Decimal(adj.new_value)
                 ajuste = Decimal(adj.dif)
-                
-                send_mail(
-                    subject='Aviso: IMPORTANTE',
-                    message=f'({adj.notice_date} {adj.client.name} {adj.client.admin_email} {adj.service.service}) \n Estimado cliente,  \n  El motivo de este email es para comunicarte un ajuste por inflación.\n Inversión actual: ${actual} \n Inversión con ajuste: ${con} \n Ajuste: ${ajuste} \n El ajuste se hará en el próximo pago. \n Cualquier duda no dejes de consultarnos. \n Saludos, \n Imactions \n www.imactions.agency',
-                    html_message=email_message,
-                    from_email='systemimactions@gmail.com',
-                    recipient_list=['hola@imactions.com'],
-                    fail_silently=False,
-                )
-                print (f" adjust -- {adj} - {service} -- EMAIL reminder SEND")
-                adj.remind_sent = True
-                adj.save()
-
+                try:
+                    send_mail(
+                        subject='Aviso: IMPORTANTE',
+                        message=f'({adj.notice_date} {adj.client.name} {adj.client.admin_email} {adj.service.service}) \n Estimado cliente,  \n  El motivo de este email es para comunicarte un ajuste por inflación.\n Inversión actual: ${actual} \n Inversión con ajuste: ${con} \n Ajuste: ${ajuste} \n El ajuste se hará en el próximo pago. \n Cualquier duda no dejes de consultarnos. \n Saludos, \n Imactions \n www.imactions.agency',
+                        html_message=email_message,
+                        from_email='systemimactions@gmail.com',
+                        recipient_list=['hola@imactions.com'],
+                        fail_silently=False,
+                    )
+                    print (f" adjust -- {adj} - {service} -- EMAIL reminder SEND")
+                    adj.remind_sent = True
+                    adj.save()
+                except:
+                    print("cant send email for adj, you  must be on dev")
 
                 
             elif adj.type == "Account":
