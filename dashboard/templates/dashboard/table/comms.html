@@ -20,20 +20,92 @@
                             <form  method="post">  
                                 {% csrf_token %}
                                 <div class="basic-list-group">
+
                                     <ul class="list-group list-group-flush">
+
                                         <li class="list-group-item d-flex justify-content-between align-items-center my-3 flex-row-reverse">
-                                            <div class="col-lg-9"> {{form.tier_i}}</div><h2 class="me-2">> </h2> <h4 class="me-5"> TIER I :</h4>                                            
+                                            <h2 class="me-2"> %</h2>
+
+                                            <div class="col-lg-3"> {{form.com_rr_1}}</div>
+                                            <h4 class="me-5"> :</h4>                                            
+
+                                            <div class="col-lg-6"> {{form.rr_1}}</div>
+                                            <h4 class="ms-5"> $</h4>                                            
+
+                                            <h2 class="me-2">> </h2> 
+                                            <h4 class="me-4"> SALE RR </h4>                                            
                                         </li>
+
                                         <li class="list-group-item d-flex justify-content-between align-items-center my-3 flex-row-reverse">
-                                            <div class="col-lg-9"> {{form.tier_ii}}</div> <h2 class="me-2"> < </h2> <h4 class="me-5"> TIER II :</h4>    
+                                            <h2 class="me-2"> %</h2>
+
+                                            <div class="col-lg-3"> {{form.com_rr_2}}</div>
+                                            <h4 class="me-5"> :</h4>                                            
+
+                                            <div class="col-lg-6"> {{form.rr_2}}</div>
+                                            <h4 class="ms-5"> $</h4>                                            
+
+                                            <h2 class="me-2">> </h2> 
+                                            <h4 class="me-4"> SALE RR </h4>                                            
                                         </li>
+
+                                        
                                         <li class="list-group-item d-flex justify-content-between align-items-center my-3 flex-row-reverse">
-                                            <div class="col-lg-9"> {{form.tier_iii}} </div> <h2 class="me-2"> < </h2> <h4 class="me-5"> TIER III :</h4>
+                                            <h2 class="me-2"> %</h2>
+
+                                            <div class="col-lg-3"> {{form.com_rr_3}}</div>
+                                            <h4 class="me-5"> :</h4>                                            
+
+                                            <div class="col-lg-6"> {{form.rr_3}}</div>
+                                            <h4 class="ms-5"> $</h4>                                            
+
+                                            <h2 class="me-2">> </h2> 
+                                            <h4 class="me-4"> SALE RR </h4>                                            
                                         </li>
+
+                                        
                                         <li class="list-group-item d-flex justify-content-between align-items-center my-3 flex-row-reverse">
-                                            <div class="col-lg-9"> {{form.tier_iv}}</div><h2 class="me-2"> < </h2> <h4 class="me-5"> TIER IV :</h4>    
+                                            <h2 class="me-2"> %</h2>
+
+                                            <div class="col-lg-3"> {{form.com_rr_4}}</div>
+                                            <h4 class="me-5"> :</h4>                                            
+
+                                            <div class="col-lg-6"> {{form.rr_4}}</div>
+                                            <h4 class="ms-5"> $</h4>                                            
+
+                                            <h2 class="me-2">> </h2> 
+                                            <h4 class="me-4"> SALE RR </h4>                                            
                                         </li>
+
+                                        
+                                        <li class="list-group-item d-flex justify-content-between align-items-center my-3 flex-row-reverse">
+                                            <h2 class="me-2"> %</h2>
+
+                                            <div class="col-lg-3"> {{form.com_rr_5}}</div>
+                                            <h4 class="me-5"> :</h4>                                            
+
+                                            <div class="col-lg-6"> {{form.rr_5}}</div>
+                                            <h4 class="ms-5"> $</h4>                                            
+
+                                            <h2 class="me-2">> </h2> 
+                                            <h4 class="me-4"> SALE RR </h4>                                            
+                                        </li>
+
+
+                                        <li class="list-group-item d-flex justify-content-between align-items-center my-3 flex-row-reverse">
+                                            <h2 class="me-2"> %</h2>
+                                            <div class="col-lg-9"> {{form.up_sell}}</div>
+                                            <h4 class="me-5"> Up Sell:</h4>    
+                                        </li>
+
+                                        <li class="list-group-item d-flex justify-content-between align-items-center my-3 flex-row-reverse">
+                                            <h2 class="me-2"> %</h2>
+                                            <div class="col-lg-9"> {{form.one_off}}</div>
+                                            <h4 class="me-5"> One Off:</h4>    
+                                        </li>
+
                                     </ul>
+
                                 </div>
 
                                 <div class="form-floating my-5 d-flex flex-row m-auto col-md-6">
