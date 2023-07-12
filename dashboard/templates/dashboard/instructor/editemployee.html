@@ -132,7 +132,18 @@
                                     </span> Holidays
                                 </a>
                             </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="tab" href="#comms"  id="comms-tab">
+                                    <span> 
+                                        <i class="fa-solid fa-percent me-2"></i>
+                                    </span> COMMs
+                                </a>
+                            </li>
+                        
                         </ul>
+
+
                         <!-- Tab panes -->
                         <div class="tab-content tabcontent-border">
 
@@ -318,7 +329,18 @@
                             </div>
 
 
+                            <div class="tab-pane fade" id="comms" role="tabpanel">
+                                <div class="pt-4 mb-4">
+
+                                    {% include 'dashboard/instructor/comms.html' %}
+
+
+                                </div>
+                            </div>
+
+
                         </div>
+
                     </div>
                 </div>
             </div>

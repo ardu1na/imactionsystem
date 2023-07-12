@@ -5,7 +5,14 @@ from customers.models import Client
 from decimal import Decimal
 from expenses.models import Employee
 
-from dashboard.models import LastBlue
+from dashboard.models import LastBlue, Comms
+
+
+try:
+    comms = Comms.objects.get(id=1)
+except:
+    comms = Comms.objects.create(              
+                )
 
 last_blue = 0
 try:
@@ -128,6 +135,34 @@ class Adj(models.Model):
 
 
 class Sale(models.Model):
+
+
+    @property
+    def get_comm_per(self):
+            
+        if self.revenue == "OneOff":
+            return comms.one_off
+        elif self.revenue == "RR":    
+            if self.kind == "Upsell":
+                return comms.up_sell
+            elif self.kind == "New Client" or self.kind == "Cross Sell":
+                if self.change >= comms.rr_1 and self.change < comms.rr_2:
+                    return comms.com_rr_1
+                elif self.change >= comms.rr_2 and self.change < comms.rr_3:
+                    return comms.com_rr_2
+                elif self.change >= comms.rr_3 and self.change < comms.rr_4:
+                    return comms.com_rr_3
+                elif self.change >= comms.rr_4 and self.change < comms.rr_5:
+                    return comms.com_rr_4
+                elif self.change >= comms.rr_5:
+                    return comms.com_rr_5
+            
+    @property
+    def get_comm(self):
+        comm = (self.get_comm_per * self.change)/100
+        return comm
+        
+    
 
     UPSELL='Upsell'
     NEW_CLIENT='New Client'

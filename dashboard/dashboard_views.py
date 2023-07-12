@@ -445,6 +445,7 @@ def deleteemployee(request, id):
 def editemployee(request, id):
     # employee detail    
     editemployee = Employee.objects.get(id=id)
+    comms = Comms.objects.get(id=1)
     holidays = Holiday.objects.filter(employee=editemployee)
     salaries = Salary.objects.filter(employee=editemployee)
             
@@ -455,6 +456,7 @@ def editemployee(request, id):
         holydayform = HolidayEmployeeForm()
         raice = RaiceForm()
         context = {
+            'comms': comms,
             'raice': raice,
             'holidayform'  : holydayform,
             'editform': editform,

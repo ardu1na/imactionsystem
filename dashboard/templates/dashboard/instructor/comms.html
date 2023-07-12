@@ -1,0 +1,44 @@
+{% load static %}
+{% if editemployee.sales %}
+        
+                        <div class="mt-4">
+                            <div class="table-responsive">
+                                <table id="example5" class="display mb-4" style="min-width: 845px">
+                                    <thead>
+                                        <tr>
+                                            
+                                            <th>DATE</th>
+                                            <th>CLIENT</th>
+                                            <th>KIND</th>
+                                            <th>SALE</th>
+                                            <th>%</th>
+                                            <th>COMM</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for i in editemployee.sales.all %}
+                                        <tr>
+    
+                                            <td>{{i.date|date:"d/m/Y"}}</td>
+                                            
+                                            
+                                            <td>{{i.client}}</td>
+                                            
+                                            <td>{{i.kind}}</td>
+    
+    
+                                            <td>{{i.service}} ${{i.change|floatformat:2}}</td>
+    
+                                            <td>{{i.get_comm_per|floatformat:1}}%</td>
+
+                                            <td>${{i.get_comm|floatformat:2}}</td>
+
+                                        </tr>
+                                        {% endfor %}
+                                       
+                                    </tbody>
+                                </table>
+                            </div>
+                                
+                        </div>
+                        {%endif%}
