@@ -13,7 +13,8 @@ urlpatterns = [
     
     path('conf/',dashboard_views.conf, name="conf"),
     path('setting/',dashboard_views.setting, name="setting"),
-
+    path('comms/',dashboard_views.comms, name="comms"),
+    
 
     path('employees/',dashboard_views.employees, name="employees"),
     path('employees/old/', dashboard_views.employeesold, name="old"),

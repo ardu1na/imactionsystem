@@ -255,7 +255,7 @@
                                                     {% endif %}
                                                 </div>
                                                 <td>{{sale.date|date:"d/m/Y"}}</td>
-                                                <td>{{sale.comments|default_if_none:"-"|truncatechars:25}}</td>                                    
+                                                <td>{{sale.sales_rep|default_if_none:"-"}}</td>                                    
                                                 <td>
                                                     <div class="d-flex flex-row">
                                                             <!-- delete BUTTON -->

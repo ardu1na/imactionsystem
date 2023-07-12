@@ -31,7 +31,7 @@ from dashboard.utils import *
 try: 
     from .services import venta as b_venta
 except: pass
-
+from dashboard.forms import CommsForm
 
 from django.http import HttpResponse
     
@@ -50,7 +50,7 @@ from django.contrib.auth.decorators import user_passes_test
 today = date.today()
 
 
-
+from dashboard.models import Comms
 
 
 
@@ -138,6 +138,37 @@ def conf(request):
                 f"Ups! Something went wrong. You should go back, update the page and try again. \n \n {form.errors}")
         
         
+
+@user_passes_test(lambda user: user.groups.filter(name='admin').exists())
+@login_required(login_url='dashboard:login')
+def comms(request):
+    
+    # ajuste de parámetros de valor de las comisiones x venta  
+    comms = Comms.objects.get(id=1)
+
+    if request.method == "GET":
+
+        form = CommsForm(instance=comms)
+        
+        context = {
+            "page_title": "CHANGE COMMS PARAMETERS",
+            'form': form,
+            'id': id
+            }
+        return render (request, 'dashboard/table/comms.html', context)
+
+    if request.method == 'POST':
+        form = CommsForm(request.POST, instance=comms)
+        print(form.errors)
+        if form.is_valid():
+            comms = form.save()
+                      
+            return redirect(reverse('dashboard:index')+ "?changed")
+        else:
+            return HttpResponse(
+                f"Ups! Something went wrong. You should go back, update the page and try again. \n \n {form.errors}")
+
+
 
 ##############################################################################################################################################################
 

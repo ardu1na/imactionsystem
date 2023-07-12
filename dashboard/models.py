@@ -10,7 +10,49 @@ class LastBlue (models.Model):
     @property
     def get_blue(self):
         return self.venta
+    
+    
+    
+    
+    
+    
+class Comms (models.Model):
+    
+    com_rr_1 = models.DecimalField(
+                max_digits=15, decimal_places=2
+                                 )
+    rr_1 = models.IntegerField()
 
+    com_rr_2 = models.DecimalField(
+                max_digits=15, decimal_places=2
+                                 )
+    rr_2 = models.IntegerField()
+    
+    
+    com_rr_3 = models.DecimalField(
+                max_digits=15, decimal_places=2
+                                 )
+    rr_3 = models.IntegerField()
+    com_rr_4 = models.DecimalField(
+                max_digits=15, decimal_places=2
+                                 )
+    rr_4 = models.IntegerField()
+    com_rr_5 = models.DecimalField(
+                max_digits=15, decimal_places=2
+                                 )
+    rr_5 = models.IntegerField()
+    
+    up_sell = models.DecimalField(
+                max_digits=15, decimal_places=2
+                                 )
+    one_off = models.DecimalField(
+                max_digits=15, decimal_places=2
+                                 )
+    
+    def __str__ (self):
+        return "COMMS config"
+    
+    
 
 class Configurations(models.Model):
     INPUT_TYPE_CHOICES = (

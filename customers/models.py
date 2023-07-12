@@ -1,6 +1,5 @@
 from datetime import date
 from django.db import models
-from django.contrib import admin
 
 
 class BackUps(models.Model):
