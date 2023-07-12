@@ -139,13 +139,15 @@ class Sale(models.Model):
 
     @property
     def get_comm_per(self):
-            
+            ## obtener el porcentaje de comisiones por venta para los empleados vendedores
         if self.revenue == "OneOff":
             return comms.one_off
         elif self.revenue == "RR":    
             if self.kind == "Upsell":
                 return comms.up_sell
             elif self.kind == "New Client" or self.kind == "Cross Sell":
+                # el porcentaje de comisión de las ventas rr q no son upsell varian según parámetros configurados x el usuario
+                # se obtienen de dashboard.comms pk=1
                 if self.change >= comms.rr_1 and self.change < comms.rr_2:
                     return comms.com_rr_1
                 elif self.change >= comms.rr_2 and self.change < comms.rr_3:
@@ -159,6 +161,7 @@ class Sale(models.Model):
             
     @property
     def get_comm(self):
+        #obtener el valor de la comisión según el precio de la venta y el prcjje
         comm = (self.get_comm_per * self.change)/100
         return comm
         

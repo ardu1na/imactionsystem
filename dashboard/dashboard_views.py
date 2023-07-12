@@ -445,10 +445,17 @@ def deleteemployee(request, id):
 def editemployee(request, id):
     # employee detail    
     editemployee = Employee.objects.get(id=id)
-    comms = Comms.objects.get(id=1)
     holidays = Holiday.objects.filter(employee=editemployee)
     salaries = Salary.objects.filter(employee=editemployee)
-            
+    
+    # get employees comms of current month
+    # 
+    comms_this_m = 0
+    for sale in editemployee.sales.filter(date__month=today.month, date__year=today.year):
+        comms_this_m += sale.get_comm
+        
+        
+        
     if request.method == "GET":      
         editform = EditEmployeeForm(instance=editemployee)
         wage_instance = Salary.objects.filter(employee=editemployee).first()
@@ -456,7 +463,7 @@ def editemployee(request, id):
         holydayform = HolidayEmployeeForm()
         raice = RaiceForm()
         context = {
-            'comms': comms,
+            'comms_this_m': comms_this_m,
             'raice': raice,
             'holidayform'  : holydayform,
             'editform': editform,
@@ -799,8 +806,7 @@ def editadj(request, id):
             instance.save()
             return redirect('dashboard:adjustment')
         else: 
-            print(adjform.errors)
-            return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
+            return HttpResponse(f"Ups! Something went wrong. You should go back, update the page and try again. \n \n {adjform.errors}")
         
         
 

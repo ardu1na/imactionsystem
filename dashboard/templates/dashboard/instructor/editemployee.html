@@ -99,6 +99,8 @@
         <div class="page-titles">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{% url 'dashboard:employees' %}">Employees</a></li>
+                <li class="breadcrumb-item"><a>{{editemployee.rol}}</a></li>
+
                 <li class="breadcrumb-item active"><a href="javascript:void(0)">{{editemployee.name}}</a></li>
             </ol>
         </div>
@@ -133,6 +135,8 @@
                                 </a>
                             </li>
 
+                            {% if editemployee.rol == "Sales" %}
+
                             <li class="nav-item">
                                 <a class="nav-link" data-bs-toggle="tab" href="#comms"  id="comms-tab">
                                     <span> 
@@ -140,6 +144,7 @@
                                     </span> COMMs
                                 </a>
                             </li>
+                            {% endif %}
                         
                         </ul>
 
@@ -327,6 +332,7 @@
                                 </div>
                                 {% include 'dashboard/instructor/salaries.html' %}
                             </div>
+                            {% if editemployee.rol == "Sales" %}
 
 
                             <div class="tab-pane fade" id="comms" role="tabpanel">
@@ -337,7 +343,7 @@
 
                                 </div>
                             </div>
-
+                            {% endif %}
 
                         </div>
 
@@ -366,7 +372,9 @@
 
 {% block additional_js %}
 
-    
+                            
+  
+
 
 <script>
    
