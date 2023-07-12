@@ -1,14 +1,13 @@
-from django.forms import ModelForm, CheckboxInput,\
-TextInput, Select, ModelChoiceField, Textarea, HiddenInput, IntegerField
-from django import forms
+from django.forms import ModelForm, Select, CharField, \
+TextInput, ModelChoiceField, Textarea, HiddenInput, IntegerField
 
 from sales.models import Sale, Service, Adj 
 from customers.models import Client
-
+from expenses.models import Employee
     
 class AdjForm(ModelForm):
-    client = forms.CharField(
-        widget=forms.TextInput(attrs={
+    client = CharField(
+        widget=TextInput(attrs={
             'class': 'form-control wide mb-3',
             'placeholder': 'type client name...',
             'id': 'client',
@@ -86,7 +85,12 @@ class SaleForm(ModelForm):
             'placeholder':"client",}), empty_label = ' - ')
 
     
+    
+    sales_rep = ModelChoiceField(queryset=Employee.objects.filter(rol="Sales"), widget=Select(attrs={'class':"default-select form-control wide mb-3",
+            'id':"sales_rep",
+            'placeholder':"Sales Rep",}), empty_label = ' - ')
 
+    
     class Meta:
         model = Sale
         
@@ -154,7 +158,13 @@ class SaleForm(ModelForm):
 
 
 class SaleForm2(ModelForm):
-        
+    
+    
+    
+    sales_rep = ModelChoiceField(queryset=Employee.objects.filter(rol="Sales"), widget=Select(attrs={'class':"default-select form-control wide mb-3",
+            'id':"sales_rep",
+            'placeholder':"Sales Rep",}), empty_label = ' - ')
+    
 
     class Meta:
         model = Sale
@@ -222,6 +232,11 @@ class SaleForm2(ModelForm):
 
 class ClientSaleForm(ModelForm):
     
+    
+    
+    sales_rep = ModelChoiceField(queryset=Employee.objects.filter(rol="Sales"), widget=Select(attrs={'class':"default-select form-control wide mb-3",
+            'id':"sales_rep",
+            'placeholder':"Sales Rep",}), empty_label = ' - ')
     
     
     
@@ -334,6 +349,12 @@ class CancellService(ModelForm):
 
 class EditSaleForm(ModelForm):
     
+    
+    
+    sales_rep = ModelChoiceField(queryset=Employee.objects.filter(rol="Sales"), widget=Select(attrs={'class':"default-select form-control wide mb-3",
+            'id':"sales_rep",
+            'placeholder':"Sales Rep",}), empty_label = ' - ')
+
         
     class Meta:
         model = Sale
