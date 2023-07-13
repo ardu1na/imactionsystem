@@ -6,7 +6,7 @@ from django.db import models
 from dashboard.models import LastBlue
 
 
-
+today = date.today()
 last_blue = 0
 try:
     last_blue =  LastBlue.objects.get(pk=1)
@@ -95,13 +95,19 @@ class Employee(models.Model):
     
     
     def get_salary (self):
-        if self.rol == "CEO":
-            wages  = Salary.objects.filter(employee=self.pk).first()
-        else: 
-            wages  = Salary.objects.filter(employee=self.pk).latest() 
+        try:
+            wages  = Salary.objects.get(employee=self.pk, period__month=today.month, period__year=today.year)
 
-        s = wages.salary 
-        return s
+            return wages.salary
+        except: 
+            try:
+                wages  = Salary.objects.filter(employee=self.pk).first()
+                return wages.salary
+            except:
+                return 0
+        
+            
+
     
     def get_nigga_per(self):
         ni = Salary.objects.filter(employee=self.pk).latest() 
