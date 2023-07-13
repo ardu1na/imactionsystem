@@ -29,6 +29,8 @@
                                     </thead>
                                     <tbody>
                                         {% for i in editemployee.sales.all %}
+                                        {% if i.change >= 80000 %}
+                                        
                                         <tr>
     
                                             <td>{{i.date|date:"d/m/Y"}}</td>
@@ -41,11 +43,12 @@
     
                                             <td>{{i.service}} ${{i.change|floatformat:2}}</td>
     
-                                            <td>{{i.get_comm_per|floatformat:1}} %</td>
+                                            <td>{{i.get_comm_per|floatformat:1|default:0}} %</td>
 
                                             <td>${{i.get_comm|floatformat:2}}</td>
 
                                         </tr>
+                                        {% endif %}
                                         {% endfor %}
                                        
                                     </tbody>

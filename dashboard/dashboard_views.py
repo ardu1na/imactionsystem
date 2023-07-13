@@ -418,7 +418,7 @@ def employees(request):
 
 
 # listado de empleados antiguos
-@user_passes_test(lambda user: user.groups.filter(name='employees').exists())
+@user_passes_test(lambda user: user.groups.filter(name='admin').exists())
 @login_required(login_url='dashboard:login')
 def employeesold(request):
     old =Employee.objects.filter(active="No")                                
@@ -429,7 +429,7 @@ def employeesold(request):
 
 
 # eliminar un empleado
-@user_passes_test(lambda user: user.groups.filter(name='employees').exists())
+@user_passes_test(lambda user: user.groups.filter(name='admin').exists())
 @login_required(login_url='dashboard:login')
 def deleteemployee(request, id):
     employee = Employee.objects.get(id=id)
@@ -559,7 +559,7 @@ def editholiday(request, id):
 
 
 # borrar una vacación
-@user_passes_test(lambda user: user.groups.filter(name='employees').exists())
+@user_passes_test(lambda user: user.groups.filter(name='admin').exists())
 @login_required(login_url='dashboard:login')
 def deleteholiday(request, id):
     holiday = Holiday.objects.get(id=id)
