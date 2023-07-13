@@ -45,7 +45,7 @@ class Salary (models.Model):
     
     
     class Meta:
-        get_latest_by = ['period']
+        get_latest_by = ['-period']
         ordering = ['-period']
 
         
@@ -95,7 +95,10 @@ class Employee(models.Model):
     
     
     def get_salary (self):
-        wages  = Salary.objects.filter(employee=self.pk).latest() 
+        if self.rol == "CEO":
+            wages  = Salary.objects.filter(employee=self.pk).first()
+        else: 
+            wages  = Salary.objects.filter(employee=self.pk).latest() 
 
         s = wages.salary 
         return s
@@ -126,34 +129,34 @@ class Employee(models.Model):
     
     
     def get_paypal (self):
-        wages  = Salary.objects.filter(employee=self.pk).latest() 
+        wages  = Salary.objects.filter(employee=self.pk).first() 
 
         p_c = wages.paypal*Decimal(blue)
         return p_c
     
     def get_mp(self):
-        wages  = Salary.objects.filter(employee=self.pk).latest() 
+        wages  = Salary.objects.filter(employee=self.pk).first() 
         i = wages.mp
         return i 
     
     def get_atm(self):
-        wages  = Salary.objects.filter(employee=self.pk).latest() 
+        wages  = Salary.objects.filter(employee=self.pk).first() 
         i = wages.atm_cash
         return i 
     
     def get_tc(self):
-        wages  = Salary.objects.filter(employee=self.pk).latest() 
+        wages  = Salary.objects.filter(employee=self.pk).first() 
         i = wages.tc
         return i 
     
     
     def get_cash(self):
-        wages  = Salary.objects.filter(employee=self.pk).latest() 
+        wages  = Salary.objects.filter(employee=self.pk).first() 
         i = wages.cash
         return i 
     
     def get_cash_usd (self):
-        wages  = Salary.objects.filter(employee=self.pk).latest() 
+        wages  = Salary.objects.filter(employee=self.pk).first() 
 
         c = wages.cash_usd*Decimal(blue)
         return c
@@ -164,17 +167,19 @@ class Employee(models.Model):
         return total
     
     def get_total_ceo (self):
-        wages  = Salary.objects.filter(employee=self.pk).latest() 
+        wages  = Salary.objects.filter(employee=self.pk).first() 
 
         total = wages.salary + wages.mp + wages.atm_cash + wages.cash + wages.tc + self.get_paypal() + self.get_cash_usd()
         return total
     
     def get_aguinaldo_mensual (self):
-        wages  = Salary.objects.filter(employee=self.pk).latest() 
+        
 
         if self.rol == "CEO":
+            wages  = Salary.objects.filter(employee=self.pk).first() 
             month = wages.salary/12
         else:
+            wages  = Salary.objects.filter(employee=self.pk).latest() 
             month = self.get_total()/12
         return month
     

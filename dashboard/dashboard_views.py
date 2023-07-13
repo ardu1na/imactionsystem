@@ -447,12 +447,10 @@ def editemployee(request, id):
     holidays = Holiday.objects.filter(employee=editemployee)
     salaries = Salary.objects.filter(employee=editemployee)
     
-    # get employees comms of current month
-    # 
+    # if rol == seller get employees comms of current month
     comms_this_m = 0
     for sale in editemployee.sales.filter(date__month=today.month, date__year=today.year):
         comms_this_m += sale.get_comm
-        
         
         
     if request.method == "GET":      
@@ -619,11 +617,14 @@ def deleteceo(request, id):
 def editceo(request, id):   
     editemployee = Employee.objects.get(id=id)
     holidays = Holiday.objects.filter(employee=editemployee)
-    salaries = Salary.objects.filter(employee=editemployee).order_by('-period')
+    salaries = Salary.objects.filter(employee=editemployee)
+    
     if request.method == "GET":       
         editform = EditEmployeeForm(instance=editemployee)
-        wage_instance = Salary.objects.filter(employee=editemployee).last()
+        
+        wage_instance = Salary.objects.filter(employee=editemployee).first()
         editwageform = EditWageCeo(instance=wage_instance) if wage_instance else EditWageCeo()
+        
         holydayform = HolidayEmployeeForm()
         context = {
             'holidayform'  : holydayform,
@@ -660,7 +661,7 @@ def editceo(request, id):
                     f"Ups! Something went wrong. You should go back, update the page and try again. \n\n {holydayform.errors}")
         # editar salario        
         if "editwage" in request.POST:
-            wage_instance = Salary.objects.filter(employee=editemployee).last()
+            wage_instance = Salary.objects.filter(employee=editemployee).first()
             editwageform = EditWageCeo(request.POST, instance=wage_instance) if wage_instance else EditWageCeo(request.POST)
             if editwageform.is_valid():
                 wage = editwageform.save(commit=False)
