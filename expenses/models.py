@@ -221,7 +221,7 @@ class Holiday (models.Model):
     
     month = models.CharField(choices=MONTH_CHOICES, max_length=150, null=True, blank= False, default=None, verbose_name="MONTH")
     
-    days = models.SmallIntegerField(verbose_name="DAYS", null=True, blank= True)
+    days = models.SmallIntegerField(verbose_name="WORKING DAYS", null=True, blank= True)
     date_start = models.DateField(null=True, blank= True)
     date_end = models.DateField(null=True, blank= True)
     
