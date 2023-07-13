@@ -144,10 +144,10 @@ class Sale(models.Model):
             ## obtener el porcentaje de comisiones por venta para los empleados vendedores
             if self.revenue == "OneOff":
                 return comms.one_off
-            elif self.revenue == "RR":    
+            else:    
                 if self.kind == "Upsell":
                     return comms.up_sell
-                elif self.kind == "New Client" or self.kind == "Cross Sell":
+                else:
                     # el porcentaje de comisión de las ventas rr q no son upsell varian según parámetros configurados x el usuario
                     # se obtienen de dashboard.comms pk=1
                     if self.change >= comms.rr_1 and self.change < comms.rr_2:
@@ -176,10 +176,12 @@ class Sale(models.Model):
     UPSELL='Upsell'
     NEW_CLIENT='New Client'
     CROSSSELL = 'Cross Sell'
+    NEW = ' - '
     KIND_CHOICES = (
         (UPSELL, ('Upsell')),
         (NEW_CLIENT, ('New Client')),
-        (CROSSSELL, ('Cross Sell')))
+        (CROSSSELL, ('Cross Sell')),
+        (NEW, (' - ')))
 
     P = "P"
     FCD = "FCD"

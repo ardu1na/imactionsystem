@@ -21,8 +21,9 @@
                                             
                                             <th>DATE</th>
                                             <th>CLIENT</th>
-                                            <th>KIND</th>
                                             <th>SALE</th>
+                                            <th>KIND</th>
+
                                             <th>%</th>
                                             <th>COMM</th>
                                         </tr>
@@ -36,12 +37,14 @@
                                             <td>{{i.date|date:"d/m/Y"}}</td>
                                             
                                             
-                                            <td>{{i.client}}</td>
+                                            <td><a href="{% url 'dashboard:editclient' id=i.client.id %}"> {{i.client}}</a></td>
                                             
-                                            <td>{{i.kind}}</td>
+                                           
     
     
-                                            <td>{{i.service}} ${{i.change|floatformat:2}}</td>
+                                            <td><a href="{% url 'dashboard:editsale' id=i.id %}">{{i.service}} ${{i.change|floatformat:2}}</a></td>
+
+                                            <td>{% if i.revenue == "OneOff" %} OneOff {% else %} {% if i.kind == " - " %} New Client  {% else %}{{i.kind}} {% endif %} {% endif %}</td>
     
                                             <td>{{i.get_comm_per|floatformat:1|default:0}} %</td>
 
