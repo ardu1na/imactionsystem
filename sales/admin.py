@@ -3,10 +3,9 @@ from django.contrib import admin
 
 from import_export.admin import ImportExportModelAdmin
 
-from unfold.admin import ModelAdmin
-from sales.models import Sale, LastBlue, Service, Adj
+from sales.models import Sale, Service, Adj
 
-from dashboard.resources import *
+from dashboard.resources import ServiceResource, SaleResource, AdjResource
 
 
 
@@ -23,7 +22,6 @@ class SaleAdmin(ImportExportModelAdmin):
     resource_class = SaleResource
 admin.site.register(Sale, SaleAdmin)
 
-admin.site.register(LastBlue)
 
 class AdjAdmin(ImportExportModelAdmin):
     resource_class = AdjResource

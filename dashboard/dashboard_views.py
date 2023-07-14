@@ -1641,176 +1641,41 @@ def download_config(request):
 
 @login_required(login_url='dashboard:login')
 def index(request):
-    
-    
-    
-    ###############
-    # birthdays
-    bds = []
-    employees = Employee.objects.filter(active="Yes")
-    for e in employees:
-        try:
-            if today.month == e.dob.month and today.day == e.dob.day:
-                bds.append(e)
-        except:
-            pass
     #######################################################################################
-    # card activity
-    ct = ContentType.objects.get_for_model(LastBlue)
-    ct2 = ContentType.objects.get_for_model(CustomUser)
-
-    events = CRUDEvent.objects.exclude(content_type=ct).exclude(content_type=ct2)
-    
-    
-    last_act = events[:7]
-
+    ########### PROCESOS EN SEGUNDO PLANO PARA CRONJOBS
     
     
     
-    #######################################################################################
-    # RR CLIENTS --- $
-    rr_t_clients = 0
-    rr_q_clients_list = []
-
-    clients = Client.objects.filter(cancelled="Active")
-    for client in clients:
-        if client.total_rr > 0 and client not in rr_q_clients_list:
-            rr_q_clients_list.append(client)
-        services = client.services.filter(state=True)
-        for service in services:
-            rr_t_clients += service.total
-    
-    rr_q_clients = len(rr_q_clients_list)
-    
-    
-    #######################################################################################
-    # BALANCE --- $
-    outcome = 0
-    expenses = Expense.objects.filter(date__month=today.month, date__year=today.year)
-    salaries = Salary.objects.filter(period__month=today.month, period__year=today.year)
-    for salary in salaries:
-        if salary.employee.rol != "CEO":
-            outcome +=  salary.employee.get_total()
-        else:
-            outcome += salary.employee.get_total_ceo()
-    for e in expenses:
-        if e.change > 0:
-            outcome += e.change
-        else:
-            outcome += e.value
-    balance = rr_t_clients - outcome
-
-    #######################################################################################
-
-    #######################################################################################
-
-    # SALES RR THIS MONTH --- $
-    # SALES 1OFF THIS MONTH --- $
-    this_month = today.month
-    month = date(1900, this_month, 1).strftime('%B')
-    rr_s_thism = 0
-    oneoff_s_thism = 0
-    sales_this_m = Sale.objects.filter(date__month=today.month, date__year=today.year)
-    if sales_this_m:
-        for sale in sales_this_m:
-            if sale.revenue == "RR":
-                rr_s_thism += sale.change
-            else:
-                oneoff_s_thism += sale.change
-    #######################################################################################
-
-    # CANCELL THIS MONTH --- Q
-    clients_cancelled = Client.objects.filter(cancelled="Cancelled")
-    sales_cancelled = Service.objects.filter(state=False)
-    sales_c_this_m = sales_cancelled.filter(date_can__month=today.month, date_can__year=today.year, client__cancelled="Active")
-    clients_c_this_m = clients_cancelled.filter(date_can__month=today.month, date_can__year=today.year)
-    cancellations = []
-    for sale in sales_c_this_m:
-        cancellations.append(sale)
-    for client in clients_c_this_m:
-        cancellations.append(client)
-    cancell_q = len(cancellations)
-       
-       
-    #######################################################################################
-    clients = Client.objects.filter(cancelled="Active")
-    
-    clients_rr = []
-    for client in clients:
-        if client.get_rr_client == True:
-            clients_rr.append(client)
-    c_rr_total = len(clients_rr)
-    
-    #  % clients by service    -  pie chart data
-               
-    seo_clients = Service.objects.filter(service="SEO", state=True).count()
-    gads_clients = Service.objects.filter(service="Google Ads", state=True).count()
-    fads_clients = Service.objects.filter(service="Facebook Ads", state=True).count()
-    lkdn_clients = Service.objects.filter(service="LinkedIn", state=True).count()
-    wp_clients = Service.objects.filter(service="Web Plan", state=True).count()
-    combo_clients = Service.objects.filter(service="Combo", state=True).count()
-    cm_clients = Service.objects.filter(service="Community Management", state=True).count()
-    emk_clients = Service.objects.filter(service="Email Marketing", state=True).count()
-    other_clients = Service.objects.filter(service="Others RR", state=True).count() 
-    
-    s_c = 0
-    g_c = 0
-    f_c = 0
-    l_c = 0
-    w_c = 0
-    co_c = 0
-    cm_c = 0
-    e_c = 0             
-    o_c = 0   
-    
-    try:
-        s_c = (seo_clients*100)/c_rr_total
-        g_c = (gads_clients*100)/c_rr_total
-        f_c = (fads_clients*100)/c_rr_total
-        l_c = (lkdn_clients*100)/c_rr_total
-        w_c = (wp_clients*100)/c_rr_total
-        co_c = (combo_clients*100)/c_rr_total
-        cm_c = (cm_clients*100)/c_rr_total
-        e_c = (emk_clients*100)/c_rr_total
-        o_c = (other_clients*100)/c_rr_total
-
-    except:
-        pass
-    
-    #######################################################################################
-
+    #############          B A C K U P S        #####################
     try :
         last_backup = BackUps.objects.get(id=1)
         if last_backup.date.month != today.month:
             print("doing back up")
+            
+            
             export_sales()
             export_clients()
             export_employees()
             export_expenses()
             export_holidays()
+            
             last_backup.date = today
             last_backup.save()
         else:
             print("don't need to back up, allready updated")
-    except: last_backup = BackUps.objects.create(id=1)
-    
+    except: last_backup = BackUps.objects.create(id=1)    
     
     try:
         auto  = AutoRevenue.objects.get(pk=1)
-        
-        
+                
     except:
         auto = AutoRevenue.objects.create(
                 pk=1,
                 date=today,
                 sales=True,
                 wages=True,
-                expenses=True,              
-                    
-            )        
-        
-        
-        
+                expenses=True,                                 
+            )            
         
     if auto.date.month != today.month:
         auto.date=today
@@ -1852,63 +1717,6 @@ def index(request):
                 currency=expense.currency,
                 wop=expense.wop,
             )
-                
-    ####################################################################
-    ####################################################################
-    #######################                 GET CLIENTS RR    ##########
-
-    clients = Client.objects.filter(cancelled="Active")
-    
-    clients_rr = []
-    for client in clients:
-        if client.get_rr_client == True:
-            clients_rr.append(client)
-    c_rr_total = len(clients_rr)
-
-    
-    ####################################################################
-    ###############################################
-    ############### CLIENTS BY TIER PieCHART
-        
-    n_clients = len(clients_rr)
-    i = 0
-    ii = 0
-    iii = 0
-    iv = 0
-    for client in clients_rr:
-        if client.tier == "I":
-            i += 1
-        elif client.tier == "II":
-            ii += 1
-        elif client.tier == "III":
-            iii += 1
-        elif client.tier == "IV":
-            iv += 1
-    t_i = 0
-    t_ii = 0
-    t_iii = 0
-    t_iv = 0
-    try:
-        t_i = (i*100)/n_clients
-        t_ii = (ii*100)/n_clients
-        t_iii = (iii*100)/n_clients
-        t_iv = (iv*100)/n_clients
-    except:
-        pass
-    
-
-####################################################################
-    total_rr = 0
-
-    for client in clients:
-        if client.cancelled == "Active":
-            for sale in client.services.filter(state=True):
-                total_rr += sale.total
-            
-    
-    
-        
-        
         
     #######################################################################################    
     # ACTUALIZACIÓN DEL DOLAR BLUE
@@ -2074,8 +1882,199 @@ def index(request):
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    ###############
+    # birthdays
+    bds = []
+    employees = Employee.objects.filter(active="Yes")
+    for e in employees:
+        try:
+            if today.month == e.dob.month and today.day == e.dob.day:
+                bds.append(e)
+        except:
+            pass
+    #######################################################################################
+    # card activity
+    ct = ContentType.objects.get_for_model(LastBlue)
+    ct2 = ContentType.objects.get_for_model(CustomUser)
 
-    ##############################################
+    events = CRUDEvent.objects.exclude(content_type=ct).exclude(content_type=ct2)
+    
+    
+    last_act = events[:7]   
+    
+    #######################################################################################
+    # RR CLIENTS --- $
+    rr_t_clients = 0
+    rr_q_clients_list = []
+
+    clients = Client.objects.filter(cancelled="Active")
+    for client in clients:
+        if client.total_rr > 0 and client not in rr_q_clients_list:
+            rr_q_clients_list.append(client)
+        services = client.services.filter(state=True)
+        for service in services:
+            rr_t_clients += service.total
+    
+    rr_q_clients = len(rr_q_clients_list)
+    
+    
+    #######################################################################################
+    # BALANCE --- $
+    outcome = 0
+    expenses = Expense.objects.filter(date__month=today.month, date__year=today.year)
+    salaries = Salary.objects.filter(period__month=today.month, period__year=today.year)
+    for salary in salaries:
+        if salary.employee.rol != "CEO":
+            outcome +=  salary.employee.get_total()
+        else:
+            outcome += salary.employee.get_total_ceo()
+    for e in expenses:
+        if e.change > 0:
+            outcome += e.change
+        else:
+            outcome += e.value
+    balance = rr_t_clients - outcome
+
+    #######################################################################################
+
+    #######################################################################################
+
+    # SALES RR THIS MONTH --- $
+    # SALES 1OFF THIS MONTH --- $
+    this_month = today.month
+    month = date(1900, this_month, 1).strftime('%B')
+    rr_s_thism = 0
+    oneoff_s_thism = 0
+    sales_this_m = Sale.objects.filter(date__month=today.month, date__year=today.year)
+    if sales_this_m:
+        for sale in sales_this_m:
+            if sale.revenue == "RR":
+                rr_s_thism += sale.change
+            else:
+                oneoff_s_thism += sale.change
+    #######################################################################################
+
+    # CANCELL THIS MONTH --- Q
+    clients_cancelled = Client.objects.filter(cancelled="Cancelled")
+    sales_cancelled = Service.objects.filter(state=False)
+    sales_c_this_m = sales_cancelled.filter(date_can__month=today.month, date_can__year=today.year, client__cancelled="Active")
+    clients_c_this_m = clients_cancelled.filter(date_can__month=today.month, date_can__year=today.year)
+    cancellations = []
+    for sale in sales_c_this_m:
+        cancellations.append(sale)
+    for client in clients_c_this_m:
+        cancellations.append(client)
+    cancell_q = len(cancellations)
+       
+       
+    #######################################################################################
+    clients = Client.objects.filter(cancelled="Active")
+    
+    clients_rr = []
+    for client in clients:
+        if client.get_rr_client == True:
+            clients_rr.append(client)
+    c_rr_total = len(clients_rr)
+    
+    #  % clients by service    -  pie chart data
+               
+    seo_clients = Service.objects.filter(service="SEO", state=True).count()
+    gads_clients = Service.objects.filter(service="Google Ads", state=True).count()
+    fads_clients = Service.objects.filter(service="Facebook Ads", state=True).count()
+    lkdn_clients = Service.objects.filter(service="LinkedIn", state=True).count()
+    wp_clients = Service.objects.filter(service="Web Plan", state=True).count()
+    combo_clients = Service.objects.filter(service="Combo", state=True).count()
+    cm_clients = Service.objects.filter(service="Community Management", state=True).count()
+    emk_clients = Service.objects.filter(service="Email Marketing", state=True).count()
+    other_clients = Service.objects.filter(service="Others RR", state=True).count() 
+    
+    s_c = 0
+    g_c = 0
+    f_c = 0
+    l_c = 0
+    w_c = 0
+    co_c = 0
+    cm_c = 0
+    e_c = 0             
+    o_c = 0   
+    
+    try:
+        s_c = (seo_clients*100)/c_rr_total
+        g_c = (gads_clients*100)/c_rr_total
+        f_c = (fads_clients*100)/c_rr_total
+        l_c = (lkdn_clients*100)/c_rr_total
+        w_c = (wp_clients*100)/c_rr_total
+        co_c = (combo_clients*100)/c_rr_total
+        cm_c = (cm_clients*100)/c_rr_total
+        e_c = (emk_clients*100)/c_rr_total
+        o_c = (other_clients*100)/c_rr_total
+
+    except:
+        pass
+    
+    ####################################################################
+    #######################                 GET CLIENTS RR    ##########
+
+    clients = Client.objects.filter(cancelled="Active")
+    
+    clients_rr = []
+    for client in clients:
+        if client.get_rr_client == True:
+            clients_rr.append(client)
+    c_rr_total = len(clients_rr)
+
+    
+    ####################################################################
+    ###############################################
+    ############### CLIENTS BY TIER PieCHART
+        
+    n_clients = len(clients_rr)
+    i = 0
+    ii = 0
+    iii = 0
+    iv = 0
+    for client in clients_rr:
+        if client.tier == "I":
+            i += 1
+        elif client.tier == "II":
+            ii += 1
+        elif client.tier == "III":
+            iii += 1
+        elif client.tier == "IV":
+            iv += 1
+    t_i = 0
+    t_ii = 0
+    t_iii = 0
+    t_iv = 0
+    try:
+        t_i = (i*100)/n_clients
+        t_ii = (ii*100)/n_clients
+        t_iii = (iii*100)/n_clients
+        t_iv = (iv*100)/n_clients
+    except:
+        pass
+    
+
+####################################################################
+    total_rr = 0
+
+    for client in clients:
+        if client.cancelled == "Active":
+            for sale in client.services.filter(state=True):
+                total_rr += sale.total           
+        
     ##############################################
 
     # GRAPHS rr   
@@ -2169,9 +2168,7 @@ def index(request):
         elif sale.date.month == 11:
             noviembre_l +=sale.get_change
         else:
-            diciembre_l +=sale.get_change
-            
-            
+            diciembre_l +=sale.get_change           
             
             
     # GRAPHS ONEOFF   

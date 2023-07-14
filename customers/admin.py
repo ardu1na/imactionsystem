@@ -1,20 +1,31 @@
 from django.contrib import admin
-from unfold.admin import ModelAdmin
 from sales.models import Sale
-from customers.models import   ConfTier, BackUps, Client, AutoRevenue
+from customers.models import  ConfTier, BackUps, Client, AutoRevenue
 
 from import_export.admin import ImportExportModelAdmin
 
-from dashboard.resources import ClientResource
+from dashboard.resources import ClientResource, BackUpsResource, ConfTierResource,  AutoRevenueResource
 
 admin.site.site_header = 'IMACTIONS'
 admin.site.index_title = 'Home'
 admin.site.site_title = 'IMACTIONS'
 
-admin.site.register(BackUps)
 
-admin.site.register(AutoRevenue)
 
+class BackUpsAdmin(ImportExportModelAdmin):
+    resource_class = BackUpsResource    
+admin.site.register(BackUps, BackUpsAdmin)
+
+
+
+class AutoRevenueAdmin(ImportExportModelAdmin):
+    resource_class = AutoRevenueResource    
+admin.site.register(AutoRevenue, AutoRevenueAdmin)
+
+
+class ConfTierAdmin(ImportExportModelAdmin):
+    resource_class = ConfTierResource    
+admin.site.register(ConfTier, ConfTierAdmin)
 
 class SaleInstanceInline(admin.TabularInline):
     model = Sale
@@ -39,11 +50,7 @@ class SaleInstanceInline(admin.TabularInline):
         verbose_name= "SALE"
 
 
-class ClientAdmin(ModelAdmin, ImportExportModelAdmin):
-    resource_class = ClientResource
- 
-    
+class ClientAdmin(ImportExportModelAdmin):
+    resource_class = ClientResource    
 admin.site.register(Client, ClientAdmin)
 
-
-admin.site.register(ConfTier)

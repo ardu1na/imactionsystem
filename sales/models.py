@@ -77,7 +77,7 @@ class Service(models.Model):
     
     state = models.BooleanField(default=True)   
     comment_can = models.CharField(max_length=500, blank=True, null=True, verbose_name="COMMENT")
-    date_can = models.DateField(null=True, blank=True, verbose_name="DATE")
+    date_can = models.DateField(null=True, blank=True, verbose_name="DATE cancellation")
     fail_can = models.CharField(max_length=50, choices=FAIL_CHOICES, blank=False,default=None, null=True, verbose_name="DO WE FAIL?")
             
       
@@ -235,7 +235,7 @@ class Sale(models.Model):
                     Employee,
                     related_name='sales',
                     null=True, blank=True,
-                    on_delete=models.CASCADE, verbose_name="SALES REP")
+                    on_delete=models.SET_NULL, verbose_name="SALES REP")
     
     
     kind = models.CharField(max_length=50, choices=KIND_CHOICES, null=True, blank=False, default=None, verbose_name="KIND")
