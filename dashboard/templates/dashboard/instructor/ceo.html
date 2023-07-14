@@ -54,22 +54,22 @@
                                     </td>
 
 
-                                    <td>${{employee.get_salary|floatformat:2}}</td>
+                                    <td>${{employee.get_salary|floatformat:2|default_if_none:"0"}}</td>
 
-                                    <td>${{employee.get_mp|floatformat:2}}</td>
+                                    <td>${{employee.get_mp|floatformat:2|default_if_none:"0"}}</td>
                                     
-                                    <td>${{employee.get_tc|floatformat:2}}</td>
-                                    <td>${{employee.get_atm|floatformat:2}}</td>
+                                    <td>${{employee.get_tc|floatformat:2|default_if_none:"0"}}</td>
+                                    <td>${{employee.get_atm|floatformat:2|default_if_none:"0"}}</td>
                                     
-                                    <td>${{employee.get_cash|floatformat:2}}</td>
+                                    <td>${{employee.get_cash|floatformat:2|default_if_none:"0"}}</td>
 
-                                    <td>${{employee.get_cash_usd|floatformat:2}}</td>
+                                    <td>${{employee.get_cash_usd|floatformat:2|default_if_none:"0"}}</td>
                                     
-                                    <td>${{employee.get_paypal|floatformat:2}}</td>
+                                    <td>${{employee.get_paypal|floatformat:2|default_if_none:"0"}}</td>
 
-                                    <td>${{employee.get_aguinaldo_mensual|floatformat:2}}</td>
+                                    <td>${{employee.get_aguinaldo_mensual|floatformat:2|default_if_none:"0"}}</td>
 
-                                    <td>${{employee.get_total_ceo|floatformat:2}}</td>
+                                    <td>${{employee.get_total_ceo|floatformat:2|default_if_none:"0"}}</td>
 
                                     <td>
                                         <div class="d-flex flex-row">

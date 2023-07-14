@@ -462,8 +462,9 @@ def editemployee(request, id):
         editform = EditEmployeeForm(instance=editemployee)
         
         editwageform = EmployeeSalaryForm(instance=wage_instance) if wage_instance else EmployeeSalaryForm()
-        holydayform = HolidayEmployeeForm()
         raice = RaiceForm()
+        
+        holydayform = HolidayEmployeeForm()
         context = {
             'comms_this_m': comms_this_m,
             'raice': raice,
@@ -494,12 +495,11 @@ def editemployee(request, id):
         # para aumentar el salario con porcentajes
         if "raice" in request.POST:
             raice = RaiceForm(request.POST)
-            print (raice)
             if raice.is_valid():
                 raice_nigga = raice.cleaned_data['nigga']
                 raice_salary = raice.cleaned_data['salary']
                 
-                last_wage = Salary.objects.filter(employee=editemployee.pk).last()
+                last_wage = wage_instance
                 last_wage.salary = last_wage.salary + (last_wage.salary*Decimal(raice_salary))/100
                 last_wage.nigga = Decimal(raice_nigga)
                 last_wage.raice = Decimal(raice_salary)
@@ -649,7 +649,6 @@ def editceo(request, id):
         # editar datos generales de ceo
         if "editemployee" in request.POST:
             editform = EditEmployeeForm(request.POST, instance=editemployee)
-            print (editform)
             if editform.is_valid():
                 editform.save()
                 return redirect('dashboard:editceo', id=editemployee.id)

@@ -178,97 +178,140 @@ class Employee(models.Model):
     
     def get_paypal (self):
         try:
-            wages  = Salary.objects.get(employee=self.pk, period__month=today.month, period__year=today.year)
-
-            
-        except: 
+            wages = Salary.objects.get(employee=self.pk, period__month=today.month, period__year=today.year)
+        except Salary.DoesNotExist:
             try:
-                wages  = Salary.objects.filter(employee=self.pk).first()
-              
-            except:
-                
-                wages = Salary.objects.create(employee=self.pk)
+                wages = Salary.objects.filter(employee=self.pk).first()
+            except Salary.DoesNotExist:
+                print("No salary object found.")
+                wages = None
 
-        p_c = wages.paypal*Decimal(blue)
-        return p_c
+        if wages is None:
+            try:
+                wages = Salary.objects.create(employee=self.pk, paypal=0)
+            except Exception as e:
+                print("Error creating salary object:", str(e))
+                wages = None
+
+        if wages is not None:
+            return wages.paypal*Decimal(blue)
+        else:
+            return None
     
     def get_mp(self):
         try:
-            wages  = Salary.objects.get(employee=self.pk, period__month=today.month, period__year=today.year)
-
-            
-        except: 
+            wages = Salary.objects.get(employee=self.pk, period__month=today.month, period__year=today.year)
+        except Salary.DoesNotExist:
             try:
-                wages  = Salary.objects.filter(employee=self.pk).first()
-              
-            except:
-                
-                wages = Salary.objects.create(employee=self.pk) 
-        i = wages.mp
-        return i 
+                wages = Salary.objects.filter(employee=self.pk).first()
+            except Salary.DoesNotExist:
+                print("No salary object found.")
+                wages = None
+
+        if wages is None:
+            try:
+                wages = Salary.objects.create(employee=self.pk, mp=0)
+            except Exception as e:
+                print("Error creating salary object:", str(e))
+                wages = None
+
+        if wages is not None:
+            return wages.mp
+        else:
+            return None
+
     
     def get_atm(self):
+        
         try:
-            wages  = Salary.objects.get(employee=self.pk, period__month=today.month, period__year=today.year)
-
-            
-        except: 
+            wages = Salary.objects.get(employee=self.pk, period__month=today.month, period__year=today.year)
+        except Salary.DoesNotExist:
             try:
-                wages  = Salary.objects.filter(employee=self.pk).first()
-              
-            except:
-                
-                wages = Salary.objects.create(employee=self.pk)
-        i = wages.atm_cash
-        return i 
-    
+                wages = Salary.objects.filter(employee=self.pk).first()
+            except Salary.DoesNotExist:
+                print("No salary object found.")
+                wages = None
+
+        if wages is None:
+            try:
+                wages = Salary.objects.create(employee=self.pk, atm_cash=0)
+            except Exception as e:
+                print("Error creating salary object:", str(e))
+                wages = None
+
+        if wages is not None:
+            return wages.atm_cash
+        else:
+            return None
+
     def get_tc(self):
         try:
-            wages  = Salary.objects.get(employee=self.pk, period__month=today.month, period__year=today.year)
-
-            
-        except: 
+            wages = Salary.objects.get(employee=self.pk, period__month=today.month, period__year=today.year)
+        except Salary.DoesNotExist:
             try:
-                wages  = Salary.objects.filter(employee=self.pk).first()
-              
-            except:
-                
-                wages = Salary.objects.create(employee=self.pk)
-        i = wages.tc
-        return i 
+                wages = Salary.objects.filter(employee=self.pk).first()
+            except Salary.DoesNotExist:
+                print("No salary object found.")
+                wages = None
+
+        if wages is None:
+            try:
+                wages = Salary.objects.create(employee=self.pk, tc=0)
+            except Exception as e:
+                print("Error creating salary object:", str(e))
+                wages = None
+
+        if wages is not None:
+            return wages.tc
+        else:
+            return None
+
     
     
     def get_cash(self):
         try:
-            wages  = Salary.objects.get(employee=self.pk, period__month=today.month, period__year=today.year)
-
-            
-        except: 
+            wages = Salary.objects.get(employee=self.pk, period__month=today.month, period__year=today.year)
+        except Salary.DoesNotExist:
             try:
-                wages  = Salary.objects.filter(employee=self.pk).first()
-              
-            except:
-                
-                wages = Salary.objects.create(employee=self.pk)
-        i = wages.cash
-        return i 
+                wages = Salary.objects.filter(employee=self.pk).first()
+            except Salary.DoesNotExist:
+                print("No salary object found.")
+                wages = None
+
+        if wages is None:
+            try:
+                wages = Salary.objects.create(employee=self.pk, cash=0)
+            except Exception as e:
+                print("Error creating salary object:", str(e))
+                wages = None
+
+        if wages is not None:
+            return wages.cash
+        else:
+            return None
     
     def get_cash_usd (self):
         try:
-            wages  = Salary.objects.get(employee=self.pk, period__month=today.month, period__year=today.year)
-
-            
-        except: 
+            wages = Salary.objects.get(employee=self.pk, period__month=today.month, period__year=today.year)
+        except Salary.DoesNotExist:
             try:
-                wages  = Salary.objects.filter(employee=self.pk).first()
-              
-            except:
-                
-                wages = Salary.objects.create(employee=self.pk)
+                wages = Salary.objects.filter(employee=self.pk).first()
+            except Salary.DoesNotExist:
+                print("No salary object found.")
+                wages = None
 
-        c = wages.cash_usd*Decimal(blue)
-        return c
-    
+        if wages is None:
+            try:
+                wages = Salary.objects.create(employee=self.pk, cash_usd=0)
+            except Exception as e:
+                print("Error creating salary object:", str(e))
+                wages = None
+
+        if wages is not None:
+            return wages.cash_usd*Decimal(blue)
+        else:
+            return None
+
     
     def get_total (self):
         total = self.get_white() + self.get_social() + self.get_nigga()
@@ -276,16 +319,20 @@ class Employee(models.Model):
     
     def get_total_ceo (self):
         try:
-            wages  = Salary.objects.get(employee=self.pk, period__month=today.month, period__year=today.year)
-
-            
-        except: 
+            wages = Salary.objects.get(employee=self.pk, period__month=today.month, period__year=today.year)
+        except Salary.DoesNotExist:
             try:
-                wages  = Salary.objects.filter(employee=self.pk).first()
-              
-            except:
-                
-                wages = Salary.objects.create(employee=self.pk)
+                wages = Salary.objects.filter(employee=self.pk).first()
+            except Salary.DoesNotExist:
+                print("No salary object found.")
+                wages = None
+
+        if wages is None:
+            try:
+                wages = Salary.objects.create(employee=self)
+            except Exception as e:
+                print("Error creating salary object:", str(e))
+                wages = None
 
         total = wages.salary + wages.mp + wages.atm_cash + wages.cash + wages.tc + self.get_paypal() + self.get_cash_usd()
         return total
@@ -295,17 +342,27 @@ class Employee(models.Model):
 
         if self.rol == "CEO":
             try:
-                wages  = Salary.objects.get(employee=self.pk, period__month=today.month, period__year=today.year)
-
-                
-            except: 
+                wages = Salary.objects.get(employee=self.pk, period__month=today.month, period__year=today.year)
+            except Salary.DoesNotExist:
                 try:
-                    wages  = Salary.objects.filter(employee=self.pk).first()
-                
-                except:
-                    
-                    wages = Salary.objects.create(employee=self.pk) 
-            month = wages.salary/12
+                    wages = Salary.objects.filter(employee=self.pk).first()
+                except Salary.DoesNotExist:
+                    print("No salary object found.")
+                    wages = None
+
+            if wages is None:
+                try:
+                    wages = Salary.objects.create(employee=self.pk)
+                except Exception as e:
+                    print("Error creating salary object:", str(e))
+                    wages = None
+
+            if wages is not None:
+                month = wages.salary/12
+            else:
+                month = 0
+            
+            
         else:
             try:
                 wages  = Salary.objects.get(employee=self.pk, period__month=today.month, period__year=today.year)
