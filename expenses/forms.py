@@ -50,9 +50,6 @@ class HolidayEmployeeForm(ModelForm):
 
 
 
-
-
-
 class ExpenseForm(ModelForm):  
     class Meta:
         model = Expense
@@ -64,6 +61,10 @@ class ExpenseForm(ModelForm):
         
         widgets = {
             
+            'currency' : Select(attrs={'class':"default-select form-control wide mb-3",
+            'id':"currency",
+            'placeholder':"Currency",}),
+                       
             'date' : TextInput(attrs={'class':"datetimepicker form-control",
             'id':"PublishDateTimeTextbox",
             'type':"date",
@@ -100,6 +101,12 @@ class EmployeeForm(ModelForm):
         exclude = ['id', 'active', 'date_gone']
         
         widgets = {
+            
+            'dob' : TextInput(attrs={'class':"datetimepicker form-control",
+            'id':"PublishDateTimeTextbox",
+            'type':"date",
+            'placeholder':"Date"}), 
+            
             
             'date_join' : TextInput(attrs={'class':"datetimepicker form-control",
             'id':"PublishDateTimeTextbox",
@@ -176,6 +183,11 @@ class CeoForm(ModelForm):
         exclude = ['id', 'active', 'date_gone']
         
         widgets = {
+            
+            'dob' : TextInput(attrs={'class':"datetimepicker form-control",
+            'id':"PublishDateTimeTextbox",
+            'type':"date",
+            'placeholder':"Date"}), 
             
             'date_join' : TextInput(attrs={'class':"datetimepicker form-control",
             'id':"PublishDateTimeTextbox",
@@ -285,9 +297,14 @@ class EditEmployeeForm(ModelForm):
     class Meta:
         model = Employee
         
-        fields = ['active', 'date_join', 'date_gone', 'rol', 'name', 'address', 'email', 'tel']
+        fields = ['active', 'dob', 'date_join', 'date_gone', 'rol', 'name', 'address', 'email', 'tel']
         
         widgets = {
+            
+            'dob' : TextInput(attrs={'class':"datetimepicker form-control",
+            'id':"PublishDateTimeTextbox",
+            'type':"date",
+            'placeholder':"Date"}), 
             
             'active' :     Select(attrs={
                 'class':"default-select form-control wide mb-3",

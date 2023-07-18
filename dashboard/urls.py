@@ -13,7 +13,8 @@ urlpatterns = [
     
     path('conf/',dashboard_views.conf, name="conf"),
     path('setting/',dashboard_views.setting, name="setting"),
-
+    path('comms/',dashboard_views.comms, name="comms"),
+    
 
     path('employees/',dashboard_views.employees, name="employees"),
     path('employees/old/', dashboard_views.employeesold, name="old"),
@@ -43,6 +44,8 @@ urlpatterns = [
     path('clients/editclient/<int:id>/', dashboard_views.editclient, name="editclient"),
     path('clients/addclientsale/<int:id>/', dashboard_views.addclientsale, name="addclientsale"),
     path('clients/deleteclients/', dashboard_views.delete_clients, name="deleteclients"),
+    path('services/<int:id>/', dashboard_views.editservice, name="editservice"),
+    path('services/<int:id>/restore/', dashboard_views.restoreservice, name="restoreservice"),
 
 
 
@@ -54,6 +57,9 @@ urlpatterns = [
     path('sales/editsale/<int:id>/', dashboard_views.editsale, name="editsale"),
     path('salesdata/',dashboard_views.salesdata, name="salesdata"),
     path('sales/deletesales/', dashboard_views.delete_sales, name="deletesales"),
+
+
+
 
     path('adjustments/',dashboard_views.adjustment, name="adjustment"),
     path('adjustments/<int:id>/',dashboard_views.adjustment, name="adjustsale"),

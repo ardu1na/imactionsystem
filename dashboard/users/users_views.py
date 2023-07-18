@@ -9,30 +9,23 @@ from dashboard.users.forms import ( CustomUserForm,
 						  UserPermissionsForm,
 						  EditUserForm,
 						)
-from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required, permission_required 
 from django.contrib.auth.models import Group, Permission
 from django.db.models import Count
-from django.http import HttpResponse, JsonResponse
-from django.contrib.contenttypes.models import ContentType
-
+from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.core.paginator import Paginator
-
 from django.core.mail import send_mail
 from django.conf import settings
 from dashboard.users.tokens import account_activation_token
-from django.utils.encoding import force_bytes,force_str
+from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode
 from django.template.loader import render_to_string
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
-from django.http import HttpResponseRedirect
-from django.contrib.auth.models import Group
 from dashboard.users import utils
-
-
 
 
 
@@ -53,6 +46,10 @@ def password_change(request):
 	else:
 		form = PasswordChangeForm(request.user)
 	return render(request, 'dashboard/modules/change-password.html', {'form': form, "page_title":"Change Password"})
+
+
+
+
 
 
 @login_required(login_url='dashboard:login')
@@ -107,6 +104,11 @@ def users(request):
 		'groups':Group.objects.all()
 	}
 	return render(request,template_name,context)
+
+
+
+
+
 
 @login_required(login_url='dashboard:login')
 @permission_required({'users.view_customuser'}, raise_exception=True)
@@ -245,15 +247,17 @@ def edit_user(request,id):
 			user_obj.groups.clear()
 			for i in form.cleaned_data['groups']:
 				user_obj.groups.add(i)
-			if user_obj.is_superuser:
-				return redirect('dashboard:users')
-			else:
-				return redirect('dashboard:index')
-		
+			return redirect('dashboard:users')
+			
 	else:
 		form = EditUserForm(instance=user_obj)
 
 	return render(request, 'dashboard/modules/add-user.html', {'form': form,"page_title":"Edit User"})
+
+
+
+
+
 
 def login_user(request):
 	message=''
@@ -287,6 +291,10 @@ def logout_user(request):
 	logout(request)
 	messages.success(request,'Logout Successfully')	
 	return redirect('dashboard:login')
+
+
+
+
 
 
 @login_required(login_url='dashboard:login')

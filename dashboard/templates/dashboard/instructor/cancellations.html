@@ -154,11 +154,12 @@
                                                 <a class="mb-0 fs-16 font-w500"  href="{% url 'dashboard:editclient' id=service.client.id %}">{{service.client}}</a>
                                             </div>
                                         </td>
-                                        <td> {% if service.client.cancelled == "Cancelled" %} ACCOUNT 
-                                              {% else %} SERVICE {% endif %}
+                                        <td> {% if service.client.cancelled == "Cancelled" %}  <a href="{% url 'dashboard:editclient' id=service.client.id %}">
+                                            ACCOUNT  </a>
+                                              {% else %} <a href="{% url 'dashboard:editservice' id=service.id %}">SERVICE  </a>{% endif %}
                                         </td>
                                         <td>
-                                           <a> {{service.service}} </a>
+                                           <a href="{% url 'dashboard:editservice' id=service.id %}"> {{service.service}} </a>
                                         </td>
                                         <td>${{service.total|floatformat:2|intcomma}}</td>
                                         <td>{{service.fail_can}}</td>

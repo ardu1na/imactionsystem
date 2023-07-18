@@ -1,6 +1,71 @@
 from django.db import models
 
 
+class LastBlue (models.Model):
+    venta = models.DecimalField(
+                max_digits=15, decimal_places=2
+                                 )
+    date_updated = models.DateTimeField(auto_now=True)
+    
+    @property
+    def get_blue(self):
+        return self.venta
+    
+    
+    
+    
+    
+    
+class Comms (models.Model):
+    
+    com_rr_1 = models.DecimalField(
+                max_digits=15, decimal_places=2,
+                default=1
+                                 )
+    rr_1 = models.IntegerField(
+                default=1)
+
+    com_rr_2 = models.DecimalField(
+                max_digits=15, decimal_places=2,
+                default=1
+                                 )
+    rr_2 = models.IntegerField(
+                default=1)
+    
+    
+    com_rr_3 = models.DecimalField(
+                default=1,
+                max_digits=15, decimal_places=2
+                                 )
+    rr_3 = models.IntegerField(
+                default=1)
+    com_rr_4 = models.DecimalField(
+                max_digits=15, decimal_places=2,
+                default=1
+                                 )
+    rr_4 = models.IntegerField(
+                default=1)
+    com_rr_5 = models.DecimalField(
+                max_digits=15, decimal_places=2,
+                default=1
+                                 )
+    rr_5 = models.IntegerField(
+                default=1)
+    
+    up_sell = models.DecimalField(
+                max_digits=15, decimal_places=2,
+                default=1
+                                 )
+    one_off = models.DecimalField(
+                max_digits=15, decimal_places=2,
+                default=1
+                                 )
+    
+    def __str__ (self):
+        return "COMMS config"
+    
+    
+
 class Configurations(models.Model):
     INPUT_TYPE_CHOICES = (
         ('','Select InputType'),

@@ -5,6 +5,8 @@
 
 {% block additional_css %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 
 {% endblock %}
 
@@ -217,7 +219,7 @@
                                             <th>KIND</th>
                                             <th>STATUS $</th>
                                             <th>DATE</th>
-                                            <th>COMMENTS</th>
+                                            <th>SALES REP</th>
                                             <th></th>
                                         </tr>
                                     </thead>
@@ -228,7 +230,7 @@
 
 
                                                
-                                                <td> <a class="mb-0 fs-16 font-w500" href="{% url 'dashboard:editsale' id=sale.id %}"> {{sale.service}} </a> </td>
+                                                <td> <a class="mb-0 fs-16 font-w500" href="{% url 'dashboard:editsale' id=sale.id %}"> {{sale.service}} </a> {% if sale.suscription.state == False %} (cancelled) {% endif %}</td>
                                                 <td>
                                                     <div class="d-flex align-items-center">
                                                         <a class="mb-0 fs-16 font-w500 client-item" href="{% url 'dashboard:editclient' id=sale.client.id %}">{{sale.client}}</a>
@@ -253,7 +255,7 @@
                                                     {% endif %}
                                                 </div>
                                                 <td>{{sale.date|date:"d/m/Y"}}</td>
-                                                <td>{{sale.comments|default_if_none:"-"|truncatechars:25}}</td>                                    
+                                                <td>{{sale.sales_rep|default_if_none:"-"}}</td>                                    
                                                 <td>
                                                     <div class="d-flex flex-row">
                                                             <!-- delete BUTTON -->
@@ -300,13 +302,23 @@
                                 <div class="form-group mb-5 d-flex flex-row">
                                     {{addform.date}}
                                 </div>
-                                <div class="fs-5">
-                                    Account 
+
+
+                            <div id="clientform">
+                                <input type="text" name="client" id="client" class="form-control" placeholder="Client" autocomplete="on" list="clients">
+                                    <datalist id="clients">
+                                    {% for client in clients %}
+                                        <option value="{{ client.name }}">
+                                    {% endfor %}
+                                    </datalist>                                  
+                            </div>
+
+                            <div class="form-group my-3">
+                                <div class="fs-5 ml-4">
+                                    Sales Rep
                                 </div>
-                                <div class=" my-3 d-flex flex-row m-auto">
-                                    <div class="col-11">   {{addform.client}}                             </div>
-                                    <div><a href="{% url 'dashboard:clients' %}" class="btn btn-outline-primary"><i class="fs-5 fa-solid fa-plus"></i></a></div>
-                                </div>
+                                {{addform.sales_rep}}
+                            </div>
 
                                 <div class="form-group my-3">
                                     <div class="fs-5 ml-4">
@@ -350,12 +362,7 @@
                                     </div>
                                     {{addform.status}}
                                 </div>
-                                <div class="form-group my-3">
-                                    <div class="fs-5 ml-4">
-                                        Adjustment Date
-                                    </div>
-                                    {{addform.raice_date}}
-                                </div>
+                                
 
                             </div>
                         </div>       
@@ -510,5 +517,33 @@
     });
   </script>
 
+
+  <script>
+    $(document).ready(function() {
+      var $clientField = $('#client');
+      var $clientForm = $('#clientform');
+      var $clientInput = $clientField.find('input');
+  
+      $clientInput.autocomplete({
+        source: '/client-autocomplete/',
+        minLength: 2,
+        select: function(event, ui) {
+          $clientInput.val(ui.item.value);
+          console.log('Selected option:', ui.item.value);
+          return false;
+        },
+        focus: function(event, ui) {
+          $clientInput.val(ui.item.value);
+          console.log('Focused option:', ui.item.value);
+          return false;
+        }
+      });
+  
+      $clientForm.submit(function(event) {
+        console.log('Submitted form:', $clientInput.val());
+      });
+    });
+  </script>
+  
   
 {% endblock %}

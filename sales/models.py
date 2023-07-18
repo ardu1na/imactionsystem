@@ -1,24 +1,28 @@
 from datetime import date, timedelta
 from django.db import models
-from django.db.models import F
 from django.contrib import admin
 from customers.models import Client
 from decimal import Decimal
+from expenses.models import Employee
+
+from dashboard.models import LastBlue, Comms
 
 
-class LastBlue (models.Model):
-    compra = models.DecimalField(max_digits=15, decimal_places=2
-                                 )
-    date_updated = models.DateTimeField(auto_now=True)
-    
-    @property
-    def get_blue(self):
-        return self.compra
+
+
+
+try:
+    comms = Comms.objects.get(id=1)
+except:
+    comms = Comms.objects.create(              
+                )
+
+
 
 last_blue = 0
 try:
     last_blue =  LastBlue.objects.get(pk=1)
-    blue = last_blue.compra
+    blue = last_blue.venta
 
 except:
     blue = 0
@@ -78,7 +82,7 @@ class Service(models.Model):
     
     state = models.BooleanField(default=True)   
     comment_can = models.CharField(max_length=500, blank=True, null=True, verbose_name="COMMENT")
-    date_can = models.DateField(null=True, blank=True, verbose_name="DATE")
+    date_can = models.DateField(null=True, blank=True, verbose_name="DATE cancellation")
     fail_can = models.CharField(max_length=50, choices=FAIL_CHOICES, blank=False,default=None, null=True, verbose_name="DO WE FAIL?")
             
       
@@ -95,7 +99,9 @@ class Adj(models.Model):
 
     
     type = models.CharField(max_length=40, default=None, verbose_name="Account/Service", choices=ADJ_CHOICES, blank=False, null=False)
+    
     service = models.ForeignKey(Service, on_delete=models.CASCADE, related_name="adj", null=True, blank=True)
+    
     client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name="adj", null=True, blank=True)
        
     adj_percent = models.DecimalField(decimal_places=2, max_digits=16)
@@ -135,13 +141,52 @@ class Adj(models.Model):
 
 class Sale(models.Model):
 
+
+    @property
+    def get_comm_per(self):
+        
+        if self.change >= comms.rr_1:
+            ## obtener el porcentaje de comisiones por venta para los empleados vendedores
+            if self.revenue == "OneOff":
+                return comms.one_off
+            else:    
+                if self.kind == "Upsell":
+                    return comms.up_sell
+                else:
+                    # el porcentaje de comisión de las ventas rr q no son upsell varian según parámetros configurados x el usuario
+                    # se obtienen de dashboard.comms pk=1
+                    if self.change >= comms.rr_1 and self.change < comms.rr_2:
+                        return comms.com_rr_1
+                    elif self.change >= comms.rr_2 and self.change < comms.rr_3:
+                        return comms.com_rr_2
+                    elif self.change >= comms.rr_3 and self.change < comms.rr_4:
+                        return comms.com_rr_3
+                    elif self.change >= comms.rr_4 and self.change < comms.rr_5:
+                        return comms.com_rr_4
+                    elif self.change >= comms.rr_5:
+                        return comms.com_rr_5
+            
+    @property
+    def get_comm(self):
+        # obtener el valor de la comisión según el precio de la venta y el prcjje
+        try:
+            comm = (self.get_comm_per * self.change)/100
+            return comm
+        # si la venta es menor a comms.rr_1 retornar 0 comisión
+        except:
+            return 0
+        
+    
+
     UPSELL='Upsell'
     NEW_CLIENT='New Client'
     CROSSSELL = 'Cross Sell'
+    NEW = ' - '
     KIND_CHOICES = (
         (UPSELL, ('Upsell')),
         (NEW_CLIENT, ('New Client')),
-        (CROSSSELL, ('Cross Sell')))
+        (CROSSSELL, ('Cross Sell')),
+        (NEW, (' - ')))
 
     P = "P"
     FCD = "FCD"
@@ -190,7 +235,13 @@ class Sale(models.Model):
         (USD, ('USD')))
 
     client = models.ForeignKey(Client, related_name='sales', null=True, blank=True, on_delete=models.CASCADE, verbose_name="ACCOUNT")
-   
+    
+    sales_rep = models.ForeignKey(
+                    Employee,
+                    related_name='sales',
+                    null=True, blank=True,
+                    on_delete=models.SET_NULL, verbose_name="SALES REP")
+    
     
     kind = models.CharField(max_length=50, choices=KIND_CHOICES, null=True, blank=False, default=None, verbose_name="KIND")
     
@@ -203,14 +254,13 @@ class Sale(models.Model):
     
     service = models.CharField(max_length=50, choices=SERVICE_CHOICES, verbose_name="SERVICE", blank=False, default=None)
     
-    price = models.DecimalField(default=0, verbose_name="PRICE", decimal_places=2, max_digits=12)
-    currency = models.CharField(max_length=50, default="ARS", choices=COIN_CHOICES, null=True, blank=False, verbose_name="CURRENCY")
+    
     note = models.CharField(max_length=400, null=True, blank=True, verbose_name="NOTES")
     cost = models.IntegerField(default=0, verbose_name="COST")
     status = models.CharField(max_length=5, choices=S_CHOICES, null=True, blank=False, default=None, verbose_name="STATUS $")
-    # cancelled = models.CharField(default='Active', max_length=50, choices=CANCELLED_CHOICES, blank=False)
     change = models.DecimalField(default=0, verbose_name="PRICE", decimal_places=2, max_digits=12, null=True, blank=True)
-    
+    price = models.DecimalField(default=0, verbose_name="PRICE", decimal_places=2, max_digits=12)
+    currency = models.CharField(max_length=50, default="ARS", choices=COIN_CHOICES, null=True, blank=False, verbose_name="CURRENCY")
     @property
     def get_change(self):
         change = 0
@@ -220,17 +270,7 @@ class Sale(models.Model):
         else:
             return self.price
         
-    
-    
         
-    def delete(self, *args, **kwargs):
-        
-        servicio = self.suscription
-        servicio.total -= self.change
-        servicio.save()
-        super().delete(*args, **kwargs)    
-        
-    
     def get_revenue(self):
         if self.service == 'SEO' or self.service == 'Google Ads' or self.service == 'Community Management' \
         or self.service == 'Facebook Ads' or self.service == 'Web Plan' or self.service == 'LinkedIn' \
@@ -261,21 +301,9 @@ class Sale(models.Model):
 
         super(Sale, self).save(*args, **kwargs)
 
-
-
         
-    def delete(self, *args, **kwargs):
-    # update asociated suscription values           
-        try:
-            suscription = self.suscription
-            suscription.total -= self.change
-            suscription.save()
-        except:
-            pass
-        super().delete(*args, **kwargs)    
+    
         
-              
-            
             
       
     

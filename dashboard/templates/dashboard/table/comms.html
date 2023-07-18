@@ -1,0 +1,129 @@
+{% extends 'dashboard/elements/layouts/admin.html' %}
+
+{% load static %}
+
+{% block additional_css %}
+{% endblock %}
+
+{% block content %}
+
+
+        
+<!-- COMMS CONF -->
+
+    <div class="row">
+
+           
+                <div class="col-xl-10 m-auto">
+                    <div class="card">
+                        <div class="card-body">
+                            <form  method="post">  
+                                {% csrf_token %}
+                                <div class="basic-list-group">
+
+                                    <ul class="list-group list-group-flush">
+
+                                        <li class="list-group-item d-flex justify-content-between align-items-center my-3 flex-row-reverse">
+                                            <h2 class="me-2"> %</h2>
+
+                                            <div class="col-lg-3"> {{form.com_rr_1}}</div>
+                                            <h4 class="me-5"> :</h4>                                            
+
+                                            <div class="col-lg-6"> {{form.rr_1}}</div>
+                                            <h4 class="ms-5"> $</h4>                                            
+
+                                            <h2 class="me-2">> </h2> 
+                                            <h4 class="me-4"> SALE RR </h4>                                            
+                                        </li>
+
+                                        <li class="list-group-item d-flex justify-content-between align-items-center my-3 flex-row-reverse">
+                                            <h2 class="me-2"> %</h2>
+
+                                            <div class="col-lg-3"> {{form.com_rr_2}}</div>
+                                            <h4 class="me-5"> :</h4>                                            
+
+                                            <div class="col-lg-6"> {{form.rr_2}}</div>
+                                            <h4 class="ms-5"> $</h4>                                            
+
+                                            <h2 class="me-2">> </h2> 
+                                            <h4 class="me-4"> SALE RR </h4>                                            
+                                        </li>
+
+                                        
+                                        <li class="list-group-item d-flex justify-content-between align-items-center my-3 flex-row-reverse">
+                                            <h2 class="me-2"> %</h2>
+
+                                            <div class="col-lg-3"> {{form.com_rr_3}}</div>
+                                            <h4 class="me-5"> :</h4>                                            
+
+                                            <div class="col-lg-6"> {{form.rr_3}}</div>
+                                            <h4 class="ms-5"> $</h4>                                            
+
+                                            <h2 class="me-2">> </h2> 
+                                            <h4 class="me-4"> SALE RR </h4>                                            
+                                        </li>
+
+                                        
+                                        <li class="list-group-item d-flex justify-content-between align-items-center my-3 flex-row-reverse">
+                                            <h2 class="me-2"> %</h2>
+
+                                            <div class="col-lg-3"> {{form.com_rr_4}}</div>
+                                            <h4 class="me-5"> :</h4>                                            
+
+                                            <div class="col-lg-6"> {{form.rr_4}}</div>
+                                            <h4 class="ms-5"> $</h4>                                            
+
+                                            <h2 class="me-2">> </h2> 
+                                            <h4 class="me-4"> SALE RR </h4>                                            
+                                        </li>
+
+                                        
+                                        <li class="list-group-item d-flex justify-content-between align-items-center my-3 flex-row-reverse">
+                                            <h2 class="me-2"> %</h2>
+
+                                            <div class="col-lg-3"> {{form.com_rr_5}}</div>
+                                            <h4 class="me-5"> :</h4>                                            
+
+                                            <div class="col-lg-6"> {{form.rr_5}}</div>
+                                            <h4 class="ms-5"> $</h4>                                            
+
+                                            <h2 class="me-2">> </h2> 
+                                            <h4 class="me-4"> SALE RR </h4>                                            
+                                        </li>
+
+
+                                        <li class="list-group-item d-flex justify-content-between align-items-center my-3 flex-row-reverse">
+                                            <h2 class="me-2"> %</h2>
+                                            <div class="col-lg-9"> {{form.up_sell}}</div>
+                                            <h4 class="me-5"> Up Sell:</h4>    
+                                        </li>
+
+                                        <li class="list-group-item d-flex justify-content-between align-items-center my-3 flex-row-reverse">
+                                            <h2 class="me-2"> %</h2>
+                                            <div class="col-lg-9"> {{form.one_off}}</div>
+                                            <h4 class="me-5"> One Off:</h4>    
+                                        </li>
+
+                                    </ul>
+
+                                </div>
+
+                                <div class="form-floating my-5 d-flex flex-row m-auto col-md-6">
+                                    <button type="submit" class="shadow-sm btn btn-secondary px-5" name="edittier"><i class="fa-solid fa-check me-2"></i> Save new Settings</button>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>                      
+
+
+    </div>
+<!-- END COMMS CONF -->
+
+
+{% endblock %}
+
+{% block additional_js %}
+
+{% endblock %}

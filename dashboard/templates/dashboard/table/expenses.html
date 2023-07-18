@@ -49,6 +49,13 @@
                                 
                                     {{addform.value}}
                                 </div>
+
+                                <div class="form-group my-3">
+                                    <div class="fs-5 ml-4">
+                                        Currrency
+                                    </div>
+                                    {{addform.currency}}
+                                </div>
                                 <div class="form-group my-3">
                                     <div class="fs-5 ml-4">
                                         WOP
@@ -203,7 +210,7 @@
                                             <a class="mb-0 fs-16 font-w500" href="{% url 'dashboard:editexpense' id=expense.id %}">{{expense.category}}</a>
                                         </td>
                                         <td> {{expense.concept|truncatechars:25}} </td>
-                                        <td>${{expense.value|floatformat:2|intcomma}}</td>
+                                        <td>{% if expense.currency == "ARS" %}${{expense.value|floatformat:2|intcomma}}{% else %}{{expense.value|floatformat:2|intcomma}} USD{% endif  %}</td>
                                         <td>{{expense.wop}}</td>   
         
                                         <td>
@@ -281,7 +288,7 @@
                 },
                 colors: ['#FEC64F', '#e35b17', '#17e3e3', '#e31739', '#171ee3', '#c417e3', '#14b57d'],
                 
-                labels: ['Empresa ${{empresa|floatformat:2}}', 'Wages Staff ${{wages_staff|floatformat:2}} ', 'LeadGen ${{lead_gen|floatformat:2}} ', 'Office ${{office|floatformat:2}}', 'Others ${{other|floatformat:2}} ', 'Taxes ${{tax|floatformat:2}}', 'Wages CEO ${{wages_ceo|floatformat:2}}'],
+                labels: ['Empresa ${{empresa|floatformat:2}}', 'Wages Staff ${{wages_staff|floatformat:2}} ', 'Lead Gen ${{lead_gen|floatformat:2}} ', 'Office ${{office|floatformat:2}}', 'Others ${{other|floatformat:2}} ', 'Taxes ${{tax|floatformat:2}}', 'Wages CEO ${{wages_ceo|floatformat:2}}'],
                 responsive: [{
                     breakpoint: 1800,
                     options: {

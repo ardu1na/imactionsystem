@@ -3,12 +3,17 @@ from decimal import Decimal
 
 from django.db import models
 
-from sales.models import LastBlue
-
-#last_blue = LastBlue.objects.get(pk=1)
-blue = 1 #last_blue.compra
+from dashboard.models import LastBlue
 
 
+today = date.today()
+last_blue = 0
+try:
+    last_blue =  LastBlue.objects.get(pk=1)
+    blue = last_blue.venta
+
+except:
+    blue = 0
 
 
 
@@ -40,7 +45,7 @@ class Salary (models.Model):
     
     
     class Meta:
-        get_latest_by = ['period']
+        get_latest_by = ['-period']
         ordering = ['-period']
 
         
@@ -78,6 +83,8 @@ class Employee(models.Model):
     
     name = models.CharField(max_length=150, verbose_name="NAME")
     
+    dob = models.DateField(null=True, blank=True)
+    
     address = models.CharField(max_length=250, verbose_name="ADDRESS", blank=True, null=True)
     email = models.EmailField(blank=True, null=True, verbose_name="EMAIL")
     tel = models.CharField(max_length=40, blank=True, null=True, verbose_name="PHONE")
@@ -87,29 +94,80 @@ class Employee(models.Model):
     date_gone = models.DateField(null=True, blank=True, verbose_name="GONE")
     
     
-    def get_salary (self):
-        wages  = Salary.objects.filter(employee=self.pk).latest() 
+    def get_last_wage(self):
+        try:
+            wages  = Salary.objects.get(employee=self.pk, period__month=today.month, period__year=today.year)
 
-        s = wages.salary 
-        return s
+            return wages
+        except: 
+            try:
+                wages  = Salary.objects.filter(employee=self.pk).first()
+                return wages
+            except:
+                pass
+        
+    
+    def get_salary (self):
+        try:
+            wages  = Salary.objects.get(employee=self.pk, period__month=today.month, period__year=today.year)
+
+            return wages.salary
+        except: 
+            try:
+                wages  = Salary.objects.filter(employee=self.pk).first()
+                return wages.salary
+            except:
+                return 0
+        
+            
+
     
     def get_nigga_per(self):
-        ni = Salary.objects.filter(employee=self.pk).latest() 
+        try:
+            wages  = Salary.objects.get(employee=self.pk, period__month=today.month, period__year=today.year)
 
-        s = ni.nigga 
-        return s    
+            return wages.nigga
+        except: 
+            try:
+                wages  = Salary.objects.filter(employee=self.pk).first()
+                return wages.nigga
+            except:
+                return 0 
     
     def get_white (self):
-        wages  = Salary.objects.filter(employee=self.pk).latest() 
+        try:
+            wages  = Salary.objects.get(employee=self.pk, period__month=today.month, period__year=today.year)
 
-        white = wages.salary - (wages.salary*(wages.nigga/100))
-        return white
+        except: 
+            try:
+                wages  = Salary.objects.filter(employee=self.pk).first()
+            except:
+                wages = Salary.objects.create(employee=self.pk)
+
+        try:
+            white = wages.salary - (wages.salary*(wages.nigga/100))
+            return white
+        except:
+            return 0
     
     def get_nigga (self):
-        wages  = Salary.objects.filter(employee=self.pk).latest() 
+        try:
+            wages  = Salary.objects.get(employee=self.pk, period__month=today.month, period__year=today.year)
 
-        n = (wages.salary*(wages.nigga/100))
-        return n
+            
+        except: 
+            try:
+                wages  = Salary.objects.filter(employee=self.pk).first()
+              
+            except:
+                
+                wages = Salary.objects.create(employee=self.pk)
+
+        try:
+            n = (wages.salary*(wages.nigga/100))
+            return n
+        except:
+            return 0
     
     def get_social (self):
         social = self.get_white()/2
@@ -119,55 +177,204 @@ class Employee(models.Model):
     
     
     def get_paypal (self):
-        wages  = Salary.objects.filter(employee=self.pk).latest() 
+        try:
+            wages = Salary.objects.get(employee=self.pk, period__month=today.month, period__year=today.year)
+        except Salary.DoesNotExist:
+            try:
+                wages = Salary.objects.filter(employee=self.pk).first()
+            except Salary.DoesNotExist:
+                print("No salary object found.")
+                wages = None
 
-        p_c = wages.paypal*Decimal(blue)
-        return p_c
+        if wages is None:
+            try:
+                wages = Salary.objects.create(employee=self.pk, paypal=0)
+            except Exception as e:
+                print("Error creating salary object:", str(e))
+                wages = None
+
+        if wages is not None:
+            return wages.paypal*Decimal(blue)
+        else:
+            return None
     
     def get_mp(self):
-        wages  = Salary.objects.filter(employee=self.pk).latest() 
-        i = wages.mp
-        return i 
+        try:
+            wages = Salary.objects.get(employee=self.pk, period__month=today.month, period__year=today.year)
+        except Salary.DoesNotExist:
+            try:
+                wages = Salary.objects.filter(employee=self.pk).first()
+            except Salary.DoesNotExist:
+                print("No salary object found.")
+                wages = None
+
+        if wages is None:
+            try:
+                wages = Salary.objects.create(employee=self.pk, mp=0)
+            except Exception as e:
+                print("Error creating salary object:", str(e))
+                wages = None
+
+        if wages is not None:
+            return wages.mp
+        else:
+            return None
+
     
     def get_atm(self):
-        wages  = Salary.objects.filter(employee=self.pk).latest() 
-        i = wages.atm_cash
-        return i 
-    
+        
+        try:
+            wages = Salary.objects.get(employee=self.pk, period__month=today.month, period__year=today.year)
+        except Salary.DoesNotExist:
+            try:
+                wages = Salary.objects.filter(employee=self.pk).first()
+            except Salary.DoesNotExist:
+                print("No salary object found.")
+                wages = None
+
+        if wages is None:
+            try:
+                wages = Salary.objects.create(employee=self.pk, atm_cash=0)
+            except Exception as e:
+                print("Error creating salary object:", str(e))
+                wages = None
+
+        if wages is not None:
+            return wages.atm_cash
+        else:
+            return None
+
     def get_tc(self):
-        wages  = Salary.objects.filter(employee=self.pk).latest() 
-        i = wages.tc
-        return i 
+        try:
+            wages = Salary.objects.get(employee=self.pk, period__month=today.month, period__year=today.year)
+        except Salary.DoesNotExist:
+            try:
+                wages = Salary.objects.filter(employee=self.pk).first()
+            except Salary.DoesNotExist:
+                print("No salary object found.")
+                wages = None
+
+        if wages is None:
+            try:
+                wages = Salary.objects.create(employee=self.pk, tc=0)
+            except Exception as e:
+                print("Error creating salary object:", str(e))
+                wages = None
+
+        if wages is not None:
+            return wages.tc
+        else:
+            return None
+
     
     
     def get_cash(self):
-        wages  = Salary.objects.filter(employee=self.pk).latest() 
-        i = wages.cash
-        return i 
+        try:
+            wages = Salary.objects.get(employee=self.pk, period__month=today.month, period__year=today.year)
+        except Salary.DoesNotExist:
+            try:
+                wages = Salary.objects.filter(employee=self.pk).first()
+            except Salary.DoesNotExist:
+                print("No salary object found.")
+                wages = None
+
+        if wages is None:
+            try:
+                wages = Salary.objects.create(employee=self.pk, cash=0)
+            except Exception as e:
+                print("Error creating salary object:", str(e))
+                wages = None
+
+        if wages is not None:
+            return wages.cash
+        else:
+            return None
     
     def get_cash_usd (self):
-        wages  = Salary.objects.filter(employee=self.pk).latest() 
+        try:
+            wages = Salary.objects.get(employee=self.pk, period__month=today.month, period__year=today.year)
+        except Salary.DoesNotExist:
+            try:
+                wages = Salary.objects.filter(employee=self.pk).first()
+            except Salary.DoesNotExist:
+                print("No salary object found.")
+                wages = None
 
-        c = wages.cash_usd*Decimal(blue)
-        return c
-    
+        if wages is None:
+            try:
+                wages = Salary.objects.create(employee=self.pk, cash_usd=0)
+            except Exception as e:
+                print("Error creating salary object:", str(e))
+                wages = None
+
+        if wages is not None:
+            return wages.cash_usd*Decimal(blue)
+        else:
+            return None
+
     
     def get_total (self):
         total = self.get_white() + self.get_social() + self.get_nigga()
         return total
     
     def get_total_ceo (self):
-        wages  = Salary.objects.filter(employee=self.pk).latest() 
+        try:
+            wages = Salary.objects.get(employee=self.pk, period__month=today.month, period__year=today.year)
+        except Salary.DoesNotExist:
+            try:
+                wages = Salary.objects.filter(employee=self.pk).first()
+            except Salary.DoesNotExist:
+                print("No salary object found.")
+                wages = None
+
+        if wages is None:
+            try:
+                wages = Salary.objects.create(employee=self)
+            except Exception as e:
+                print("Error creating salary object:", str(e))
+                wages = None
 
         total = wages.salary + wages.mp + wages.atm_cash + wages.cash + wages.tc + self.get_paypal() + self.get_cash_usd()
         return total
     
     def get_aguinaldo_mensual (self):
-        wages  = Salary.objects.filter(employee=self.pk).latest() 
+        
 
         if self.rol == "CEO":
-            month = wages.salary/12
+            try:
+                wages = Salary.objects.get(employee=self.pk, period__month=today.month, period__year=today.year)
+            except Salary.DoesNotExist:
+                try:
+                    wages = Salary.objects.filter(employee=self.pk).first()
+                except Salary.DoesNotExist:
+                    print("No salary object found.")
+                    wages = None
+
+            if wages is None:
+                try:
+                    wages = Salary.objects.create(employee=self.pk)
+                except Exception as e:
+                    print("Error creating salary object:", str(e))
+                    wages = None
+
+            if wages is not None:
+                month = wages.salary/12
+            else:
+                month = 0
+            
+            
         else:
+            try:
+                wages  = Salary.objects.get(employee=self.pk, period__month=today.month, period__year=today.year)
+
+                
+            except: 
+                try:
+                    wages  = Salary.objects.filter(employee=self.pk).first()
+                
+                except:
+                    
+                    wages = Salary.objects.create(employee=self.pk) 
             month = self.get_total()/12
         return month
     
@@ -214,7 +421,7 @@ class Holiday (models.Model):
     
     month = models.CharField(choices=MONTH_CHOICES, max_length=150, null=True, blank= False, default=None, verbose_name="MONTH")
     
-    days = models.SmallIntegerField(verbose_name="DAYS", null=True, blank= True)
+    days = models.SmallIntegerField(verbose_name="WORKING DAYS", null=True, blank= True)
     date_start = models.DateField(null=True, blank= True)
     date_end = models.DateField(null=True, blank= True)
     
@@ -257,7 +464,29 @@ class Expense(models.Model):
     date = models.DateField(default=date.today)
     category = models.CharField(max_length=80, default=None, choices=EXP_CHOICES, blank=False, verbose_name="CATEGORY")
     concept = models.CharField(max_length=150, verbose_name="CONCEPT", blank=True, null=True)
+    
     value = models.DecimalField(decimal_places=2, max_digits=15, blank= True, null= True, verbose_name="VALUE")
+    
+    
+    ARS = "ARS"
+    USD = "USD"
+    COIN_CHOICES = (
+        (ARS, ('ARS')),
+        (USD, ('USD')))
+    
+    currency = models.CharField(max_length=50, default="ARS", choices=COIN_CHOICES, null=True, blank=False, verbose_name="CURRENCY")
+
+    change = models.DecimalField(default=0, verbose_name="PRICE", decimal_places=2, max_digits=12, null=True, blank=True)
+
+    @property
+    def get_change(self):
+        change = 0
+        if self.currency == "USD":
+            change = self.value*Decimal(blue)
+            return change
+        else:
+            return self.value
+        
     wop = models.CharField(max_length=80, default=None, blank= False, choices=WOP_CHOICES, verbose_name="WOP")
 
     def __str__ (self):
@@ -266,3 +495,11 @@ class Expense(models.Model):
 
     class Meta:
         ordering = ['-date']
+        
+    
+    
+    def save(self, *args, **kwargs):                                    
+
+        self.change = self.get_change         
+
+        super(Expense, self).save(*args, **kwargs)

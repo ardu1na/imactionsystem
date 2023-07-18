@@ -1,14 +1,13 @@
-from django.forms import ModelForm, CheckboxInput,\
-TextInput, Select, ModelChoiceField, Textarea, HiddenInput, IntegerField
-from django import forms
+from django.forms import ModelForm, Select, CharField, \
+TextInput, ModelChoiceField, Textarea, HiddenInput, IntegerField
 
 from sales.models import Sale, Service, Adj 
 from customers.models import Client
-
+from expenses.models import Employee
     
 class AdjForm(ModelForm):
-    client = forms.CharField(
-        widget=forms.TextInput(attrs={
+    client = CharField(
+        widget=TextInput(attrs={
             'class': 'form-control wide mb-3',
             'placeholder': 'type client name...',
             'id': 'client',
@@ -86,11 +85,16 @@ class SaleForm(ModelForm):
             'placeholder':"client",}), empty_label = ' - ')
 
     
+    
+    sales_rep = ModelChoiceField(queryset=Employee.objects.filter(rol="Sales", active="Yes"), widget=Select(attrs={'class':"default-select form-control wide mb-3",
+            'id':"sales_rep",
+            'placeholder':"Sales Rep",}), empty_label = ' - ')
 
+    
     class Meta:
         model = Sale
         
-        exclude = ['sale_id', 'revenue', 'change']
+        exclude = ['sale_id', 'revenue', 'change', 'suscription']
         
         
         widgets = {
@@ -152,8 +156,87 @@ class SaleForm(ModelForm):
 
 
 
+
+class SaleForm2(ModelForm):
+    
+    
+    
+    sales_rep = ModelChoiceField(queryset=Employee.objects.filter(rol="Sales", active="Yes"), widget=Select(attrs={'class':"default-select form-control wide mb-3",
+            'id':"sales_rep",
+            'placeholder':"Sales Rep",}), empty_label = ' - ')
+    
+
+    class Meta:
+        model = Sale
+        
+        exclude = ['sale_id', 'revenue', 'change', 'client', 'suscription']
+        
+        
+        widgets = {
+            
+            'date' : TextInput(attrs={'class':"datetimepicker form-control",
+            'id':"PublishDateTimeTextbox",
+            'type':"date",
+            'placeholder':"Date",}),
+
+            'kind' : Select(attrs={'class':"default-select form-control wide mb-3",
+            'id':"kind",
+            'placeholder':"Kind",}),
+
+            'comments' : TextInput(attrs={'class':"form-control",
+            'id':"comments",
+            'placeholder':"Comments",}),
+
+            'service' : Select(attrs={
+                'class':"default-select form-control wide mb-3",
+                'id':"service",
+                'placeholder' : "Service",
+                }
+            ),
+
+
+            'price' : TextInput(attrs={
+                'class':"form-control",
+                'id':"price",
+                'placeholder' : "Price"
+                }
+            ),
+            
+            'currency' : Select(attrs={'class':"default-select form-control wide mb-3",
+            'id':"currency",
+            'placeholder':"Currency",}),
+
+            'note' : TextInput(attrs={
+                'class':"form-control",
+                'id':"note",
+                'placeholder' : "Notes"
+                }
+            ),
+
+            'cost' : TextInput(attrs={
+                'class':"form-control",
+                'id':"cost",
+                'placeholder' : "Cost"
+                }
+            ),
+
+            'status' : Select(attrs={
+                'class':"default-select form-control wide mb-3",
+                'id':"status",
+                'placeholder' : "Status"
+                }
+            ),
+
+        }
+
+
 class ClientSaleForm(ModelForm):
     
+    
+    
+    sales_rep = ModelChoiceField(queryset=Employee.objects.filter(rol="Sales", active="Yes"), widget=Select(attrs={'class':"default-select form-control wide mb-3",
+            'id':"sales_rep",
+            'placeholder':"Sales Rep",}), empty_label = ' - ')
     
     
     
@@ -256,8 +339,22 @@ class CancellService(ModelForm):
             ),
         }
 
+
+
+
+
+
+
+
+
 class EditSaleForm(ModelForm):
     
+    
+    
+    sales_rep = ModelChoiceField(queryset=Employee.objects.filter(rol="Sales", active="Yes"), widget=Select(attrs={'class':"default-select form-control wide mb-3",
+            'id':"sales_rep",
+            'placeholder':"Sales Rep",}), empty_label = ' - ')
+
         
     class Meta:
         model = Sale

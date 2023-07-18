@@ -140,11 +140,11 @@ $('#date-filter-form').on('change', 'select', function() {
 	
 	// dataTable5
 	var table = $('#example5').DataTable({
-		searching: false,
-		paging:false,
-		select: false,
-		info: false,         
-		lengthChange:false ,
+		searching: true,
+		paging:true,
+		select: true,
+		info: true,         
+		lengthChange:true ,
 		language: {
 			paginate: {
 			  next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',

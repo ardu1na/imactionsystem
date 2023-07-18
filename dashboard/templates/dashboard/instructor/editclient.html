@@ -293,8 +293,8 @@
 
                                             <li class="list-group-item">
                                                 
-                                                <a class="mb-4 d-flex flex-row-reverse"> {% if sale.suscription.state == False %}
-                                                    ( service cancelled ) 
+                                                <a class="mb-4 d-flex flex-row-reverse"> {% if sale.suscription.state == False %}( {% if sale.client.cancelled == "Cancelled" %} 
+                                                    client {% else %} service {% endif %} cancelled ) 
                                                     {% endif %} 
                                                     {{sale.date|date:"d/m/Y"}}</a>
 
@@ -312,7 +312,7 @@
                                                     <span class="badge light badge-warning">
                                                         {{sale.status|default_if_none:"?"}}
                                                     </span> 
-                                                {% endif %} ${{sale.get_change}} </p>
+                                                {% endif %} ${{sale.change|floatformat:2}} </p>
                                                 
                                                 {% if sale.note %}
                                                 <p> {{sale.note}} </p>
@@ -343,19 +343,24 @@
 
                                             <li class="list-group-item">
                                                 <a class="mb-4 d-flex flex-row-reverse"> {% if service.state == False %}
-                                                    ( cancelled ) 
-                                                    {% endif %} {{service.created_at|date:"d/m/Y"}}</a>
+                                                    ( cancelled ) {{service.date_can|date:"d/m/Y"}} {% else %}
+                                                     {{service.created_at|date:"d/m/Y"}}{% endif %}</a>
 
-                                                <h4>{{service.service}}</h4> 
+                                                <h4 href="{% url 'dashboard:editservice' id=service.id %}">{{service.service}}</h4> 
                                                 
 
                                                 <p class="fs-4">
                                                    
                                                 ${{service.total|floatformat:2}} </p>
                                                 
-                                                <div class="form-floating my-2 d-flex flex-row-reverse">                                                
+                                                <div class="form-floating my-2 d-flex flex-row-reverse">                                                {% if service.state == True %}
                                                     <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancell{{service.id}}">Cancell Service
                                                     </button>
+                                                    {% else %}
+                                                    <a href="{% url 'dashboard:restoreservice' id=service.id %}" class="btn btn-success px-3 fs-3">Restore Service
+                                                    </a>
+                                                    {% endif %}
+                                                    
                                                 </div>                                                
 
                                                 <!-- START modal cancell service -->

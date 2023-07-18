@@ -1,0 +1,88 @@
+{% extends 'dashboard/elements/layouts/admin.html' %}
+
+{% load static %}
+
+{% block additional_css %}
+{% endblock %}
+
+{% block content %}
+
+        <div class="row page-titles">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a>Services</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'dashboard:editclient' id=editservice.client.id %}" > {{editservice.client}} </a>  </li>
+                <li class="breadcrumb-item active"> {{editservice.service}} service </li>
+
+            </ol> 
+        </div>
+       
+        <div class="row">
+            <div class="col-xl-12 col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title"> {{editservice.service}} - {{editservice.client}} </h4>
+                    </div>
+                    <div class="card-body mt-0 pt-0">
+                        <div class="basic-form">
+                                    <div class="pt-1 pb-4">
+                                        <div class="formcontrol">                                 <div class="form-group my-3">
+                                                    <div class="fs-5 ml-4">
+                                                        Created at: {{editservice.created_at}}
+                                                    </div>
+                                                    <br>
+                                                    <div class="fs-5 ml-4">
+                                                        Value <strong>${{editservice.total|floatformat:2}}</strong> 
+                                                    </div>
+                                                    <br>
+                                                   
+                                                
+                                                    <br>
+                                                    {% if editservice.state == False %}
+                                                    <div class="fs-5 ml-4">
+                                                       {% if editservice.client.cancelled == "Cancelled" %}
+                                                       <strong>Account cancelled </strong>{% if editservice.client.date_can %}<span class="mx-2">at {{editservice.client.date_can|date:"d/m/Y"}}</span>{% endif %} 
+                                                       <p class="my-4">{{editservice.client.comment_cam}}</p>
+                                                       {% else %} 
+                                                       <strong>Service cancelled</strong>{% if editservice.date_can %}<span class="mx-2">at {{editservice.date_can|date:"d/m/Y"}}</span>{% endif %}
+                                                        
+                                                       <p class="my-4">{{editservice.client.comment_cam}}</p>
+                                                       
+                                                       {% endif %} 
+                                                        
+                                                        {% if editservice.client.cancelled == "Active" %}
+                                                       <div class="form-floating my-2 d-flex flex-row-reverse">             
+                                                        
+                                                        <a href="{% url 'dashboard:restoreservice' id=editservice.id %}" class="btn btn-success px-3 fs-3">Restore Service
+                                                        </a>
+                                                    </div>
+                                                                                                       
+                                                    {% endif %}
+                                                    </div>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>       
+
+                                        
+
+                                    </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+{% endblock %}
+
+
+
+
+
+{% block additional_js %}
+
+
+
+
+
+{% endblock %}
