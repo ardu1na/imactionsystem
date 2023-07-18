@@ -8,7 +8,6 @@ db.sqlite3
 db.sqlite3-journal
 migrations/
 core/settings.py
-sales/admin.py
 env/
 .env
 frontend/
