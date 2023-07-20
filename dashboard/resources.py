@@ -209,12 +209,55 @@ class EmployeeResource(resources.ModelResource):
         model = Employee      
         
 
-        
             
-class ExportStaff(resources.ModelResource): 
+class ExportCeo(resources.ModelResource): 
+    last_salary = fields.Field(attribute='get_salary', column_name='SALARY')
+    
+    mp = fields.Field(attribute='get_mp', column_name='MP')
+    tc = fields.Field(attribute='get_tc', column_name='TC')
+    atm = fields.Field(attribute='get_atm', column_name='ATM')
+    cash = fields.Field(attribute='get_cash', column_name='CASH')
+    usd = fields.Field(attribute='get_cash_usd', column_name='CASH USD')
+    paypal = fields.Field(attribute='get_paypal', column_name='PAYPAL')
+
+    monthly_bonus = fields.Field(attribute='get_aguinaldo_mensual', column_name='MONTHLY BONUS')
+    
+    total =fields.Field(attribute='get_total_ceo', column_name='TOTAL')
+    
     
     class Meta:
         model = Employee
+        fields = ('name', 'rol', 'dob', 'address', 'email', 'tel', 'date_join', 'active', 'date_gone', 'last_salary', 'mp','tc','atm','cash','usd','paypal','monthly_bonus', 'total')
+        
+        
+
+    def get_queryset(self):
+        # Get the original queryset
+        queryset = super().get_queryset()
+
+        # Filter out employees with role="CEO"
+        queryset = queryset.filter(rol="CEO")
+
+        return queryset
+
+        
+            
+class ExportStaff(resources.ModelResource): 
+    last_salary = fields.Field(attribute='get_salary', column_name='SALARY')
+    white = fields.Field(attribute='get_white', column_name='WHITE')
+    tax = fields.Field(attribute='get_social', column_name='TAX')
+    nigga = fields.Field(attribute='get_nigga', column_name='NIGGA')
+    
+    monthly_bonus = fields.Field(attribute='get_aguinaldo_mensual', column_name='MONTHLY BONUS')
+    
+    total =fields.Field(attribute='get_total', column_name='TOTAL')
+    
+    
+    class Meta:
+        model = Employee
+        fields = ('name', 'rol', 'dob', 'address', 'email', 'tel', 'date_join', 'active', 'date_gone', 'last_salary', 'white','tax','nigga','monthly_bonus', 'total')
+        
+        
 
     def get_queryset(self):
         # Get the original queryset

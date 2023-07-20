@@ -40,7 +40,7 @@ from django.http import HttpResponse
 from easyaudit.models import CRUDEvent, LoginEvent
 
 from django.contrib.contenttypes.models import ContentType
-from dashboard.resources import ExportSales, ClientResource, ExportRR, ExpenseResource, ExportStaff
+from dashboard.resources import ExportSales, ClientResource, ExportRR, ExpenseResource, ExportStaff, ExportCeo
 from itertools import chain
 
 
@@ -600,6 +600,16 @@ def deleteholiday(request, id):
 
 
 ############ CEO
+
+
+## función para exportar data de ceo para excel
+@login_required(login_url='dashboard:login')
+def export_ceo(request):
+    dataset = ExportCeo().export()
+    response = HttpResponse(dataset.xlsx, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename="ceo.xlsx"'
+    return response
+
 
 # lista de ceo
 @user_passes_test(lambda user: user.groups.filter(name='admin').exists())

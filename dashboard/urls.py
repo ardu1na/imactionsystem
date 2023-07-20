@@ -33,6 +33,7 @@ urlpatterns = [
     path('ceo/',dashboard_views.ceo, name="ceo"),
     path('ceo/edit/<int:id>/', dashboard_views.editceo, name="editceo"),  
     path('ceo/delete/<int:id>/', dashboard_views.deleteceo, name="deleteceo"),  
+    path('ceo/export/', dashboard_views.export_ceo, name="export_ceo"),  
 
     path('expenses/', dashboard_views.expenses, name="expenses"),
     path('expenses/delete/<int:id>/', dashboard_views.deleteexpense, name="deleteexpense"), 
