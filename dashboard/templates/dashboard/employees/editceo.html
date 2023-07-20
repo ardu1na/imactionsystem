@@ -1,0 +1,458 @@
+{% extends 'dashboard/elements/layouts/admin.html' %}
+{% load static %}
+
+{% block content %}
+
+
+<!-- START modal edit wages employee -->
+<div class="modal fade " id="editwage{{editemployee.id}}" tabindex="-1" aria-labelledby="editwage{{editemployee.id}}Label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="editwage{{editemployee.id}}Label">{{editemployee.name}} WAGES</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>       
+
+            <form  method="post">
+            {% csrf_token %}
+                <div class="modal-body">
+                
+                  
+                    <div class="form-group my-3">
+                        <label class="form-label">Salary</label>
+
+                         {{editwageform.salary}}
+                    </div>
+
+                
+
+                    <div id="ceo">
+                        <div class="form-group my-3">
+                            <label class="form-label">MP</label>
+
+                                {{editwageform.mp}}
+                        </div>
+
+                        <div class="form-group my-3">
+                            <label class="form-label">TC</label>
+
+                            {{editwageform.tc}}
+                        </div>
+
+                        <div class="form-group my-3">
+                            <label class="form-label">ATM</label>
+
+                             {{editwageform.atm_cash}}
+                        </div>
+
+                        <div class="form-group my-3">
+                            <label class="form-label">CASH $</label>
+
+                             {{editwageform.cash}}
+                        </div>
+
+
+                        <div class="form-group my-3">
+                            <label class="form-label">CASH USD</label>
+
+                             {{editwageform.cash_usd}}
+                        </div>
+
+
+                        <div class="form-group my-3">
+                            <label class="form-label">PAYPAL</label>
+
+                             {{editwageform.paypal}}
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-floating my-3 text-center">
+                        <button type="submit" class="shadow-sm btn btn-secondary" name="editwage"><i class="fa-solid fa-check me-2"></i> Submit</button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- END modal add employee -->
+
+
+
+        <div class="page-titles">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'dashboard:ceo' %}">CEO</a></li>
+                <li class="breadcrumb-item active"><a href="javascript:void(0)">{{editemployee.name}}</a></li>
+            </ol>
+        </div>
+
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-bs-toggle="tab" href="#home8">
+                                    <span>
+                                        <i class="ti-user fs-4 me-2"></i>
+                                    </span> Personal
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="salary-tab" data-bs-toggle="tab" href="#messages8">
+                                    <span> 
+                                        <i class="ti-wallet fs-4 me-2"></i>
+                                    </span> Pay
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="holiday-tab" data-bs-toggle="tab" href="#holiday">
+                                    <span> 
+                                        <i class="ti-star fs-4 me-2"></i>
+                                    </span> Holidays
+                                </a>
+                            </li>
+                        </ul>
+                        <!-- Tab panes -->
+                        <div class="tab-content tabcontent-border">
+
+
+                            <div class="tab-pane fade show active" id="home8" role="tabpanel">
+                                <div class="pt-4">
+
+                                    <div class="basic-form">
+                                        <form method="post">
+                                            {% csrf_token %}
+                                            <div class="row">
+                                                <div class="mb-3 col-md-6">
+                                                    <label class="form-label">Name</label>
+                                                    {{editform.name}}
+                                                </div>
+                                                <div class="mb-3 col-md-6">
+                                                    <label class="form-label">Email</label>
+                                                    {{editform.email}}
+                                                </div>
+                                                <div class="mb-3 col-md-6">
+                                                    <label class="form-label">Address</label>
+                                                    {{editform.address}}
+                                                </div>
+                                                <div class="mb-3 col-md-6">
+                                                    <label>Phone Number</label>
+                                                    {{editform.tel}}
+                                                </div>
+
+                                                <div class="form-group my-3">
+                                                    <label class="form-label">Birthday</label>
+                                                    {{editform.dob}}
+                                                </div>
+                                            </div>
+
+                                                <div class="form-group my-3">
+                                                    <label class="form-label">Role</label>
+                                                    {{editform.rol}}
+                                                </div>
+
+                                                <div class="form-group my-3">
+                                                    <label class="form-label">Joined</label>
+                                                    {{editform.date_join}}
+                                                </div>
+
+                                                <div class="form-group my-3">
+                                                <label class="form-label">Active?</label>
+                                                {{ editform.active }}
+                                            </div>
+
+                                            <div class="mb-3" id="cancellation">
+                                                <label class="form-label">Gone</label>
+                                                {{ editform.date_gone }}
+                                            </div>
+
+
+                                            <button type="submit" name="editemployee" class="btn btn-primary">Save</button>
+                                        </form>
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                            <div class="tab-pane fade" id="messages8" role="tabpanel">
+                                <div class="pt-4 my-5">
+                                    
+                                    <div class="basic-list-group m-3 px-4">
+                                        <div class="form-floating my-2 d-flex flex-row-reverse">                                                
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editwage{{editemployee.id}}">CHANGE
+                                            </button>
+                                        </div>
+                                        <ul class="list-group">
+                                            <li class="list-group-item">
+                                                <h4>SALARY</h4> 
+                                                <p class="fs-4">
+                                                    <span class="badge light badge-info">
+                                                        $ {{editemployee.get_salary|floatformat:2}}
+                                                    </span>
+                                                </p>
+                                            </li>
+
+                                           
+                                            <li class="list-group-item">
+                                                <h4>MP</h4> 
+                                                <p class="fs-4">
+                                                    <span class="badge light badge-primary">
+                                                        $ {{editemployee.get_mp|floatformat:2}}
+                                                    </span>
+                                                </p>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <h4>TC</h4> 
+                                                <p class="fs-4">
+                                                    <span class="badge light badge-secondary">
+                                                        $ {{editemployee.get_tc|floatformat:2}}
+                                                    </span>
+                                                </p>
+                                            </li>
+                                            
+
+
+                                            <li class="list-group-item">
+                                                <h4>ATM</h4> 
+                                                <p class="fs-4">
+                                                    <span class="badge light badge-secondary">
+                                                        $ {{editemployee.get_atm|floatformat:2}}
+                                                    </span>
+                                                </p>
+                                            </li>
+
+                                            <li class="list-group-item">
+                                                <h4>CASH $ </h4> 
+                                                <p class="fs-4">
+                                                    <span class="badge light badge-warning">
+                                                        $ {{editemployee.get_cash|floatformat:2}}
+                                                    </span>
+                                                </p>
+                                            </li>
+
+                                            <li class="list-group-item">
+                                                <h4>CASH USD</h4> 
+                                                <p class="fs-4">
+                                                    <span class="badge light badge-success">
+                                                        $ {{editemployee.get_cash_usd|floatformat:2}}
+                                                    </span>
+                                                </p>
+                                            </li>
+
+
+                                            <li class="list-group-item">
+                                                <h4>PAYPAL</h4> 
+                                                <p class="fs-4">
+                                                    <span class="badge light badge-info">
+                                                        $ {{editemployee.get_paypal|floatformat:2}}
+                                                    </span>
+                                                </p>
+                                            </li>
+
+                                           
+
+                                            <li class="list-group-item">
+                                                <h4>MONTHLY BONUS</h4> 
+                                                <p class="fs-4">
+                                                    <span class="badge light badge-light">
+                                                        $  {{editemployee.get_aguinaldo_mensual|floatformat:2}}
+                                                    </span>
+                                                </p>
+                                            </li>
+
+                                            <li class="list-group-item">
+                                                <h4>TOTAL</h4> 
+                                                <p class="fs-4">
+                                                    <span class="badge light badge-dark">
+                                                        $  {{editemployee.get_total_ceo|floatformat:2}}
+                                                    </span>
+                                                </p>
+                                            </li>
+
+                                        </ul>
+                                    </div>
+                                </div>
+                                {% include 'dashboard/employees/salarieceo.html' %}
+
+
+                            </div>
+
+
+                            <div class="tab-pane fade" id="holiday" role="tabpanel">
+                                <div class="pt-4 mb-4">
+
+                                    <div class="basic-form mb-4">
+                                        <form method="post">
+                                            {% csrf_token %}
+                                            <div class="row">
+                                                <div class="form-group my-3">
+                                                    <label class="form-label">YEAR</label>
+                                                    {{holidayform.year}}
+                                                </div>
+
+
+
+
+                                                <div class="form-group my-3">
+                                                    <label class="form-label">MONTH</label>
+
+
+                                                        {{holidayform.month}}
+                                                </div>
+
+
+                                                <div class="form-group my-3">
+                                                    <label class="form-label">DAYS</label>
+
+
+                                                        {{holidayform.days}}
+                                                </div>
+
+                                                <div class="form-group my-3">
+                                                    <label class="form-label">START</label>
+                                                    {{holidayform.date_start}}
+                                                </div>
+
+                                                <div class="form-group my-3">
+                                                    <label>END</label>
+                                                    {{holidayform.date_end}}
+                                                </div>
+                                            </div>
+
+
+                                            <button type="submit" name="holiday" class="mb-4 btn btn-primary">ADD</button>
+                                        </form>
+                                    </div>
+
+
+                                    {% include 'dashboard/employees/holidays.html' %}
+
+
+                                </div>
+                            </div>
+
+
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+<!-- modals delete holidays -->
+{% for i in holidays %}
+<div class="modal" id="deleteholiday{{i.id}}">
+    {% include 'dashboard/employees/deleteholiday.html' %}
+</div>
+{% endfor %}
+
+
+
+{% endblock %}
+
+
+{% block additional_js %}
+
+
+<script>
+    // Check if URL contains "#pay"
+    if(window.location.hash == "#pay") {
+        // Get the salary tab element
+        var salaryTab = document.getElementById("salary-tab");
+        // Activate the tab
+        var tab = new bootstrap.Tab(salaryTab);
+        tab.show();
+    }
+
+    if(window.location.hash == "#holiday") {
+        // Get the salary tab element
+        var holidayTab = document.getElementById("holiday-tab");
+        // Activate the tab
+        var tab = new bootstrap.Tab(holidayTab);
+        tab.show();
+    }
+
+</script>
+
+<!-- change active select date_gone -->
+<script>
+    var can = document.getElementById("active");
+    var coso = document.getElementById("cancellation");
+    coso.style.display="none"
+    can.onchange=function(){
+    
+        if(this.value=="Yes"){
+            coso.style.display="none";  
+        }else{
+            coso.style.display="block";
+        }
+    }        
+</script>
+
+
+<script>
+
+    // Get references to the holiday tab and the card with the ID "holidays"
+const holidayTab = document.getElementById('holiday-tab');
+const holidaysCard = document.getElementById('holidays');
+
+// Hide the holidays card by default
+holidaysCard.style.display = 'none';
+
+// Add an event listener to the holiday tab that listens for clicks
+holidayTab.addEventListener('click', function() {
+  // Toggle the display property of the holidays card based on whether the tab is active or not
+  if (holidayTab.classList.contains('active')) {
+    holidaysCard.style.display = 'block';
+  } else {
+    holidaysCard.style.display = 'none';
+  }
+});
+
+document.addEventListener('click', function(event) {
+    // Check if the clicked element is outside the holidays card
+    if (!holidaysCard.contains(event.target) && !holidayTab.contains(event.target)) {
+      holidaysCard.style.display = 'none';
+      holidayTab.classList.remove('active');
+    }
+  });
+
+    </script>
+
+
+<script>
+    var select = document.getElementById("rol"); 
+    var option = select.querySelector('option[value="SEO"]');
+    var option2 = select.querySelector('option[value="GADS"]');
+    var option3 = select.querySelector('option[value="FADS"]');
+    var option4 = select.querySelector('option[value="Design"]');
+    var option5 = select.querySelector('option[value="Admin"]');
+    var option6 = select.querySelector('option[value="Sales"]');
+    var option7 = select.querySelector('option[value="Others"]');
+
+        if (option) 
+        {select.removeChild(option);}
+        if (option2) 
+        {select.removeChild(option2);}
+        if (option3) 
+        {select.removeChild(option3);}
+        if (option4) 
+        {select.removeChild(option4);}
+        if (option5) 
+        {select.removeChild(option5);}
+        if (option6) 
+        {select.removeChild(option6);}
+        if (option7) 
+        {select.removeChild(option7);}
+
+</script>
+
+
+{% endblock %}

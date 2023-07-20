@@ -49,7 +49,6 @@ class HolidayEmployeeForm(ModelForm):
         }
 
 
-
 class ExpenseForm(ModelForm):  
     class Meta:
         model = Expense
@@ -91,7 +90,6 @@ class ExpenseForm(ModelForm):
                 }),
 
         }
-
 
 
 class EmployeeForm(ModelForm): 
@@ -173,8 +171,6 @@ class EmployeeSalaryForm(ModelForm):
            
         }
         
-        
-
 
 class CeoForm(ModelForm): 
     
@@ -289,9 +285,6 @@ class CeoSalaryForm(ModelForm):
         }
     
     
-    
-    
-    
 class EditEmployeeForm(ModelForm):
     
     class Meta:
@@ -393,8 +386,7 @@ class EditWageForm(ModelForm):
             
             }
         
-        
-        
+                
 class EditWageCeo(ModelForm):
     
     class Meta:

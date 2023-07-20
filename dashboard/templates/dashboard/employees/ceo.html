@@ -1,0 +1,272 @@
+{% extends 'dashboard/elements/layouts/admin.html' %}
+
+{% load static %}
+
+{% block additional_css %}
+{% endblock %}
+
+{% block content %}
+
+
+
+<!-- MAIN EMPLOYEES -->
+    
+
+    <div class="row">     
+        <div class="col-xl-12">
+            
+
+            <div class="card">
+
+                <div class="card-header border-0 flex-wrap pb-0 mb-5">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">NEW<span class="btn-icon-end">
+                        <i class="fa fa-plus"></i></span> </button>
+    
+                        <a class="btn btn-info" href="{% url 'dashboard:export_ceo' %}">
+                            Export CEO Info
+                            <span class="btn-icon-end">
+                                <i class="fa-solid fa-file-export"></i>
+                            </span>
+                        </a>    
+                </div>
+
+                
+                <div class="card-body">
+                    
+                    <!-- TABLE EMPLOYEES -->
+                    <div class="table-responsive py-4">
+                        <table id="example4" class="display mb-4" style="min-width: 845px">
+                            <thead>
+                                <tr>
+                                    
+                                    <th>NAME</th>
+                                    <th>SALARY</th>
+                                    <th>MP</th>
+                                    <th>TC</th>
+                                   
+                                    <th>ATM</th>
+                                    <th>CASH $</th>
+                                    <th>CASH USD</th>
+                                    <th>PAYPAL</th>
+                                    <th>MONTHLY BONUS </th>
+                                    <th>TOTAL </th>
+
+
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>{% if ceo %}
+                                {% for employee in ceo %}
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <a class="mb-0 fs-16 font-w500" href="{% url 'dashboard:editceo' id=employee.id %}">{{employee.name}}</a>
+                                        </div>
+                                    </td>
+
+
+                                    <td>${{employee.get_salary|floatformat:2|default_if_none:"0"}}</td>
+
+                                    <td>${{employee.get_mp|floatformat:2|default_if_none:"0"}}</td>
+                                    
+                                    <td>${{employee.get_tc|floatformat:2|default_if_none:"0"}}</td>
+                                    <td>${{employee.get_atm|floatformat:2|default_if_none:"0"}}</td>
+                                    
+                                    <td>${{employee.get_cash|floatformat:2|default_if_none:"0"}}</td>
+
+                                    <td>${{employee.get_cash_usd|floatformat:2|default_if_none:"0"}}</td>
+                                    
+                                    <td>${{employee.get_paypal|floatformat:2|default_if_none:"0"}}</td>
+
+                                    <td>${{employee.get_aguinaldo_mensual|floatformat:2|default_if_none:"0"}}</td>
+
+                                    <td>${{employee.get_total_ceo|floatformat:2|default_if_none:"0"}}</td>
+
+                                    <td>
+                                        <div class="d-flex flex-row">
+                                            
+                                                <!-- delete BUTTON -->
+                                                <a class="btn btn-danger" href="{% url 'dashboard:deleteceo' id=employee.id %}">
+                                                    <i class="fa-solid fa-trash fs-7"></i>
+                                        </a>                                                                                  
+                                                <!-- edit BUTTON -->
+                                                    <a href="{% url 'dashboard:editceo' id=employee.id %}" class="px-3 shadow-sm btn btn-secondary mx-1">
+                                                        <i class="fa-solid fa-pen-to-square"></i>
+                                                    </a>                                                
+                                        </div>                                        
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                {%endif%}
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+                       
+        </div>
+    </div>
+<!-- end MAIN employees -->
+
+
+
+
+<!-- START modal add employee -->
+    <div class="modal fade " id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Add a new Employee</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>       
+
+                <form  method="post">
+                {% csrf_token %} 
+                    <div class="modal-body">
+                    
+                        <div class="form-group my-3">
+                            <label class="form-label">Date</label>
+                            {{ ceo_form.date_join}}
+                        </div>
+
+                        <div class="form-group my-3">
+                            {{ceo_form.name}}
+                        </div>      
+                        
+                        <div class="form-group my-3">
+                            <label class="form-label">Birthday</label>
+                            {{ceo_form.dob}}
+                        </div>
+
+                        <div class="accordion accordion-rounded-stylish" id="accordion-twelve">
+                            <div class="accordion-item">
+                                
+                                <div class="accordion-header  rounded-lg" id="accord-12One" data-bs-toggle="collapse" data-bs-target="#collapse12One" aria-controls="collapse12One"   aria-expanded="true"  role="button">
+                                    <span class="accordion-header-icon"></span>
+                                    <span class="accordion-header-text">Contact Data</span>
+                                    <span class="accordion-header-indicator"></span>
+                                </div>
+
+                                <div id="collapse12One" class="collapse accordion__body hidden" aria-labelledby="accord-12One" data-bs-parent="#accordion-twelve">
+                                    <div class="accordion-body-text">
+                                    
+                                        <div class="form-group my-3 d-flex justify-content-between">
+                                            <div class="me-3">
+                                                {{ceo_form.email}} </div>                                            
+                                        </div>
+
+                                        <div class="form-group my-3">
+                                            {{ceo_form.tel}}
+                                        </div>
+                                        
+                                        <div class="form-group my-3">
+                                            {{ceo_form.address}}
+                                        </div>
+                                        
+                                    </div>
+                                </div>                             
+                            </div>                          
+                        </div>
+
+                        <div class="form-group my-3">
+                            {{ceo_form.rol}}
+                        </div>
+
+                        <div class="form-group my-3">
+                            <label class="form-label">Salary</label>
+
+                             {{salary_form.salary}}
+                        </div>
+
+
+                        <div id="ceo">
+                            <div class="form-group my-3">
+                                <label class="form-label">MP</label>
+
+                                    {{salary_form.mp}}
+                            </div>
+
+                            <div class="form-group my-3">
+                                <label class="form-label">TC</label>
+
+                             {{salary_form.tc}}
+                            </div>
+
+                            <div class="form-group my-3">
+                                <label class="form-label">ATM</label>
+    
+                                 {{salary_form.atm_cash}}
+                            </div>
+    
+                            <div class="form-group my-3">
+                                <label class="form-label">CASH $</label>
+    
+                                 {{salary_form.cash}}
+                            </div>
+
+                            <div class="form-group my-3">
+                                <label class="form-label">CASH USD</label>
+
+                                 {{salary_form.cash_usd}}
+                            </div>
+
+
+                            <div class="form-group my-3">
+                                <label class="form-label">PAYPAL</label>
+
+                                 {{salary_form.paypal}}
+                            </div>
+
+                        </div>
+
+                        <div class="form-floating my-3 text-center">
+                            <button type="submit" class="shadow-sm btn btn-secondary" name="addemployee"><i class="fa-solid fa-check me-2"></i> Submit</button>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+<!-- END modal add employee -->
+{% endblock %}
+
+
+{% block additional_js %}
+       
+
+
+
+
+<script>
+    var select = document.getElementById("rol"); 
+    var option = select.querySelector('option[value="SEO"]');
+    var option2 = select.querySelector('option[value="GADS"]');
+    var option3 = select.querySelector('option[value="FADS"]');
+    var option4 = select.querySelector('option[value="Design"]');
+    var option5 = select.querySelector('option[value="Admin"]');
+    var option6 = select.querySelector('option[value="Sales"]');
+    var option7 = select.querySelector('option[value="Others"]');
+
+        if (option) 
+        {select.removeChild(option);}
+        if (option2) 
+        {select.removeChild(option2);}
+        if (option3) 
+        {select.removeChild(option3);}
+        if (option4) 
+        {select.removeChild(option4);}
+        if (option5) 
+        {select.removeChild(option5);}
+        if (option6) 
+        {select.removeChild(option6);}
+        if (option7) 
+        {select.removeChild(option7);}
+
+</script>
+
+
+
+{% endblock %}

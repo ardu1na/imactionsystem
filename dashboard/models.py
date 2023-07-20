@@ -1,5 +1,30 @@
 from django.db import models
+from datetime import date
 
+
+class AutoRevenue(models.Model):
+    date = models.DateField(default=date.today, editable=True)
+    sales = models.BooleanField(default=False, null=True, blank=True)
+    expenses = models.BooleanField(default=False, null=True, blank=True)
+    wages = models.BooleanField(default=False, null=True, blank=True)
+    
+     
+       
+# SETTINGS
+# # let the user change variables of model method definitions
+class ConfTier(models.Model):
+    tier_v = models.IntegerField(default=30000)
+    tier_iv = models.IntegerField(default=65000)
+    tier_iii = models.IntegerField(default=110000)
+    tier_ii = models.IntegerField(default=200000)
+    tier_i = models.IntegerField(default=200000)
+
+
+
+
+class BackUps(models.Model):
+    date = models.DateField(default=date.today)
+    
 
 class LastBlue (models.Model):
     venta = models.DecimalField(

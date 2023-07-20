@@ -53,8 +53,7 @@ class AdjForm(ModelForm):
                 }
             ),
         }
-        
-        
+
     
 class ChangeAdj(ModelForm):
     
@@ -153,8 +152,6 @@ class SaleForm(ModelForm):
             ),
 
         }
-
-
 
 
 class SaleForm2(ModelForm):
@@ -338,13 +335,6 @@ class CancellService(ModelForm):
                 }
             ),
         }
-
-
-
-
-
-
-
 
 
 class EditSaleForm(ModelForm):

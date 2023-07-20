@@ -2,7 +2,6 @@
 <html lang="en">
 
 <head>
-
     {% load static custom_tags %}
     <meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -17,7 +16,7 @@
 	<meta name="format-detection" content="telephone=no">
 	
 	<!-- PAGE TITLE HERE -->
-	<title>IMACTIONS</title>
+	<title>{{ site_config.Site.title.value }}</title>
 	
 	<!-- FAVICONS ICON -->
 	<link rel="shortcut icon" type="image/png" href="{{ site_config.Site.favicon.value }}" />
@@ -31,8 +30,6 @@
 	
     {% block additional_css %}
     {% endblock %}
-
-    
 
 </head>
 <body>
@@ -67,6 +64,7 @@
 		<!--**********************************
             Chat box start
         ***********************************-->
+		{% include 'dashboard/elements/chatbox.html' %}
 		<!--**********************************
             Chat box End
         ***********************************-->

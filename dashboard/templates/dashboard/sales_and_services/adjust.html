@@ -1,0 +1,160 @@
+{% extends 'dashboard/elements/layouts/admin.html' %}
+{% load humanize %}
+
+{% load static %}
+
+{% block additional_css %}
+
+{% endblock %}
+
+{% block content %}
+
+
+
+        <!-- row -->
+
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card p-2">
+                    <div class="card-header border-0 flex-wrap pb-0 mb-3">
+                        <form method="get">
+                        <button class="btn btn-primary" type="submit" name="accounts"> ADJ account  </button>
+                        
+
+                        <button class="btn btn-secondary" type="submit" name="services"> ADJ service  </button>
+                        </form>
+                    </div>                  
+                  
+                    <div class="card-body">
+                       {% if 'accounts' in request.GET %}
+
+
+
+                       <div class="table-responsive">
+                        <table id="example4" class="display" style="min-width: 845px">
+                            <thead>
+                                <tr>
+                                    <th>ACCOUNT</th>                                    
+                                    <th>SERVICES</th>
+                                    <th>RR NOW</th>
+                                    <th>ADJ %</th>
+                                    <th>EMAIL DATE</th>
+
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for client in services %}
+                                    <tr>                                               
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <a class="mb-0 fs-16 font-w500 client-item" href="{% url 'dashboard:editclient' id=client.id %}">{{client.name}}</a>
+                                            </div>
+                                        </td>
+
+                                        <td>{% for service in client.services.all %} {{service.service}}{% if forloop.last %}{%else%}, {%endif%} {%endfor%}</td>
+                                     
+
+
+                                        <td>${{client.total_rr|floatformat:2|intcomma}}</td>
+                                        <td>{{ client.services.latest.last_adj|floatformat:2|intcomma}}%</td>
+                                        <td>{{client.services.latest.adj_at|date:"d/m/Y"}}</td>
+                                       
+                                        <td>
+                                            <div class="d-flex flex-row">                                                                                                                                  
+                                                    
+                                                <button type="button" class="py-2 px-3 m-2 btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal{{client.id}}">
+                                                    <i class="bi bi-envelope fs-4"></i>                                                </button> 
+
+                                                    <div class="modal" id="exampleModal{{client.id}}" >
+                                                        {% include 'dashboard/sales_and_services/raicesale.html' %}
+                                                    </div> 
+                                            </div>                                        
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+
+
+                       {% else %}
+                            <div class="table-responsive">
+                                <table id="example4" class="display" style="min-width: 845px">
+                                    <thead>
+                                        <tr>
+                                            <th>ACCOUNT</th>
+                                            
+                                            <th>SERVICE</th>
+                                            <th>LAST ADJ</th>
+
+                                            <th>LAST %</th>
+
+                                            <th>LAST PRICE</th>
+                                            <th>DIFERENCE</th>
+
+                                            <th>PRICE NOW</th>
+                                            <th>ADJ %</th>
+                                            <th>EMAIL DATE</th>
+
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for sale in services %}
+                                            <tr>                                               
+                                                <td>
+                                                    <div class="d-flex align-items-center">
+                                                        <a class="mb-0 fs-16 font-w500 client-item" href="{% url 'dashboard:editclient' id=sale.client.id %}">{{sale.client}}</a>
+                                                    </div>
+                                                </td>
+                                                <td> <a class="mb-0 fs-16 font-w500"> {{sale.service}} </a> </td>
+
+                                                <td>{{sale.adj_at_old|date:"d/m/Y"}}</td>
+
+                                                <td>{{sale.adj_old|floatformat:2|intcomma}}%</td>
+                                                <td>${{sale.total_old|floatformat:2|intcomma}}</td>
+
+                                                <td>${{sale.get_diference|floatformat:2|intcomma}}</td>
+
+                                                <td>${{sale.total|floatformat:2|intcomma}}</td>
+                                                <td>{{sale.last_adj|floatformat:2|intcomma}}%</td>
+                                                <td>{{sale.adj_at|date:"d/m/Y"}}</td>
+                                               
+                                                <td>
+                                                    <div class="d-flex flex-row">                                                                                                                                  
+                                                            
+                                                        <button type="button" class="py-2 px-3 m-2 btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal{{sale.id}}">
+                                                            <i class="bi bi-envelope fs-4"></i>                                                </button> 
+
+                                                            <div class="modal" id="exampleModal{{sale.id}}" >
+                                                                {% include 'dashboard/sales_and_services/raicesale.html' %}
+                                                            </div> 
+                                                    </div>                                        
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        {% endif %}
+
+                       </div>
+                </div>
+            </div>
+            
+        </div>
+
+
+        
+
+
+  
+
+
+{% endblock %}
+
+{% block additional_js %}
+{% endblock %}

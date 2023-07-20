@@ -1,0 +1,558 @@
+{% extends 'dashboard/elements/layouts/admin.html' %}
+{% load humanize %}
+
+{% load static %}
+
+{% block additional_css %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
+{% endblock %}
+
+{% block content %}
+
+
+
+
+        
+        <!-- row -->
+
+
+        <div class="row">
+
+
+            <div class="col-xl-4 col-xxl-4 col-lg-4 col-sm-2">
+                <div class="widget-stat card">
+                    <div class="card-body  p-4">
+                        <div class="media ai-icon">
+                            <span class="me-3 bgl-danger text-danger">
+                                <svg id="icon-revenue" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-dollar-sign">
+                                    <line x1="12" y1="1" x2="12" y2="23"></line>
+                                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                </svg>
+                            </span>
+                            <div class="media-body">
+                                <p class="mb-1">RR {{this_month}}</p>
+                                <h4 class="mb-0">{{sales_this_month}}</h4>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+    
+            <div class="col-xl-4 col-xxl-4 col-lg-4 col-sm-2">
+                <div class="widget-stat card">
+                    <div class="card-body  p-4">
+                        <div class="media ai-icon">
+                            <span class="me-3 bgl-info text-info">
+                                <svg id="icon-revenue" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-dollar-sign">
+                                    <line x1="12" y1="1" x2="12" y2="23"></line>
+                                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                </svg>
+                            </span>
+                            <div class="media-body">
+                                <p class="mb-1">One Off {{this_month}}</p>
+                                <h4 class="mb-0">{{sales1_this_month}} </h4>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+    
+            <div class="col-xl-3 col-xxl-4 col-lg-4 col-sm-1">
+                <div class="widget-stat card">
+                    <div class="card-body p-4">
+                        <div class="media ai-icon">
+                            <span class="me-3 bgl-primary text-primary">
+                                <svg id="icon-customers" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                            </span>
+                            <div class="media-body">
+                                <p class="mb-1">New Accounts {{this_month}}</p>
+                                <h4 class="mb-0">{{clients_this_month}}</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+    
+            <div class="col-xl-3 col-xxl-4 col-lg-4 col-sm-1">
+                <div class="widget-stat card">
+                    <div class="card-body p-4">
+                        <div class="media ai-icon">
+                            <span class="me-3 bgl-warning text-warning">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trending-up"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>                            </span>
+                            <div class="media-body">
+                                <p class="mb-1">UpSell {{this_month}}</p>
+                                <h4 class="mb-0">{{upsell}} </h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+    
+            <div class="col-xl-3 col-xxl-4 col-lg-4 col-sm-1">
+                <div class="widget-stat card">
+                    <div class="card-body p-4">
+                        <div class="media ai-icon">
+                            <span class="me-3 bgl-secondary text-secondary">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-repeat"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>                            </span>
+                            <div class="media-body">
+                                <p class="mb-1">Cross Sell  {{this_month}}</p>
+                                <h4 class="mb-0">{{cross}}</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="col-xl-3 col-xxl-4 col-lg-4 col-sm-1">
+                <div class="widget-stat card">
+                    <div class="card-body p-4">
+                        <div class="media ai-icon">
+                            <span class="me-3 bgl-success text-success">
+                                <svg id="icon-revenue" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-dollar-sign">
+                                    <line x1="12" y1="1" x2="12" y2="23"></line>
+                                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                </svg>
+                            </span>
+                            <div class="media-body">
+                                <p class="mb-1"> {{this_month|capfirst}} sales of  
+                                    <div class="basic-dropdown">
+                                        <div class="dropdown">
+                                            <button type="button" class="btn btn-outline-light dropdown-toggle fs-4 px-2 py-1 btn-sm" data-bs-toggle="dropdown">
+                                                service
+                                            </button>
+                                            <div class="dropdown-menu" id="dropdown-menu">
+                                                {% for service in services %}
+                                                <a class="dropdown-item" id="{{service|cut:" "|lower}}" onclick="updateTotal('{{service}}')">{{service}}</a>
+
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </p>
+                                <h4 class="mb-0" id="total-amount">0</h4> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="col-12">
+                <div class="card p-2">
+                    <div class="card-header border-0 flex-wrap pb-0 mb-3">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addsale">
+                            ADD Sale
+                            <span class="btn-icon-end">
+                            <i class="fa fa-plus"></i></span>
+                        </button>
+                        
+                        <a class="btn btn-info" href="{% url 'dashboard:export_sales' %}">
+                            Export Sales
+                            <span class="btn-icon-end">
+                                <i class="fa-solid fa-file-export"></i>
+                            </span>
+                        </a>
+                    </div> 
+
+                    <div class="d-flex flex-row-reverse mx-5">
+
+                        <form id="date-filter-form">
+                            <div class="row">
+
+                            <div class="col-lg-6 col-l-6 col-m-6 ">
+
+                                <div class="form-group mr-3">
+                                <label for="year">Year:</label>
+                                <select id="year" name="year" class="form-control">
+                                    <option value="">All</option>
+                                    <option value="2025">2025</option>
+                                    <option value="2024">2024</option>
+                                    <option value="2023">2023</option>
+                                    <option value="2022">2022</option>
+                                    <option value="2021">2021</option>
+                                </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-l-6 col-m-6 ">
+
+                                <div class="form-group ">
+                                <label for="month">Month:</label>
+                                <select id="month" name="month" class="form-control">
+                                    <option value="">All</option>
+                                    <option value="01">January</option>
+                                    <option value="02">February</option>
+                                    <option value="03">March</option>
+                                    <option value="04">April</option>
+                                    <option value="05">May</option>
+                                    <option value="06">June</option>
+                                    <option value="07">July</option>
+                                    <option value="08">August</option>
+                                    <option value="09">September</option>
+                                    <option value="10">October</option>
+                                    <option value="11">November</option>
+                                    <option value="12">December</option>
+                                </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        </form>
+  
+                    </div>
+
+                  
+                    <div class="card-body">
+                        <form action="{% url 'dashboard:deletesales' %}" method="POST">
+                            {% csrf_token %}
+                            <div class="table-responsive">
+                                <table id="example4" class="display" style="min-width: 845px">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>SERVICE</th>
+                                            <th>ACCOUNT</th>
+
+                                            <th>NOTES</th>
+                                            <th>TOTAL</th>
+                                            <th>KIND</th>
+                                            <th>STATUS $</th>
+                                            <th>DATE</th>
+                                            <th>SALES REP</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for sale in sales %}
+                                            <tr>
+                                                <td><input type="checkbox" name="selected_sales" value="{{ sale.id }}" data-row-index="{{ forloop.counter0 }}"></td>
+
+
+                                               
+                                                <td> <a class="mb-0 fs-16 font-w500" href="{% url 'dashboard:editsale' id=sale.id %}"> {{sale.service}} </a> {% if sale.suscription.state == False %} (cancelled) {% endif %}</td>
+                                                <td>
+                                                    <div class="d-flex align-items-center">
+                                                        <a class="mb-0 fs-16 font-w500 client-item" href="{% url 'dashboard:editclient' id=sale.client.id %}">{{sale.client}}</a>
+                                                    </div>
+                                                </td>
+                                                <td> <a href="{% url 'dashboard:editsale' id=sale.id %}">{{sale.note|default_if_none:"-"|truncatechars:25}}</a> </td>
+                                                <td>${{sale.change|floatformat:2|intcomma}}</td>
+                                                <div class="d-flex flex-row m-auto">
+                                                        <td>{{sale.kind|default_if_none:"-"}}</td>
+                                                    {% if sale.status == "FC" %}
+                                                        <td> <span class="badge light badge-danger">
+                                                            {{sale.status}}
+                                                        </span> </td>
+                                                    {% elif sale.status == "P" %}
+                                                        <td> <span class="badge light badge-success">
+                                                            {{sale.status}}
+                                                        </span> </td>
+                                                    {% else %} 
+                                                        <td> <span class="badge light badge-warning">
+                                                            {{sale.status|default_if_none:"?"}}
+                                                        </span> </td>
+                                                    {% endif %}
+                                                </div>
+                                                <td>{{sale.date|date:"d/m/Y"}}</td>
+                                                <td>{{sale.sales_rep|default_if_none:"-"}}</td>                                    
+                                                <td>
+                                                    <div class="d-flex flex-row">
+                                                            <!-- delete BUTTON -->
+                                                                <button type="button" class="shadow-sm btn btn-danger px-3 py-1 mx-1" data-bs-toggle="modal" data-bs-target="#deletesale{{sale.id}}">
+                                                                <i class="fa-solid fa-trash fs-7"></i>
+                                                                </button>                                                                                  
+                                                            <span><!-- edit BUTTON -->
+                                                            <a href="{% url 'dashboard:editsale' id=sale.id %}" class="shadow-sm btn btn-secondary px-3">
+                                                                <i class="fa-solid fa-pen-to-square"></i>
+                                                            </a>                     </span>                            
+                                                    </div>                                        
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="d-flex flex-row-reverse">
+                                <button type="submit" name="delete" class="btn btn-danger my-4">DELETE SELECTED<i class="fa-solid fa-trash fs-7 px-3"></i></button>
+                            </div>
+                        </form>  
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+
+
+
+<!-- START modal add sale -->
+<div class="modal fade " id="addsale" tabindex="-1" aria-labelledby="addsaleLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="addsaleLabel">New Sale</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>           
+            <form  method="post">
+            {% csrf_token %}
+                <div class="modal-body">
+                    <div class="pt-1 pb-4">
+                        <div class="formcontrol">                                         
+                            <div class="form-floating mb-3">
+                                <div class="form-group mb-5 d-flex flex-row">
+                                    {{addform.date}}
+                                </div>
+
+
+                            <div id="clientform">
+                                <input type="text" name="client" id="client" class="form-control" placeholder="Client" autocomplete="on" list="clients">
+                                    <datalist id="clients">
+                                    {% for client in clients %}
+                                        <option value="{{ client.name }}">
+                                    {% endfor %}
+                                    </datalist>                                  
+                            </div>
+
+                            <div class="form-group my-3">
+                                <div class="fs-5 ml-4">
+                                    Sales Rep
+                                </div>
+                                {{addform.sales_rep}}
+                            </div>
+
+                                <div class="form-group my-3">
+                                    <div class="fs-5 ml-4">
+                                        Kind
+                                    </div>
+                                    {{addform.kind}}
+                                </div>
+                                <div class="form-group my-3">
+                                    {{addform.comments}}
+                                </div>
+                                <div class="form-group my-3">
+                                    <div class="fs-5 ml-4">
+                                        Service
+                                    </div>
+                                    {{addform.service}}
+                                </div>
+                                <div class="form-group my-3">
+                                    <div class="fs-5 ml-4">
+                                        Price
+                                    </div>
+                                    {{addform.price}}
+                                </div>
+                                <div class="form-group my-3">
+                                    <div class="fs-5 ml-4">
+                                        Currency
+                                    </div>
+                                    {{addform.currency}}
+                                </div>
+                                <div class="form-group my-3">
+                                    {{addform.note}}
+                                </div>
+                                <div class="form-group my-3">
+                                    <div class="fs-5 ml-4">
+                                        Cost
+                                    </div>
+                                    {{addform.cost}}
+                                </div>
+                                <div class="form-group my-3">
+                                    <div class="fs-5 ml-4">
+                                        Status $
+                                    </div>
+                                    {{addform.status}}
+                                </div>
+                                
+
+                            </div>
+                        </div>       
+
+                        
+                    </div>
+                    <div class="form-floating my-3 text-center">
+                        <button type="submit" class="shadow-sm btn btn-secondary" name="addsale"><i class="fa-solid fa-check me-2"></i> Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- END modal add sale -->
+
+
+<!-- modals delete sale -->
+{% for sale in sales %}
+<div class="modal" id="deletesale{{sale.id}}">
+    {% include 'dashboard/sales_and_services/deletesale.html' %}
+</div>
+{% endfor %}
+
+
+
+{% endblock %}
+
+{% block additional_js %}
+
+
+
+ <!-- dropdown sales by service -->
+<script>
+    
+    $(document).ready(function() {
+        $('.basic-dropdown .dropdown-menu a').click(function() {
+            var selected = $(this).text();
+            $(this).parents('.basic-dropdown').find('.dropdown-toggle').html(selected);
+        });
+    });
+
+   
+</script>
+       
+<script>
+    function updateTotal(selectedService) {
+        // Get a reference to the total amount element
+        var totalamount = document.getElementById('total-amount');
+
+        // Update the total amount with the selected service's total sales
+        switch(selectedService) {
+            case 'SEO':
+                totalamount.textContent = "{{total_seo}}";
+                break;
+            case 'Google Ads':
+                totalamount.textContent = "{{total_googleads}}";
+                break;
+            case 'Facebook Ads':
+                totalamount.textContent = "{{total_facebookads}}";
+                break;
+            case 'LinkedIn':
+                totalamount.textContent = "{{total_linkedin}}";
+                break;
+            case 'Community Management':
+                totalamount.textContent = "{{total_communitymanagement}}";
+                break;
+            case 'Combo':
+                totalamount.textContent = "{{total_combo}}";
+                break;
+            case 'Web Plan':
+                totalamount.textContent = "{{total_webplan}}";
+                break;
+            case 'Others RR':
+                totalamount.textContent = "{{total_otherrr}}";
+                break;
+            case 'Web Design':
+                totalamount.textContent = "{{total_webdesign}}";
+                break;
+            case 'Hosting':
+                totalamount.textContent = "{{total_hosting}}";
+                break;
+            case 'SSL certificate':
+                totalamount.textContent = "{{total_sslcertificate}}";
+                break;
+            case 'Email Marketing':
+                totalamount.textContent = "{{total_emailmarketing}}";
+                break;
+            case 'Others':
+                totalamount.textContent = "{{total_other}}";
+                break;
+            default:
+                totalamount.textContent = "0";
+                break;
+        }
+    }
+</script>
+
+
+<script>
+    if ( $.fn.dataTable.isDataTable( '#example4' ) ) {
+        table = $('#example4').DataTable();
+        $('#date-filter-form').on('change', 'select', function() {
+            var year = $('#year').val();
+            var month = $('#month').val();
+            var date = month + '/' + year;
+            table.search(date).draw();
+        });
+    }
+    else {
+        table = $('#example4').DataTable( {
+            paging: false
+        } );
+    }
+
+
+</script>
+
+
+
+    
+ <!-- NEWMODALS -->
+ <script>
+    
+    const addsale = new bootstrap.Modal('#addsale',   {keyboard: true}    )
+</script>
+<script>
+    const deletesale = new bootstrap.Modal('#deletesale',   {keyboard: true}    )
+</script>
+
+<script>
+    var lastChecked = null;
+  
+    $(document).ready(function() {
+      // Escuchar el evento 'click' en los checkboxes de la tabla
+      $('#example4 tbody').on('click', 'input[type="checkbox"]', function(e) {
+        if(!lastChecked) {
+          lastChecked = this;
+          return;
+        }
+  
+        if(e.shiftKey) {
+          var start = $('#example4 tbody input[type="checkbox"]').index(this);
+          var end = $('#example4 tbody input[type="checkbox"]').index(lastChecked);
+  
+          $('#example4 tbody input[type="checkbox"]').slice(Math.min(start,end), Math.max(start,end)+ 1).prop('checked', lastChecked.checked);
+  
+        }
+  
+        lastChecked = this;
+      });
+    });
+  </script>
+
+
+  <script>
+    $(document).ready(function() {
+      var $clientField = $('#client');
+      var $clientForm = $('#clientform');
+      var $clientInput = $clientField.find('input');
+  
+      $clientInput.autocomplete({
+        source: '/client-autocomplete/',
+        minLength: 2,
+        select: function(event, ui) {
+          $clientInput.val(ui.item.value);
+          console.log('Selected option:', ui.item.value);
+          return false;
+        },
+        focus: function(event, ui) {
+          $clientInput.val(ui.item.value);
+          console.log('Focused option:', ui.item.value);
+          return false;
+        }
+      });
+  
+      $clientForm.submit(function(event) {
+        console.log('Submitted form:', $clientInput.val());
+      });
+    });
+  </script>
+  
+  
+{% endblock %}

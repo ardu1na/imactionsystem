@@ -46,29 +46,25 @@ class Service(models.Model):
         (OTHER_RR, ('Others RR')),
 
     )
+    
     service = models.CharField(max_length=50, choices=SERVICE_CHOICES)
     client = models.ForeignKey(Client, related_name="services", on_delete=models.CASCADE, null=True)
     
     total = models.DecimalField(default=0, decimal_places=2, max_digits=20)
             
-    
-
     created_at = models.DateField(auto_now_add=True)
     updated_at = models.DateField(auto_now=True)
-    def __str__(self):
-        
+    def __str__(self):  
         return f"{self.client} - {self.service}"
-    
-                
+                    
     class Meta:
         unique_together = (('service', 'client'),) 
         get_latest_by = ('created_at')
-            
+           
             
     YES = 'YES'
     NO = 'NO'
     DEBATIBLE = 'DEBATIBLE'
-
     FAIL_CHOICES = (
         (YES, ('YES')),
         (NO, ('NO')),
@@ -91,22 +87,16 @@ class Adj(models.Model):
     )
     created_at = models.DateField(auto_now_add=True)
     updated_at = models.DateField(auto_now=True)
-
     
-    type = models.CharField(max_length=40, default=None, verbose_name="Account/Service", choices=ADJ_CHOICES, blank=False, null=False)
-    
+    type = models.CharField(max_length=40, default=None, verbose_name="Account/Service", choices=ADJ_CHOICES, blank=False, null=False) 
     service = models.ForeignKey(Service, on_delete=models.CASCADE, related_name="adj", null=True, blank=True)
+    client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name="adj", null=True, blank=True) 
     
-    client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name="adj", null=True, blank=True)
-       
     adj_percent = models.DecimalField(decimal_places=2, max_digits=16)
-
     old_value = models.DecimalField(default=0, max_digits=40, decimal_places=2)
     new_value = models.DecimalField(default=0, max_digits=40, decimal_places=2)
     dif = models.DecimalField(default=0, max_digits=40, decimal_places=2)
                 
-            
-    
     def __str__ (self):
         if self.type == "Service":
             client = self.service.client.name
@@ -119,12 +109,10 @@ class Adj(models.Model):
 
     notice_date = models.DateField(null=True,blank=True)
     adj_done = models.BooleanField(default=False)
-
+    
     email_date = models.DateField(null=True, blank=True)
     remind_sent = models.BooleanField(default=False)
     
-
-   
     def save(self, *args, **kwargs):
         if self.notice_date:
             fifteen_days_before = self.notice_date - timedelta(days=15)
@@ -219,10 +207,7 @@ class Sale(models.Model):
         (OTHER_RR, ('Others RR')),
 
     )
-    
-
-
-    
+       
     ARS = "ARS"
     USD = "USD"
     COIN_CHOICES = (

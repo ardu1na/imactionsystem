@@ -83,7 +83,7 @@ class Employee(models.Model):
     
     name = models.CharField(max_length=150, verbose_name="NAME")
     
-    dob = models.DateField(null=True, blank=True)
+    dob = models.DateField(null=True, blank=True, verbose_name="DATE OF BIRTH")
     
     address = models.CharField(max_length=250, verbose_name="ADDRESS", blank=True, null=True)
     email = models.EmailField(blank=True, null=True, verbose_name="EMAIL")
