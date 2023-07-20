@@ -41,7 +41,6 @@ from sales.forms import AdjForm, ChangeAdj, SaleForm2, ClientSaleForm, CancellSe
 # expenses app
 from expenses.models import Employee, Expense, Holiday, Salary
 from expenses.forms import RaiceForm, HolidayEmployeeForm, ExpenseForm, EmployeeForm, EmployeeSalaryForm, CeoForm, CeoSalaryForm, EditEmployeeForm, EditWageCeo 
-
 ### END IMPORTS
 
 
@@ -88,14 +87,13 @@ def activity(request):
 
 
 ## CONFIGURACIONES Y AJUSTES 
-
 @login_required(login_url='dashboard:login')
 def setting (request):
     # pestaña principal de acceso a configuraciones
     context = {
             "page_title": "SETTINGS",
             }
-    return render (request, 'dashboard/table/settings.html', context)
+    return render (request, 'dashboard/settings.html', context)
 
 
 @user_passes_test(lambda user: user.groups.filter(name='admin').exists())
@@ -114,7 +112,7 @@ def conf(request):
             'form': form,
             'id': id
             }
-        return render (request, 'dashboard/table/conf.html', context)
+        return render (request, 'dashboard/tier.html', context)
 
     if request.method == 'POST':
         form = TierConf(request.POST, instance=tier)
@@ -145,7 +143,7 @@ def comms(request):
             'form': form,
             'id': id
             }
-        return render (request, 'dashboard/table/comms.html', context)
+        return render (request, 'dashboard/commsconf.html', context)
 
     if request.method == 'POST':
         form = CommsForm(request.POST, instance=comms)
@@ -160,7 +158,7 @@ def comms(request):
 
 
 
-##############################################################################################################################################################
+#####################   EXPENSES  ##################################################################################
 
 
 ## EXPENSES CRUD
@@ -180,7 +178,7 @@ def editexpense(request, id):
             'editexpense': editexpense,
             'id': id
             }
-        return render (request, 'dashboard/table/editexpense.html', context)
+        return render (request, 'dashboard/expenses/editexpense.html', context)
 
     
     if request.method == 'POST':
@@ -201,9 +199,6 @@ def export_expenses(request):
     response = HttpResponse(dataset.xlsx, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     response['Content-Disposition'] = 'attachment; filename="expenses.xlsx"'
     return response
-
-
-
         
         
 @user_passes_test(lambda user: user.groups.filter(name='expenses').exists())
@@ -335,7 +330,7 @@ def expenses(request):
         "tax1" : tax1,
         "wages_ceo1" : wages_ceo1,
         "wages_staff1" : wages_staff1,}
-    return render(request,'dashboard/table/expenses.html', context)
+    return render(request,'dashboard/expenses/expenses.html', context)
 
 
 ## borrar expense
@@ -359,7 +354,7 @@ def expenseshistory(request, id):
             'id': id,
             'page_title':'Expense History',
             }
-    return render (request, 'dashboard/instructor/expenseshistory.html', context)
+    return render (request, 'dashboard/expenses/expenseshistory.html', context)
 
 
 
@@ -376,7 +371,7 @@ def export_employees(request):
     response['Content-Disposition'] = 'attachment; filename="employees.xlsx"'
     return response
 
-
+## LISTADO Y TABLA DE EMPLEADOS ACTIVOS
 @user_passes_test(lambda user: user.groups.filter(name='admin').exists())
 @login_required(login_url='dashboard:login')
 def employees(request):
@@ -426,7 +421,7 @@ def employees(request):
         "nigga": total_nigga,
         "total": total_total,        
         "page_title":"WAGES STAFF",}
-    return render(request,'dashboard/instructor/employees.html', context)
+    return render(request,'dashboard/employees/employees.html', context)
 
 
 # listado de empleados antiguos
@@ -437,7 +432,7 @@ def employeesold(request):
     context={        
         "page_title":"STAFF OLD",
         "old": old,}
-    return render(request,'dashboard/instructor/employeesold.html',context)
+    return render(request,'dashboard/employees/employeesold.html',context)
 
 
 # eliminar un empleado
@@ -488,7 +483,7 @@ def editemployee(request, id):
             'holidays': holidays,
             'salaries': salaries,
             }       
-        return render (request, 'dashboard/instructor/editemployee.html', context)
+        return render (request, 'dashboard/employees/editemployee.html', context)
 
     # edit employee
     if request.method == 'POST':
@@ -556,7 +551,7 @@ def editholiday(request, id):
             'holidayform'  : holydayform,
             'editemployee': editemployee,
             'id': id}
-        return render (request, 'dashboard/instructor/editholiday.html', context)
+        return render (request, 'dashboard/employees/editholiday.html', context)
 
     # editar una vacacion
     if request.method == 'POST':                
@@ -626,7 +621,7 @@ def ceo(request):
         "ceo_form": addform,
         "salary_form": salaryform,        
         "page_title":"WAGES CEO",}
-    return render(request,'dashboard/instructor/ceo.html',context)
+    return render(request,'dashboard/employees/ceo.html',context)
 
 
 # borrar ceo
@@ -665,7 +660,7 @@ def editceo(request, id):
             'holidays': holidays,
             'salaries': salaries,
             }      
-        return render (request, 'dashboard/instructor/editceo.html', context)
+        return render (request, 'dashboard/employees/editceo.html', context)
     
     if request.method == 'POST':
         # editar datos generales de ceo
@@ -699,6 +694,10 @@ def editceo(request, id):
             else: 
                 return HttpResponse(
                     f"Ups! Something went wrong. You should go back, update the page and try again. \n\n {editwageform.errors}")
+
+
+
+
 
 
 

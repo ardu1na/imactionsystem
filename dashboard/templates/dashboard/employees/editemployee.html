@@ -332,7 +332,7 @@
                             <div class="tab-pane fade" id="comms" role="tabpanel">
                                 <div class="pt-4 mb-4">
 
-                                    {% include 'dashboard/instructor/comms.html' %}
+                                    {% include 'dashboard/employees/comms.html' %}
 
 
                                 </div>
@@ -355,7 +355,7 @@
 <!-- modals delete holidays -->
 {% for i in holidays %}
 <div class="modal" id="deleteholiday{{i.id}}">
-    {% include 'dashboard/instructor/deleteholiday.html' %}
+    {% include 'dashboard/employees/deleteholiday.html' %}
 </div>
 {% endfor %}
 
