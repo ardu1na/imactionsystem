@@ -215,8 +215,8 @@
 <div class="row">
 
 
-    <div class="col-xl-6 col-xxl-6 col-m-6">
-        <div class="card score-active px-2 px-s-1 px-xs-1 py-2">
+    <div class="col">
+        <div class="card score-active py-2">
             <div class="card-header border-0">
                 <h4>ACTIVITY</h4>
             </div>
@@ -224,43 +224,43 @@
             <div class="widget-timeline style-3 mx-2 mx-s-1 mx-xs-1">
                 <ul id="loglist" class="timeline-active my-4">
                     {% for e in activity %}
-                        <div class="panel">
-                            <li class=" mt-3">
+                    <div class="panel">
+                        <li class="mt-3 d-flex flex-row">
 
-                            <a>
-                                {% if e.get_event_type_display == "Update" %}
-                                    <div class="badge badge-xl badge-warning fs-5">
-                                        <i class="fa-solid fa-pen-to-square"></i>
-                                    </div>
-                                {% elif e.get_event_type_display == "Create" %}
-                                    <div class="badge badge-xl badge-secondary fs-5">
-                                        <i class="fa fa-plus"></i>
-                                    </div>
-                                {% elif e.get_event_type_display == "Delete" %}
-                                    <div class="badge badge-xl badge-primary fs-5">
-                                        <i class="fa-solid fa-trash fs-7"></i>
-                                    </div>
-                                {% endif %}
-    
-                                <h4 class="activity-title">
-                                    <strong>{{ e.user }}</strong>
-                                    {{ e.get_event_type_display }}
-                                    {{ e.content_type.model }}
-                                </h4>
-                                <p class="activity-details">
                                     {% if e.get_event_type_display == "Update" %}
-                                        <strong class="text-warning">{{ e.object_repr }}</strong>
+                                        <span class="badge badge-lg light badge-warning fs-5">
+                                            <i class="fa-solid fa-pen-to-square"></i>
+                                        </span>
                                     {% elif e.get_event_type_display == "Create" %}
-                                        <strong class="text-secondary">{{ e.object_repr }}</strong>
+                                        <span class="badge badge-lg light badge-success fs-5">
+                                            <i class="fa fa-plus"></i>
+                                        </span>
                                     {% elif e.get_event_type_display == "Delete" %}
-                                        <strong class="text-primary">{{ e.object_repr }}</strong>
+                                        <span class="badge badge-lg light badge-danger fs-5">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </span>
                                     {% endif %}
-                                    {{ e.datetime|date:"H:i \h\s, j N" }}
-                                </p>
-                            </a>
+                            
+                                    <p class="activity-title">
+                                        <strong>{{ e.user }}</strong>
+                                        {{ e.get_event_type_display }}
+                                        {{ e.content_type.model }}
+                                    <p>
+                                    <a class="activity-details ms-2">
+                                        {% if e.get_event_type_display == "Update" %}
+                                            <strong class="text-warning">{{ e.object_repr }}</strong>
+                                        {% elif e.get_event_type_display == "Create" %}
+                                            <strong class="text-secondary">{{ e.object_repr }}</strong>
+                                        {% elif e.get_event_type_display == "Delete" %}
+                                            <strong class="text-primary">{{ e.object_repr }}</strong>
+                                        {% endif %}
+                                        {{ e.datetime|date:"H:i \h\s, j N" }}
+                                    </a>
+                            
+
                         </li>
 
-                        </div>
+                    </div>
                     {% endfor %}
                 </ul>
             </div>
