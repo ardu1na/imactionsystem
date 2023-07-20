@@ -107,6 +107,28 @@ class SaleResource(resources.ModelResource):
         model = Sale
 """
 
+
+
+class ExportSales(resources.ModelResource):
+    client = fields.Field(
+        column_name='client',
+        attribute='client',
+        widget=ForeignKeyWidget(Client, 'name')
+    )
+    
+    sales_rep = fields.Field(
+        column_name='sales_rep',
+        attribute='sales_rep',
+        widget=ForeignKeyWidget(Employee, 'name')
+    )
+    
+    class Meta:
+        model = Sale
+        exclude = ('suscription', 'change', 'id', 'pk', 'total')
+
+
+
+
 class SaleResource(resources.ModelResource):
     client = fields.Field(
         column_name='client',
@@ -139,6 +161,16 @@ class ServiceResource(resources.ModelResource):
 
 
 
+class ExportRR(resources.ModelResource):
+    client = fields.Field(
+        column_name='client',
+        attribute='client',
+        widget=ForeignKeyWidget(Client, 'name')
+    )
+   
+    class Meta:
+        model = Service
+
 
 
 class AdjResource(resources.ModelResource):
@@ -167,11 +199,34 @@ class ClientResource(resources.ModelResource):
     class Meta:
         model = Client
         
+
+        
+        
             
 class EmployeeResource(resources.ModelResource): 
     
     class Meta:
         model = Employee      
+        
+
+        
+            
+class ExportStaff(resources.ModelResource): 
+    
+    class Meta:
+        model = Employee
+
+    def get_queryset(self):
+        # Get the original queryset
+        queryset = super().get_queryset()
+
+        # Filter out employees with role="CEO"
+        queryset = queryset.exclude(rol="CEO")
+
+        return queryset
+
+    
+      
         
         
         

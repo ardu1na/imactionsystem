@@ -181,8 +181,27 @@
             <div class="card students-list">
                 <div class="card-header border-0 flex-wrap pb-0 mb-5">
                     <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal">ADD Client<span class="btn-icon-end">
-                        <i class="fa fa-plus"></i></span>
-                </div>                
+                        <i class="fa fa-plus"></i></span></button>
+
+                        <a class="btn btn-info" href="{% url 'dashboard:export_clients' %}">
+                            Export Clients Info
+                            <span class="btn-icon-end">
+                                <i class="fa-solid fa-file-export"></i>
+                            </span>
+                        </a>
+
+
+                        <a class="btn btn-warning" href="{% url 'dashboard:export_rr' %}">
+                            Export RR Detail
+                            <span class="btn-icon-end">
+                                <i class="fa-solid fa-file-export"></i>
+                            </span>
+                        </a>
+                </div> 
+                
+                
+
+
                 <!-- TABLE CLIENTS -->
                 <div class="card-body py-0">
                     <form action="{% url 'dashboard:deleteclients' %}" method="POST">

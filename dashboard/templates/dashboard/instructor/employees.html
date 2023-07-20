@@ -97,19 +97,27 @@
     </div>
 
 
-    <div class="col-xl-12 col-xxl-12 col-lg-12 col-sm-12  mb-2">
-
-        <div class="d-flex flex-row-reverse mt-3">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">ADD Employee<span class="btn-icon-end">
-                <i class="fa fa-plus"></i></span>     
-        </div>
-    </div>
-
-
     <div class="col-xl-12">
         
 
         <div class="card">
+
+            <div class="card-header border-0 flex-wrap pb-0 mb-5">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">ADD Employee<span class="btn-icon-end">
+                    <i class="fa fa-plus"></i></span> 
+                </button>
+
+                    <a class="btn btn-info" href="{% url 'dashboard:export_employees' %}">
+                        Export Staff Info
+                        <span class="btn-icon-end">
+                            <i class="fa-solid fa-file-export"></i>
+                        </span>
+                    </a>
+
+
+            </div> 
+
+
             <div class="card-body">
                 
                 <div class="tab-content">

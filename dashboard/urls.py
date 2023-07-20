@@ -17,6 +17,8 @@ urlpatterns = [
     
 
     path('employees/',dashboard_views.employees, name="employees"),
+    path('employees/export/',dashboard_views.export_employees, name="export_employees"),
+
     path('employees/old/', dashboard_views.employeesold, name="old"),
 
     path('employees/delete/<int:id>/', dashboard_views.deleteemployee, name="deleteemployee"), 
@@ -37,6 +39,7 @@ urlpatterns = [
     path('expenses/edit/<int:id>/', dashboard_views.editexpense, name="editexpense"), 
     path('expenses/deleteexpenses/', dashboard_views.delete_expenses, name="deleteexpenses"),
     path('expenses/history/<int:id>/', dashboard_views.expenseshistory, name="expenseshistory"),
+    path('expenses/export/', dashboard_views.export_expenses, name="export_expenses"),
 
     
     path('clients/',dashboard_views.clients, name="clients"),
@@ -44,6 +47,19 @@ urlpatterns = [
     path('clients/editclient/<int:id>/', dashboard_views.editclient, name="editclient"),
     path('clients/addclientsale/<int:id>/', dashboard_views.addclientsale, name="addclientsale"),
     path('clients/deleteclients/', dashboard_views.delete_clients, name="deleteclients"),
+    path('clients/export/', dashboard_views.export_clients, name="export_clients"),
+    path('clients/rr/export/', dashboard_views.export_rr, name="export_rr"),
+
+    path('client-autocomplete/', dashboard_views.client_autocomplete, name='client_autocomplete'),
+
+    path('adjustments/',dashboard_views.adjustment, name="adjustment"),
+    path('adjustments/<int:id>/',dashboard_views.adjustment, name="adjustsale"),
+    path('adjustment/<int:id>/delete/', dashboard_views.deleteadj, name="canceladj"),
+    path('adjustment/<int:id>/change/', dashboard_views.editadj, name="editadj"),
+
+    path('adj/',dashboard_views.adj, name="adj"),
+
+
     path('services/<int:id>/', dashboard_views.editservice, name="editservice"),
     path('services/<int:id>/restore/', dashboard_views.restoreservice, name="restoreservice"),
 
@@ -52,22 +68,18 @@ urlpatterns = [
 
     path('cancellations/', dashboard_views.cancellations, name="cancellations"),
 
+
+
+
     path('sales/',dashboard_views.sales, name="sales"),
     path('sales/deletesale/<int:id>/', dashboard_views.deletesale, name="deletesale"),
     path('sales/editsale/<int:id>/', dashboard_views.editsale, name="editsale"),
     path('salesdata/',dashboard_views.salesdata, name="salesdata"),
     path('sales/deletesales/', dashboard_views.delete_sales, name="deletesales"),
+    path('sales/export/', dashboard_views.export_sales, name='export_sales'),
 
 
 
-
-    path('adjustments/',dashboard_views.adjustment, name="adjustment"),
-    path('adjustments/<int:id>/',dashboard_views.adjustment, name="adjustsale"),
-    path('adjustment/<int:id>/delete/', dashboard_views.deleteadj, name="canceladj"),
-    path('adjustment/<int:id>/change/', dashboard_views.editadj, name="editadj"),
-
-    path('adj/',dashboard_views.adj, name="adj"),
-    path('client-autocomplete/', dashboard_views.client_autocomplete, name='client_autocomplete'),
 
 
     

@@ -151,10 +151,19 @@
             <div class="col-12">
                 <div class="card p-2">
                     <div class="card-header border-0 flex-wrap pb-0 mb-3">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addsale">ADD Sale<span class="btn-icon-end">
-                        <i class="fa fa-plus"></i></span>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addsale">
+                            ADD Sale
+                            <span class="btn-icon-end">
+                            <i class="fa fa-plus"></i></span>
+                        </button>
                         
-                </div> 
+                        <a class="btn btn-info" href="{% url 'dashboard:export_sales' %}">
+                            Export Sales
+                            <span class="btn-icon-end">
+                                <i class="fa-solid fa-file-export"></i>
+                            </span>
+                        </a>
+                    </div> 
 
                     <div class="d-flex flex-row-reverse mx-5">
 

@@ -1,3 +1,5 @@
+
+
 from django.shortcuts import render, redirect, get_object_or_404
 from dashboard.models import Configurations
 from django.contrib import messages
@@ -38,7 +40,7 @@ from django.http import HttpResponse
 from easyaudit.models import CRUDEvent, LoginEvent
 
 from django.contrib.contenttypes.models import ContentType
-
+from dashboard.resources import ExportSales, ClientResource, ExportRR, ExpenseResource, ExportStaff
 from itertools import chain
 
 
@@ -59,7 +61,7 @@ from dashboard.models import Comms
 
 ######################## AJAX REQUEST
 
-
+@login_required(login_url='dashboard:login')
 @require_GET
 def client_autocomplete(request):
     q = request.GET.get('q', '')
@@ -202,6 +204,17 @@ def editexpense(request, id):
                 f"Ups! Something went wrong. You should go back, update the page and try again.\n \n {form.errors}"
                 )
         
+
+## exportación de expenses para excel
+@login_required(login_url='dashboard:login')
+def export_expenses(request):
+    dataset = ExpenseResource().export()
+    response = HttpResponse(dataset.xlsx, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename="expenses.xlsx"'
+    return response
+
+
+
         
         
 @user_passes_test(lambda user: user.groups.filter(name='expenses').exists())
@@ -366,7 +379,17 @@ def expenseshistory(request, id):
 ########################################################################################################################################################
 ## EMPLOYEES
 
+## función para exportar la info de los empleados para excel
+@login_required(login_url='dashboard:login')
+def export_employees(request):
+    dataset = ExportStaff().export()
+    response = HttpResponse(dataset.xlsx, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename="employees.xlsx"'
+    return response
+
+
 @user_passes_test(lambda user: user.groups.filter(name='admin').exists())
+@login_required(login_url='dashboard:login')
 def employees(request):
     staff = Employee.objects.exclude(rol="CEO").filter(active="Yes")
     ceo = Employee.objects.filter(rol="CEO")        
@@ -757,12 +780,41 @@ def adj(request):
     return render (request, 'dashboard/table/adj.html', context)
 
 
+
+
+
+
+
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
 def deleteadj(request, id):
+    
     adj = Adj.objects.get(id=id)
-    adj.delete()
+    
+    if adj.adj_done == False:  
+        adj.delete()
+    else:
+        if adj.type == "Service":
+            service = adj.service
+            service.total = adj.old_value
+            service.save()
+        else:
+            client = adj.client
+            for service in client.services.exclude(state=False):
+                corregido = Decimal(service.total / (1 + (adj.adj_percent / 100)))
+                service.total = corregido
+                service.save()
+        adj.delete()        
+            
+            
     return redirect(reverse('dashboard:adjustment')+ "?deleted")
+
+
+
+
+
+
+
 
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
@@ -937,12 +989,21 @@ def adjustment(request):
 #####################################################################################################################################
 ## VENTAS
 
+## función para exportar ventas para excel
+@login_required(login_url='dashboard:login')
+def export_sales(request):
+    dataset = ExportSales().export()
+    response = HttpResponse(dataset.xlsx, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename="sales.xlsx"'
+    return response
+
+
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
 def sales(request):
     clients = Client.objects.all()
     services = ['SEO','Google Ads','Facebook Ads','Web Design', 'Hosting', 'LinkedIn', 'SSL certificate','Web Plan','Combo', 'Community Management', 'Email Marketing', 'Others', 'Others RR']
-    this_month = date.today().month
+    this_month = today.month
     month_name = date(1900, this_month, 1).strftime('%B')
     
     sales_this_month = Sale.objects.filter(date__month=today.month, date__year=today.year, revenue="RR").exclude(note="auto revenue sale")
@@ -995,7 +1056,7 @@ def sales(request):
                 return redirect(reverse('dashboard:sales') + "?added")
             else:
                
-                return HttpResponse(f"Ups! Something went wrong: {addform.errors}")
+                return HttpResponse(f"Ups! Something went wrong: \n\n {addform.errors}")
 
                 
             
@@ -1235,6 +1296,24 @@ def editsale(request, id):
                 
             return redirect('dashboard:editsale', id=editsale.id)
         else: return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
+
+## exportación de todos los clientes para excel
+@login_required(login_url='dashboard:login')
+def export_clients(request):
+    dataset = ClientResource().export()
+    response = HttpResponse(dataset.xlsx, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename="clients.xlsx"'
+    return response
+
+
+## exportación de las cuentas rr activas
+@login_required(login_url='dashboard:login')
+def export_rr(request):
+    dataset = ExportRR().export()
+    response = HttpResponse(dataset.xlsx, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename="rr.xlsx"'
+    return response
+
 
 
 
