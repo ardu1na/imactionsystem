@@ -757,11 +757,29 @@ def adj(request):
     return render (request, 'dashboard/table/adj.html', context)
 
 
+
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
 def deleteadj(request, id):
+    
     adj = Adj.objects.get(id=id)
-    adj.delete()
+    
+    if adj.adj_done == False:  
+        adj.delete()
+    else:
+        if adj.type == "Service":
+            service = adj.service
+            service.total = adj.old_value
+            service.save()
+        else:
+            client = adj.client
+            for service in client.services.exclude(state=False):
+                corregido = Decimal(service.total / (1 + (adj.adj_percent / 100)))
+                service.total = corregido
+                service.save()
+        adj.delete()        
+            
+            
     return redirect(reverse('dashboard:adjustment')+ "?deleted")
 
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
