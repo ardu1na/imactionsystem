@@ -153,4 +153,3 @@ class UserPermissionsForm(forms.ModelForm):
         fields = ('user_permissions',)
 
 
-
