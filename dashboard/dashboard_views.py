@@ -252,7 +252,7 @@ def expenses(request):
             wages_staff += employee.get_total()
             all_bonus += employee.get_aguinaldo_mensual()
     except: pass               
-    with_wages = without_wages + wages_staff + wages_ceo
+    with_wages = without_wages + Decimal(wages_staff) + wages_ceo
         
     
     ## DATA PARA EL GRÁFICO    
@@ -289,7 +289,7 @@ def expenses(request):
             else:
                 tax += expense.value            
             
-    all = empresa + lead_gen + office + tax + other + wages_staff + wages_ceo
+    all = empresa + lead_gen + office + tax + other + Decimal(wages_staff) + wages_ceo
     
     try:            
         empresa1 = (empresa*100)/all
@@ -1939,12 +1939,18 @@ def index(request):
         if salary.employee.rol != "CEO":
             outcome +=  salary.employee.get_total()
         else:
-            outcome += salary.employee.get_total_ceo()
+            try:
+                outcome += salary.employee.get_total_ceo()
+            except:
+                pass
     for e in expenses:
-        if e.change > 0:
-            outcome += e.change
-        else:
-            outcome += e.value
+        try:
+            if e.change is not None and e.change > 0:
+                outcome += e.change
+            else:
+                outcome += e.value
+        except:
+            pass
     balance = rr_t_clients - outcome
 
     #######################################################################################
