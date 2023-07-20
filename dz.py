@@ -90,15 +90,7 @@ dz_array = {
                                 "index":[
                                     f"{foldername_d}/vendor/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css"
                                 ],
-                                "index2":[
-                                    f"{foldername_d}/vendor/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css"
-                                ],
-                                "schedule":[
-                                    f"{foldername_d}/vendor/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css",
-                                    f"{foldername_d}/vendor/fullcalendar/css/main.min.css"
-                                ],
-                                "instructors":[],
-                                "message":[],
+                                
                                 "activity":[],
                                 "profile":[],
 
@@ -144,24 +136,7 @@ dz_array = {
                                 ],
                                 
 
-                                "courses":[
-                                    f"{foldername_d}/vendor/swiper/css/swiper-bundle.min.css"
-                                ],
-                                "course_details_1":[
-                                    f"{foldername_d}/vendor/magnific-popup/magnific-popup.min.css",
-                                ],
-                                "course_details_2":[
-                                    f"{foldername_d}/vendor/magnific-popup/magnific-popup.min.css",
-                                ],
-                                "instructor_dashboard":[
-                                    f"{foldername_d}/vendor/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css",
-                                ],
-                                "instructor_courses":[
-                                    f"{foldername_d}/vendor/owl-carousel/owl.carousel.css",
-                                ],
-                                "instructor_schedule":[
-                                    f"{foldername_d}/vendor/fullcalendar/css/main.min.css",
-                                ],
+                                
                                 "clients":[
                                     f"{foldername_d}/vendor/datatables/css/jquery.dataTables.min.css",
                                 ],
@@ -191,88 +166,12 @@ dz_array = {
                                 ],
 
 
-                                "instructor_resources":[],
-                                "instructor_transactions":[
-                                    f"{foldername_d}/vendor/datatables/css/jquery.dataTables.min.css",
-                                ],
-                                "instructor_liveclass":[],
+                                
                                 "app_profile":[
                                     f"{foldername_d}/vendor/lightgallery/css/lightgallery.min.css",
                                     f"{foldername_d}/vendor/magnific-popup/magnific-popup.css"
                                 ],
-                                "post_details":[
-                                    f"{foldername_d}/vendor/lightgallery/css/lightgallery.min.css",
-                                    f"{foldername_d}/vendor/magnific-popup/magnific-popup.css"
-                                ],
-                                "email_compose":[
-                                    f"{foldername_d}/vendor/dropzone/dist/dropzone.css",
-                                ],
-                                "email_inbox":[],
-                                "email_read":[],
-                                "app_calender":[
-                                    f"{foldername_d}/vendor/fullcalendar/css/main.min.css",
-                                ],
-
-                                "ecom_product_grid":[],
-                                "ecom_product_list":[
-                                    f"{foldername_d}/vendor/star-rating/star-rating-svg.css",
-                                ],
-                                "ecom_product_detail":[
-                                    f"{foldername_d}/vendor/star-rating/star-rating-svg.css",
-                                ],
-                                "ecom_product_order":[],
-                                "ecom_checkout":[],
-                                "ecom_invoice":[
-                                    f"{foldername_d}/vendor/bootstrap-select/dist/css/bootstrap-select.min.css",
-                                ],
-                                "ecom_customers":[],
-
-                                "chart_float":[],
-                                "chart_morris":[],
-                                "chart_chartjs":[],
-                                "chart_chartist":[
-                                    f"{foldername_d}/vendor/chartist/css/chartist.min.css"
-                                ],
-                                "chart_sparkline":[],
-                                "chart_peity":[],
-                                "uc_select2":[
-                                    f"{foldername_d}/vendor/select2/css/select2.min.css",
-                                ],
-                                "uc_nestable":[
-                                    f"{foldername_d}/vendor/nestable2/css/jquery.nestable.min.css"
-                                ],
-                                "uc_noui_slider":[
-                                    f"{foldername_d}/vendor/nouislider/nouislider.min.css"
-                                ],
-                                "uc_sweetalert":[
-                                    f"{foldername_d}/vendor/sweetalert2/dist/sweetalert2.min.css"
-                                ],
-                                "uc_toastr":[
-                                    f"{foldername_d}/vendor/toastr/css/toastr.min.css"
-                                ],
-                                "map_jqvmap":[
-                                    f"{foldername_d}/vendor/jqvmap/css/jqvmap.min.css"
-                                ],
-                                "uc_lightgallery":[
-                                    f"{foldername_d}/vendor/lightgallery/css/lightgallery.min.css"
-                                ],
-                                "widget_basic":[
-                                    f"{foldername_d}/vendor/chartist/css/chartist.min.css",
-                                    f"{foldername_d}/vendor/bootstrap-select/dist/css/bootstrap-select.min.css",
-                                ],
-                                "form_element":[],
-                                "form_wizard":[
-                                    f"{foldername_d}/vendor/jquery-smartwizard/dist/css/smart_wizard.min.css"
-                                ],
-                                "form_ckeditor":[],
-                                "form_pickers":[
-                                    f"{foldername_d}/vendor/bootstrap-daterangepicker/daterangepicker.css",
-                                    f"{foldername_d}/vendor/clockpicker/css/bootstrap-clockpicker.min.css",
-                                    f"{foldername_d}/vendor/jquery-asColorPicker/css/asColorPicker.min.css",
-                                    f"{foldername_d}/vendor/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css",
-                                    f"{foldername_d}/vendor/pickadate/themes/default.css",
-                                    f"{foldername_d}/vendor/pickadate/themes/default.date.css",
-                                ],
+                                
                                 "bi":[
                                     f"{foldername_d}/vendor/bootstrap-daterangepicker/daterangepicker.css",
                                     f"{foldername_d}/vendor/clockpicker/css/bootstrap-clockpicker.min.css",
@@ -281,8 +180,7 @@ dz_array = {
                                     f"{foldername_d}/vendor/pickadate/themes/default.css",
                                     f"{foldername_d}/vendor/pickadate/themes/default.date.css",
                                 ],
-                                "form_validation":[],
-                                "table_bootstrap_basic":[],
+                                
                                 "sales":[
                                     f"{foldername_d}/vendor/datatables/css/jquery.dataTables.min.css",
                                 ],
@@ -314,26 +212,7 @@ dz_array = {
                                     f"{foldername_d}/vendor/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js",
                                     f"{foldername_d}/js/dashboard/dashboard-1.js",
                                 ],
-                                "index2":[
-                                    f"{foldername_d}/vendor/chart.js/Chart.bundle.min.js",
-                                    f"{foldername_d}/vendor/apexchart/apexchart.js",
-                                    f"{foldername_d}/vendor/bootstrap-datetimepicker/js/moment.js",
-                                    f"{foldername_d}/vendor/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js",
-                                    f"{foldername_d}/js/dashboard/dashboard-1.js",
-                                ],
-                                "schedule":[
-                                    f"{foldername_d}/vendor/bootstrap-datetimepicker/js/moment.js",
-                                    f"{foldername_d}/vendor/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js",
-                                    f"{foldername_d}/vendor/apexchart/apexchart.js",
-                                    f"{foldername_d}/vendor/chart.js/Chart.bundle.min.js",
-                                    f"{foldername_d}/vendor/moment/moment.min.js",
-                                    f"{foldername_d}/vendor/fullcalendar/js/main.min.js",
-                                    f"{foldername_d}/js/plugins-init/fullcalendar-init.js",
-                                    f"{foldername_d}/js/dashboard/schedule.js",
-                                    
-                                ],
-                                "instructors":[],
-                                "message":[],
+                                
                                 "activity":[],
                                 "profile":[
                                     f"{foldername_d}/vendor/chart.js/Chart.bundle.min.js",
@@ -383,33 +262,7 @@ dz_array = {
                                 ],
                                 
 
-                                "courses":[
-                                    f"{foldername_d}/vendor/swiper/js/swiper-bundle.min.js",
-                                    f"{foldername_d}/js/dlab.carousel.js"
-                                ],
-                                "course_details_1":[
-                                    f"{foldername_d}/vendor/magnific-popup/magnific-popup.js"
-                                ],
-                                "course_details_2":[
-                                    f"{foldername_d}/vendor/magnific-popup/magnific-popup.js"
-                                ],
-                                "instructor_dashboard":[
-                                    f"{foldername_d}/vendor/chart.js/Chart.bundle.min.js",
-                                    f"{foldername_d}/vendor/apexchart/apexchart.js",
-                                    f"{foldername_d}/vendor/bootstrap-datetimepicker/js/moment.js",
-                                    f"{foldername_d}/vendor/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js",
-                                    f"{foldername_d}/vendor/day-fullcalendar/main.min.js",
-                                    f"{foldername_d}/vendor/peity/jquery.peity.min.js",
-                                    f"{foldername_d}/js/dashboard/instructor-dashboard.js",
-                                ],
-                                "instructor_courses":[
-                                    f"{foldername_d}/vendor/chart.js/Chart.bundle.min.js",
-                                    f"{foldername_d}/vendor/apexchart/apexchart.js",
-                                    f"{foldername_d}/vendor/peity/jquery.peity.min.js",
-                                    f"{foldername_d}/vendor/owl-carousel/owl.carousel.js",
-                                    f"{foldername_d}/js/dashboard/instructor-courses.js",
-                                    f"{foldername_d}/js/dlab.carousel.js",
-                                ],
+                                
                                 "bi":[
                                     f"{foldername_d}/vendor/chart.js/Chart.bundle.min.js",
                                     f"{foldername_d}/vendor/apexchart/apexchart.js",
@@ -418,11 +271,7 @@ dz_array = {
                                     #f"{foldername_d}/js/dashboard/instructor-courses.js",
                                     f"{foldername_d}/js/dlab.carousel.js",
                                 ],
-                                "instructor_schedule":[
-                                    f"{foldername_d}/vendor/moment/moment.min.js",
-                                    f"{foldername_d}/vendor/fullcalendar/js/main.min.js",
-                                    f"{foldername_d}/js/plugins-init/fullcalendar-init.js"
-                                ],
+                                
                                 "clients":[
                                     f"{foldername_d}/vendor/chart.js/Chart.bundle.min.js",
                                     f"{foldername_d}/vendor/apexchart/apexchart.js",
@@ -497,169 +346,12 @@ dz_array = {
                                     f"{foldername_d}/js/dashboard/instructor-student.js",
                                 ],
                                 
-                                "instructor_resources":[
-                                    f"{foldername_d}/vendor/chart.js/Chart.bundle.min.js",
-                                ],
-                                "instructor_transactions":[
-                                    f"{foldername_d}/vendor/chart.js/Chart.bundle.min.js",
-                                    f"{foldername_d}/vendor/apexchart/apexchart.js",
-                                    f"{foldername_d}/vendor/datatables/js/jquery.dataTables.min.js",
-                                    f"{foldername_d}/js/plugins-init/datatables.init.js",
-                                    f"{foldername_d}/js/dashboard/instructor-transactions.js",
-                                ],
-                                "instructor_liveclass":[
-                                    f"{foldername_d}/vendor/chart.js/Chart.bundle.min.js",
-                                ],
+                                
                                 "app_profile":[
                                     f"{foldername_d}/vendor/lightgallery/js/lightgallery-all.min.js",
                                     f"{foldername_d}/vendor/magnific-popup/magnific-popup.js"
                                 ],
-                                "post_details":[
-                                    f"{foldername_d}/vendor/lightgallery/js/lightgallery-all.min.js",
-                                    f"{foldername_d}/vendor/magnific-popup/magnific-popup.js"
-                                ],
-                                "email_compose":[
-                                    f"{foldername_d}/vendor/dropzone/dist/dropzone.js",
-                                ],
-                                "email_inbox":[],
-                                "email_read":[],
-                                "app_calender":[
-                                    f"{foldername_d}/vendor/moment/moment.min.js",
-                                    f"{foldername_d}/vendor/fullcalendar/js/main.min.js",
-                                    f"{foldername_d}/js/plugins-init/fullcalendar-init.js",
-                                ],
-                                "ecom_product_grid":[],
-                                "ecom_product_list":[
-                                    f"{foldername_d}/vendor/star-rating/jquery.star-rating-svg.js", 
-                                ],
-                                "ecom_product_detail":[
-                                    f"{foldername_d}/vendor/star-rating/jquery.star-rating-svg.js",
-                                ],
-                                "ecom_product_order":[],
-                                "ecom_checkout":[],
-                                "ecom_invoice":[],
-                                "ecom_customers":[],
-
-                                "chart_flot":[
-                                    f"{foldername_d}/vendor/chart.js/Chart.bundle.min.js",
-                                    f"{foldername_d}/vendor/apexchart/apexchart.js",
-                                    f"{foldername_d}/vendor/flot/jquery.flot.js",
-                                    f"{foldername_d}/vendor/flot/jquery.flot.pie.js",
-                                    f"{foldername_d}/vendor/flot/jquery.flot.resize.js",
-                                    f"{foldername_d}/vendor/flot-spline/jquery.flot.spline.min.js",
-                                    f"{foldername_d}/js/plugins-init/flot-init.js",
-                                ],
-                                "chart_morris":[
-                                    f"{foldername_d}/vendor/chart.js/Chart.bundle.min.js",
-                                    f"{foldername_d}/vendor/apexchart/apexchart.js",
-                                    f"{foldername_d}/vendor/raphael/raphael.min.js",
-                                    f"{foldername_d}/vendor/morris/morris.min.js",
-                                    f"{foldername_d}/js/plugins-init/morris-init.js",
-                                ],
-                                "chart_chartjs":[
-                                    f"{foldername_d}/vendor/chart.js/Chart.bundle.min.js",
-                                    f"{foldername_d}/js/plugins-init/chartjs-init.js",
-                                ],
-                                "chart_chartist":[
-                                    f"{foldername_d}/vendor/chart.js/Chart.bundle.min.js",
-                                    f"{foldername_d}/vendor/apexchart/apexchart.js",
-                                    f"{foldername_d}/vendor/chartist/js/chartist.min.js",
-                                    f"{foldername_d}/vendor/chartist-plugin-tooltips/js/chartist-plugin-tooltip.min.js",
-                                    f"{foldername_d}/js/plugins-init/chartist-init.js",
-                                ],
-                                "chart_sparkline":[
-                                    f"{foldername_d}/vendor/chart.js/Chart.bundle.min.js",
-                                    f"{foldername_d}/vendor/apexchart/apexchart.js",
-                                    f"{foldername_d}/vendor/jquery-sparkline/jquery.sparkline.min.js",
-                                    f"{foldername_d}/js/plugins-init/sparkline-init.js",
-                                    f"{foldername_d}/vendor/svganimation/vivus.min.js",
-                                    f"{foldername_d}/vendor/svganimation/svg.animation.js"
-                                ],
-                                "chart_peity":[
-                                    f"{foldername_d}/vendor/chart.js/Chart.bundle.min.js",
-                                    f"{foldername_d}/vendor/peity/jquery.peity.min.js",
-                                    f"{foldername_d}/js/plugins-init/piety-init.js",
-                                ],
-
-                                "uc_select2":[
-                                    f"{foldername_d}/vendor/select2/js/select2.full.min.js",
-                                    f"{foldername_d}/js/plugins-init/select2-init.js"
-                                ],
-                                "uc_nestable":[
-                                    f"{foldername_d}/vendor/nestable2/js/jquery.nestable.min.js",
-                                    f"{foldername_d}/js/plugins-init/nestable-init.js"
-
-                                ],
-                                "uc_noui_slider":[
-                                    f"{foldername_d}/vendor/nouislider/nouislider.min.js",
-                                    f"{foldername_d}/vendor/wnumb/wNumb.js",
-                                    f"{foldername_d}/js/plugins-init/nouislider-init.js"
-                                ],
-                                "uc_sweetalert":[
-                                    f"{foldername_d}/vendor/sweetalert2/dist/sweetalert2.min.js",
-                                    f"{foldername_d}/js/plugins-init/sweetalert.init.js",
-
-                                ],
-                                "uc_toastr":[
-                                    f"{foldername_d}/vendor/toastr/js/toastr.min.js",
-                                    f"{foldername_d}/js/plugins-init/toastr-init.js"
-                                ],
-                                "map_jqvmap":[
-                                    f"{foldername_d}/vendor/jqvmap/js/jquery.vmap.min.js",
-                                    f"{foldername_d}/vendor/jqvmap/js/jquery.vmap.world.js",
-                                    f"{foldername_d}/vendor/jqvmap/js/jquery.vmap.usa.js",
-                                    f"{foldername_d}/js/plugins-init/jqvmap-init.js"
-
-                                ],
-                                "uc_lightgallery":[
-                                    f"{foldername_d}/vendor/lightgallery/js/lightgallery-all.min.js"
-
-                                ],
-                                "widget_basic":[
-                                    f"{foldername_d}/vendor/chart.js/Chart.bundle.min.js",
-                                    f"{foldername_d}/vendor/apexchart/apexchart.js",
-                                    f"{foldername_d}/vendor/chartist/js/chartist.min.js",
-                                    f"{foldername_d}/vendor/chartist-plugin-tooltips/js/chartist-plugin-tooltip.min.js",
-                                    f"{foldername_d}/vendor/flot/jquery.flot.js",
-                                    f"{foldername_d}/vendor/flot/jquery.flot.pie.js",
-                                    f"{foldername_d}/vendor/flot/jquery.flot.resize.js",
-                                    f"{foldername_d}/vendor/flot-spline/jquery.flot.spline.min.js",
-                                    f"{foldername_d}/vendor/jquery-sparkline/jquery.sparkline.min.js",
-                                    f"{foldername_d}/js/plugins-init/sparkline-init.js",
-                                    f"{foldername_d}/vendor/peity/jquery.peity.min.js",
-                                    f"{foldername_d}/js/plugins-init/piety-init.js",
-                                    f"{foldername_d}/js/plugins-init/widgets-script-init.js",
-                                ],
-                            "form_element":[],
-                            "form_wizard":[
-                                f"{foldername_d}/vendor/jquery-steps/build/jquery.steps.min.js",
-                                f"{foldername_d}/vendor/jquery-validation/jquery.validate.min.js",
-                                f"{foldername_d}/js/plugins-init/jquery.validate-init.js",
-                                f"{foldername_d}/vendor/jquery-smartwizard/dist/js/jquery.smartWizard.js",
-                            ],
-                            "form_ckeditor":[
-                                f"{foldername_d}/vendor/ckeditor/ckeditor.js"
-                            ],
-                            "form_pickers":[
-                                f"{foldername_d}/vendor/bootstrap-select/dist/js/bootstrap-select.min.js",
-                                f"{foldername_d}/vendor/chart.js/Chart.bundle.min.js",
-                                f"{foldername_d}/vendor/apexchart/apexchart.js",
-                                f"{foldername_d}/vendor/moment/moment.min.js",
-                                f"{foldername_d}/vendor/bootstrap-daterangepicker/daterangepicker.js",
-                                f"{foldername_d}/vendor/clockpicker/js/bootstrap-clockpicker.min.js",
-                                f"{foldername_d}/vendor/jquery-asColor/jquery-asColor.min.js",
-                                f"{foldername_d}/vendor/jquery-asGradient/jquery-asGradient.min.js",
-                                f"{foldername_d}/vendor/jquery-asColorPicker/js/jquery-asColorPicker.min.js",
-                                f"{foldername_d}/vendor/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js",
-                                f"{foldername_d}/vendor/pickadate/picker.js",
-                                f"{foldername_d}/vendor/pickadate/picker.time.js",
-                                f"{foldername_d}/vendor/pickadate/picker.date.js",
-                                f"{foldername_d}/js/plugins-init/bs-daterange-picker-init.js",
-                                f"{foldername_d}/js/plugins-init/clock-picker-init.js",
-                                f"{foldername_d}/js/plugins-init/jquery-asColorPicker.init.js",
-                                f"{foldername_d}/js/plugins-init/material-date-picker-init.js",
-                                f"{foldername_d}/js/plugins-init/pickadate-init.js",
-                            ],
+                                
                             "bi":[
                                 f"{foldername_d}/vendor/bootstrap-select/dist/js/bootstrap-select.min.js",
                                 f"{foldername_d}/vendor/chart.js/Chart.bundle.min.js",
@@ -674,8 +366,7 @@ dz_array = {
                                 f"{foldername_d}/js/plugins-init/material-date-picker-init.js",
                                 f"{foldername_d}/js/plugins-init/pickadate-init.js",
                             ],
-                            "form_validation":[],
-                            "table_bootstrap_basic":[],
+                            
                             "sales":[
                                 f"{foldername_d}/vendor/chart.js/Chart.bundle.min.js",
                                 f"{foldername_d}/vendor/apexchart/apexchart.js",
