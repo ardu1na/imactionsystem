@@ -61,1660 +61,13 @@ def client_autocomplete(request):
     results = [{'id': c.pk, 'text': c.name} for c in clients]
     return JsonResponse({'results': results})
 
-######################################################################################################################################
-## HISTORIAL DE CAMBIOS
-@user_passes_test(lambda user: user.groups.filter(name='admin').exists())   
-@login_required(login_url='dashboard:login')
-def activity(request):
-  
-    # Registro de actividad en el ERP
-    # exceptuando cambios en la cotización del blue y usuarios.
-    ct = ContentType.objects.get_for_model(LastBlue)
-    ct2 = ContentType.objects.get_for_model(CustomUser)
-    events = CRUDEvent.objects.exclude(content_type=ct).exclude(content_type=ct2)
-    logs = LoginEvent.objects.all()
-    combined_list = list(chain(events, logs))     
-    paginator = Paginator(combined_list, 20) # Show 20 elements per page.
-    elements = paginator.get_page(request.GET.get('page'))
-    context={
-        "page_title":"Activity",
-        "events" : events,
-        "logs" : logs,
-        "list" : elements,}
-    return render(request,'dashboard/activity.html',context)
 
-######################################################################################################################################
-
-
-## CONFIGURACIONES Y AJUSTES 
-@login_required(login_url='dashboard:login')
-def setting (request):
-    # pestaña principal de acceso a configuraciones
-    context = {
-            "page_title": "SETTINGS",
-            }
-    return render (request, 'dashboard/settings.html', context)
-
-
-@user_passes_test(lambda user: user.groups.filter(name='admin').exists())
-@login_required(login_url='dashboard:login')
-def conf(request):
-    
-    # ajuste de parámetros de valor del cliente (tier)    
-    tier = ConfTier.objects.get(id=1)
-
-    if request.method == "GET":
-
-        form = TierConf(instance=tier)
-        
-        context = {
-            "page_title": "CHANGE TIER PARAMETERS",
-            'form': form,
-            'id': id
-            }
-        return render (request, 'dashboard/tier.html', context)
-
-    if request.method == 'POST':
-        form = TierConf(request.POST, instance=tier)
-        print(form.errors)
-        if form.is_valid():
-            tier = form.save()
-                      
-            return redirect(reverse('dashboard:index')+ "?changed")
-        else:
-            return HttpResponse(
-                f"Ups! Something went wrong. You should go back, update the page and try again. \n \n {form.errors}")
-        
-        
-### COMISIONES DE VENTA
-@user_passes_test(lambda user: user.groups.filter(name='admin').exists())
-@login_required(login_url='dashboard:login')
-def comms(request):
-    
-    # ajuste de parámetros de valor de las comisiones x venta  
-    comms = Comms.objects.get(id=1)
-
-    if request.method == "GET":
-
-        form = CommsForm(instance=comms)
-        
-        context = {
-            "page_title": "CHANGE COMMS PARAMETERS",
-            'form': form,
-            'id': id
-            }
-        return render (request, 'dashboard/commsconf.html', context)
-
-    if request.method == 'POST':
-        form = CommsForm(request.POST, instance=comms)
-        print(form.errors)
-        if form.is_valid():
-            comms = form.save()
-                      
-            return redirect(reverse('dashboard:index')+ "?changed")
-        else:
-            return HttpResponse(
-                f"Ups! Something went wrong. You should go back, update the page and try again. \n \n {form.errors}")
-
-
-
-#####################   EXPENSES  ##################################################################################
-
-
-## EXPENSES CRUD
-
-@user_passes_test(lambda user: user.groups.filter(name='expenses').exists())
-@login_required(login_url='dashboard:login')
-def editexpense(request, id):
-    # EXPENSE DETAIL . EDIT INSTANCE
-    editexpense = Expense.objects.get(id=id)
-    
-    if request.method == "GET":
-    
-        form = ExpenseForm(instance=editexpense)
-        
-        context = {
-            'form': form,
-            'editexpense': editexpense,
-            'id': id
-            }
-        return render (request, 'dashboard/expenses/editexpense.html', context)
-
-    
-    if request.method == 'POST':
-        form = ExpenseForm(request.POST, instance=editexpense)
-        if form.is_valid():
-            form.save()
-            return redirect ('dashboard:editexpense', id=editexpense.id)
-        else:
-            return HttpResponse(
-                f"Ups! Something went wrong. You should go back, update the page and try again.\n \n {form.errors}"
-                )
-        
-
-## exportación de expenses para excel
-@login_required(login_url='dashboard:login')
-def export_expenses(request):
-    dataset = ExpenseResource().export()
-    response = HttpResponse(dataset.xlsx, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = 'attachment; filename="expenses.xlsx"'
-    return response
-        
-        
-@user_passes_test(lambda user: user.groups.filter(name='expenses').exists())
-@login_required(login_url='dashboard:login')
-def expenses(request):
-    
-    # EXPENSES + SALARIES -- OF CURRENT MONTH
-
-    expenses = Expense.objects.filter(date__month=today.month, date__year= today.year)
-    employees = Employee.objects.filter(active="Yes").exclude(rol="CEO")
-    ceo = Employee.objects.filter(rol="CEO", active="Yes")
-    
-    if request.method == 'GET':
-        addform = ExpenseForm()
-    
-    
-    # nueva expense    
-    if request.method == 'POST':
-        if "addexpense" in request.POST:
-            addform = ExpenseForm(request.POST)
-            if addform.is_valid():
-                addform.save()
-                return redirect(reverse('dashboard:expenses')+ "?added")
-            else:
-                return HttpResponse(
-                    f"Ups! Something went wrong. You should go back, update the page and try again.\n \n {addform.errors}")
-    
-    
-    ###############################################        
-    ## CALCULOS PARA LAS CARDS      
-    without_wages = 0
-    for expense in expenses:
-        if expense.change > 0:
-            without_wages += expense.change
-        else:
-            without_wages += expense.value
-    
-    all_bonus = 0
-    wages_staff = 0
-    wages_ceo = 0
-    
-    try:
-        for i in ceo:
-            wages_ceo += i.get_total_ceo()
-            all_bonus += i.get_aguinaldo_mensual()
-            
-        for employee in employees:
-            wages_staff += employee.get_total()
-            all_bonus += employee.get_aguinaldo_mensual()
-    except: pass               
-    with_wages = without_wages + Decimal(wages_staff) + wages_ceo
-        
-    
-    ## DATA PARA EL GRÁFICO    
-    empresa = 0
-    lead_gen = 0
-    office = 0
-    other = 0
-    tax = 0
-    
-    for expense in expenses:
-        if expense.category == "Empresa":
-            if expense.change > 0:
-                empresa += expense.change
-            else:
-                empresa += expense.value
-        if expense.category == "Lead Gen":
-            if expense.change > 0:
-                lead_gen += expense.change
-            else:
-                lead_gen += expense.value    
-        if expense.category == "Office":
-            if expense.change > 0:
-                office += expense.change
-            else:
-                office += expense.value  
-        if expense.category == "Other":
-            if expense.change > 0:
-                other += expense.change
-            else:
-                other += expense.value           
-        if expense.category == "Tax":
-            if expense.change > 0:
-                tax += expense.change
-            else:
-                tax += expense.value            
-            
-    all = empresa + lead_gen + office + tax + other + Decimal(wages_staff) + wages_ceo
-    
-    try:            
-        empresa1 = (empresa*100)/all
-        lead_gen1 = (lead_gen*100)/all
-        tax1 = (tax*100)/all
-        wages_staff1 = (wages_staff*100)/all
-        other1 = (other*100)/all
-        office1 = (office*100)/all
-        wages_ceo1 = (wages_ceo*100)/all
-    except:
-        empresa1 = 0
-        lead_gen1 = 0
-        tax1 = 0
-        wages_staff1 = 0
-        other1 = 0
-        office1 = 0
-        wages_ceo1 = 0
-                    
-    context={
-        "page_title": "Expenses",
-        "expenses" : expenses,
-        "addform" : addform,
-        "without_wages" : without_wages,
-        "with_wages": with_wages,
-        "all_bonus" : all_bonus,
-        "employees" : employees,
-        "ceo" : ceo,     
-        #chart data  
-        "empresa" : empresa,
-        "lead_gen" : lead_gen,
-        "office" : office,
-        "other" : other,
-        "tax" : tax,
-        "wages_ceo" : wages_ceo,
-        "ceo" : ceo,     
-        "wages_staff" : wages_staff,
-        "empresa1" : empresa1,
-        "lead_gen1" : lead_gen1,
-        "office1" : office1,
-        "other1" : other1,
-        "tax1" : tax1,
-        "wages_ceo1" : wages_ceo1,
-        "wages_staff1" : wages_staff1,}
-    return render(request,'dashboard/expenses/expenses.html', context)
-
-
-## borrar expense
-@user_passes_test(lambda user: user.groups.filter(name='expenses').exists())
-@login_required(login_url='dashboard:login')
-def deleteexpense(request, id):
-    expense = Expense.objects.get(id=id)
-    expense.delete()
-    return redirect(reverse('dashboard:expenses')+ "?deleted")
-
-
-# historial de una expensa    
-@user_passes_test(lambda user: user.groups.filter(name='expenses').exists())
-@login_required(login_url='dashboard:login')
-def expenseshistory(request, id):
-    editexpense = Expense.objects.get(id=id)
-    same_expense = Expense.objects.filter(concept=editexpense.concept)   
-    context = {
-            'editexpense' : editexpense,
-            'same_expense': same_expense,
-            'id': id,
-            'page_title':'Expense History',
-            }
-    return render (request, 'dashboard/expenses/expenseshistory.html', context)
-
-
-
-
-
-########################################################################################################################################################
-## EMPLOYEES
-
-## función para exportar la info de los empleados para excel
-@login_required(login_url='dashboard:login')
-def export_employees(request):
-    dataset = ExportStaff().export()
-    response = HttpResponse(dataset.xlsx, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = 'attachment; filename="employees.xlsx"'
-    return response
-
-## LISTADO Y TABLA DE EMPLEADOS ACTIVOS
-@user_passes_test(lambda user: user.groups.filter(name='admin').exists())
-@login_required(login_url='dashboard:login')
-def employees(request):
-    staff = Employee.objects.exclude(rol="CEO").filter(active="Yes")
-    ceo = Employee.objects.filter(rol="CEO")        
-    employees  = Employee.objects.filter(active="Yes")
-    all = Employee.objects.all()
-    
-    if request.method == 'GET':
-        addform = EmployeeForm()
-        salaryform = EmployeeSalaryForm()
-        
-    if request.method == 'POST':
-        if "addemployee" in request.POST:
-            addform = EmployeeForm(request.POST)
-            salaryform = EmployeeSalaryForm(request.POST)
-            if addform.is_valid() and salaryform.is_valid():
-                employee = addform.save()
-                salary = salaryform.save(commit=False)
-                salary.employee = employee
-                salary.save()
-                return redirect(reverse('dashboard:employees')+ "?added")
-            else:
-                return HttpResponse(
-                    f"Ups! Something get wrong with the form. Please go back, reload the page and try again. \n \n {addform.errors}")           
-    
-    # cards data
-    total_white = 0
-    total_nigga = 0
-    total_total = 0    
-    for employee in staff:
-        try:
-            total_white += employee.get_white()        
-            total_nigga += employee.get_nigga()
-            total_total += employee.get_total()
-        except: pass     
-          
-    context={
-        "staff": staff,
-        "count_staff": staff.count(),
-        "ceo": ceo,
-        "employees": employees,
-        "all": all,
-        "employee_form": addform,
-        "salary_form": salaryform,
-        "white": total_white,
-        "nigga": total_nigga,
-        "total": total_total,        
-        "page_title":"WAGES STAFF",}
-    return render(request,'dashboard/employees/employees.html', context)
-
-
-# listado de empleados antiguos
-@user_passes_test(lambda user: user.groups.filter(name='admin').exists())
-@login_required(login_url='dashboard:login')
-def employeesold(request):
-    old =Employee.objects.filter(active="No")                                
-    context={        
-        "page_title":"STAFF OLD",
-        "old": old,}
-    return render(request,'dashboard/employees/employeesold.html',context)
-
-
-# eliminar un empleado
-@user_passes_test(lambda user: user.groups.filter(name='admin').exists())
-@login_required(login_url='dashboard:login')
-def deleteemployee(request, id):
-    employee = Employee.objects.get(id=id)
-    id = employee.id
-    employee.delete()
-    return redirect(reverse('dashboard:employees')+ "?deleted")
-
-
-## detalle de un EMPLEADO
-@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
-@login_required(login_url='dashboard:login')
-def editemployee(request, id):
-    # employee detail    
-    editemployee = Employee.objects.get(id=id)
-    holidays = Holiday.objects.filter(employee=editemployee)
-    salaries = Salary.objects.filter(employee=editemployee)
-    try:
-        wage_instance = Salary.objects.get(employee=editemployee, period__month=today.month, period__year=today.year)
-    except:
-        wage_instance =Salary.objects.filter(employee=editemployee).first()
-            
-    # if rol == seller get employees comms of current month
-    comms_this_m = 0
-    if editemployee.rol == "Sales":
-        for sale in editemployee.sales.filter(date__month=today.month, date__year=today.year):
-            comms_this_m += sale.get_comm
-        
-        
-    if request.method == "GET":      
-        editform = EditEmployeeForm(instance=editemployee)
-        
-        editwageform = EmployeeSalaryForm(instance=wage_instance) if wage_instance else EmployeeSalaryForm()
-        raice = RaiceForm()
-        
-        holydayform = HolidayEmployeeForm()
-        context = {
-            'comms_this_m': comms_this_m,
-            'raice': raice,
-            'holidayform'  : holydayform,
-            'editform': editform,
-            'editwageform': editwageform,
-            'editemployee': editemployee,
-            'id': id,
-            'holidays': holidays,
-            'salaries': salaries,
-            }       
-        return render (request, 'dashboard/employees/editemployee.html', context)
-
-    # edit employee
-    if request.method == 'POST':
-        # para modificar el salario
-        if "editwage" in request.POST:
-            
-            editwageform = EmployeeSalaryForm(request.POST, instance=wage_instance) if wage_instance else EmployeeSalaryForm(request.POST)
-            if editwageform.is_valid():
-                wage = editwageform.save(commit=False)
-                wage.employee = editemployee
-                wage.save()
-                return redirect(reverse('dashboard:editemployee', kwargs={'id': editemployee.id}) + '#pay')
-            else: 
-                return HttpResponse(f"Ups! Something went wrong. You should go back, update the page and try again. \n \n {editwageform.errors}")
-
-        # para aumentar el salario con porcentajes
-        if "raice" in request.POST:
-            raice = RaiceForm(request.POST)
-            if raice.is_valid():
-                raice_nigga = raice.cleaned_data['nigga']
-                raice_salary = raice.cleaned_data['salary']
-                
-                last_wage = wage_instance
-                last_wage.salary = last_wage.salary + (last_wage.salary*Decimal(raice_salary))/100
-                last_wage.nigga = Decimal(raice_nigga)
-                last_wage.raice = Decimal(raice_salary)
-                last_wage.save()
-                return redirect(reverse('dashboard:editemployee', kwargs={'id': editemployee.id}) + '#pay')
-            else:
-                return HttpResponse(f"Ups! Something went wrong. You should go back, update the page and try again. \n \n {raice.errors}")
-        
-        # detalles del empleado
-        if "editemployee" in request.POST:
-            editform = EditEmployeeForm(request.POST, instance=editemployee)
-            print (editform)
-            if editform.is_valid():
-                editform.save()
-                return redirect('dashboard:editemployee', id=editemployee.id)
-            else:
-                return HttpResponse(f"Ups! Something went wrong. You should go back, update the page and try again. \n \n {editform.errors}")
-        
-        # vacaciones
-        if "holiday" in request.POST:
-            holydayform = HolidayEmployeeForm(request.POST)
-            if holydayform.is_valid():
-                holiday = holydayform.save(commit=False)
-                holiday.employee = editemployee
-                holiday.save()
-                return redirect(reverse('dashboard:editemployee', kwargs={'id': editemployee.id}) + '#holiday')
-            else:
-                return HttpResponse(f"Ups! Something went wrong. You should go back, update the page and try again. \n \n {holydayform.errors}")
-
-
-
-# detalle de una vacacion
-@user_passes_test(lambda user: user.groups.filter(name='admin').exists())
-@login_required(login_url='dashboard:login')
-def editholiday(request, id):
-    editholiday = Holiday.objects.get(id=id)
-    editemployee = editholiday.employee      
-    if request.method == "GET":          
-        holyday_instance = Holiday.objects.filter(employee=editemployee).last()
-        holydayform = HolidayEmployeeForm(instance=holyday_instance) if holyday_instance else HolidayEmployeeForm()
-        context = {
-            'holidayform'  : holydayform,
-            'editemployee': editemployee,
-            'id': id}
-        return render (request, 'dashboard/employees/editholiday.html', context)
-
-    # editar una vacacion
-    if request.method == 'POST':                
-        if "holiday" in request.POST:
-            holyday_instance = Holiday.objects.filter(employee=editemployee).last()
-            holydayform = HolidayEmployeeForm(request.POST, instance=holyday_instance) if holyday_instance else HolidayEmployeeForm(request.POST)
-            if holydayform.is_valid():
-                holiday = holydayform.save(commit=False)
-                holiday.employee = editemployee
-                holiday.save()
-                return redirect('dashboard:editemployee', id=editemployee.id)
-            else:
-                return HttpResponse(
-                    f"Ups! Something went wrong. You should go back, update the page and try again. \n \n {holydayform.errors}")
-
-
-# borrar una vacación
-@user_passes_test(lambda user: user.groups.filter(name='admin').exists())
-@login_required(login_url='dashboard:login')
-def deleteholiday(request, id):
-    holiday = Holiday.objects.get(id=id)
-    holiday.delete()
-    employeeid=holiday.employee.id
-    
-    if holiday.employee.rol == "CEO":
-        return redirect(reverse('dashboard:editceo', kwargs={'id': employeeid}) + '#holiday')
-    else:
-        return redirect(reverse('dashboard:editemployee', kwargs={'id': employeeid}) + '#holiday')
-
-
-
-############ CEO
-
-
-## función para exportar data de ceo para excel
-@login_required(login_url='dashboard:login')
-def export_ceo(request):
-    dataset = ExportCeo().export()
-    response = HttpResponse(dataset.xlsx, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = 'attachment; filename="ceo.xlsx"'
-    return response
-
-
-# lista de ceo
-@user_passes_test(lambda user: user.groups.filter(name='admin').exists())
-@login_required(login_url='dashboard:login')
-def ceo(request):
-    ceo = Employee.objects.filter(rol="CEO")           
-    if request.method == 'GET':
-        addform = CeoForm()
-        salaryform = CeoSalaryForm()                   
-    if request.method == 'POST':
-        if "addemployee" in request.POST:
-            addform = CeoForm(request.POST)
-            salaryform = CeoSalaryForm(request.POST)
-            if addform.is_valid() and salaryform.is_valid():
-                employee = addform.save()
-                salary = salaryform.save(commit=False)
-                salary.employee = employee
-                salary.save()
-                return redirect(reverse('dashboard:ceo')+ "?added")
-            else:
-                return HttpResponse(
-                    f"Ups! Something get wrong. \n\n {addform.errors}")                                     
-    context={
-        "ceo": ceo,
-        "ceo_form": addform,
-        "salary_form": salaryform,        
-        "page_title":"WAGES CEO",}
-    return render(request,'dashboard/employees/ceo.html',context)
-
-
-# borrar ceo
-@user_passes_test(lambda user: user.groups.filter(name='admin').exists())
-@login_required(login_url='dashboard:login')
-def deleteceo(request, id):
-    employee = Employee.objects.get(id=id)
-    employee.delete()
-    return redirect(reverse('dashboard:ceo')+ "?deleted")
-
-
-# ver detalle editar ceo
-@user_passes_test(lambda user: user.groups.filter(name='admin').exists())
-@login_required(login_url='dashboard:login')
-def editceo(request, id):   
-    editemployee = Employee.objects.get(id=id)
-    holidays = Holiday.objects.filter(employee=editemployee)
-    salaries = Salary.objects.filter(employee=editemployee)
-    try:
-        wage_instance = Salary.objects.get(employee=editemployee, period__month=today.month, period__year=today.year)
-    except:
-        wage_instance =Salary.objects.filter(employee=editemployee).first()
-        
-        
-    if request.method == "GET":       
-        editform = EditEmployeeForm(instance=editemployee)
-        editwageform = EditWageCeo(instance=wage_instance) if wage_instance else EditWageCeo()
-        
-        holydayform = HolidayEmployeeForm()
-        context = {
-            'holidayform'  : holydayform,
-            'editform': editform,
-            'editwageform': editwageform,
-            'editemployee': editemployee,
-            'id': id,
-            'holidays': holidays,
-            'salaries': salaries,
-            }      
-        return render (request, 'dashboard/employees/editceo.html', context)
-    
-    if request.method == 'POST':
-        # editar datos generales de ceo
-        if "editemployee" in request.POST:
-            editform = EditEmployeeForm(request.POST, instance=editemployee)
-            if editform.is_valid():
-                editform.save()
-                return redirect('dashboard:editceo', id=editemployee.id)
-            else:
-                return HttpResponse(
-                    f"Ups! Something went wrong. You should go back, update the page and try again. \n\n {editform.errors}")
-        # nueva vacacion
-        if "holiday" in request.POST:
-            holydayform = HolidayEmployeeForm(request.POST)
-            if holydayform.is_valid():
-                holiday = holydayform.save(commit=False)
-                holiday.employee = editemployee
-                holiday.save()
-                return redirect(reverse('dashboard:editceo', kwargs={'id': editemployee.id}) + '#holiday')
-            else:
-                return HttpResponse(
-                    f"Ups! Something went wrong. You should go back, update the page and try again. \n\n {holydayform.errors}")
-        # editar salario        
-        if "editwage" in request.POST:
-            editwageform = EditWageCeo(request.POST, instance=wage_instance) if wage_instance else EditWageCeo(request.POST)
-            if editwageform.is_valid():
-                wage = editwageform.save(commit=False)
-                wage.employee = editemployee
-                wage.save()
-                return redirect(reverse('dashboard:editceo', kwargs={'id': editemployee.id}) + '#pay')
-            else: 
-                return HttpResponse(
-                    f"Ups! Something went wrong. You should go back, update the page and try again. \n\n {editwageform.errors}")
-
-
-
-
-
-
-
-
-#######################################################################################################################################################3
-## SERVICES
-# un servicio es la suscripción mensual (de una sale RR)
-
-
-# ver detalle de un servicio
-@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
-@login_required(login_url='dashboard:login')
-def editservice(request, id):   
-    editservice = get_object_or_404(Service, id=id)
-    context = {
-        'editservice': editservice,
-    }                   
-    return render (request, 'dashboard/table/editservice.html', context)
-
-
-# restaurar un servicio cancelado
-@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
-@login_required(login_url='dashboard:login')
-def restoreservice(request, id):        
-    editservice = get_object_or_404(Service, id=id)
-    client_id = editservice.client.id
-    editservice.state = True
-    editservice.save()
-    print(f'Service {editservice} restored.')                  
-    return redirect ('dashboard:editclient', id=client_id)
-            
-
-
-
-
-#####################################################################################################################################
-## AJUSTES
-# ajustes a los servicios
-@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
-@login_required(login_url='dashboard:login')
-def adj(request):      
-    services = Service.objects.filter(state=True)
-    accounts = Client.objects.filter(cancelled="Active")
-    adjform = AdjForm()
-    
-    if request.method == "POST" and "adj" in request.POST:
-        
-        adjform =AdjForm(request.POST)
-
-        if adjform.is_valid():
-            
-            instance = adjform.save(commit=False)
-            
-            client_name = adjform.cleaned_data['client']
-            client_instance = Client.objects.get(name=client_name)
-            instance.client = client_instance
-            
-
-            
-            if adjform.cleaned_data['type'] == "Service":
-                service_name = adjform.cleaned_data['service']
-                instance.service = service_name
-        
-            instance.save() 
-                
-                 
-        else:
-            print(adjform)
-            print(adjform.errors)
-    
-
-    context = {
-        'adjform': adjform,
-        'services': services,
-        'clients': accounts,
-
-    }
-    return render (request, 'dashboard/table/adj.html', context)
-
-
-
-
-
-
-
-@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
-@login_required(login_url='dashboard:login')
-def deleteadj(request, id):
-    
-    adj = Adj.objects.get(id=id)
-    
-    if adj.adj_done == False:  
-        adj.delete()
-    else:
-        if adj.type == "Service":
-            service = adj.service
-            service.total = adj.old_value
-            service.save()
-        else:
-            client = adj.client
-            for service in client.services.exclude(state=False):
-                corregido = Decimal(service.total / (1 + (adj.adj_percent / 100)))
-                service.total = corregido
-                service.save()
-        adj.delete()        
-            
-            
-    return redirect(reverse('dashboard:adjustment')+ "?deleted")
-
-
-
-
-
-
-
-
-@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
-@login_required(login_url='dashboard:login')
-def editadj(request, id):  
-      
-    adj = Adj.objects.get(id=id)
-
-    if request.method == "GET":
-        
-        adjform = ChangeAdj(instance=adj)
-        context = {
-            'adjform': adjform,
-            'adj': adj,
-            'id': id,
-            }
-        return render (request, 'dashboard/table/editadj.html', context)
-
-    
-    if request.method == 'POST':
-        adjform = ChangeAdj(request.POST, instance=adj)
-        
-        if adjform.is_valid():
-            instance = adjform.save(commit=False)
-            
-            
-            client_instance = adj.client
-            
-
-            adj_percent = adjform.cleaned_data['adj_percent']
-
-            if adj.type == "Service":
-                service = adj.service
-                new = Decimal(service.total + ((adj_percent / 100) * service.total))
-                instance.new_value = new
-                instance.dif = new - service.total               
-                
-            elif adj.type == "Account":
-                services = client_instance.services.filter(state=True)
-                total_services = 0
-                for service in services:
-                    total_services += service.total
-                
-                new = Decimal(total_services + ((adj_percent / 100) * total_services))
-                instance.new_value = new
-                instance.dif = new - total_services          
-        
-            instance.save()
-            return redirect('dashboard:adjustment')
-        else: 
-            return HttpResponse(f"Ups! Something went wrong. You should go back, update the page and try again. \n \n {adjform.errors}")
-        
-        
-
-@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
-@login_required(login_url='dashboard:login')
-def adjustment(request):
-    
-    # adjust services script from adjustment view
-    print("")
-
-    print("#######################################")
-    print("####################################### ADJUST SERVICES ")
-
-    adj_list = Adj.objects.filter(
-                        adj_done=False,
-                        notice_date__lte=today
-                    )
-    if adj_list:
-        print(f"############################### adjust list:\n {adj_list}")
-        print("##############################################")
-        for adj in adj_list:
-            if adj.type == "Service":
-                service = adj.service
-                print(f"######################################### item found -------- --- - -- - > {adj.type} ######")
-                print(f"{service}")
-                print(f"######################################### old value-- - > {service.total} ######")
-                service.total = adj.new_value
-                
-                service.save() 
-                print(f"######################################### new value-- - > {service.total} ######")
-                adj.adj_done = True
-                adj.save()
-                print(f"###### Adjust {service} done ---- > {adj.adj_done} ######")
-            elif adj.type == "Account":
-                client = adj.client
-                print(f"######################################### item found -------- --- - -- - > {adj.type}: {client} ######")
-                services = client.services.filter(state=True)
-                for service in services:
-                    print(f"{service}")
-                    print(f"######################################### old value-- - > {service.total} ######")
-                    
-                    
-                    service.total = Decimal(service.total + ((adj.adj_percent / 100) * service.total))
-
-                    service.save() 
-                    print(f"######################################### new value-- - > {service.total} ######")
-                adj.adj_done = True
-                adj.save()
-                print(f"###### Adjust {client} done ---- > {adj.adj_done}######")
-        print("")
-        print(f"############################### done with adjustments ")
-        print("############################################################################################")
-    else:
-        print(f"############################### nothing to adjust ")
-    
-    services = Service.objects.filter(state=True)
-    clients = Client.objects.filter(cancelled="Active")
-    adjform = AdjForm()
-    adjusts = Adj.objects.all()
-    if request.method == "POST" and "adj" in request.POST:
-        
-        adjform =AdjForm(request.POST)
-
-        if adjform.is_valid():
-            
-            instance = adjform.save(commit=False)
-            
-            client_name = adjform.cleaned_data['client']
-            client_instance = Client.objects.get(name=client_name)
-            instance.client = client_instance
-            
-
-            adj_percent = adjform.cleaned_data['adj_percent']
-
-            if adjform.cleaned_data['type'] == "Service":
-                service = adjform.cleaned_data['service']
-                instance.service = service
-                
-                instance.old_value = service.total
-                new = Decimal(service.total + ((adj_percent / 100) * service.total))
-                instance.new_value = new
-                instance.dif = new - service.total               
-                
-            elif adjform.cleaned_data['type'] == "Account":
-                services = client_instance.services.filter(state=True)
-                total_services = 0
-                for service in services:
-                    total_services += service.total
-                
-                instance.old_value = total_services
-                new = Decimal(total_services + ((adj_percent / 100) * total_services))
-                instance.new_value = new
-                instance.dif = new - total_services          
-        
-            instance.save()
-            return redirect('dashboard:adjustment') 
-                
-                 
-        else:
-            print(adjform.errors) 
-
-    context = {
-        'services': services,
-        'clients': clients,
-        "page_title":"ADJUSTMENTS",
-        'adjform':adjform,
-        'adjusts': adjusts,
-
-    }
-    return render (request, 'dashboard/table/adjustments.html', context)
-
-
-
-
-
-
-
-
-
-
-
-#####################################################################################################################################
-## VENTAS
-
-## función para exportar ventas para excel
-@login_required(login_url='dashboard:login')
-def export_sales(request):
-    dataset = ExportSales().export()
-    response = HttpResponse(dataset.xlsx, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = 'attachment; filename="sales.xlsx"'
-    return response
-
-
-@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
-@login_required(login_url='dashboard:login')
-def sales(request):
-    clients = Client.objects.all()
-    services = ['SEO','Google Ads','Facebook Ads','Web Design', 'Hosting', 'LinkedIn', 'SSL certificate','Web Plan','Combo', 'Community Management', 'Email Marketing', 'Others', 'Others RR']
-    this_month = today.month
-    month_name = date(1900, this_month, 1).strftime('%B')
-    
-    sales_this_month = Sale.objects.filter(date__month=today.month, date__year=today.year, revenue="RR").exclude(note="auto revenue sale")
-    
-    total_amount = sales_this_month.aggregate(Sum('change'))['change__sum']
-    
-    def get_total_format():
-        try:
-            return '{:,.0f}'.format(total_amount)
-        except: return 0
-
-    sales1_this_month = Sale.objects.filter(date__month=today.month, date__year=today.year, revenue="OneOff").exclude(note="auto revenue sale")
-    total1_amount = sales1_this_month.aggregate(Sum('change'))['change__sum']
-    def get_total1_format():
-        try:
-            return '{:,.0f}'.format(total1_amount)
-        except: return 0
-        
-    clients_this_month = Sale.objects.filter(date__month=today.month, date__year=today.year, kind="New Client").exclude(note="auto revenue sale")
-    total_clients = clients_this_month.count()
-    
-    
-    upsell_this_month = Sale.objects.filter(date__month=today.month, date__year=today.year, kind="Upsell").exclude(note="auto revenue sale")
-    total_upsell_this_month = upsell_this_month.count()
-    
-    crosssell_this_month = Sale.objects.filter(date__month=today.month, date__year=today.year, kind="Cross Sell").exclude(note="auto revenue sale")
-    total_crosssell_this_month = crosssell_this_month.count()
-    
-    sales = Sale.objects.filter(date__month=today.month, date__year=today.year)
-        
-        
-        
-    if request.method == 'GET':
-        initial_data = {}
-        client_id = request.GET.get('client')
-        if client_id:
-            initial_data['client'] = client_id
-        addform = SaleForm2(initial=initial_data)
-
-    if request.method == 'POST':
-        if "addsale" in request.POST:
-            client_name = request.POST.get('client')
-            addform = SaleForm2(request.POST)
-
-            if addform.is_valid():
-                instance = addform.save(commit=False)
-                client_instance = Client.objects.get(name=client_name)
-                instance.client = client_instance
-                instance.save()
-                return redirect(reverse('dashboard:sales') + "?added")
-            else:
-               
-                return HttpResponse(f"Ups! Something went wrong: \n\n {addform.errors}")
-
-                
-            
-            
-            
-    
-    sales_by_service =Sale.objects.filter(date__month=today.month, date__year=today.year).exclude(note="auto revenue sale")
-
-    s_seo = 0
-    s_gads= 0
-    s_fads= 0
-    s_lin= 0
-    s_cm = 0
-    s_combo = 0
-    s_webp = 0
-    s_other = 0
-    s_web = 0
-    s_hos = 0
-    s_ssl = 0
-    s_em = 0
-    s_other1 = 0
-    
-
-    for sale in sales_by_service:
-        if sale.service == "SEO":
-            s_seo += sale.get_change
-        elif sale.service == "Google Ads":
-            s_gads += sale.get_change
-        elif sale.service == "Facebook Ads":
-            s_fads += sale.get_change
-        elif sale.service == "LinkedIn":
-            s_lin  += sale.get_change
-        elif sale.service == "Community Management":
-            s_cm  += sale.get_change
-        elif sale.service == "Combo":
-            s_combo  += sale.get_change
-        elif sale.service == "Web Plan":
-            s_webp += sale.get_change
-        elif sale.service == "Others RR":
-            s_other += sale.get_change
-        elif sale.service == "Web Design":
-            s_web += sale.get_change
-        elif sale.service == "Hosting":
-            s_hos += sale.get_change
-        elif sale.service == "SSL certificate":
-            s_ssl += sale.get_change
-        elif sale.service == "Email Marketing":
-            s_em += sale.get_change
-        elif sale.service == "Others":
-            s_other1 += sale.get_change
-            
-        else: pass
-
-                
-    context={
-        "clients": clients,
-        "page_title":"SALES",
-        "sales" : sales,
-        "sales_this_month" : get_total_format,
-        "sales1_this_month" : get_total1_format,
-        "clients_this_month" : total_clients,
-        "this_month": month_name,
-        'upsell': total_upsell_this_month,
-        'cross': total_crosssell_this_month,
-        'services': services,
-        "addform" : addform,
-        "total_seo" : '{:,.0f}'.format(s_seo),
-        "total_googleads" : '{:,.0f}'.format(s_gads),
-        "total_facebookads" : '{:,.0f}'.format(s_fads),
-        "total_linkedin" : '{:,.0f}'.format(s_lin),
-        "total_communitymanagement" : '{:,.0f}'.format(s_cm),
-        "total_combo" :'{:,.0f}'.format(s_combo),
-        "total_webplan" :'{:,.0f}'.format(s_webp), 
-        "total_otherrr" : '{:,.0f}'.format(s_other),
-        "total_webdesign" :'{:,.0f}'.format(s_web),
-        "total_hosting":'{:,.0f}'.format(s_hos),
-        "total_sslcertificate": '{:,.0f}'.format(s_ssl),
-        "total_emailmarketing" :'{:,.0f}'.format(s_em),
-        "total_other" : '{:,.0f}'.format(s_other1)
-    }
-    return render(request,'dashboard/table/sales.html',context)
-
-@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
-@login_required(login_url='dashboard:login')
-def salesdata(request):
-    sales_rr_current_year = Sale.objects.filter(revenue="RR")\
-                                        .filter(date__year=datetime.now().date().year)
-    total_rr_this_year = 0
-    for s in sales_rr_current_year:
-        total_rr_this_year += s.get_change
-            
-    enero = 0
-    febrero = 0
-    marzo = 0
-    abril = 0
-    mayo = 0
-    junio = 0
-    julio = 0
-    agosto = 0
-    septiembre = 0
-    octubre = 0
-    noviembre = 0
-    diciembre = 0
-    
-    for sale in sales_rr_current_year:
-        if sale.date.month == 1:
-            enero +=sale.get_change
-            
-        elif sale.date.month == 2:
-            febrero +=sale.get_change
-        elif sale.date.month == 3:
-            marzo +=sale.get_change
-        elif sale.date.month == 4:
-            abril +=sale.get_change
-        elif sale.date.month == 5:
-            mayo +=sale.get_change
-        elif sale.date.month == 6:
-            junio +=sale.get_change
-        elif sale.date.month == 7:
-            julio +=sale.get_change
-        elif sale.date.month == 8:
-            agosto +=sale.get_change
-        elif sale.date.month == 9:
-            septiembre +=sale.get_change
-        elif sale.date.month == 10:
-            octubre +=sale.get_change
-        elif sale.date.month == 11:
-            noviembre +=sale.get_change
-        else:
-            diciembre +=sale.get_change
-            
-            
-    context={
-        "total_rr_this_year": total_rr_this_year,
-        "enero" : enero,
-        "febrero": febrero,
-        "marzo": marzo,
-        "abril": abril,
-        "mayo": mayo,
-        "junio": junio,
-        "julio": julio,
-        "agosto": agosto,
-        "septiembre": septiembre,
-        "octubre": octubre,
-        "noviembre": noviembre,
-        "diciembre": diciembre
-    }
-    
-    "SALES RR Y 1OFF BY YEAR AND MONTH"
-    "SERVICES BY YEAR AND MONTH"
-    "KIND AND SOURCE BY YEAR AND MONTH"
-    
-    return render(request,'dashboard/table/salesdata.html', context)
-
-
-
-
-
-
-
-@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
-@login_required(login_url='dashboard:login')
-def deletesale(request, id):
-    sale = Sale.objects.get(id=id)
-    # update asociated suscription values       
-    print("look for service asociated")
-
-    try:
-
-        servicio = sale.suscription
-        print(f"service finded {servicio}, sustracting sale price {sale.change} from service total {servicio.total}")
-
-        servicio.total -= sale.change
-        print(f'new total: {servicio.total}')
-        if servicio.total < 1:
-            print("service total is less than 1, deleting service...")
-            servicio.delete()
-            print("done")
-        else: 
-            print("service total is biggetr than 1, saving service")
-            servicio.save()
-            print("done")
-        
-    except:
-        print("cant find associated service")
-        pass
-    print("deleting the sale")
-    
-    sale.delete()
-    return redirect(reverse('dashboard:sales')+ "?deleted")
-
-
-@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
-@login_required(login_url='dashboard:login')
-def editsale(request, id):
-    
-    editsale = Sale.objects.get(id=id)
-    service = editsale.suscription
-    if request.method == "GET":
-        
-        editform = EditSaleForm(instance=editsale)
-        context = {
-            'editform': editform,
-            'editsale': editsale,
-            'id': id,
-            }
-        return render (request, 'dashboard/table/editsale.html', context)
-
-    
-    if request.method == 'POST':
-        editform = EditSaleForm(request.POST, instance=editsale)
-        if editform.is_valid():
-            antiguo = editsale.change
-            print(f'precio anterior de la venta: {antiguo}') 
-            sale = editform.save() 
-            if service is not None:
-                print(f'total atual del servicio {service.total}')
-                service.total -= antiguo
-                
-                print(f'restar el valor viejo de la venta: {antiguo}')
-                service.save()
-                print(f'SERVICIO GUARDADO total sin precio antiguo {service.total}')
-
-                print(f'precio nueva de la venta: {sale.change}')
-                print(f'sumar el nuevo valor al nuevo total {service.total}+ {sale.change}')
-
-                service.total += sale.change
-
-                service.save() 
-                print(service.total)
-                
-                
-            else:
-                print("not service asocciated")
-            sale.save() 
-                
-                
-            return redirect('dashboard:editsale', id=editsale.id)
-        else: return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
-
-## exportación de todos los clientes para excel
-@login_required(login_url='dashboard:login')
-def export_clients(request):
-    dataset = ClientResource().export()
-    response = HttpResponse(dataset.xlsx, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = 'attachment; filename="clients.xlsx"'
-    return response
-
-
-## exportación de las cuentas rr activas
-@login_required(login_url='dashboard:login')
-def export_rr(request):
-    dataset = ExportRR().export()
-    response = HttpResponse(dataset.xlsx, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = 'attachment; filename="rr.xlsx"'
-    return response
-
-
-
-
-
-
-@user_passes_test(lambda user: user.groups.filter(name='clients').exists())
-@login_required(login_url='dashboard:login')
-def clients(request):
-    clients_all = Client.objects.filter(cancelled="Active")
-    clients = []
-    for client in clients_all:
-        if client.services.filter(state=True).exists():
-            clients.append(client)
-        
-    total_rr = 0
-    for client in clients:
-        if client.cancelled == "Active":
-            for service in client.services.filter(state=True):
-                total_rr += service.total                
-    total_rr_k = total_rr
-    
-    
-    clients_rr = []
-    for client in clients_all.filter(cancelled="Active"):
-        if client.services.filter(state=True).exists():
-            clients_rr.append(client.id)
-    c_rr_total = len(clients_rr)
-
-    if len(clients_rr) > 0:
-        formula = total_rr/c_rr_total
-    else:
-        formula = 0
-        
-       
-    addform=ClientForm()
-    if request.method == 'GET':
-        addform = ClientForm()
-    if request.method == 'POST':
-        if "addclient" in request.POST:
-            addform = ClientForm(request.POST)
-            print(addform.errors)
-            if addform.is_valid():
-                newclient = addform.save()
-                return redirect('dashboard:editclient', id=newclient.id)
-            else:
-                return HttpResponse("hacked from las except else form")
-    
-    
-    services = Service.objects.filter(state=True)
-    s_seo = 0
-    s_gads= 0
-    s_fads= 0
-    s_lin= 0
-    s_cm = 0
-    s_combo = 0
-    s_webp = 0
-    s_other = 0
-    
-
-    for sale in services:
-        if sale.service == "SEO":
-            s_seo += sale.total
-        elif sale.service == "Google Ads":
-            s_gads += sale.total
-        elif sale.service == "Facebook Ads":
-            s_fads += sale.total
-        elif sale.service == "LinkedIn":
-            s_lin  += sale.total
-        elif sale.service == "Community Management":
-            s_cm  += sale.total
-        elif sale.service == "Combo":
-            s_combo  += sale.total
-        elif sale.service == "Web Plan":
-            s_webp += sale.total
-        elif sale.service == "Others":
-            s_webp += sale.total
-        else: pass
-
-    get_incomes_by_service = [s_seo, s_gads, s_fads, s_lin, s_cm, s_combo, s_webp, s_other]
-    
-    t1=0
-    t2=0
-    t3=0
-    t4=0
-    t5=0
-
-    for sale in services:
-        
-        if sale.client.tier == "I":
-            
-            t1 += sale.total
-        elif sale.client.tier == "II":
-            t2 += sale.total
-        elif sale.client.tier == "III":
-            t3 += sale.total
-        elif sale.client.tier == "IV":
-            t4 += sale.total
-        elif sale.client.tier == "V":
-            t5 += sale.total
-        else: pass
-    get_incomes_by_tier = [t1, t2, t3, t4, t5]      
-    
-    context={
-        "total_rr": total_rr,
-        "clients" : clients,
-        "addform": addform,
-        "c_rr_total":c_rr_total,
-        "total_rr_k":total_rr_k,
-        'get_incomes_by_service' : get_incomes_by_service,
-        'get_incomes_by_tier' : get_incomes_by_tier,
-        'seo' : s_seo,       
-        'gads': s_gads,
-        'fads' : s_fads,
-        'lin' : s_lin ,
-        'cm' : s_cm ,
-        'combo' : s_combo,
-        'web' : s_webp,
-        'formula': formula,
-        "page_title":"RR ACCOUNTS",
-    }
-    return render(request,'dashboard/instructor/clients.html',context)
-
-
-
-@user_passes_test(lambda user: user.groups.filter(Q(name='sales')).exists())
-@login_required(login_url='dashboard:login')
-def cancellations(request):
-    
-    
-    this_month = today.month
-    month = date(1900, this_month, 1).strftime('%B')
-    
-    clients_cancelled = Client.objects.filter(cancelled="Cancelled")
-    services_cancelled = Service.objects.filter(state=False)
-    services_this_month = services_cancelled.filter(date_can__month=today.month, client__cancelled="Active")
-    clients_this_month = clients_cancelled.filter(date_can__month=today.month)
-
-
-    total_amount = services_cancelled.filter(date_can__month=today.month).aggregate(Sum('total'))['total__sum']
-    def get_total_format():
-        try:
-            return '{:,.0f}'.format(total_amount)
-        except: return 0
-    
-    context={
-        "clients_cancelled": clients_cancelled,
-        "services_cancelled" : services_cancelled,
-        "month" : month,
-        "sales" : services_this_month.count(),
-        "clients": clients_this_month.count(),
-        "total": get_total_format,       
-        "page_title":"Cancellations"
-    }   
-    
-    return render(request,'dashboard/instructor/cancellations.html',context)
-
-
-@user_passes_test(lambda user: user.groups.filter(name='clients').exists())
-@login_required(login_url='dashboard:login')
-def deleteclient(request, id):
-    client = Client.objects.get(id=id)
-    client.delete()
-    return redirect(reverse('dashboard:clients')+ "?deleted")
-
-
-
-@user_passes_test(lambda user: user.groups.filter(name='clients').exists())
-@login_required(login_url='dashboard:login')
-def delete_clients(request):
-    if request.method == 'POST' and 'delete' in request.POST:
-        selected_ids = request.POST.getlist('selected_clients')
-        Client.objects.filter(id__in=selected_ids).delete()
-        return redirect('dashboard:clients')
-    else:
-        return HttpResponseBadRequest('Invalid request')
-
-@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
-@login_required(login_url='dashboard:login')
-def delete_sales(request):
-    if request.method == 'POST' and 'delete' in request.POST:
-        selected_ids = request.POST.getlist('selected_sales')
-        # update asociated suscription values    
-        for sale in Sale.objects.filter(id__in= selected_ids):
-            print(f"deleting {sale}")       
-            print("look for service asociated")
-        
-            try:
-
-                servicio = sale.suscription
-                print(f"service finded {servicio}, sustracting sale price {sale.change} from service total {servicio.total}")
-
-                servicio.total -= sale.change
-                print(f'new total: {servicio.total}')
-                if servicio.total < 1:
-                    print("service total is less than 1, deleting service...")
-                    servicio.delete()
-                    print("done")
-                else: 
-                    print("service total is biggetr than 1, saving service")
-                    servicio.save()
-                    print("done")
-                
-            except:
-                print("cant find associated service")
-                pass
-            print("deleting the sale")
-        
-        Sale.objects.filter(id__in=selected_ids).delete()
-        return redirect('dashboard:sales')
-    else:
-        return HttpResponseBadRequest('Invalid request')
-    
-    
-@user_passes_test(lambda user: user.groups.filter(name='expenses').exists())
-@login_required(login_url='dashboard:login')
-def delete_expenses(request):
-    if request.method == 'POST' and 'delete' in request.POST:
-        selected_ids = request.POST.getlist('selected_expenses')
-        Expense.objects.filter(id__in=selected_ids).delete()
-        return redirect('dashboard:expenses')
-    else:
-        return HttpResponseBadRequest('Invalid request')    
-
-
-@user_passes_test(lambda user: user.groups.filter(name='clients').exists())
-@login_required(login_url='dashboard:login')
-def editclient(request, id):
-    
-    editclient = Client.objects.get(id=id)
-
-    if request.method == "GET":
-        sales = editclient.sales.exclude(note="auto revenue sale")
-        services = editclient.services.all()
-        editform = EditClientForm(instance=editclient)
-        cancelform = CancellService()
-        context = {
-            'editform': editform,
-            'editclient': editclient,
-            'cancelform': cancelform,
-            'id': id,
-            'sales': sales,
-            'services': services,
-            }
-        return render (request, 'dashboard/instructor/editclient.html', context)
-
-    
-    if request.method == 'POST':
-        if 'editclient' in request.POST:
-            editform = EditClientForm(request.POST, instance=editclient)
-            if editform.is_valid():
-                clientedit = editform.save(commit=False)
-                if clientedit.cancelled == "Cancelled":
-                    for sale in clientedit.services.all():
-                        sale.state = False
-                        sale.comment_can = clientedit.comment_can
-                        sale.fail_can = clientedit.fail_can
-                        sale.date_can = clientedit.date_can
-                        sale.save()
-                clientedit.save()
-                return redirect('dashboard:editclient', id=clientedit.id)
-            else: return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
-            
-        if 'cancelservice' in request.POST:
-            
-            cancelform = CancellService(request.POST)
-            if cancelform.is_valid():
-                id = cancelform.cleaned_data['id']
-                instance = Service.objects.get(id=id)
-                instance.state = False
-                instance.comment_can = cancelform.cleaned_data['comment_can']
-                instance.date_can = cancelform.cleaned_data['date_can']
-                instance.fail_can = cancelform.cleaned_data['fail_can']
-                instance.save()
-                return redirect('dashboard:editclient', id=instance.client.id)
-
-            else:
-                print(cancelform.errors)
-                return HttpResponse(f"something get wrong: {cancelform.errors}")    
-        
-        
-        
-@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
-@login_required(login_url='dashboard:login')
-def addclientsale(request, id):
-    
-    client = Client.objects.get(id=id)
-
-    if request.method == "GET":
-        
-        addclientsaleform = ClientSaleForm()
-        context = {
-            'addclientsaleform': addclientsaleform,
-            'client': client,
-            }
-        return render (request, 'dashboard/instructor/addclientsale.html', context)
-
-    
-    if request.method == 'POST':
-        addclientsaleform = ClientSaleForm(request.POST)
-              
-        if addclientsaleform.is_valid():
-            instance = addclientsaleform.save(commit=False)
-            instance.client=client
-            instance.save()
-           
-            return redirect('dashboard:editclient', id=client.id)
-
-        else:
-
-            print (addclientsaleform.errors) 
-            return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
-        
-        
-        
-
-
-
-
-
-@login_required(login_url='dashboard:login')
-@permission_required({'dashboard.view_configurations','dashboard.delete_configurations'}, raise_exception=True)
-def delete_config(request,id):
-    config_obj = Configurations.objects.get(id=id)
-    if config_obj:
-        config_obj.delete()
-        setup_config.updateConfig()
-        messages.success(request, "Configuration Delete Successfully") 
-    else:
-        messages.error(request, "Configuration Not Valid") 
-
-    return redirect("dashboard:all-config")
-
-
-
-def count(d):
-    return max(count(v) if isinstance(v,dict) else 0 for v in d.values()) + 1
-
-
-@login_required(login_url='dashboard:login')
-@permission_required({'dashboard.view_configurations','dashboard.delete_configurations','dashboard.add_configurations'}, raise_exception=True)
-def reset_config(request):
-    path = "configurations/config.json"
-    full_path = os.path.join(settings.BASE_DIR,path)
-    Configurations.objects.all().delete()
-
-    with open(full_path,'r') as f:
-        configdata = json.load(f)
-       
-        for key1, value1 in configdata.items():
-            if count(value1) == 2:
-                for key2, value2 in value1.items():
-                    name = key1+"."+key2
-                    value = value2.get('value')
-                    title = value2.get('title')
-                    description = value2.get('description')
-                    input_type = value2.get('input_type')
-                    editable = value2.get('editable')
-                    order = value2.get('order')
-                    params = value2.get('params')
-                    config_obj = Configurations(
-                                    name=name,
-                                    value=value,
-                                    title=title,
-                                    description=description,
-                                    input_type=input_type,
-                                    editable=editable,
-                                    order=order,
-                                    params=params
-                                )
-                    config_obj.save()
-    setup_config.updateConfig()
-    return redirect("dashboard:all-config")
-        
-        
-
-
-@login_required(login_url='dashboard:login')
-def download_config(request):
-    path = "configurations/Config"
-    pickle_file_path = os.path.join(settings.BASE_DIR, path)
-   
-    dbfile = open(pickle_file_path, 'rb')
-    config_data = pickle.load(dbfile)
-    dbfile.close()
-    
-    json_file_path =os.path.join(settings.BASE_DIR,'configurations/config.json')
-    json_file = open(json_file_path,'w')
-    json_file.write(json.dumps(config_data,indent=4))
-    json_file.close()
-    mime_type, _ = mimetypes.guess_type(json_file_path)
-    
-    if os.path.exists(json_file_path):
-        with open(json_file_path, 'r') as fh:
-            response = HttpResponse(fh, content_type=mime_type)
-            response['Content-Disposition'] = "attachment; filename=%s" % 'config.json'
-            return response
-    raise Http404
 
 
 
 #######################################################################################
 
-
+############ INDEX
 
 @login_required(login_url='dashboard:login')
 def index(request):
@@ -3141,18 +1494,1700 @@ def index(request):
 
 
 
+######################################################################################################################################
+## HISTORIAL DE CAMBIOS
+@user_passes_test(lambda user: user.groups.filter(name='admin').exists())   
+@login_required(login_url='dashboard:login')
+def activity(request):
+  
+    # Registro de actividad en el ERP
+    # exceptuando cambios en la cotización del blue y usuarios.
+    ct = ContentType.objects.get_for_model(LastBlue)
+    ct2 = ContentType.objects.get_for_model(CustomUser)
+    events = CRUDEvent.objects.exclude(content_type=ct).exclude(content_type=ct2)
+    logs = LoginEvent.objects.all()
+    combined_list = list(chain(events, logs))     
+    paginator = Paginator(combined_list, 20) # Show 20 elements per page.
+    elements = paginator.get_page(request.GET.get('page'))
+    context={
+        "page_title":"Activity",
+        "events" : events,
+        "logs" : logs,
+        "list" : elements,}
+    return render(request,'dashboard/activity.html',context)
+
+######################################################################################################################################
+
+
+## CONFIGURACIONES Y AJUSTES 
+@login_required(login_url='dashboard:login')
+def setting (request):
+    # pestaña principal de acceso a configuraciones
+    context = {
+            "page_title": "SETTINGS",
+            }
+    return render (request, 'dashboard/settings.html', context)
+
+
+@user_passes_test(lambda user: user.groups.filter(name='admin').exists())
+@login_required(login_url='dashboard:login')
+def conf(request):
+    
+    # ajuste de parámetros de valor del cliente (tier)    
+    tier = ConfTier.objects.get(id=1)
+
+    if request.method == "GET":
+
+        form = TierConf(instance=tier)
+        
+        context = {
+            "page_title": "CHANGE TIER PARAMETERS",
+            'form': form,
+            'id': id
+            }
+        return render (request, 'dashboard/tier.html', context)
+
+    if request.method == 'POST':
+        form = TierConf(request.POST, instance=tier)
+        print(form.errors)
+        if form.is_valid():
+            tier = form.save()
+                      
+            return redirect(reverse('dashboard:index')+ "?changed")
+        else:
+            return HttpResponse(
+                f"Ups! Something went wrong. You should go back, update the page and try again. \n \n {form.errors}")
+        
+        
+### COMISIONES DE VENTA
+@user_passes_test(lambda user: user.groups.filter(name='admin').exists())
+@login_required(login_url='dashboard:login')
+def comms(request):
+    
+    # ajuste de parámetros de valor de las comisiones x venta  
+    comms = Comms.objects.get(id=1)
+
+    if request.method == "GET":
+
+        form = CommsForm(instance=comms)
+        
+        context = {
+            "page_title": "CHANGE COMMS PARAMETERS",
+            'form': form,
+            'id': id
+            }
+        return render (request, 'dashboard/commsconf.html', context)
+
+    if request.method == 'POST':
+        form = CommsForm(request.POST, instance=comms)
+        print(form.errors)
+        if form.is_valid():
+            comms = form.save()
+                      
+            return redirect(reverse('dashboard:index')+ "?changed")
+        else:
+            return HttpResponse(
+                f"Ups! Something went wrong. You should go back, update the page and try again. \n \n {form.errors}")
 
 
 
+#####################   EXPENSES  ##################################################################################
 
+
+## EXPENSES CRUD
+
+
+# DELETE EXPENSE
+@user_passes_test(lambda user: user.groups.filter(name='expenses').exists())
+@login_required(login_url='dashboard:login')
+def delete_expenses(request):
+    if request.method == 'POST' and 'delete' in request.POST:
+        selected_ids = request.POST.getlist('selected_expenses')
+        Expense.objects.filter(id__in=selected_ids).delete()
+        return redirect('dashboard:expenses')
+    else:
+        return HttpResponseBadRequest('Invalid request')    
+    
+# EDIT EXPENSE    
+@user_passes_test(lambda user: user.groups.filter(name='expenses').exists())
+@login_required(login_url='dashboard:login')
+def editexpense(request, id):
+    # EXPENSE DETAIL . EDIT INSTANCE
+    editexpense = Expense.objects.get(id=id)
+    
+    if request.method == "GET":
+    
+        form = ExpenseForm(instance=editexpense)
+        
+        context = {
+            'form': form,
+            'editexpense': editexpense,
+            'id': id
+            }
+        return render (request, 'dashboard/expenses/editexpense.html', context)
 
     
+    if request.method == 'POST':
+        form = ExpenseForm(request.POST, instance=editexpense)
+        if form.is_valid():
+            form.save()
+            return redirect ('dashboard:editexpense', id=editexpense.id)
+        else:
+            return HttpResponse(
+                f"Ups! Something went wrong. You should go back, update the page and try again.\n \n {form.errors}"
+                )
+        
+
+## exportación de expenses para excel
+@login_required(login_url='dashboard:login')
+def export_expenses(request):
+    dataset = ExpenseResource().export()
+    response = HttpResponse(dataset.xlsx, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename="expenses.xlsx"'
+    return response
+        
+# EXPENSES TABLE + ADD EXPENSE NEW        
+@user_passes_test(lambda user: user.groups.filter(name='expenses').exists())
+@login_required(login_url='dashboard:login')
+def expenses(request):
+    
+    # EXPENSES + SALARIES -- OF CURRENT MONTH
+
+    expenses = Expense.objects.filter(date__month=today.month, date__year= today.year)
+    employees = Employee.objects.filter(active="Yes").exclude(rol="CEO")
+    ceo = Employee.objects.filter(rol="CEO", active="Yes")
+    
+    if request.method == 'GET':
+        addform = ExpenseForm()
+    
+    
+    # nueva expense    
+    if request.method == 'POST':
+        if "addexpense" in request.POST:
+            addform = ExpenseForm(request.POST)
+            if addform.is_valid():
+                addform.save()
+                return redirect(reverse('dashboard:expenses')+ "?added")
+            else:
+                return HttpResponse(
+                    f"Ups! Something went wrong. You should go back, update the page and try again.\n \n {addform.errors}")
+    
+    
+    ###############################################        
+    ## CALCULOS PARA LAS CARDS      
+    without_wages = 0
+    for expense in expenses:
+        if expense.change > 0:
+            without_wages += expense.change
+        else:
+            without_wages += expense.value
+    
+    all_bonus = 0
+    wages_staff = 0
+    wages_ceo = 0
+    
+    try:
+        for i in ceo:
+            wages_ceo += i.get_total_ceo()
+            all_bonus += i.get_aguinaldo_mensual()
+            
+        for employee in employees:
+            wages_staff += employee.get_total()
+            all_bonus += employee.get_aguinaldo_mensual()
+    except: pass               
+    with_wages = without_wages + Decimal(wages_staff) + wages_ceo
+        
+    
+    ## DATA PARA EL GRÁFICO    
+    empresa = 0
+    lead_gen = 0
+    office = 0
+    other = 0
+    tax = 0
+    
+    for expense in expenses:
+        if expense.category == "Empresa":
+            if expense.change > 0:
+                empresa += expense.change
+            else:
+                empresa += expense.value
+        if expense.category == "Lead Gen":
+            if expense.change > 0:
+                lead_gen += expense.change
+            else:
+                lead_gen += expense.value    
+        if expense.category == "Office":
+            if expense.change > 0:
+                office += expense.change
+            else:
+                office += expense.value  
+        if expense.category == "Other":
+            if expense.change > 0:
+                other += expense.change
+            else:
+                other += expense.value           
+        if expense.category == "Tax":
+            if expense.change > 0:
+                tax += expense.change
+            else:
+                tax += expense.value            
+            
+    all = empresa + lead_gen + office + tax + other + Decimal(wages_staff) + wages_ceo
+    
+    try:            
+        empresa1 = (empresa*100)/all
+        lead_gen1 = (lead_gen*100)/all
+        tax1 = (tax*100)/all
+        wages_staff1 = (wages_staff*100)/all
+        other1 = (other*100)/all
+        office1 = (office*100)/all
+        wages_ceo1 = (wages_ceo*100)/all
+    except:
+        empresa1 = 0
+        lead_gen1 = 0
+        tax1 = 0
+        wages_staff1 = 0
+        other1 = 0
+        office1 = 0
+        wages_ceo1 = 0
+                    
+    context={
+        "page_title": "Expenses",
+        "expenses" : expenses,
+        "addform" : addform,
+        "without_wages" : without_wages,
+        "with_wages": with_wages,
+        "all_bonus" : all_bonus,
+        "employees" : employees,
+        "ceo" : ceo,     
+        #chart data  
+        "empresa" : empresa,
+        "lead_gen" : lead_gen,
+        "office" : office,
+        "other" : other,
+        "tax" : tax,
+        "wages_ceo" : wages_ceo,
+        "ceo" : ceo,     
+        "wages_staff" : wages_staff,
+        "empresa1" : empresa1,
+        "lead_gen1" : lead_gen1,
+        "office1" : office1,
+        "other1" : other1,
+        "tax1" : tax1,
+        "wages_ceo1" : wages_ceo1,
+        "wages_staff1" : wages_staff1,}
+    return render(request,'dashboard/expenses/expenses.html', context)
+
+
+## borrar expense
+@user_passes_test(lambda user: user.groups.filter(name='expenses').exists())
+@login_required(login_url='dashboard:login')
+def deleteexpense(request, id):
+    expense = Expense.objects.get(id=id)
+    expense.delete()
+    return redirect(reverse('dashboard:expenses')+ "?deleted")
+
+
+# historial de una expensa    
+@user_passes_test(lambda user: user.groups.filter(name='expenses').exists())
+@login_required(login_url='dashboard:login')
+def expenseshistory(request, id):
+    editexpense = Expense.objects.get(id=id)
+    same_expense = Expense.objects.filter(concept=editexpense.concept)   
+    context = {
+            'editexpense' : editexpense,
+            'same_expense': same_expense,
+            'id': id,
+            'page_title':'Expense History',
+            }
+    return render (request, 'dashboard/expenses/expenseshistory.html', context)
+
+
+
+
+
+########################################################################################################################################################
+## EMPLOYEES
+
+## función para exportar la info de los empleados para excel
+@login_required(login_url='dashboard:login')
+def export_employees(request):
+    dataset = ExportStaff().export()
+    response = HttpResponse(dataset.xlsx, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename="employees.xlsx"'
+    return response
+
+## LISTADO Y TABLA DE EMPLEADOS ACTIVOS
+@user_passes_test(lambda user: user.groups.filter(name='admin').exists())
+@login_required(login_url='dashboard:login')
+def employees(request):
+    staff = Employee.objects.exclude(rol="CEO").filter(active="Yes")
+    ceo = Employee.objects.filter(rol="CEO")        
+    employees  = Employee.objects.filter(active="Yes")
+    all = Employee.objects.all()
+    
+    if request.method == 'GET':
+        addform = EmployeeForm()
+        salaryform = EmployeeSalaryForm()
+        
+    if request.method == 'POST':
+        if "addemployee" in request.POST:
+            addform = EmployeeForm(request.POST)
+            salaryform = EmployeeSalaryForm(request.POST)
+            if addform.is_valid() and salaryform.is_valid():
+                employee = addform.save()
+                salary = salaryform.save(commit=False)
+                salary.employee = employee
+                salary.save()
+                return redirect(reverse('dashboard:employees')+ "?added")
+            else:
+                return HttpResponse(
+                    f"Ups! Something get wrong with the form. Please go back, reload the page and try again. \n \n {addform.errors}")           
+    
+    # cards data
+    total_white = 0
+    total_nigga = 0
+    total_total = 0    
+    for employee in staff:
+        try:
+            total_white += employee.get_white()        
+            total_nigga += employee.get_nigga()
+            total_total += employee.get_total()
+        except: pass     
+          
+    context={
+        "staff": staff,
+        "count_staff": staff.count(),
+        "ceo": ceo,
+        "employees": employees,
+        "all": all,
+        "employee_form": addform,
+        "salary_form": salaryform,
+        "white": total_white,
+        "nigga": total_nigga,
+        "total": total_total,        
+        "page_title":"WAGES STAFF",}
+    return render(request,'dashboard/employees/employees.html', context)
+
+
+# listado de empleados antiguos
+@user_passes_test(lambda user: user.groups.filter(name='admin').exists())
+@login_required(login_url='dashboard:login')
+def employeesold(request):
+    old =Employee.objects.filter(active="No")                                
+    context={        
+        "page_title":"STAFF OLD",
+        "old": old,}
+    return render(request,'dashboard/employees/employeesold.html',context)
+
+
+# eliminar un empleado
+@user_passes_test(lambda user: user.groups.filter(name='admin').exists())
+@login_required(login_url='dashboard:login')
+def deleteemployee(request, id):
+    employee = Employee.objects.get(id=id)
+    id = employee.id
+    employee.delete()
+    return redirect(reverse('dashboard:employees')+ "?deleted")
+
+
+## detalle de un EMPLEADO
+@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
+@login_required(login_url='dashboard:login')
+def editemployee(request, id):
+    # employee detail    
+    editemployee = Employee.objects.get(id=id)
+    holidays = Holiday.objects.filter(employee=editemployee)
+    salaries = Salary.objects.filter(employee=editemployee)
+    try:
+        wage_instance = Salary.objects.get(employee=editemployee, period__month=today.month, period__year=today.year)
+    except:
+        wage_instance =Salary.objects.filter(employee=editemployee).first()
+            
+    # if rol == seller get employees comms of current month
+    comms_this_m = 0
+    if editemployee.rol == "Sales":
+        for sale in editemployee.sales.filter(date__month=today.month, date__year=today.year):
+            comms_this_m += sale.get_comm
+        
+        
+    if request.method == "GET":      
+        editform = EditEmployeeForm(instance=editemployee)
+        
+        editwageform = EmployeeSalaryForm(instance=wage_instance) if wage_instance else EmployeeSalaryForm()
+        raice = RaiceForm()
+        
+        holydayform = HolidayEmployeeForm()
+        context = {
+            'comms_this_m': comms_this_m,
+            'raice': raice,
+            'holidayform'  : holydayform,
+            'editform': editform,
+            'editwageform': editwageform,
+            'editemployee': editemployee,
+            'id': id,
+            'holidays': holidays,
+            'salaries': salaries,
+            }       
+        return render (request, 'dashboard/employees/editemployee.html', context)
+
+    # edit employee
+    if request.method == 'POST':
+        # para modificar el salario
+        if "editwage" in request.POST:
+            
+            editwageform = EmployeeSalaryForm(request.POST, instance=wage_instance) if wage_instance else EmployeeSalaryForm(request.POST)
+            if editwageform.is_valid():
+                wage = editwageform.save(commit=False)
+                wage.employee = editemployee
+                wage.save()
+                return redirect(reverse('dashboard:editemployee', kwargs={'id': editemployee.id}) + '#pay')
+            else: 
+                return HttpResponse(f"Ups! Something went wrong. You should go back, update the page and try again. \n \n {editwageform.errors}")
+
+        # para aumentar el salario con porcentajes
+        if "raice" in request.POST:
+            raice = RaiceForm(request.POST)
+            if raice.is_valid():
+                raice_nigga = raice.cleaned_data['nigga']
+                raice_salary = raice.cleaned_data['salary']
+                
+                last_wage = wage_instance
+                last_wage.salary = last_wage.salary + (last_wage.salary*Decimal(raice_salary))/100
+                last_wage.nigga = Decimal(raice_nigga)
+                last_wage.raice = Decimal(raice_salary)
+                last_wage.save()
+                return redirect(reverse('dashboard:editemployee', kwargs={'id': editemployee.id}) + '#pay')
+            else:
+                return HttpResponse(f"Ups! Something went wrong. You should go back, update the page and try again. \n \n {raice.errors}")
+        
+        # detalles del empleado
+        if "editemployee" in request.POST:
+            editform = EditEmployeeForm(request.POST, instance=editemployee)
+            print (editform)
+            if editform.is_valid():
+                editform.save()
+                return redirect('dashboard:editemployee', id=editemployee.id)
+            else:
+                return HttpResponse(f"Ups! Something went wrong. You should go back, update the page and try again. \n \n {editform.errors}")
+        
+        # vacaciones
+        if "holiday" in request.POST:
+            holydayform = HolidayEmployeeForm(request.POST)
+            if holydayform.is_valid():
+                holiday = holydayform.save(commit=False)
+                holiday.employee = editemployee
+                holiday.save()
+                return redirect(reverse('dashboard:editemployee', kwargs={'id': editemployee.id}) + '#holiday')
+            else:
+                return HttpResponse(f"Ups! Something went wrong. You should go back, update the page and try again. \n \n {holydayform.errors}")
+
+
+
+# detalle de una vacacion
+@user_passes_test(lambda user: user.groups.filter(name='admin').exists())
+@login_required(login_url='dashboard:login')
+def editholiday(request, id):
+    editholiday = Holiday.objects.get(id=id)
+    editemployee = editholiday.employee      
+    if request.method == "GET":          
+        holyday_instance = Holiday.objects.filter(employee=editemployee).last()
+        holydayform = HolidayEmployeeForm(instance=holyday_instance) if holyday_instance else HolidayEmployeeForm()
+        context = {
+            'holidayform'  : holydayform,
+            'editemployee': editemployee,
+            'id': id}
+        return render (request, 'dashboard/employees/editholiday.html', context)
+
+    # editar una vacacion
+    if request.method == 'POST':                
+        if "holiday" in request.POST:
+            holyday_instance = Holiday.objects.filter(employee=editemployee).last()
+            holydayform = HolidayEmployeeForm(request.POST, instance=holyday_instance) if holyday_instance else HolidayEmployeeForm(request.POST)
+            if holydayform.is_valid():
+                holiday = holydayform.save(commit=False)
+                holiday.employee = editemployee
+                holiday.save()
+                return redirect('dashboard:editemployee', id=editemployee.id)
+            else:
+                return HttpResponse(
+                    f"Ups! Something went wrong. You should go back, update the page and try again. \n \n {holydayform.errors}")
+
+
+# borrar una vacación
+@user_passes_test(lambda user: user.groups.filter(name='admin').exists())
+@login_required(login_url='dashboard:login')
+def deleteholiday(request, id):
+    holiday = Holiday.objects.get(id=id)
+    holiday.delete()
+    employeeid=holiday.employee.id
+    
+    if holiday.employee.rol == "CEO":
+        return redirect(reverse('dashboard:editceo', kwargs={'id': employeeid}) + '#holiday')
+    else:
+        return redirect(reverse('dashboard:editemployee', kwargs={'id': employeeid}) + '#holiday')
+
+
+
+############ CEO
+
+
+## función para exportar data de ceo para excel
+@login_required(login_url='dashboard:login')
+def export_ceo(request):
+    dataset = ExportCeo().export()
+    response = HttpResponse(dataset.xlsx, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename="ceo.xlsx"'
+    return response
+
+
+# lista de ceo
+@user_passes_test(lambda user: user.groups.filter(name='admin').exists())
+@login_required(login_url='dashboard:login')
+def ceo(request):
+    ceo = Employee.objects.filter(rol="CEO")           
+    if request.method == 'GET':
+        addform = CeoForm()
+        salaryform = CeoSalaryForm()                   
+    if request.method == 'POST':
+        if "addemployee" in request.POST:
+            addform = CeoForm(request.POST)
+            salaryform = CeoSalaryForm(request.POST)
+            if addform.is_valid() and salaryform.is_valid():
+                employee = addform.save()
+                salary = salaryform.save(commit=False)
+                salary.employee = employee
+                salary.save()
+                return redirect(reverse('dashboard:ceo')+ "?added")
+            else:
+                return HttpResponse(
+                    f"Ups! Something get wrong. \n\n {addform.errors}")                                     
+    context={
+        "ceo": ceo,
+        "ceo_form": addform,
+        "salary_form": salaryform,        
+        "page_title":"WAGES CEO",}
+    return render(request,'dashboard/employees/ceo.html',context)
+
+
+# borrar ceo
+@user_passes_test(lambda user: user.groups.filter(name='admin').exists())
+@login_required(login_url='dashboard:login')
+def deleteceo(request, id):
+    employee = Employee.objects.get(id=id)
+    employee.delete()
+    return redirect(reverse('dashboard:ceo')+ "?deleted")
+
+
+# ver detalle editar ceo
+@user_passes_test(lambda user: user.groups.filter(name='admin').exists())
+@login_required(login_url='dashboard:login')
+def editceo(request, id):   
+    editemployee = Employee.objects.get(id=id)
+    holidays = Holiday.objects.filter(employee=editemployee)
+    salaries = Salary.objects.filter(employee=editemployee)
+    try:
+        wage_instance = Salary.objects.get(employee=editemployee, period__month=today.month, period__year=today.year)
+    except:
+        wage_instance =Salary.objects.filter(employee=editemployee).first()
+        
+        
+    if request.method == "GET":       
+        editform = EditEmployeeForm(instance=editemployee)
+        editwageform = EditWageCeo(instance=wage_instance) if wage_instance else EditWageCeo()
+        
+        holydayform = HolidayEmployeeForm()
+        context = {
+            'holidayform'  : holydayform,
+            'editform': editform,
+            'editwageform': editwageform,
+            'editemployee': editemployee,
+            'id': id,
+            'holidays': holidays,
+            'salaries': salaries,
+            }      
+        return render (request, 'dashboard/employees/editceo.html', context)
+    
+    if request.method == 'POST':
+        # editar datos generales de ceo
+        if "editemployee" in request.POST:
+            editform = EditEmployeeForm(request.POST, instance=editemployee)
+            if editform.is_valid():
+                editform.save()
+                return redirect('dashboard:editceo', id=editemployee.id)
+            else:
+                return HttpResponse(
+                    f"Ups! Something went wrong. You should go back, update the page and try again. \n\n {editform.errors}")
+        # nueva vacacion
+        if "holiday" in request.POST:
+            holydayform = HolidayEmployeeForm(request.POST)
+            if holydayform.is_valid():
+                holiday = holydayform.save(commit=False)
+                holiday.employee = editemployee
+                holiday.save()
+                return redirect(reverse('dashboard:editceo', kwargs={'id': editemployee.id}) + '#holiday')
+            else:
+                return HttpResponse(
+                    f"Ups! Something went wrong. You should go back, update the page and try again. \n\n {holydayform.errors}")
+        # editar salario        
+        if "editwage" in request.POST:
+            editwageform = EditWageCeo(request.POST, instance=wage_instance) if wage_instance else EditWageCeo(request.POST)
+            if editwageform.is_valid():
+                wage = editwageform.save(commit=False)
+                wage.employee = editemployee
+                wage.save()
+                return redirect(reverse('dashboard:editceo', kwargs={'id': editemployee.id}) + '#pay')
+            else: 
+                return HttpResponse(
+                    f"Ups! Something went wrong. You should go back, update the page and try again. \n\n {editwageform.errors}")
+
+
+
+
+
+
+
+
+#######################################################################################################################################################3
+## SERVICES
+# un servicio es la suscripción mensual (de una sale RR)
+
+
+# ver detalle de un servicio
+@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
+@login_required(login_url='dashboard:login')
+def editservice(request, id):   
+    editservice = get_object_or_404(Service, id=id)
+    context = {
+        'editservice': editservice,
+    }                   
+    return render (request, 'dashboard/sales_and_services/editservice.html', context)
+
+
+# restaurar un servicio cancelado
+@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
+@login_required(login_url='dashboard:login')
+def restoreservice(request, id):        
+    editservice = get_object_or_404(Service, id=id)
+    client_id = editservice.client.id
+    editservice.state = True
+    editservice.save()
+    print(f'Service {editservice} restored.')                  
+    return redirect ('dashboard:editclient', id=client_id)
+            
+
+
+
+
+#####################################################################################################################################
+## AJUSTES
+# ajustes a los servicios
+@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
+@login_required(login_url='dashboard:login')
+def adj(request):      
+    services = Service.objects.filter(state=True)
+    accounts = Client.objects.filter(cancelled="Active")
+    adjform = AdjForm()
+    
+    if request.method == "POST" and "adj" in request.POST:
+        
+        adjform =AdjForm(request.POST)
+
+        if adjform.is_valid():
+            
+            instance = adjform.save(commit=False)
+            
+            client_name = adjform.cleaned_data['client']
+            client_instance = Client.objects.get(name=client_name)
+            instance.client = client_instance
+            
+
+            
+            if adjform.cleaned_data['type'] == "Service":
+                service_name = adjform.cleaned_data['service']
+                instance.service = service_name
+        
+            instance.save() 
+                
+                 
+        else:
+            print(adjform)
+            print(adjform.errors)
+    
+
+    context = {
+        'adjform': adjform,
+        'services': services,
+        'clients': accounts,
+
+    }
+    return render (request, 'dashboard/sales_and_services/adj.html', context)
+
+
+
+
+
+
+# BORRAR UN AJUSTE
+@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
+@login_required(login_url='dashboard:login')
+def deleteadj(request, id):
+    
+    adj = Adj.objects.get(id=id)
+    # SI EL AJUSTE AÚN NO SE EFECTUÓ SE PUEDE BORRAR SIN HACER NADA
+    if adj.adj_done == False:  
+        adj.delete()
+    else:
+    # SI EL AJUSTE YA SE EFECTUÓ HAY QUE DESHACERLO EN EL O LOS SERVICIOS    
+        if adj.type == "Service":
+            service = adj.service
+            service.total = adj.old_value
+            service.save()
+        else:
+            client = adj.client
+            # SI SE AJUSTA LA CUENTA, HAY QUE REVERTIR CADA SERVICIO UNO POR UNO
+            for service in client.services.exclude(state=False):
+                corregido = Decimal(service.total / (1 + (adj.adj_percent / 100)))
+                service.total = corregido
+                service.save()
+        # LISTO SE PUEDE BORRAR
+        adj.delete()        
+            
+            
+    return redirect(reverse('dashboard:adjustment')+ "?deleted")
+
+
+
+
+
+
+
+## para editar un ajuste antes de que sea ejecutado y notificado
+@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
+@login_required(login_url='dashboard:login')
+def editadj(request, id):  
+      
+    adj = Adj.objects.get(id=id)
+
+    if request.method == "GET":
+        
+        adjform = ChangeAdj(instance=adj)
+        context = {
+            'adjform': adjform,
+            'adj': adj,
+            'id': id,
+            }
+        return render (request, 'dashboard/sales_and_services/editadj.html', context)
+
+    
+    if request.method == 'POST':
+        adjform = ChangeAdj(request.POST, instance=adj)
+        
+        if adjform.is_valid():
+            instance = adjform.save(commit=False)
+            
+            
+            client_instance = adj.client
+            
+
+            adj_percent = adjform.cleaned_data['adj_percent']
+
+            if adj.type == "Service":
+                service = adj.service
+                new = Decimal(service.total + ((adj_percent / 100) * service.total))
+                instance.new_value = new
+                instance.dif = new - service.total               
+                
+            elif adj.type == "Account":
+                services = client_instance.services.filter(state=True)
+                total_services = 0
+                for service in services:
+                    total_services += service.total
+                
+                new = Decimal(total_services + ((adj_percent / 100) * total_services))
+                instance.new_value = new
+                instance.dif = new - total_services          
+        
+            instance.save()
+            return redirect('dashboard:adjustment')
+        else: 
+            return HttpResponse(f"Ups! Something went wrong. You should go back, update the page and try again. \n \n {adjform.errors}")
+        
+        
+# ESTA ES LA VISTA DE AJUSTES 
+@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
+@login_required(login_url='dashboard:login')
+def adjustment(request):
+    
+    # adjust services script from adjustment view
+    print("")
+
+    print("#######################################")
+    print("####################################### ADJUST SERVICES ")
+
+    adj_list = Adj.objects.filter(
+                        adj_done=False,
+                        notice_date__lte=today
+                    )
+    if adj_list:
+        print(f"############################### adjust list:\n {adj_list}")
+        print("##############################################")
+        for adj in adj_list:
+            if adj.type == "Service":
+                service = adj.service
+                print(f"######################################### item found -------- --- - -- - > {adj.type} ######")
+                print(f"{service}")
+                print(f"######################################### old value-- - > {service.total} ######")
+                service.total = adj.new_value
+                
+                service.save() 
+                print(f"######################################### new value-- - > {service.total} ######")
+                adj.adj_done = True
+                adj.save()
+                print(f"###### Adjust {service} done ---- > {adj.adj_done} ######")
+            elif adj.type == "Account":
+                client = adj.client
+                print(f"######################################### item found -------- --- - -- - > {adj.type}: {client} ######")
+                services = client.services.filter(state=True)
+                for service in services:
+                    print(f"{service}")
+                    print(f"######################################### old value-- - > {service.total} ######")
+                    
+                    
+                    service.total = Decimal(service.total + ((adj.adj_percent / 100) * service.total))
+
+                    service.save() 
+                    print(f"######################################### new value-- - > {service.total} ######")
+                adj.adj_done = True
+                adj.save()
+                print(f"###### Adjust {client} done ---- > {adj.adj_done}######")
+        print("")
+        print(f"############################### done with adjustments ")
+        print("############################################################################################")
+    else:
+        print(f"############################### nothing to adjust ")
+    
+    services = Service.objects.filter(state=True)
+    clients = Client.objects.filter(cancelled="Active")
+    adjform = AdjForm()
+    adjusts = Adj.objects.all()
+    if request.method == "POST" and "adj" in request.POST:
+        
+        adjform =AdjForm(request.POST)
+
+        if adjform.is_valid():
+            
+            instance = adjform.save(commit=False)
+            
+            client_name = adjform.cleaned_data['client']
+            client_instance = Client.objects.get(name=client_name)
+            instance.client = client_instance
+            
+
+            adj_percent = adjform.cleaned_data['adj_percent']
+
+            if adjform.cleaned_data['type'] == "Service":
+                service = adjform.cleaned_data['service']
+                instance.service = service
+                
+                instance.old_value = service.total
+                new = Decimal(service.total + ((adj_percent / 100) * service.total))
+                instance.new_value = new
+                instance.dif = new - service.total               
+                
+            elif adjform.cleaned_data['type'] == "Account":
+                services = client_instance.services.filter(state=True)
+                total_services = 0
+                for service in services:
+                    total_services += service.total
+                
+                instance.old_value = total_services
+                new = Decimal(total_services + ((adj_percent / 100) * total_services))
+                instance.new_value = new
+                instance.dif = new - total_services          
+        
+            instance.save()
+            return redirect('dashboard:adjustment') 
+                
+                 
+        else:
+            print(adjform.errors) 
+
+    context = {
+        'services': services,
+        'clients': clients,
+        "page_title":"ADJUSTMENTS",
+        'adjform':adjform,
+        'adjusts': adjusts,
+
+    }
+    return render (request, 'dashboard/sales_and_services/adjustments.html', context)
+
+
+
+
+
+
+
+
+
+
+
+#####################################################################################################################################
+## VENTAS
+
+## función para exportar ventas para excel
+@login_required(login_url='dashboard:login')
+def export_sales(request):
+    dataset = ExportSales().export()
+    response = HttpResponse(dataset.xlsx, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename="sales.xlsx"'
+    return response
+
+
+@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
+@login_required(login_url='dashboard:login')
+def delete_sales(request):
+    if request.method == 'POST' and 'delete' in request.POST:
+        selected_ids = request.POST.getlist('selected_sales')
+        # update asociated suscription values    
+        for sale in Sale.objects.filter(id__in= selected_ids):
+            print(f"deleting {sale}")       
+            print("look for service asociated")
+        
+            try:
+
+                servicio = sale.suscription
+                print(f"service finded {servicio}, sustracting sale price {sale.change} from service total {servicio.total}")
+
+                servicio.total -= sale.change
+                print(f'new total: {servicio.total}')
+                if servicio.total < 1:
+                    print("service total is less than 1, deleting service...")
+                    servicio.delete()
+                    print("done")
+                else: 
+                    print("service total is biggetr than 1, saving service")
+                    servicio.save()
+                    print("done")
+                
+            except:
+                print("cant find associated service")
+                pass
+            print("deleting the sale")
+        
+        Sale.objects.filter(id__in=selected_ids).delete()
+        return redirect('dashboard:sales')
+    else:
+        return HttpResponseBadRequest('Invalid request')
+    
+    
+
+
+## TABLA Y LISTA DE VENTAS - SALES TABLE
+@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
+@login_required(login_url='dashboard:login')
+def sales(request):
+    
+    # CARDS DATA
+    clients = Client.objects.all()
+    services = ['SEO','Google Ads','Facebook Ads','Web Design', 'Hosting', 'LinkedIn', 'SSL certificate','Web Plan','Combo', 'Community Management', 'Email Marketing', 'Others', 'Others RR']
+    this_month = today.month
+    month_name = date(1900, this_month, 1).strftime('%B')
+    
+    sales_this_month = Sale.objects.filter(date__month=today.month, date__year=today.year, revenue="RR").exclude(note="auto revenue sale")
+    
+    total_amount = sales_this_month.aggregate(Sum('change'))['change__sum']
+    
+    def get_total_format():
+        try:
+            return '{:,.0f}'.format(total_amount)
+        except: return 0
+
+    sales1_this_month = Sale.objects.filter(date__month=today.month, date__year=today.year, revenue="OneOff").exclude(note="auto revenue sale")
+    total1_amount = sales1_this_month.aggregate(Sum('change'))['change__sum']
+    def get_total1_format():
+        try:
+            return '{:,.0f}'.format(total1_amount)
+        except: return 0
+        
+    clients_this_month = Sale.objects.filter(date__month=today.month, date__year=today.year, kind="New Client").exclude(note="auto revenue sale")
+    total_clients = clients_this_month.count()
+    
+    
+    upsell_this_month = Sale.objects.filter(date__month=today.month, date__year=today.year, kind="Upsell").exclude(note="auto revenue sale")
+    total_upsell_this_month = upsell_this_month.count()
+    
+    crosssell_this_month = Sale.objects.filter(date__month=today.month, date__year=today.year, kind="Cross Sell").exclude(note="auto revenue sale")
+    total_crosssell_this_month = crosssell_this_month.count()
+    
+    sales = Sale.objects.filter(date__month=today.month, date__year=today.year)
+        
+    # NUEVA VENTA    
+    # MODAL FORM ADD SALE CON AUTOCOMPLETE DE CLIENTS    
+    if request.method == 'GET':
+        initial_data = {}
+        client_id = request.GET.get('client')
+        if client_id:
+            initial_data['client'] = client_id
+        addform = SaleForm2(initial=initial_data)
+    # ADD NEW SALE MODAL POST
+    if request.method == 'POST':
+        if "addsale" in request.POST:
+            client_name = request.POST.get('client')
+            addform = SaleForm2(request.POST)
+
+            if addform.is_valid():
+                instance = addform.save(commit=False)
+                client_instance = Client.objects.get(name=client_name)
+                instance.client = client_instance
+                instance.save()
+                return redirect(reverse('dashboard:sales') + "?added")
+            else:
+               
+                return HttpResponse(f"Ups! Something went wrong: \n\n {addform.errors}")
+
+                
+            
+            
+            
+    # MAS DATA PARA LAS CARDS
+    sales_by_service =Sale.objects.filter(date__month=today.month, date__year=today.year).exclude(note="auto revenue sale")
+
+    s_seo = 0
+    s_gads= 0
+    s_fads= 0
+    s_lin= 0
+    s_cm = 0
+    s_combo = 0
+    s_webp = 0
+    s_other = 0
+    s_web = 0
+    s_hos = 0
+    s_ssl = 0
+    s_em = 0
+    s_other1 = 0
+    
+
+    for sale in sales_by_service:
+        if sale.service == "SEO":
+            s_seo += sale.get_change
+        elif sale.service == "Google Ads":
+            s_gads += sale.get_change
+        elif sale.service == "Facebook Ads":
+            s_fads += sale.get_change
+        elif sale.service == "LinkedIn":
+            s_lin  += sale.get_change
+        elif sale.service == "Community Management":
+            s_cm  += sale.get_change
+        elif sale.service == "Combo":
+            s_combo  += sale.get_change
+        elif sale.service == "Web Plan":
+            s_webp += sale.get_change
+        elif sale.service == "Others RR":
+            s_other += sale.get_change
+        elif sale.service == "Web Design":
+            s_web += sale.get_change
+        elif sale.service == "Hosting":
+            s_hos += sale.get_change
+        elif sale.service == "SSL certificate":
+            s_ssl += sale.get_change
+        elif sale.service == "Email Marketing":
+            s_em += sale.get_change
+        elif sale.service == "Others":
+            s_other1 += sale.get_change
+            
+        else: pass
+
+                
+    context={
+        "clients": clients,
+        "page_title":"SALES",
+        "sales" : sales,
+        "sales_this_month" : get_total_format,
+        "sales1_this_month" : get_total1_format,
+        "clients_this_month" : total_clients,
+        "this_month": month_name,
+        'upsell': total_upsell_this_month,
+        'cross': total_crosssell_this_month,
+        'services': services,
+        "addform" : addform,
+        "total_seo" : '{:,.0f}'.format(s_seo),
+        "total_googleads" : '{:,.0f}'.format(s_gads),
+        "total_facebookads" : '{:,.0f}'.format(s_fads),
+        "total_linkedin" : '{:,.0f}'.format(s_lin),
+        "total_communitymanagement" : '{:,.0f}'.format(s_cm),
+        "total_combo" :'{:,.0f}'.format(s_combo),
+        "total_webplan" :'{:,.0f}'.format(s_webp), 
+        "total_otherrr" : '{:,.0f}'.format(s_other),
+        "total_webdesign" :'{:,.0f}'.format(s_web),
+        "total_hosting":'{:,.0f}'.format(s_hos),
+        "total_sslcertificate": '{:,.0f}'.format(s_ssl),
+        "total_emailmarketing" :'{:,.0f}'.format(s_em),
+        "total_other" : '{:,.0f}'.format(s_other1)
+    }
+    return render(request,'dashboard/sales_and_services/sales.html',context)
+
+
+
+@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
+@login_required(login_url='dashboard:login')
+def salesdata(request):
+    sales_rr_current_year = Sale.objects.filter(revenue="RR")\
+                                        .filter(date__year=datetime.now().date().year)
+    total_rr_this_year = 0
+    for s in sales_rr_current_year:
+        total_rr_this_year += s.get_change
+            
+    enero = 0
+    febrero = 0
+    marzo = 0
+    abril = 0
+    mayo = 0
+    junio = 0
+    julio = 0
+    agosto = 0
+    septiembre = 0
+    octubre = 0
+    noviembre = 0
+    diciembre = 0
+    
+    for sale in sales_rr_current_year:
+        if sale.date.month == 1:
+            enero +=sale.get_change
+            
+        elif sale.date.month == 2:
+            febrero +=sale.get_change
+        elif sale.date.month == 3:
+            marzo +=sale.get_change
+        elif sale.date.month == 4:
+            abril +=sale.get_change
+        elif sale.date.month == 5:
+            mayo +=sale.get_change
+        elif sale.date.month == 6:
+            junio +=sale.get_change
+        elif sale.date.month == 7:
+            julio +=sale.get_change
+        elif sale.date.month == 8:
+            agosto +=sale.get_change
+        elif sale.date.month == 9:
+            septiembre +=sale.get_change
+        elif sale.date.month == 10:
+            octubre +=sale.get_change
+        elif sale.date.month == 11:
+            noviembre +=sale.get_change
+        else:
+            diciembre +=sale.get_change
+            
+            
+    context={
+        "total_rr_this_year": total_rr_this_year,
+        "enero" : enero,
+        "febrero": febrero,
+        "marzo": marzo,
+        "abril": abril,
+        "mayo": mayo,
+        "junio": junio,
+        "julio": julio,
+        "agosto": agosto,
+        "septiembre": septiembre,
+        "octubre": octubre,
+        "noviembre": noviembre,
+        "diciembre": diciembre
+    }
+    
+    "SALES RR Y 1OFF BY YEAR AND MONTH"
+    "SERVICES BY YEAR AND MONTH"
+    "KIND AND SOURCE BY YEAR AND MONTH"
+    
+    return render(request,'dashboard/sales_and_services/salesdata.html', context)
+
+
+
+
+
+
+# BORRAR VENTA
+@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
+@login_required(login_url='dashboard:login')
+def deletesale(request, id):
+    # COMO LA VENTA SE SUMA A UN SERVICIO RR
+    # ES NECESARIO RESTARLA DEL SERVICIO
+    sale = Sale.objects.get(id=id)
+    # update asociated SERVICE(suscription values       
+    print("look for service asociated")
+
+    try:
+
+        servicio = sale.suscription
+        print(f"service finded {servicio}, sustracting sale price {sale.change} from service total {servicio.total}")
+
+        servicio.total -= sale.change
+        print(f'new total: {servicio.total}')
+        if servicio.total < 1:
+            print("service total is less than 1, deleting service...")
+            servicio.delete()
+            print("done")
+        else: 
+            print("service total is biggetr than 1, saving service")
+            servicio.save()
+            print("done")
+        
+    except:
+        print("cant find associated service")
+        pass
+    print("deleting the sale")
+    
+    sale.delete()
+    return redirect(reverse('dashboard:sales')+ "?deleted")
+
+
+
+
+# EDITAR VENTA
+@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
+@login_required(login_url='dashboard:login')
+def editsale(request, id):
+    
+    editsale = Sale.objects.get(id=id)
+    service = editsale.suscription
+    if request.method == "GET":
+        
+        editform = EditSaleForm(instance=editsale)
+        context = {
+            'editform': editform,
+            'editsale': editsale,
+            'id': id,
+            }
+        return render (request, 'dashboard/sales_and_services/editsale.html', context)
+
+    
+    if request.method == 'POST':
+        editform = EditSaleForm(request.POST, instance=editsale)
+        if editform.is_valid():
+            antiguo = editsale.change
+            print(f'precio anterior de la venta: {antiguo}') 
+            sale = editform.save() 
+            if service is not None:
+                print(f'total atual del servicio {service.total}')
+                service.total -= antiguo
+                
+                print(f'restar el valor viejo de la venta: {antiguo}')
+                service.save()
+                print(f'SERVICIO GUARDADO total sin precio antiguo {service.total}')
+
+                print(f'precio nueva de la venta: {sale.change}')
+                print(f'sumar el nuevo valor al nuevo total {service.total}+ {sale.change}')
+
+                service.total += sale.change
+
+                service.save() 
+                print(service.total)
+                
+                
+            else:
+                print("not service asocciated")
+            sale.save() 
+                
+                
+            return redirect('dashboard:editsale', id=editsale.id)
+        else: return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
+
+
+
+
+
+
+############################################################################################
+###################### CLIENTES - CLIENTS - ACCOUNTS """"""
+
+
+## exportación de todos los clientes para excel
+@login_required(login_url='dashboard:login')
+def export_clients(request):
+    dataset = ClientResource().export()
+    response = HttpResponse(dataset.xlsx, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename="clients.xlsx"'
+    return response
+
+
+## exportación de las cuentas rr activas
+@login_required(login_url='dashboard:login')
+def export_rr(request):
+    dataset = ExportRR().export()
+    response = HttpResponse(dataset.xlsx, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename="rr.xlsx"'
+    return response
+
+
+
+
+## CLIENTS TABLE  - ACCOUNTS RR
+@user_passes_test(lambda user: user.groups.filter(name='clients').exists())
+@login_required(login_url='dashboard:login')
+def clients(request):
+    # GET ACTIVE RR ACCOUNTS
+    clients_all = Client.objects.filter(cancelled="Active")
+    clients = []
+    for client in clients_all:
+        if client.services.filter(state=True).exists():
+            clients.append(client)
+    # CARDS DATA    
+    total_rr = 0
+    for client in clients:
+        if client.cancelled == "Active":
+            for service in client.services.filter(state=True):
+                total_rr += service.total                
+    total_rr_k = total_rr
+    
+    
+    clients_rr = []
+    for client in clients_all.filter(cancelled="Active"):
+        if client.services.filter(state=True).exists():
+            clients_rr.append(client.id)
+    c_rr_total = len(clients_rr)
+
+    if len(clients_rr) > 0:
+        formula = total_rr/c_rr_total
+    else:
+        formula = 0
+        
+    # FORMULARIO MODAL NEW CLIENT -    
+    addform=ClientForm()
+    if request.method == 'GET':
+        addform = ClientForm()
+    if request.method == 'POST':
+        if "addclient" in request.POST:
+            addform = ClientForm(request.POST)
+            print(addform.errors)
+            if addform.is_valid():
+                newclient = addform.save()
+                return redirect('dashboard:editclient', id=newclient.id)
+            else:
+                return HttpResponse("hacked from las except else form")
+    
+    
+    services = Service.objects.filter(state=True)
+    s_seo = 0
+    s_gads= 0
+    s_fads= 0
+    s_lin= 0
+    s_cm = 0
+    s_combo = 0
+    s_webp = 0
+    s_other = 0
+    
+
+    for sale in services:
+        if sale.service == "SEO":
+            s_seo += sale.total
+        elif sale.service == "Google Ads":
+            s_gads += sale.total
+        elif sale.service == "Facebook Ads":
+            s_fads += sale.total
+        elif sale.service == "LinkedIn":
+            s_lin  += sale.total
+        elif sale.service == "Community Management":
+            s_cm  += sale.total
+        elif sale.service == "Combo":
+            s_combo  += sale.total
+        elif sale.service == "Web Plan":
+            s_webp += sale.total
+        elif sale.service == "Others":
+            s_webp += sale.total
+        else: pass
+
+    get_incomes_by_service = [s_seo, s_gads, s_fads, s_lin, s_cm, s_combo, s_webp, s_other]
+    
+    t1=0
+    t2=0
+    t3=0
+    t4=0
+    t5=0
+
+    for sale in services:
+        
+        if sale.client.tier == "I":
+            
+            t1 += sale.total
+        elif sale.client.tier == "II":
+            t2 += sale.total
+        elif sale.client.tier == "III":
+            t3 += sale.total
+        elif sale.client.tier == "IV":
+            t4 += sale.total
+        elif sale.client.tier == "V":
+            t5 += sale.total
+        else: pass
+    get_incomes_by_tier = [t1, t2, t3, t4, t5]      
+    
+    context={
+        "total_rr": total_rr,
+        "clients" : clients,
+        "addform": addform,
+        "c_rr_total":c_rr_total,
+        "total_rr_k":total_rr_k,
+        'get_incomes_by_service' : get_incomes_by_service,
+        'get_incomes_by_tier' : get_incomes_by_tier,
+        'seo' : s_seo,       
+        'gads': s_gads,
+        'fads' : s_fads,
+        'lin' : s_lin ,
+        'cm' : s_cm ,
+        'combo' : s_combo,
+        'web' : s_webp,
+        'formula': formula,
+        "page_title":"RR ACCOUNTS",
+    }
+    return render(request,'dashboard/clients/clients.html',context)
+
+
+
+
+
+# DELETE CLIENT
+@user_passes_test(lambda user: user.groups.filter(name='clients').exists())
+@login_required(login_url='dashboard:login')
+def deleteclient(request, id):
+    client = Client.objects.get(id=id)
+    client.delete()
+    return redirect(reverse('dashboard:clients')+ "?deleted")
+
+
+# DELETE MULTIPLE CLIENTS
+@user_passes_test(lambda user: user.groups.filter(name='clients').exists())
+@login_required(login_url='dashboard:login')
+def delete_clients(request):
+    if request.method == 'POST' and 'delete' in request.POST:
+        selected_ids = request.POST.getlist('selected_clients')
+        Client.objects.filter(id__in=selected_ids).delete()
+        return redirect('dashboard:clients')
+    else:
+        return HttpResponseBadRequest('Invalid request')
+
+
+
+
+## client detail --- edit client --- see sales, services and cancellations of a client
+@user_passes_test(lambda user: user.groups.filter(name='clients').exists())
+@login_required(login_url='dashboard:login')
+def editclient(request, id):
+    
+    editclient = Client.objects.get(id=id)
+
+    if request.method == "GET":
+        sales = editclient.sales.exclude(note="auto revenue sale")
+        services = editclient.services.all()
+        editform = EditClientForm(instance=editclient)
+        cancelform = CancellService()
+        context = {
+            'editform': editform,
+            'editclient': editclient,
+            'cancelform': cancelform,
+            'id': id,
+            'sales': sales,
+            'services': services,
+            }
+        return render (request, 'dashboard/clients/editclient.html', context)
+
+    
+    if request.method == 'POST':
+        if 'editclient' in request.POST:
+            editform = EditClientForm(request.POST, instance=editclient)
+            if editform.is_valid():
+                clientedit = editform.save(commit=False)
+                if clientedit.cancelled == "Cancelled":
+                    for sale in clientedit.services.all():
+                        sale.state = False
+                        sale.comment_can = clientedit.comment_can
+                        sale.fail_can = clientedit.fail_can
+                        sale.date_can = clientedit.date_can
+                        sale.save()
+                clientedit.save()
+                return redirect('dashboard:editclient', id=clientedit.id)
+            else: return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
+            
+        if 'cancelservice' in request.POST:
+            
+            cancelform = CancellService(request.POST)
+            if cancelform.is_valid():
+                id = cancelform.cleaned_data['id']
+                instance = Service.objects.get(id=id)
+                instance.state = False
+                instance.comment_can = cancelform.cleaned_data['comment_can']
+                instance.date_can = cancelform.cleaned_data['date_can']
+                instance.fail_can = cancelform.cleaned_data['fail_can']
+                instance.save()
+                return redirect('dashboard:editclient', id=instance.client.id)
+
+            else:
+                print(cancelform.errors)
+                return HttpResponse(f"something get wrong: {cancelform.errors}")    
+        
+        
+### add a sale to a client        
+@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
+@login_required(login_url='dashboard:login')
+def addclientsale(request, id):
+    
+    client = Client.objects.get(id=id)
+
+    if request.method == "GET":
+        
+        addclientsaleform = ClientSaleForm()
+        context = {
+            'addclientsaleform': addclientsaleform,
+            'client': client,
+            }
+        return render (request, 'dashboard/clients/addclientsale.html', context)
+
+    
+    if request.method == 'POST':
+        addclientsaleform = ClientSaleForm(request.POST)
+              
+        if addclientsaleform.is_valid():
+            instance = addclientsaleform.save(commit=False)
+            instance.client=client
+            instance.save()
+           
+            return redirect('dashboard:editclient', id=client.id)
+
+        else:
+
+            print (addclientsaleform.errors) 
+            return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
+        
+        
+        
+
+
+
+####################################################### CANCELLATIONS
+@user_passes_test(lambda user: user.groups.filter(Q(name='sales')).exists())
+@login_required(login_url='dashboard:login')
+def cancellations(request):
+    # LA CANCELACIÓN PUEDE SER DE UN SERVICIO UN DE TODA LA CUENTA DEL CLIENTE
+    # FILTRAR PARA ESTE MES
+    this_month = today.month
+    month = date(1900, this_month, 1).strftime('%B')
+    
+    clients_cancelled = Client.objects.filter(cancelled="Cancelled")
+    services_cancelled = Service.objects.filter(state=False)
+    services_this_month = services_cancelled.filter(date_can__month=today.month, client__cancelled="Active")
+    clients_this_month = clients_cancelled.filter(date_can__month=today.month)
+
+    # DATA PARA LAS CARDS
+    total_amount = services_cancelled.filter(date_can__month=today.month).aggregate(Sum('total'))['total__sum']
+    def get_total_format():
+        try:
+            return '{:,.0f}'.format(total_amount)
+        except: return 0
+    
+    context={
+        "clients_cancelled": clients_cancelled,
+        "services_cancelled" : services_cancelled,
+        "month" : month,
+        "sales" : services_this_month.count(),
+        "clients": clients_this_month.count(),
+        "total": get_total_format,       
+        "page_title":"Cancellations"
+    }   
+    
+    return render(request,'dashboard/cancellations.html',context)
+
+
+
+
+
+
+
+
+
+
+############ W3CMS VIEWS
+
+@login_required(login_url='dashboard:login')
+@permission_required({'dashboard.view_configurations','dashboard.delete_configurations'}, raise_exception=True)
+def delete_config(request,id):
+    config_obj = Configurations.objects.get(id=id)
+    if config_obj:
+        config_obj.delete()
+        setup_config.updateConfig()
+        messages.success(request, "Configuration Delete Successfully") 
+    else:
+        messages.error(request, "Configuration Not Valid") 
+
+    return redirect("dashboard:all-config")
+
+
+
+def count(d):
+    return max(count(v) if isinstance(v,dict) else 0 for v in d.values()) + 1
+
+
+@login_required(login_url='dashboard:login')
+@permission_required({'dashboard.view_configurations','dashboard.delete_configurations','dashboard.add_configurations'}, raise_exception=True)
+def reset_config(request):
+    path = "configurations/config.json"
+    full_path = os.path.join(settings.BASE_DIR,path)
+    Configurations.objects.all().delete()
+
+    with open(full_path,'r') as f:
+        configdata = json.load(f)
+       
+        for key1, value1 in configdata.items():
+            if count(value1) == 2:
+                for key2, value2 in value1.items():
+                    name = key1+"."+key2
+                    value = value2.get('value')
+                    title = value2.get('title')
+                    description = value2.get('description')
+                    input_type = value2.get('input_type')
+                    editable = value2.get('editable')
+                    order = value2.get('order')
+                    params = value2.get('params')
+                    config_obj = Configurations(
+                                    name=name,
+                                    value=value,
+                                    title=title,
+                                    description=description,
+                                    input_type=input_type,
+                                    editable=editable,
+                                    order=order,
+                                    params=params
+                                )
+                    config_obj.save()
+    setup_config.updateConfig()
+    return redirect("dashboard:all-config")
+        
+        
+
+
+@login_required(login_url='dashboard:login')
+def download_config(request):
+    path = "configurations/Config"
+    pickle_file_path = os.path.join(settings.BASE_DIR, path)
+   
+    dbfile = open(pickle_file_path, 'rb')
+    config_data = pickle.load(dbfile)
+    dbfile.close()
+    
+    json_file_path =os.path.join(settings.BASE_DIR,'configurations/config.json')
+    json_file = open(json_file_path,'w')
+    json_file.write(json.dumps(config_data,indent=4))
+    json_file.close()
+    mime_type, _ = mimetypes.guess_type(json_file_path)
+    
+    if os.path.exists(json_file_path):
+        with open(json_file_path, 'r') as fh:
+            response = HttpResponse(fh, content_type=mime_type)
+            response['Content-Disposition'] = "attachment; filename=%s" % 'config.json'
+            return response
+    raise Http404 
 
         
 def page_lock_screen(request):
     return render(request,'dashboard/pages/page-lock-screen.html')
-
-
 
 
 
