@@ -3,9 +3,9 @@ from import_export.fields import Field
 from import_export.widgets import ForeignKeyWidget
 
 from sales.models import Sale, Adj, Service
-from customers.models import Client, BackUps, ConfTier, AutoRevenue
+from customers.models import Client
 from expenses.models import Expense, Employee, Holiday, Salary
-from dashboard.models import Comms, LastBlue, Configurations   
+from dashboard.models import Comms, LastBlue, Configurations, BackUps, ConfTier, AutoRevenue   
 
 
         

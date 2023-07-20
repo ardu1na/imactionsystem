@@ -1,6 +1,32 @@
 from django import forms
-from dashboard.models import Configurations, Comms
+from django.forms import ModelForm, TextInput
 
+from dashboard.models import Configurations, Comms, ConfTier
+
+class TierConf(ModelForm):
+    class Meta:
+        model = ConfTier
+        exclude = ['id', 'tier_v']
+        
+        widgets = {
+            'tier_i' : TextInput(attrs={'class':"form-control",
+            'id':"tier_i",
+            'placeholder':"Tier I"}),
+            
+            'tier_ii' : TextInput(attrs={'class':"form-control",
+            'id':"tier_ii",
+            'placeholder':"Tier II"}),
+            
+            'tier_iii' : TextInput(attrs={'class':"form-control",
+            'id':"tier_iii",
+            'placeholder':"Tier III"}),
+            
+            'tier_iv' : TextInput(attrs={'class':"form-control",
+            'id':"tier_iv",
+            'placeholder':"Tier IV"}),
+            
+            
+        }
 
 
 class CommsForm(forms.ModelForm):

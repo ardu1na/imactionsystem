@@ -22,25 +22,36 @@ from django.core.paginator import Paginator
 
 ## external packages 
 from easyaudit.models import CRUDEvent, LoginEvent
+
 # dashboard app
 from dashboard import setup_config
-from dashboard.models import Configurations, Comms, LastBlue
+from dashboard.models import Configurations, Comms, LastBlue, ConfTier, BackUps, AutoRevenue
 from dashboard.users.models import CustomUser
+from dashboard.forms import CommsForm, TierConf
+
+# export/import db
+from dashboard.resources import ExportSales, ClientResource, ExportRR, ExpenseResource, ExportStaff, ExportCeo
+
+# this is for something not done
 from dashboard.utils import *
+
+# get blue venta 
 try: 
     from dashboard.services import venta as b_venta
 except: pass
-from dashboard.forms import CommsForm
-from dashboard.resources import ExportSales, ClientResource, ExportRR, ExpenseResource, ExportStaff, ExportCeo
+
 # customers app
-from customers.models import ConfTier, BackUps, Client, AutoRevenue
-from customers.forms import TierConf, ClientForm, EditClientForm
+from customers.models import  Client
+from customers.forms import ClientForm, EditClientForm
+
 # sales app
 from sales.models import Sale, Service, Adj
 from sales.forms import AdjForm, ChangeAdj, SaleForm2, ClientSaleForm, CancellService, EditSaleForm
+
 # expenses app
 from expenses.models import Employee, Expense, Holiday, Salary
 from expenses.forms import RaiceForm, HolidayEmployeeForm, ExpenseForm, EmployeeForm, EmployeeSalaryForm, CeoForm, CeoSalaryForm, EditEmployeeForm, EditWageCeo 
+
 ### END IMPORTS
 
 

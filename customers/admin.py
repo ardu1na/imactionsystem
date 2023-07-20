@@ -1,10 +1,10 @@
 from django.contrib import admin
 from sales.models import Sale
-from customers.models import  ConfTier, BackUps, Client, AutoRevenue
+from customers.models import   Client
 
 from import_export.admin import ImportExportModelAdmin
 
-from dashboard.resources import ClientResource, BackUpsResource, ConfTierResource,  AutoRevenueResource
+from dashboard.resources import ClientResource
 
 admin.site.site_header = 'IMACTIONS'
 admin.site.index_title = 'Home'
@@ -12,20 +12,7 @@ admin.site.site_title = 'IMACTIONS'
 
 
 
-class BackUpsAdmin(ImportExportModelAdmin):
-    resource_class = BackUpsResource    
-admin.site.register(BackUps, BackUpsAdmin)
 
-
-
-class AutoRevenueAdmin(ImportExportModelAdmin):
-    resource_class = AutoRevenueResource    
-admin.site.register(AutoRevenue, AutoRevenueAdmin)
-
-
-class ConfTierAdmin(ImportExportModelAdmin):
-    resource_class = ConfTierResource    
-admin.site.register(ConfTier, ConfTierAdmin)
 
 class SaleInstanceInline(admin.TabularInline):
     model = Sale
