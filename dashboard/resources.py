@@ -8,7 +8,6 @@ from expenses.models import Expense, Employee, Holiday, Salary
 from dashboard.models import Comms, LastBlue, Configurations   
 
 
-
         
 class CommsResource(resources.ModelResource): 
     
@@ -91,7 +90,6 @@ class SaleResource(resources.ModelResource):
         model = Sale"""
 """
         
-
 class SaleResource(resources.ModelResource):
     client = fields.Field(
         column_name='client',
@@ -107,30 +105,6 @@ class SaleResource(resources.ModelResource):
     
     class Meta:
         model = Sale
-<<<<<<< HEAD
-        exclude = ('suscription',)
-
-
-
-
-
-
-class ServiceResource(resources.ModelResource):
-    client = fields.Field(
-        column_name='client',
-        attribute='client',
-        widget=ForeignKeyWidget(Client, 'name')
-    )
-    
-    class Meta:
-        model = Service
-
-
-
-
-
-
-=======
 """
 
 class SaleResource(resources.ModelResource):
@@ -161,7 +135,6 @@ class ServiceResource(resources.ModelResource):
     
     class Meta:
         model = Service
-
 
 
 

@@ -234,7 +234,7 @@ def expenses(request):
     ## CALCULOS PARA LAS CARDS      
     without_wages = 0
     for expense in expenses:
-        if expense.change > 0:
+        if expense.change is not None and expense.change > 0:
             without_wages += expense.change
         else:
             without_wages += expense.value
@@ -252,7 +252,7 @@ def expenses(request):
             wages_staff += employee.get_total()
             all_bonus += employee.get_aguinaldo_mensual()
     except: pass               
-    with_wages = without_wages + wages_staff + wages_ceo
+    with_wages = without_wages + Decimal(wages_staff) + wages_ceo
         
     
     ## DATA PARA EL GRÁFICO    
@@ -264,32 +264,32 @@ def expenses(request):
     
     for expense in expenses:
         if expense.category == "Empresa":
-            if expense.change > 0:
+            if expense.change is not None and expense.change > 0:
                 empresa += expense.change
             else:
                 empresa += expense.value
         if expense.category == "Lead Gen":
-            if expense.change > 0:
+            if expense.change is not None and expense.change > 0:
                 lead_gen += expense.change
             else:
                 lead_gen += expense.value    
         if expense.category == "Office":
-            if expense.change > 0:
+            if expense.change  is not None and expense.change > 0:
                 office += expense.change
             else:
                 office += expense.value  
         if expense.category == "Other":
-            if expense.change > 0:
+            if expense.change is not None and expense.change > 0:
                 other += expense.change
             else:
                 other += expense.value           
         if expense.category == "Tax":
-            if expense.change > 0:
+            if expense.change is not None and expense.change > 0:
                 tax += expense.change
             else:
                 tax += expense.value            
             
-    all = empresa + lead_gen + office + tax + other + wages_staff + wages_ceo
+    all = empresa + lead_gen + office + tax + other + Decimal(wages_staff) + wages_ceo
     
     try:            
         empresa1 = (empresa*100)/all
@@ -1949,7 +1949,6 @@ def index(request):
         balance = rr_t_clients - outcome
     except:
         balance = 0
-
     #######################################################################################
 
     #######################################################################################

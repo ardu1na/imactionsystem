@@ -8,16 +8,11 @@ from expenses.models import Employee
 from dashboard.models import LastBlue, Comms
 
 
-
-
-
 try:
     comms = Comms.objects.get(id=1)
 except:
     comms = Comms.objects.create(              
                 )
-
-
 
 last_blue = 0
 try:

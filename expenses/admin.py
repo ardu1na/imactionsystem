@@ -23,7 +23,8 @@ admin.site.register(Employee, EmployeeAdmin)
 
 class ExpenseAdmin(ImportExportModelAdmin): 
     resource_class = ExpenseResource
-
+    list_display = ['date', 'category', 'concept', 'value', 'currency', 'change']
+    
 
 admin.site.register(Expense, ExpenseAdmin)
 

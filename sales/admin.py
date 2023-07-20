@@ -2,15 +2,14 @@
 from django.contrib import admin
 
 from import_export.admin import ImportExportModelAdmin
+
 from sales.models import Sale, Service, Adj
 
 from dashboard.resources import ServiceResource, SaleResource, AdjResource
 
 
 
-
 class ServiceAdmin(ImportExportModelAdmin):
-
     extra= 0
     resource_class = ServiceResource
 

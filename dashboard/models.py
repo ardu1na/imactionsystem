@@ -3,7 +3,7 @@ from django.db import models
 
 class LastBlue (models.Model):
     venta = models.DecimalField(
-                max_digits=15, decimal_places=2
+                max_digits=15, decimal_places=2, default=500
                                  )
     date_updated = models.DateTimeField(auto_now=True)
     

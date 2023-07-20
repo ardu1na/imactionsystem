@@ -88,7 +88,7 @@ class SaleForm(ModelForm):
     
     sales_rep = ModelChoiceField(queryset=Employee.objects.filter(rol="Sales", active="Yes"), widget=Select(attrs={'class':"default-select form-control wide mb-3",
             'id':"sales_rep",
-            'placeholder':"Sales Rep",}), empty_label = ' - ')
+            'placeholder':"Sales Rep",}), empty_label = ' - ', required=False)
 
     
     class Meta:
@@ -163,7 +163,7 @@ class SaleForm2(ModelForm):
     
     sales_rep = ModelChoiceField(queryset=Employee.objects.filter(rol="Sales", active="Yes"), widget=Select(attrs={'class':"default-select form-control wide mb-3",
             'id':"sales_rep",
-            'placeholder':"Sales Rep",}), empty_label = ' - ')
+            'placeholder':"Sales Rep",}), empty_label = ' - ',  required=False)
     
 
     class Meta:
@@ -236,7 +236,7 @@ class ClientSaleForm(ModelForm):
     
     sales_rep = ModelChoiceField(queryset=Employee.objects.filter(rol="Sales", active="Yes"), widget=Select(attrs={'class':"default-select form-control wide mb-3",
             'id':"sales_rep",
-            'placeholder':"Sales Rep",}), empty_label = ' - ')
+            'placeholder':"Sales Rep",}), empty_label = ' - ',  required=False)
     
     
     
@@ -353,7 +353,7 @@ class EditSaleForm(ModelForm):
     
     sales_rep = ModelChoiceField(queryset=Employee.objects.filter(rol="Sales", active="Yes"), widget=Select(attrs={'class':"default-select form-control wide mb-3",
             'id':"sales_rep",
-            'placeholder':"Sales Rep",}), empty_label = ' - ')
+            'placeholder':"Sales Rep",}), empty_label = ' - ',  required=False)
 
         
     class Meta:
