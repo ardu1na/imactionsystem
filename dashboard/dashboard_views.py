@@ -1931,7 +1931,7 @@ def index(request):
     
     
     #######################################################################################
-    # BALANCE --- $
+# BALANCE --- $
     outcome = 0
     expenses = Expense.objects.filter(date__month=today.month, date__year=today.year)
     salaries = Salary.objects.filter(period__month=today.month, period__year=today.year)
@@ -1939,16 +1939,19 @@ def index(request):
         if salary.employee.rol != "CEO":
             outcome +=  salary.employee.get_total()
         else:
-            outcome += salary.employee.get_total_ceo()
-    try:
-        for e in expenses:
-            if e.change > 0:
+            try:
+                outcome += salary.employee.get_total_ceo()
+            except:
+                pass
+    for e in expenses:
+        try:
+            if e.change is not None and e.change > 0:
                 outcome += e.change
             else:
                 outcome += e.value
-        balance = rr_t_clients - outcome
-    except:
-        balance = 0
+        except:
+            pass
+    balance = rr_t_clients - outcome
     #######################################################################################
 
     #######################################################################################
