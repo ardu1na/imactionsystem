@@ -1,66 +1,59 @@
-
-
-from django.shortcuts import render, redirect, get_object_or_404
-from dashboard.models import Configurations
-from django.contrib import messages
-from django.urls import reverse
-from django.contrib.auth.decorators import login_required
+### imports
 import json
-from dashboard import setup_config
 import os
-from django.conf import settings
-from django.http import HttpResponse, Http404, HttpResponseBadRequest
-from django.contrib.auth.decorators import login_required, permission_required 
 import pickle
 import mimetypes
+from datetime import datetime, date
+from decimal import Decimal
+from itertools import chain
+## django imports
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from django.urls import reverse
+from django.conf import settings
+from django.http import HttpResponse, Http404, HttpResponseBadRequest, JsonResponse
+from django.contrib.auth.decorators import user_passes_test, login_required, permission_required 
 from django.template.loader import render_to_string
 from django.core.mail import send_mail
-from django.http import JsonResponse
 from django.views.decorators.http import require_GET
-from django.db.models import Sum
-from datetime import datetime
-from decimal import Decimal
-from django.db.models import Q
-from customers.models import *
-from customers.forms import *
-from sales.models import *
-from sales.forms import *
-from expenses.models import *
-from expenses.forms import * 
+from django.db.models import Sum, Q
+from django.contrib.contenttypes.models import ContentType
+from django.core.paginator import Paginator
+
+## external packages 
+from easyaudit.models import CRUDEvent, LoginEvent
+# dashboard app
+from dashboard import setup_config
+from dashboard.models import Configurations, Comms, LastBlue
 from dashboard.users.models import CustomUser
 from dashboard.utils import *
 try: 
-    from .services import venta as b_venta
+    from dashboard.services import venta as b_venta
 except: pass
 from dashboard.forms import CommsForm
-
-from django.http import HttpResponse
-    
-    
-from easyaudit.models import CRUDEvent, LoginEvent
-
-from django.contrib.contenttypes.models import ContentType
 from dashboard.resources import ExportSales, ClientResource, ExportRR, ExpenseResource, ExportStaff, ExportCeo
-from itertools import chain
+# customers app
+from customers.models import ConfTier, BackUps, Client, AutoRevenue
+from customers.forms import TierConf, ClientForm, EditClientForm
+# sales app
+from sales.models import Sale, Service, Adj
+from sales.forms import AdjForm, ChangeAdj, SaleForm2, ClientSaleForm, CancellService, EditSaleForm
+# expenses app
+from expenses.models import Employee, Expense, Holiday, Salary
+from expenses.forms import RaiceForm, HolidayEmployeeForm, ExpenseForm, EmployeeForm, EmployeeSalaryForm, CeoForm, CeoSalaryForm, EditEmployeeForm, EditWageCeo 
+
+### END IMPORTS
 
 
-from django.core.paginator import Paginator
 
-from django.contrib.auth.decorators import user_passes_test
+####################################################################
+# VIEWS - LÓGICA DE LA APP
 
+# get today info
 today = date.today()
 
-
-from dashboard.models import Comms
-
-
-
-
-
-
-
 ######################## AJAX REQUEST
-
+# ESTA FUNCIÓN SIRVE PARA AUTOCOMPLETAR LOS CLIENTES EN LOS FORMS
 @login_required(login_url='dashboard:login')
 @require_GET
 def client_autocomplete(request):
@@ -69,16 +62,12 @@ def client_autocomplete(request):
     results = [{'id': c.pk, 'text': c.name} for c in clients]
     return JsonResponse({'results': results})
 
-
-
-
 ######################################################################################################################################
 ## HISTORIAL DE CAMBIOS
-
 @user_passes_test(lambda user: user.groups.filter(name='admin').exists())   
 @login_required(login_url='dashboard:login')
 def activity(request):
-    
+  
     # Registro de actividad en el ERP
     # exceptuando cambios en la cotización del blue y usuarios.
     ct = ContentType.objects.get_for_model(LastBlue)
@@ -139,7 +128,7 @@ def conf(request):
                 f"Ups! Something went wrong. You should go back, update the page and try again. \n \n {form.errors}")
         
         
-
+### COMISIONES DE VENTA
 @user_passes_test(lambda user: user.groups.filter(name='admin').exists())
 @login_required(login_url='dashboard:login')
 def comms(request):
