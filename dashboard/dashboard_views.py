@@ -82,7 +82,6 @@ def client_autocomplete(request):
 
 @login_required(login_url='dashboard:login')
 def index(request):
-    #######################################################################################
     
     
     try:    
@@ -91,85 +90,8 @@ def index(request):
         tier = ConfTier.objects.create()
         
     
-    ########### PROCESOS EN SEGUNDO PLANO PARA CRONJOBS
-    
-    
-    
-    #############          B A C K U P S        #####################
-    try :
-        last_backup = BackUps.objects.get(id=1)
-        if last_backup.date.month != today.month:
-            print("doing back up")
-            
-            
-            export_sales()
-            export_clients()
-            export_employees()
-            export_expenses()
-            export_holidays()
-            
-            last_backup.date = today
-            last_backup.save()
-        else:
-            print("don't need to back up, allready updated")
-    except: last_backup = BackUps.objects.create(id=1)    
-    
-    try:
-        auto  = AutoRevenue.objects.get(pk=1)
-                
-    except:
-        auto = AutoRevenue.objects.create(
-                pk=1,
-                date=today,
-                sales=True,
-                wages=True,
-                expenses=True,                                 
-            )            
-        
-    if auto.date.month != today.month:
-        auto.date=today
-        auto.sales=True
-        auto.wages=True
-        auto.expenses=True
-        auto.save()
-
-        staff = Employee.objects.filter(active="Yes")
-        for employee in staff:
-            try:
-                last_salary = employee.salaries.last()
-                if last_salary.period.month != today.month:
-                    new_salary = Salary.objects.create(
-                    employee=last_salary.employee,
-                    period=today,
-                    salary=last_salary.salary,
-                    nigga=last_salary.nigga,
-                    mp=last_salary.mp,
-                    tc=last_salary.tc,
-                    cash=last_salary.cash,
-                    atm_cash=last_salary.atm_cash,
-                    cash_usd=last_salary.cash_usd,
-                    paypal=last_salary.paypal,
-                )
-            
-            except:
-                pass
-
-                
-        expenses_list = Expense.objects.filter(date__month=today.month-1, date__year=today.year)
-        for expense in expenses_list:    
-            if expense.date.month != today.month:
-                update_expense = Expense.objects.create(
-                date=today,
-                category=expense.category,
-                concept=expense.concept,
-                value=expense.value,
-                currency=expense.currency,
-                wop=expense.wop,
-            )
-        
     #######################################################################################    
     # ACTUALIZACIÓN DEL DOLAR BLUE
-    # ESTO TIENE QUE IR A UN CRONJOB'
     last_blue = 490
     try:
         last_blue =  LastBlue.objects.get(pk=1)
@@ -189,142 +111,7 @@ def index(request):
         
     except: # si la api no esta disponible devolver el ultimo valor guardado en la db
         blue = last_blue.venta
-    #############33
-    
-    
-
-       
-       
-       
-    ##############################################    ##############################################
-
-    print("##############################################")
-    print("##############################################")
-    print("##############################################  ADJUSTMENTS")
-
-    #  internal reminder ----adjust client------ for email send 
-    print("#######################################")
-    print("####################################### REMINDER ")
-    
-    remind_list = Adj.objects.filter(
-                        adj_done=False,
-                        remind_sent = False,
-                        email_date__lte=today
-                    )
-    if remind_list:
-        for adj in remind_list:
-            if adj.type == "Service":
-                service = adj.service
-                print(f"######################################### REMIND found -------- --- - -- - > {adj.type} {service} ######")
-                print(f"######################################### values- - > OLD {service.total} NEW {adj.new_value} ######")
-                
-                email_message = render_to_string('dashboard/email_adjust_service_template.html', {'adj': adj})
-                actual = Decimal(adj.old_value)
-                con = Decimal(adj.new_value)
-                ajuste = Decimal(adj.dif)
-                try:
-                    send_mail(
-                        subject='Aviso: IMPORTANTE',
-                        message=f'({adj.notice_date} {adj.client.name} {adj.client.admin_email} {adj.service.service}) \n Estimado cliente,  \n  El motivo de este email es para comunicarte un ajuste por inflación.\n Inversión actual: ${actual} \n Inversión con ajuste: ${con} \n Ajuste: ${ajuste} \n El ajuste se hará en el próximo pago. \n Cualquier duda no dejes de consultarnos. \n Saludos, \n Imactions \n www.imactions.agency',
-                        html_message=email_message,
-                        from_email='systemimactions@gmail.com',
-                        recipient_list=['hola@imactions.com'],
-                        fail_silently=False,
-                    )
-                    print (f" adjust -- {adj} - {service} -- EMAIL reminder SEND")
-                    adj.remind_sent = True
-                    adj.save()
-                except:
-                    print("cant send email for adj, you  must be on dev")
-
-                
-            elif adj.type == "Account":
-                client = adj.client
-                print(f"######################################### REMIND found -------- --- - -- - > {adj.type}: {client} ######")
-                services = client.services.filter(state=True)
-                services_list = []
-                for service in services:
-                    print(f"{service}")
-                    services_list.append(service.service)
-                    
-                    
-                email_message = render_to_string('dashboard/email_adjust_account_template.html', {'adj': adj, 'services': services})
-                actual = Decimal(adj.old_value)
-                con = Decimal(adj.new_value)
-                ajuste = Decimal(adj.dif)
-                try:
-                    send_mail(
-                        subject='Aviso: IMPORTANTE',
-                        message=f'({adj.notice_date} {adj.client.name} {adj.client.admin_email} {services_list}) \n Estimado cliente, \n El motivo de este email es para comunicarte un ajuste por inflación.\n  \n Inversión actual: ${actual} \n Inversión con ajuste: ${con} \n Ajuste: ${ajuste} \n El ajuste se hará en el próximo pago. \n Cualquier duda no dejes de consultarnos. \n Saludos, \n Imactions \n www.imactions.agency',
-                        html_message=email_message,
-                        from_email='systemimactions@gmail.com',
-                        recipient_list=['hola@imactions.com'],
-                        fail_silently=False,
-                    )
-                    print (f" adjust -- {adj} - {client} -- EMAIL reminder SEND")
-                    adj.remind_sent = True
-                    adj.save()
-                except:
-                    print("cant send email you must be in dev")
-                    
-                    
-                    
-    print("##############         end reminders             ###############")
-
-                
-                
-
-
-    # adjust services script from adjustment view
-    print("")
-
-    print("#######################################")
-    print("####################################### ADJUST SERVICES ")
-
-    adj_list = Adj.objects.filter(
-                        adj_done=False,
-                        notice_date__lte=today
-                    )
-    if adj_list:
-        print(f"############################### adjust list:\n {adj_list}")
-        print("##############################################")
-        for adj in adj_list:
-            if adj.type == "Service":
-                service = adj.service
-                print(f"######################################### item found -------- --- - -- - > {adj.type} ######")
-                print(f"{service}")
-                print(f"######################################### old value-- - > {service.total} ######")
-                service.total = adj.new_value
-                
-                service.save() 
-                print(f"######################################### new value-- - > {service.total} ######")
-                adj.adj_done = True
-                adj.save()
-                print(f"###### Adjust {service} done ---- > {adj.adj_done} ######")
-            elif adj.type == "Account":
-                client = adj.client
-                print(f"######################################### item found -------- --- - -- - > {adj.type}: {client} ######")
-                services = client.services.filter(state=True)
-                for service in services:
-                    print(f"{service}")
-                    print(f"######################################### old value-- - > {service.total} ######")
-                    
-                    
-                    service.total = Decimal(service.total + ((adj.adj_percent / 100) * service.total))
-
-                    service.save() 
-                    print(f"######################################### new value-- - > {service.total} ######")
-                adj.adj_done = True
-                adj.save()
-                print(f"###### Adjust {client} done ---- > {adj.adj_done}######")
-        print("")
-        print(f"############################### done with adjustments ")
-        print("############################################################################################")
-    else:
-        print(f"############################### nothing to adjust ")
-    
-    
-    
+    #############  
     
     ###############
     # birthdays
@@ -418,6 +205,8 @@ def index(request):
        
        
     #######################################################################################
+    #  % clients by service    -  pie chart data
+
     clients = Client.objects.filter(cancelled="Active")
     
     clients_rr = []
@@ -426,7 +215,8 @@ def index(request):
             clients_rr.append(client)
     c_rr_total = len(clients_rr)
     
-    #  % clients by service    -  pie chart data
+    
+    
                
     seo_clients = Service.objects.filter(service="SEO", state=True).count()
     gads_clients = Service.objects.filter(service="Google Ads", state=True).count()
@@ -462,6 +252,12 @@ def index(request):
     except:
         pass
     
+    
+
+    
+    ####################################################################
+    ###############################################
+    ############### CLIENTS BY TIER PieCHART
     ####################################################################
     #######################                 GET CLIENTS RR    ##########
 
@@ -471,13 +267,7 @@ def index(request):
     for client in clients:
         if client.get_rr_client == True:
             clients_rr.append(client)
-    c_rr_total = len(clients_rr)
-
-    
-    ####################################################################
-    ###############################################
-    ############### CLIENTS BY TIER PieCHART
-        
+    c_rr_total = len(clients_rr)    
     n_clients = len(clients_rr)
     i = 0
     ii = 0
@@ -505,205 +295,7 @@ def index(request):
         pass
     
 
-####################################################################
-    total_rr = 0
-
-    for client in clients:
-        if client.cancelled == "Active":
-            for sale in client.services.filter(state=True):
-                total_rr += sale.total           
-        
-    ##############################################
-
-    # GRAPHS rr   
-    sales_rr_current_year = Sale.objects.filter(revenue="RR")\
-                                        .filter(date__year=datetime.now().date().year)
-    total_rr_this_year = 0
-    for s in sales_rr_current_year:
-        total_rr_this_year += s.get_change
-    
-    enero = 0
-    febrero = 0
-    marzo = 0
-    abril = 0
-    mayo = 0
-    junio = 0
-    julio = 0
-    agosto = 0
-    septiembre = 0
-    octubre = 0
-    noviembre = 0
-    diciembre = 0
-    
-    for sale in sales_rr_current_year:
-        if sale.date.month == 1:
-            enero +=sale.get_change
-            
-        elif sale.date.month == 2:
-            febrero +=sale.get_change
-        elif sale.date.month == 3:
-            marzo +=sale.get_change
-        elif sale.date.month == 4:
-            abril +=sale.get_change
-        elif sale.date.month == 5:
-            mayo +=sale.get_change
-        elif sale.date.month == 6:
-            junio +=sale.get_change
-        elif sale.date.month == 7:
-            julio +=sale.get_change
-        elif sale.date.month == 8:
-            agosto +=sale.get_change
-        elif sale.date.month == 9:
-            septiembre +=sale.get_change
-        elif sale.date.month == 10:
-            octubre +=sale.get_change
-        elif sale.date.month == 11:
-            noviembre +=sale.get_change
-        else:
-            diciembre +=sale.get_change
-            
-            
-    sales_rr_last_year = Sale.objects.filter(revenue="RR")\
-                                        .filter(date__year=datetime.now().date().year-1)
-    total_rr_last_year = 0
-    for s in sales_rr_last_year:
-        total_rr_last_year += s.get_change
-    
-    enero_l = 0
-    febrero_l = 0
-    marzo_l = 0
-    abril_l = 0
-    mayo_l = 0
-    junio_l = 0
-    julio_l = 0
-    agosto_l = 0
-    septiembre_l = 0
-    octubre_l = 0
-    noviembre_l = 0
-    diciembre_l = 0
-    
-    for sale in sales_rr_last_year:
-        if sale.date.month == 1:
-            enero_l +=sale.get_change            
-        elif sale.date.month == 2:
-            febrero_l +=sale.get_change
-        elif sale.date.month == 3:
-            marzo_l +=sale.get_change
-        elif sale.date.month == 4:
-            abril_l +=sale.get_change
-        elif sale.date.month == 5:
-            mayo_l +=sale.get_change
-        elif sale.date.month == 6:
-            junio_l +=sale.get_change
-        elif sale.date.month == 7:
-            julio_l +=sale.get_change
-        elif sale.date.month == 8:
-            agosto_l +=sale.get_change
-        elif sale.date.month == 9:
-            septiembre_l +=sale.get_change
-        elif sale.date.month == 10:
-            octubre_l +=sale.get_change
-        elif sale.date.month == 11:
-            noviembre_l +=sale.get_change
-        else:
-            diciembre_l +=sale.get_change           
-            
-            
-    # GRAPHS ONEOFF   
-    sales_one_current_year = Sale.objects.filter(revenue="OneOff")\
-                                        .filter(date__year=datetime.now().date().year)
-    total_one_this_year = 0
-    for s in sales_one_current_year:
-        total_one_this_year += s.get_change
-    
-    enero_o = 0
-    febrero_o = 0
-    marzo_o = 0
-    abril_o = 0
-    mayo_o = 0
-    junio_o = 0
-    julio_o = 0
-    agosto_o = 0
-    septiembre_o = 0
-    octubre_o = 0
-    noviembre_o = 0
-    diciembre_o = 0
-    
-    for sale in sales_one_current_year:
-        if sale.date.month == 1:
-            enero_o +=sale.get_change
-            
-        elif sale.date.month == 2:
-            febrero_o +=sale.get_change
-        elif sale.date.month == 3:
-            marzo_o +=sale.get_change
-        elif sale.date.month == 4:
-            abril_o +=sale.get_change
-        elif sale.date.month == 5:
-            mayo_o +=sale.get_change
-        elif sale.date.month == 6:
-            junio_o +=sale.get_change
-        elif sale.date.month == 7:
-            julio_o +=sale.get_change
-        elif sale.date.month == 8:
-            agosto_o +=sale.get_change
-        elif sale.date.month == 9:
-            septiembre_o +=sale.get_change
-        elif sale.date.month == 10:
-            octubre_o +=sale.get_change
-        elif sale.date.month == 11:
-            noviembre_o +=sale.get_change
-        else:
-            diciembre_o +=sale.get_change
-            
-            
-    sales_one_last_year = Sale.objects.filter(revenue="OneOff")\
-                                        .filter(date__year=datetime.now().date().year-1)
-    total_one_last_year = 0
-    for s in sales_one_last_year:
-        total_one_last_year += s.get_change
-    
-    enero_l_o = 0
-    febrero_l_o = 0
-    marzo_l_o = 0
-    abril_l_o = 0
-    mayo_l_o = 0
-    junio_l_o = 0
-    julio_l_o = 0
-    agosto_l_o = 0
-    septiembre_l_o = 0
-    octubre_l_o = 0
-    noviembre_l_o = 0
-    diciembre_l_o = 0
-    
-    for sale in sales_one_last_year:
-        if sale.date.month == 1:
-            enero_l_o +=sale.get_change            
-        elif sale.date.month == 2:
-            febrero_l_o +=sale.get_change
-        elif sale.date.month == 3:
-            marzo_l_o +=sale.get_change
-        elif sale.date.month == 4:
-            abril_l_o +=sale.get_change
-        elif sale.date.month == 5:
-            mayo_l_o +=sale.get_change
-        elif sale.date.month == 6:
-            junio_l_o +=sale.get_change
-        elif sale.date.month == 7:
-            julio_l_o +=sale.get_change
-        elif sale.date.month == 8:
-            agosto_l_o +=sale.get_change
-        elif sale.date.month == 9:
-            septiembre_l_o +=sale.get_change
-        elif sale.date.month == 10:
-            octubre_l_o +=sale.get_change
-        elif sale.date.month == 11:
-            noviembre_l_o +=sale.get_change
-        else:
-            diciembre_l_o +=sale.get_change
-
-            
-            
+    ###################################################       
     # GRAPHS SERVICES  current year
     
     if request.method == 'GET':
@@ -1311,17 +903,23 @@ def index(request):
                     
     
     context={
+        # cards + info gral
         "page_title":"Dashboard",
         "bds" : bds,        
-        "activity": last_act[:7],
+        "activity": last_act[:10],
         "balance": balance,
+        
         "rr_t_clients": rr_t_clients,
         "rr_q_clients": rr_q_clients,
+        
         "rr_this":rr_s_thism,
         "month":month,
         "one_this":oneoff_s_thism,
         "cancell_q": cancell_q,
+        "blue": blue,
+        "hour": datetime.now(),
         
+        # pie chart rr accounts data
         "seo_clients": seo_clients,
         "gads_clients": gads_clients,
         "fads_clients": fads_clients,
@@ -1331,7 +929,6 @@ def index(request):
         "cm_clients": cm_clients,
         "emk_clients": emk_clients,
         "other_clients": other_clients,
-        
         "s_c": s_c,
         "g_c": g_c,
         "f_c": f_c,
@@ -1342,59 +939,7 @@ def index(request):
         "e_c": e_c,
         "o_c": o_c,
         
-        "blue": blue,
-        "hour": datetime.now(),
-        "c_rr_total": c_rr_total,
-        "total_rr":total_rr,
-        "total_rr_this_year": round(total_rr_this_year),
-        "enero" : round(enero),
-        "febrero": round(febrero),
-        "marzo": round(marzo),
-        "abril": round(abril),
-        "mayo": round(mayo),
-        "junio": round(junio),
-        "julio": round(julio),
-        "agosto": round(agosto),
-        "septiembre": round(septiembre),
-        "octubre": round(octubre),
-        "noviembre": round(noviembre),
-        "diciembre": round(diciembre),
-        "enero_l" : round(enero_l),
-        "febrero_l": round(febrero_l),
-        "marzo_l": round(marzo_l),
-        "abril_l": round(abril_l),
-        "mayo_l": round(mayo_l),
-        "junio_l": round(junio_l),
-        "julio_l": round(julio_l),
-        "agosto_l": round(agosto_l),
-        "septiembre_l": round(septiembre_l),
-        "octubre_l": round(octubre_l),
-        "noviembre_l": round(noviembre_l),
-        "diciembre_l": round(diciembre_l),
-        "enero_o" : round(enero_o),
-        "febrero_o": round(febrero_o),
-        "marzo_o": round(marzo_o),
-        "abril_o": round(abril_o),
-        "mayo_o": round(mayo_o),
-        "junio_o": round(junio_o),
-        "julio_o": round(julio_o),
-        "agosto_o": round(agosto_o),
-        "septiembre_o": round(septiembre_o),
-        "octubre_o": round(octubre_o),
-        "noviembre_o": round(noviembre_o),
-        "diciembre_o": round(diciembre_o),
-        "enero_l_o" : round(enero_l_o),
-        "febrero_l_o": round(febrero_l_o),
-        "marzo_l_o": round(marzo_l_o),
-        "abril_l_o": round(abril_l_o),
-        "mayo_l_o": round(mayo_l_o),
-        "junio_l_o": round(junio_l_o),
-        "julio_l_o": round(julio_l_o),
-        "agosto_l_o": round(agosto_l_o),
-        "septiembre_l_o": round(septiembre_l_o),
-        "octubre_l_o": round(octubre_l_o),
-        "noviembre_l_o": round(noviembre_l_o),
-        "diciembre_l_o": round(diciembre_l_o),
+        # line chart data
         "enero_seo" : round(enero_seo),
         "febrero_seo": round(febrero_seo),
         "marzo_seo": round(marzo_seo),
@@ -1479,6 +1024,8 @@ def index(request):
         "octubre_lk": round(octubre_lk),
         "noviembre_lk": round(noviembre_lk),
         "diciembre_lk": round(diciembre_lk),
+        
+        # tier clients pie chart
         "i" : i,
         "ii" : ii,
         "iii" : iii,
