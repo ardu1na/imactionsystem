@@ -43,7 +43,7 @@ from customers.models import  Client
 from customers.forms import ClientForm, EditClientForm
 
 # sales app
-from sales.models import Sale, Service, Adj
+from sales.models import Sale, Service, Adj, Comm
 from sales.forms import AdjForm, ChangeAdj, SaleForm2, ClientSaleForm, CancellService, EditSaleForm
 
 # expenses app
@@ -1462,12 +1462,84 @@ def editemployee(request, id):
         wage_instance = Salary.objects.get(employee=editemployee, period__month=today.month, period__year=today.year)
     except:
         wage_instance =Salary.objects.filter(employee=editemployee).first()
+        
+        
             
     # if rol == seller get employees comms of current month
-    comms_this_m = 0
-    if editemployee.rol == "Sales":
-        for sale in editemployee.sales.filter(date__month=today.month, date__year=today.year):
-            comms_this_m += sale.get_comm
+    try:
+        comms_this_m = Comm.objects.get(employee=editemployee, created_at__month=today.month, created_at__year=today.year)
+    except:
+        comms_this_m = Comm.objects.create(employee=editemployee)
+    
+    # get comms conf variables
+    try:
+        comms_conf = Comms.objects.get(id=1)
+    except:
+        comms_conf = Comms.objects.create(
+            id=1,
+            com_rr_1 = 40,
+            rr_1 = 80000,
+            com_rr_2 = 50,
+            rr_2 = 240000,
+            com_rr_3 = 60,
+            rr_3 = 400000,
+            com_rr_4 = 65,
+            rr_4 = 560000,
+            com_rr_5 = 70,
+            rr_5 = 720000,
+            up_sell = 5,
+            one_off = 15,             
+            )
+        
+    one_off_sales_this_m = 0
+    one_off_comm_percent = comms_conf.one_off  # you can change the % comm here on in the model instance or at the conf comms view
+    up_sell_sales_this_m = 0
+    up_sell_comm_percent = comms_conf.up_sell # you can change the % comm here on in the model instance or at the conf comms view
+    rr_sales_this_m = 0
+    rr_comm_percent = 1
+    
+    for sale in editemployee.sales.filter(sales_rep=editemployee, date__month=today.month, date__year=today.year):
+        if sale.revenue == 'OneOff':
+            one_off_sales_this_m += sale.change
+        else:
+            if sale.kind == "UpSell":
+                up_sell_sales_this_m += sale.change
+            else:
+                rr_sales_this_m += sale.change
+    try:
+        one_off_comms_this_m = (one_off_sales_this_m * one_off_comm_percent)/100
+    except:
+        one_off_comms_this_m = 0
+    try:
+        up_sell_comms_this_m = (up_sell_sales_this_m * up_sell_comm_percent)/100
+    except:
+        up_sell_comms_this_m = 0
+    
+    if rr_sales_this_m >= comms_conf.rr_1 and rr_sales_this_m < comms_conf.rr_2:
+        rr_comm_percent = comms_conf.comm_rr_1
+    elif rr_sales_this_m >= comms_conf.rr_2 and rr_sales_this_m < comms_conf.rr_3:
+        rr_comm_percent = comms_conf.comm_rr_2
+    elif rr_sales_this_m >= comms_conf.rr_3 and rr_sales_this_m < comms_conf.rr_4:
+        rr_comm_percent = comms_conf.comm_rr_3
+    elif rr_sales_this_m >= comms_conf.rr_4 and rr_sales_this_m < comms_conf.rr_5:
+        rr_comm_percent = comms_conf.comm_rr_4
+    elif rr_sales_this_m >= comms_conf.rr_5:
+        rr_comm_percent = comms_conf.comm_rr_5
+    else:
+        rr_comm_percent = 1
+
+    try:
+        rr_comms_this_m = (rr_comms_this_m * rr_comm_percent)/100
+    except:
+        rr_comms_this_m = 0     
+        
+    comms_this_m.one_off = one_off_comms_this_m
+    comms_this_m.up_sell = up_sell_comms_this_m
+    comms_this_m.rr_comm = rr_comms_this_m
+    comms_this_m.rr_percent = rr_comm_percent
+    comms_this_m.total = one_off_comms_this_m + up_sell_comms_this_m + rr_comms_this_m
+    comms_this_m.save()
+        
         
         
     if request.method == "GET":      

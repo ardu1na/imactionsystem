@@ -354,12 +354,8 @@ class Sale(models.Model):
     def get_date(self):
         formatdate = self.date.strftime('%d/%m/%Y')
         return formatdate
-    
-   
-    
-    
-    
-    
+        
+        
 class Comm(models.Model):
     #
     # Modelo de comisiones mensuales de los vendedores
