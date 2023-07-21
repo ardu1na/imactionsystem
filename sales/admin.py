@@ -17,7 +17,7 @@ admin.site.register(Service, ServiceAdmin)
     
     
 class SaleAdmin(ImportExportModelAdmin):
-    list_display = ['service', 'client', 'change', 'note']
+    list_display = ['date', 'service', 'kind', 'client', 'change', 'note']
     search_fields = ['note',]
     resource_class = SaleResource
 admin.site.register(Sale, SaleAdmin)

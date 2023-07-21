@@ -83,6 +83,14 @@ def client_autocomplete(request):
 @login_required(login_url='dashboard:login')
 def index(request):
     #######################################################################################
+    
+    
+    try:    
+        tier = ConfTier.objects.get(id=1)
+    except:
+        tier = ConfTier.objects.create()
+        
+    
     ########### PROCESOS EN SEGUNDO PLANO PARA CRONJOBS
     
     
@@ -314,23 +322,6 @@ def index(request):
         print("############################################################################################")
     else:
         print(f"############################### nothing to adjust ")
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     
@@ -1530,7 +1521,8 @@ def activity(request):
 ######################################################################################################################################
 
 
-## CONFIGURACIONES Y AJUSTES 
+## CONFIGURACIONES Y AJUSTES
+@user_passes_test(lambda user: user.groups.filter(name='admin').exists())   
 @login_required(login_url='dashboard:login')
 def setting (request):
     # pestaña principal de acceso a configuraciones
@@ -1544,9 +1536,12 @@ def setting (request):
 @login_required(login_url='dashboard:login')
 def conf(request):
     
-    # ajuste de parámetros de valor del cliente (tier)    
-    tier = ConfTier.objects.get(id=1)
-
+    # ajuste de parámetros de valor del cliente (tier)
+    try:    
+        tier = ConfTier.objects.get(id=1)
+    except:
+        tier = ConfTier.objects.create()
+        
     if request.method == "GET":
 
         form = TierConf(instance=tier)
@@ -2501,13 +2496,17 @@ def delete_sales(request):
 def sales(request):
     
     # CARDS DATA
-    clients = Client.objects.all()
-    services = ['SEO','Google Ads','Facebook Ads','Web Design', 'Hosting', 'LinkedIn', 'SSL certificate','Web Plan','Combo', 'Community Management', 'Email Marketing', 'Others', 'Others RR']
+    
+    
     this_month = today.month
     month_name = date(1900, this_month, 1).strftime('%B')
     
-    sales_this_month = Sale.objects.filter(date__month=today.month, date__year=today.year, revenue="RR").exclude(note="auto revenue sale")
     
+    clients = Client.objects.all()
+    
+    services = ['SEO','Google Ads','Facebook Ads','Web Design', 'Hosting', 'LinkedIn', 'SSL certificate','Web Plan','Combo', 'Community Management', 'Email Marketing', 'Others', 'Others RR']
+    
+    sales_this_month = Sale.objects.filter(date__month=today.month, date__year=today.year, revenue="RR").exclude(note="auto revenue sale")
     total_amount = sales_this_month.aggregate(Sum('change'))['change__sum']
     
     def get_total_format():
@@ -2612,17 +2611,24 @@ def sales(request):
 
                 
     context={
-        "clients": clients,
         "page_title":"SALES",
+        
+        "clients": clients,
         "sales" : sales,
+        'services': services,
+        
+        "addform" : addform,
+        
+        # cards data
         "sales_this_month" : get_total_format,
         "sales1_this_month" : get_total1_format,
         "clients_this_month" : total_clients,
         "this_month": month_name,
         'upsell': total_upsell_this_month,
         'cross': total_crosssell_this_month,
-        'services': services,
-        "addform" : addform,
+            
+        
+        # card con filter by service and get total of this month
         "total_seo" : '{:,.0f}'.format(s_seo),
         "total_googleads" : '{:,.0f}'.format(s_gads),
         "total_facebookads" : '{:,.0f}'.format(s_fads),
@@ -3104,7 +3110,7 @@ def cancellations(request):
         "page_title":"Cancellations"
     }   
     
-    return render(request,'dashboard/cancellations.html',context)
+    return render(request,'dashboard/clients/cancellations.html',context)
 
 
 

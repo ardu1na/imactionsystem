@@ -12,4 +12,4 @@ env/
 frontend/
 .vscode
 dashboard/utils.py
-sales/admin.py
+core/settings.py

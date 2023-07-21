@@ -1,5 +1,23 @@
 ############### imactionsystem
 
+# activar entorno virtual : source venv/bin/activate
+
+
+## arrancar el servidor:
+# python3 manage.py runserver 0.0.0.0:80
+# (para detener el sevidor: CTRL + C)
+
+# primera vez
+# instalar dependencias: pip install -r requirements.txt
+
+# PD: despues de realizar cualquier modificación en los modelos:
+# python3 manage.py makemigrations
+# python3 manage.py migrate
+## arrancar el servidor otra vez
+
+
+##### DÓNDE ENCONTRAR:
+
 ## TEMPLATES
 # HTML files  at:
 # /dashboard/templates/
@@ -10,6 +28,7 @@
 
 ## MAIN LOGIC OF THE VIEWS:
 # /dashboard/dashboard_views.py
+## config models:  /dashboard/models.py
 
 ## USER/PERMS/GROUPS/AUTH VIEWS (LOGIC) - FORMS - MODELS (DB) :
 # /dashboard/users/
@@ -22,20 +41,12 @@
 
 
 
-### apps
+### apps (ver diagrama de relación en w3cms/models.jpeg)
+# customers app: Client
 
-# customers app
-# models: ConfTier, BackUps, AutoRevenue, Client
-# forms customers/forms.py TierConf, ClientForm, EditClientForm
+# sales app: Service(Adj), Sale 
 
-# sales app
-# models: Service(Sale, Adj, Client) 
-# forms sales/forms.py AdjForm, ChangeAdj, SaleForm2, ClientSaleForm, CancellService, EditSaleForm
-
-##  expenses app
-# models : Employee (Holiday, Salary, Sale), Expense
-# forms expenses/forms.py : RaiceForm, HolidayEmployeeForm, ExpenseForm, EmployeeForm, EmployeeSalaryForm, CeoForm, CeoSalaryForm, EditEmployeeForm, EditWageCeo 
-
+#  expenses app: Employee(Holiday, Salary), Expense
 
 
 
