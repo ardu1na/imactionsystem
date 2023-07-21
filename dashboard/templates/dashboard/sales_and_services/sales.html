@@ -264,7 +264,7 @@
                                                     {% endif %}
                                                 </div>
                                                 <td>{{sale.date|date:"d/m/Y"}}</td>
-                                                <td>{{sale.sales_rep|default_if_none:"-"}}</td>                                    
+                                                <td><a href="{% if sale.sales_rep %}{% url 'dashboard:employee_comms' id=sale.sales_rep.id %}{% else %}#{% endif %}"> {{sale.sales_rep|default_if_none:"-"}}</a></td>                                    
                                                 <td>
                                                     <div class="d-flex flex-row">
                                                             <!-- delete BUTTON -->
