@@ -74,8 +74,7 @@ class Service(models.Model):
     date_can = models.DateField(null=True, blank=True, verbose_name="DATE cancellation")
     fail_can = models.CharField(max_length=50, choices=FAIL_CHOICES, blank=True, null=True, verbose_name="DO WE FAIL?")
 
-      
-        
+              
 class Adj(models.Model):
     """
     Model representing an adjustment made for an Account or a Service.
@@ -146,13 +145,8 @@ class Adj(models.Model):
         super(Adj, self).save(*args, **kwargs)
 
 
-
-
-
-
 class Sale(models.Model):
-
-
+    # obtener el porcentaje de comisión acorde al tipo de venta
     @property
     def get_comm_per(self):
         

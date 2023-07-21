@@ -13,8 +13,6 @@ from django.urls import reverse
 from django.conf import settings
 from django.http import HttpResponse, Http404, HttpResponseBadRequest, JsonResponse
 from django.contrib.auth.decorators import user_passes_test, login_required, permission_required 
-from django.template.loader import render_to_string
-from django.core.mail import send_mail
 from django.views.decorators.http import require_GET
 from django.db.models import Sum, Q
 from django.contrib.contenttypes.models import ContentType
@@ -25,7 +23,7 @@ from easyaudit.models import CRUDEvent, LoginEvent
 
 # dashboard app
 from dashboard import setup_config
-from dashboard.models import Configurations, Comms, LastBlue, ConfTier, BackUps, AutoRevenue
+from dashboard.models import Configurations, Comms, LastBlue, ConfTier
 from dashboard.users.models import CustomUser
 from dashboard.forms import CommsForm, TierConf
 
@@ -92,25 +90,33 @@ def index(request):
     
     #######################################################################################    
     # ACTUALIZACIÓN DEL DOLAR BLUE
-    last_blue = 490
     try:
         last_blue =  LastBlue.objects.get(pk=1)
-        blue = last_blue.venta
     # si aun  no se creo ningún valor de cotización crearlo
     except:
         last_blue = LastBlue.objects.create(
             venta = 490
         )
+
     # solicitar a la api de dolarhoy para mantener actualizado el valor de la venta
     # b_venta viene de dashboard.services.py
     try:
-        blue = b_venta
-        if last_blue.venta != b_venta:
-                last_blue.venta = b_venta
+        if last_blue.venta != b_venta and b_venta is not None:
+            last_blue.venta = b_venta
         last_blue.save()
-        
-    except: # si la api no esta disponible devolver el ultimo valor guardado en la db
-        blue = last_blue.venta
+        print("##############################################")
+
+        print("Blue exchange Updated successfully !!!!!")
+    
+    
+        print()
+    except:
+        print("##############################################")
+
+        print("cant update lastblue api doesnt response !!!!!!!!!!!!!!")
+    
+    blue = last_blue.venta
+    
     #############  
     
     ###############
@@ -1371,7 +1377,7 @@ def export_employees(request):
     return response
 
 ## LISTADO Y TABLA DE EMPLEADOS ACTIVOS
-@user_passes_test(lambda user: user.groups.filter(name='admin').exists())
+@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
 def employees(request):
     staff = Employee.objects.exclude(rol="CEO").filter(active="Yes")
@@ -1424,7 +1430,7 @@ def employees(request):
 
 
 # listado de empleados antiguos
-@user_passes_test(lambda user: user.groups.filter(name='admin').exists())
+@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
 def employeesold(request):
     old =Employee.objects.filter(active="No")                                
@@ -1435,7 +1441,7 @@ def employeesold(request):
 
 
 # eliminar un empleado
-@user_passes_test(lambda user: user.groups.filter(name='admin').exists())
+@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
 def deleteemployee(request, id):
     employee = Employee.objects.get(id=id)
@@ -1538,7 +1544,7 @@ def editemployee(request, id):
 
 
 # detalle de una vacacion
-@user_passes_test(lambda user: user.groups.filter(name='admin').exists())
+@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
 def editholiday(request, id):
     editholiday = Holiday.objects.get(id=id)
@@ -1568,7 +1574,7 @@ def editholiday(request, id):
 
 
 # borrar una vacación
-@user_passes_test(lambda user: user.groups.filter(name='admin').exists())
+@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
 def deleteholiday(request, id):
     holiday = Holiday.objects.get(id=id)

@@ -30,7 +30,6 @@
                                     </thead>
                                     <tbody>
                                         {% for i in editemployee.sales.all %}
-                                        {% if i.change >= 80000 %}
                                         
                                         <tr>
     
@@ -51,7 +50,6 @@
                                             <td>${{i.get_comm|floatformat:2}}</td>
 
                                         </tr>
-                                        {% endif %}
                                         {% endfor %}
                                        
                                     </tbody>
