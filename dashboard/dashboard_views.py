@@ -1450,6 +1450,22 @@ def deleteemployee(request, id):
     return redirect(reverse('dashboard:employees')+ "?deleted")
 
 
+# HISTORIAL DE COMISIONES de un empleado
+@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
+@login_required(login_url='dashboard:login')
+def employee_comms(request, id):
+    employee = Employee.objects.get(id=id)
+    id = employee.id
+    comms = Comm.objects.filter(employee=employee)
+    context = {
+        'employee': employee,
+        'comms': comms,
+    }
+    return render(request,'dashboard/employees/employee_comms.html', context)
+
+
+
+
 ## detalle de un EMPLEADO
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
@@ -1462,14 +1478,7 @@ def editemployee(request, id):
         wage_instance = Salary.objects.get(employee=editemployee, period__month=today.month, period__year=today.year)
     except:
         wage_instance =Salary.objects.filter(employee=editemployee).first()
-        
-        
-            
-    # if rol == seller get employees comms of current month
-    try:
-        comms_this_m = Comm.objects.get(employee=editemployee, created_at__month=today.month, created_at__year=today.year)
-    except:
-        comms_this_m = Comm.objects.create(employee=editemployee)
+             
     
     # get comms conf variables
     try:
@@ -1489,57 +1498,70 @@ def editemployee(request, id):
             rr_5 = 720000,
             up_sell = 5,
             one_off = 15,             
-            )
+            )       
         
-    one_off_sales_this_m = 0
-    one_off_comm_percent = comms_conf.one_off  # you can change the % comm here on in the model instance or at the conf comms view
-    up_sell_sales_this_m = 0
-    up_sell_comm_percent = comms_conf.up_sell # you can change the % comm here on in the model instance or at the conf comms view
-    rr_sales_this_m = 0
-    rr_comm_percent = 1 # this value depends on the rr_sales_total of the month variable and it changes across the time
-    
-    for sale in editemployee.sales.filter(sales_rep=editemployee, date__month=today.month, date__year=today.year):
-        if sale.revenue == 'OneOff':
-            one_off_sales_this_m += sale.change
-        else:
-            if sale.kind == "UpSell":
-                up_sell_sales_this_m += sale.change
+      
+    #### COMMS OF THIS MONTH """"""""        
+    # if rol == seller get and update employee's comms of current month
+    if editemployee.rol == "Sales":
+        # if the employee still does not has comms, create one for current month, else, get the current month comm instance.
+        try:
+            comms_this_m = Comm.objects.get(
+                employee=editemployee,
+                created_at__month=today.month, created_at__year=today.year)
+        except:
+            comms_this_m = Comm.objects.create(employee=editemployee) 
+               
+        one_off_sales_this_m = 0
+        one_off_comm_percent = comms_conf.one_off  # you can change the % comm here on in the model instance or at the conf comms view
+        up_sell_sales_this_m = 0
+        up_sell_comm_percent = comms_conf.up_sell # you can change the % comm here on in the model instance or at the conf comms view
+        rr_sales_this_m = 0
+        rr_comm_percent = 1 # this value depends on the rr_sales_total of the month variable and it changes across the time
+        
+        for sale in editemployee.sales.filter(sales_rep=editemployee, date__month=today.month, date__year=today.year):
+            if sale.revenue == 'OneOff':
+                one_off_sales_this_m += sale.change
             else:
-                rr_sales_this_m += sale.change
-    try:
-        one_off_comms_this_m = (one_off_sales_this_m * one_off_comm_percent)/100
-    except:
-        one_off_comms_this_m = 0
-    try:
-        up_sell_comms_this_m = (up_sell_sales_this_m * up_sell_comm_percent)/100
-    except:
-        up_sell_comms_this_m = 0
-    
-    if rr_sales_this_m >= comms_conf.rr_1 and rr_sales_this_m < comms_conf.rr_2:
-        rr_comm_percent = comms_conf.com_rr_1
-    elif rr_sales_this_m >= comms_conf.rr_2 and rr_sales_this_m < comms_conf.rr_3:
-        rr_comm_percent = comms_conf.com_rr_2
-    elif rr_sales_this_m >= comms_conf.rr_3 and rr_sales_this_m < comms_conf.rr_4:
-        rr_comm_percent = comms_conf.com_rr_3
-    elif rr_sales_this_m >= comms_conf.rr_4 and rr_sales_this_m < comms_conf.rr_5:
-        rr_comm_percent = comms_conf.rr_4
-    elif rr_sales_this_m >= comms_conf.com_rr_5:
-        rr_comm_percent = comms_conf.com_rr_5
-    else:
-        rr_comm_percent = 1
+                if sale.kind == "UpSell":
+                    up_sell_sales_this_m += sale.change
+                else:
+                    rr_sales_this_m += sale.change
+        try:
+            one_off_comms_this_m = (one_off_sales_this_m * one_off_comm_percent)/100
+        except:
+            one_off_comms_this_m = 0
+        try:
+            up_sell_comms_this_m = (up_sell_sales_this_m * up_sell_comm_percent)/100
+        except:
+            up_sell_comms_this_m = 0
+        
+        if rr_sales_this_m >= comms_conf.rr_1 and rr_sales_this_m < comms_conf.rr_2:
+            rr_comm_percent = comms_conf.com_rr_1
+        elif rr_sales_this_m >= comms_conf.rr_2 and rr_sales_this_m < comms_conf.rr_3:
+            rr_comm_percent = comms_conf.com_rr_2
+        elif rr_sales_this_m >= comms_conf.rr_3 and rr_sales_this_m < comms_conf.rr_4:
+            rr_comm_percent = comms_conf.com_rr_3
+        elif rr_sales_this_m >= comms_conf.rr_4 and rr_sales_this_m < comms_conf.rr_5:
+            rr_comm_percent = comms_conf.rr_4
+        elif rr_sales_this_m >= comms_conf.com_rr_5:
+            rr_comm_percent = comms_conf.com_rr_5
+        else:
+            rr_comm_percent = 1
 
-    try:
-        rr_comms_this_m = (rr_sales_this_m * rr_comm_percent)/100
-    except:
-        rr_comms_this_m = 0     
-        
-    comms_this_m.one_off = one_off_comms_this_m
-    comms_this_m.up_sell = up_sell_comms_this_m
-    comms_this_m.rr_comm = rr_comms_this_m
-    comms_this_m.rr_percent = rr_comm_percent
-    comms_this_m.total = one_off_comms_this_m + up_sell_comms_this_m + rr_comms_this_m
-    comms_this_m.save()
-        
+        try:
+            rr_comms_this_m = (rr_sales_this_m * rr_comm_percent)/100
+        except:
+            rr_comms_this_m = 0     
+            
+        comms_this_m.one_off = one_off_comms_this_m
+        comms_this_m.up_sell = up_sell_comms_this_m
+        comms_this_m.rr_comm = rr_comms_this_m
+        comms_this_m.rr_percent = rr_comm_percent
+        comms_this_m.total = Decimal(one_off_comms_this_m) + Decimal(up_sell_comms_this_m) + Decimal(rr_comms_this_m)
+        comms_this_m.save()
+    else:
+        comms_this_m = None   
         
         
     if request.method == "GET":      

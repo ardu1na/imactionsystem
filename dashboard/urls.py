@@ -21,8 +21,9 @@ urlpatterns = [
 
     path('employees/old/', dashboard_views.employeesold, name="old"),
 
-    path('employees/delete/<int:id>/', dashboard_views.deleteemployee, name="deleteemployee"), 
-    path('employees/edit/<int:id>/', dashboard_views.editemployee, name="editemployee"),
+    path('employee/<int:id>/delete/', dashboard_views.deleteemployee, name="deleteemployee"), 
+    path('employee/<int:id>/edit/', dashboard_views.editemployee, name="editemployee"),
+    path('employee/<int:id>/comms/', dashboard_views.employee_comms, name="employee_comms"),
 
     
     path('holiday/delete/<int:id>/', dashboard_views.deleteholiday, name="deleteholiday"), 

@@ -45,9 +45,6 @@
 </div>
 <!-- END modal  -->
 
-
-
-
 <!-- START modal raice -->
 <div class="modal fade " id="raice" tabindex="-1" aria-labelledby="raiceLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -85,9 +82,6 @@
     </div>
 </div>
 <!-- END modal  -->
-
-
-
 
 
 <div class="page-titles">
@@ -432,13 +426,7 @@
             </div>
         </div>
     </div>
-</div>
-
-        
-
-
-
-
+</div>    
 
 <!-- modals delete holidays -->
 {% for i in holidays %}
@@ -448,20 +436,12 @@
 {% endfor %}
 
 
-
 {% endblock %}
-
 
 {% block additional_js %}
 
-                            
-  
-
-
 <script>
-   
-
-        // Check if URL contains "#pay"
+    // Check if URL contains "#pay"
         if(window.location.hash == "#pay") {
             // Get the salary tab element
             var salaryTab = document.getElementById("salary-tab");
@@ -479,8 +459,15 @@
 
         }
 
-</script>
+        if(window.location.hash == "#comms") {
+            // Get the salary tab element
+            var commsTab = document.getElementById("comms-tab");
+            // Activate the tab
+            var tab = new bootstrap.Tab(commsTab);
+            tab.show();
 
+        }
+</script>
 
 
 <!-- change active select date_gone -->
