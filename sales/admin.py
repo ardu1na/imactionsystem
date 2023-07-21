@@ -3,10 +3,11 @@ from django.contrib import admin
 
 from import_export.admin import ImportExportModelAdmin
 
-from sales.models import Sale, Service, Adj
+from sales.models import Sale, Service, Adj, Comm
 
 from dashboard.resources import ServiceResource, SaleResource, AdjResource
 
+admin.site.register(Comm)
 
 
 class ServiceAdmin(ImportExportModelAdmin):

@@ -8,12 +8,6 @@ from customers.models import Client
 from expenses.models import Employee
 from dashboard.models import LastBlue, Comms
 
-# get commision value from configurations db
-try:
-    comms = Comms.objects.get(id=1)
-except:
-    comms = Comms.objects.create(              
-                )
 # get 'dolar blue / pesos' exchange to display info
 try:
     last_blue =  LastBlue.objects.get(pk=1)
@@ -146,41 +140,7 @@ class Adj(models.Model):
 
 
 class Sale(models.Model):
-    # obtener el porcentaje de comisión acorde al tipo de venta
-    @property
-    def get_comm_per(self):
-        
-        if self.change >= comms.rr_1:
-            ## obtener el porcentaje de comisiones por venta para los empleados vendedores
-            if self.revenue == "OneOff":
-                return comms.one_off
-            else:    
-                if self.kind == "Upsell":
-                    return comms.up_sell
-                else:
-                    # el porcentaje de comisión de las ventas rr q no son upsell varian según parámetros configurados x el usuario
-                    # se obtienen de dashboard.comms pk=1
-                    if self.change >= comms.rr_1 and self.change < comms.rr_2:
-                        return comms.com_rr_1
-                    elif self.change >= comms.rr_2 and self.change < comms.rr_3:
-                        return comms.com_rr_2
-                    elif self.change >= comms.rr_3 and self.change < comms.rr_4:
-                        return comms.com_rr_3
-                    elif self.change >= comms.rr_4 and self.change < comms.rr_5:
-                        return comms.com_rr_4
-                    elif self.change >= comms.rr_5:
-                        return comms.com_rr_5
-            
-    @property
-    def get_comm(self):
-        # obtener el valor de la comisión según el precio de la venta y el prcjje
-        try:
-            comm = (self.get_comm_per * self.change)/100
-            return comm
-        # si la venta es menor a comms.rr_1 retornar 0 comisión
-        except:
-            return 0
-        
+   
     
 
     UPSELL='Upsell'
@@ -244,6 +204,12 @@ class Sale(models.Model):
                     null=True, blank=True,
                     on_delete=models.SET_NULL, verbose_name="SALES REP")
     
+    comm = models.ForeignKey(
+                    'Comm',
+                    related_name='sales',
+                    null=True, blank=True,
+                    on_delete=models.CASCADE,
+                    verbose_name="Employee's COMM")
     
     kind = models.CharField(max_length=50, choices=KIND_CHOICES, null=True, blank=False, default=None, verbose_name="KIND")
     
@@ -263,6 +229,7 @@ class Sale(models.Model):
     change = models.DecimalField(default=0, verbose_name="PRICE", decimal_places=2, max_digits=12, null=True, blank=True)
     price = models.DecimalField(default=0, verbose_name="PRICE", decimal_places=2, max_digits=12)
     currency = models.CharField(max_length=50, default="ARS", choices=COIN_CHOICES, null=True, blank=False, verbose_name="CURRENCY")
+    
     @property
     def get_change(self):
         change = 0
@@ -287,28 +254,54 @@ class Sale(models.Model):
         (RR, ("RR")),
         (OneOff, ("OneOff")),)
     revenue = models.CharField(max_length=20, null=True, blank=False, default=None, choices=REVENUE_CHOICES, help_text="Leave blank to automatically fill", verbose_name="REVENUE")
-
+        
+    suscription = models.ForeignKey(
+        Service,
+        related_name="sales",
+        on_delete=models.CASCADE,
+        null=True, blank=True)
     
-    def save(self, *args, **kwargs):                                    
-
-
+    class Meta:
+        ordering = ['-date']
+        
+    def save(self, *args, **kwargs):                               
         self.change = self.get_change
         self.revenue = self.get_revenue()
-
-
         if self.suscription is None and self.revenue == "RR":
-                    
-            self.get_service_or_update()
-            
-
+            self.get_service_or_update()           
+        self.get_comm_or_create()            
         super(Sale, self).save(*args, **kwargs)
 
-        
     
-        
-            
-      
+    def __str__(self):
+       return '{} - {} '.format(self.client, self.service)
+
     
+    ###################
+    #
+    # función para asociar o crear una instancia de comisión mensual para un empleado y asociarla a la venta
+    #
+    def get_comm_or_create(self, *args, **kwargs):
+        if self.sales_rep:
+            if not self.comm:
+                try:
+                    comm = Comm.objects.get(
+                        employee = self.sales_rep,
+                        created_at__month=self.date.month,
+                        created_at__year=self.date.year
+                        )
+                    self.comm = comm
+                
+                    
+                except Comm.DoesNotExist:                
+                    values = {
+                        "employee": self.sales_rep,                   
+                        }            
+                    comm = Comm(**values)
+                    comm.save()  
+                    self.comm=comm        
+                
+        
     ################### 
     def get_service_or_update (self, *args, **kwargs):  
                 
@@ -332,22 +325,17 @@ class Sale(models.Model):
             service.save()  
             self.suscription=service
                 
+                
+                
+                
+    #################################################### 
+    ###  propiedades para display y funciones      
+    # (se pueden llamar direcatemnte en el template html)
     
-    
-    
-                        
-                    
-
-            
-        
     @property
     def total(self):
         result = self.price - self.cost
         return '${:,}'.format(result)
-
-    def __str__(self):
-       return '{} - {} '.format(self.client, self.service)
-
 
     @admin.display
     def subtotal(self):
@@ -367,19 +355,76 @@ class Sale(models.Model):
         formatdate = self.date.strftime('%d/%m/%Y')
         return formatdate
     
-    @property
-    def get_date_can(self):
-        formatdate = self.date_can.strftime('%d/%m/%Y')
-        return formatdate
-
-
    
+    
+    
+    
+    
+class Comm(models.Model):
+    #
+    # Modelo de comisiones mensuales de los vendedores
+    created_at = models.DateField(auto_now_add=True)
 
-    class Meta:
-        ordering = ['-date']
-        
-    suscription = models.ForeignKey(Service, related_name="sales", on_delete=models.CASCADE, null=True, blank=True)
+    # se busca o crea y asocia automáticamente
+    # desde el modelo Sale('get_comm_or_create')
+    # al crear o guardar una venta
+    # verificando si ya existe una comisión mensual para ese empleado
     
+    # un vendedor tiene múltiples comisiones anuales, una mensual
+    # y una comisión tiene  múltiples ventas
+    #    
+    employee = models.ForeignKey(
+        Employee,
+        related_name="comms",
+        on_delete=models.CASCADE,
+        null=False,
+        blank=False
+    )
+        
+    # cada vez que se va a la pestaña de comisiones del vendedor
+    # se actualizan los valores desde la vista editemployee
+    updated_at = models.DateField(
+        auto_now=True
+        )       
+    one_off = models.DecimalField(
+        decimal_places=2,
+        max_digits=50,
+        default=0
+        )    
+    up_sell = models.DecimalField(
+        decimal_places=2,
+        max_digits=50,
+        default=0
+        )    
+    # como el porcnetaje de las ventas rr es variable en función de cuánto se vendió, este campo se almacena para registro
+    rr_percent = models.DecimalField(
+        decimal_places=2,
+        max_digits=5,
+        default=0
+        )    
+    rr_comm = models.DecimalField(
+        decimal_places=2,
+        max_digits=50,
+        default=0
+        )  
+    total = models.DecimalField(
+        decimal_places=2,
+        max_digits=50,
+        default=0
+        )
     
+    def __str__ (self):
+        return f'{self.employee} {self.get_period} comms'
         
-        
+    # obtener el mes y el año del comm para ese empleado
+    @property
+    def get_period(self):
+        period = self.created_at.strftime("%m/%Y")
+        return period
+    
+    # obtener el total de comms del mes para ese empleado
+    @property
+    def get_total(self):
+        total = self.rr_comm + self.one_off + self.up_sell
+        return total
+    
