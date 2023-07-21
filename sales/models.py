@@ -15,8 +15,7 @@ try:
 except:
     blue = 0
 
-from django.db import models
-
+    
 # Constants for service choices and fail choices
 SERVICE_CHOICES = (
     ('SEO', 'SEO'),
@@ -139,8 +138,30 @@ class Adj(models.Model):
         super(Adj, self).save(*args, **kwargs)
 
 
-class Sale(models.Model):
-   
+
+# get comms conf variables
+try:
+    comms_conf = Comms.objects.get(id=1)
+except Comms.DoesNotExist:
+    comms_conf = Comms.objects.create(
+        id=1,
+        com_rr_1 = 40,
+        rr_1 = 80000,
+        com_rr_2 = 50,
+        rr_2 = 240000,
+        com_rr_3 = 60,
+        rr_3 = 400000,
+        com_rr_4 = 65,
+        rr_4 = 560000,
+        com_rr_5 = 70,
+        rr_5 = 720000,
+        up_sell = 5,
+        one_off = 15,             
+        )
+    comms_conf.save()
+        
+        
+class Sale(models.Model):  
     
 
     UPSELL='Upsell'
@@ -330,7 +351,36 @@ class Sale(models.Model):
                 
     #################################################### 
     ###  propiedades para display y funciones      
-    # (se pueden llamar direcatemnte en el template html)
+    # (se pueden llamar direcatemnte en el template html
+    # )
+        
+   
+        
+    @property
+    def get_comm_per(self):
+        
+        
+            ## obtener el porcentaje de comisiones por venta para los empleados vendedores
+            if self.revenue == "OneOff":
+                return comms_conf.one_off
+            else:    
+                if self.kind == "Upsell":
+                    return comms_conf.up_sell
+                else:
+                    com = self.comm
+                    comm_rr = com.rr_percent
+                    return comm_rr
+            
+    @property
+    def get_comm(self):
+        # obtener el valor de la comisión según el precio de la venta y el prcjje
+        try:
+            comm = (self.get_comm_per * self.change)/100
+            return comm
+        # si la venta es menor a comms.rr_1 retornar 0 comisión
+        except:
+            return 0
+    
     
     @property
     def total(self):

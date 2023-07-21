@@ -1559,6 +1559,7 @@ def editemployee(request, id):
             'id': id,
             'holidays': holidays,
             'salaries': salaries,
+            'comms_conf': comms_conf,
             }       
         return render (request, 'dashboard/employees/editemployee.html', context)
 
