@@ -3192,6 +3192,7 @@ textarea.form-control-lg {
   flex-direction: column;
   padding-left: 0;
   margin-bottom: 0;
+  margin-left: 0;
   list-style: none; }
   .navbar-nav .nav-link {
     padding-right: 0;
@@ -27778,7 +27779,7 @@ table.dataTable.display tbody td {
   flex-direction: column-reverse;
   padding: 1.5625rem 0.75rem;
   height: calc(100vh - 2.5rem);
-  width: 5.625rem; }
+  width: 3.625rem; }
   .dlab-side-menu .search-coundry {
     flex-direction: column; }
     .dlab-side-menu .search-coundry .list {

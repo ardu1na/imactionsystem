@@ -21,6 +21,8 @@
 ## TEMPLATES
 # HTML files  at:
 # /dashboard/templates/
+# base: dashboard\templates\dashboard\elements\layouts\admin.html
+
 
 ## STATIC files
 # (js, css, icons, fonts, images, etc) at:
