@@ -1525,7 +1525,8 @@ def employee_comms(request, id):
         'employee': employee,
         'comms': comms,
         'comms_this_m': comms_this_m,
-        'month': month_name
+        'month': month_name,
+        'page_title': f'{employee.name} COMMs'
     }
     return render(request,'dashboard/employees/employee_comms.html', context)
 
@@ -1537,6 +1538,8 @@ def editemployee(request, id):
     editemployee = Employee.objects.get(id=id)
     holidays = Holiday.objects.filter(employee=editemployee)
     salaries = Salary.objects.filter(employee=editemployee)
+    this_month = today.month
+    month_name = date(1900, this_month, 1).strftime('%B')
     try:
         wage_instance = Salary.objects.get(employee=editemployee, period__month=today.month, period__year=today.year)
     except:
@@ -1645,6 +1648,7 @@ def editemployee(request, id):
             'holidays': holidays,
             'salaries': salaries,
             'comms_conf': comms_conf,
+            'month': month_name,
             }       
         return render (request, 'dashboard/employees/editemployee.html', context)
 
