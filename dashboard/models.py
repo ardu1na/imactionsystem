@@ -1,15 +1,5 @@
 from django.db import models
-from datetime import date
 
-
-class AutoRevenue(models.Model):
-    date = models.DateField(default=date.today, editable=True)
-    sales = models.BooleanField(default=False, null=True, blank=True)
-    expenses = models.BooleanField(default=False, null=True, blank=True)
-    wages = models.BooleanField(default=False, null=True, blank=True)
-    
-     
-       
 # SETTINGS
 # # let the user change variables of model method definitions
 class ConfTier(models.Model):
@@ -19,12 +9,6 @@ class ConfTier(models.Model):
     tier_ii = models.IntegerField(default=200000)
     tier_i = models.IntegerField(default=200000)
 
-
-
-
-class BackUps(models.Model):
-    date = models.DateField(default=date.today)
-    
 
 class LastBlue (models.Model):
     venta = models.DecimalField(
@@ -36,10 +20,7 @@ class LastBlue (models.Model):
     def get_blue(self):
         return self.venta
     
-    
-    
-    
-    
+       
     
 class Comms (models.Model):
     
@@ -90,7 +71,6 @@ class Comms (models.Model):
         return "COMMS config"
     
     
-
 class Configurations(models.Model):
     INPUT_TYPE_CHOICES = (
         ('','Select InputType'),

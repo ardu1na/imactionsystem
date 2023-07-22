@@ -5,13 +5,17 @@ from import_export.admin import ImportExportModelAdmin
 
 from sales.models import Sale, Service, Adj, Comm
 
-from dashboard.resources import ServiceResource, SaleResource, AdjResource
+from dashboard.resources import ServiceResource, SaleResource, AdjResource, CommResource
 
-admin.site.register(Comm)
+
+
+
+class CommAdmin(ImportExportModelAdmin):
+    resource_class = CommResource
+admin.site.register(Comm, CommAdmin)
 
 
 class ServiceAdmin(ImportExportModelAdmin):
-    extra= 0
     resource_class = ServiceResource
 
 admin.site.register(Service, ServiceAdmin)

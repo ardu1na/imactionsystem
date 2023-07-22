@@ -2018,7 +2018,7 @@ def editadj(request, id):
 @login_required(login_url='dashboard:login')
 def adjustment(request):
     
-    # adjust services script from adjustment view
+    # adjust services
     print("")
 
     print("#######################################")
@@ -2063,8 +2063,6 @@ def adjustment(request):
         print("")
         print(f"############################### done with adjustments ")
         print("############################################################################################")
-    else:
-        print(f"############################### nothing to adjust ")
     
     services = Service.objects.filter(state=True)
     clients = Client.objects.filter(cancelled="Active")
