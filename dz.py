@@ -140,6 +140,9 @@ dz_array = {
                                 "clients":[
                                     f"{foldername_d}/vendor/datatables/css/jquery.dataTables.min.css",
                                 ],
+                                "employee_comms":[
+                                    f"{foldername_d}/vendor/datatables/css/jquery.dataTables.min.css",
+                                ],
                                 "expenses":[
                                     f"{foldername_d}/vendor/datatables/css/jquery.dataTables.min.css",
                                 ],
@@ -273,6 +276,14 @@ dz_array = {
                                 ],
                                 
                                 "clients":[
+                                    f"{foldername_d}/vendor/chart.js/Chart.bundle.min.js",
+                                    f"{foldername_d}/vendor/apexchart/apexchart.js",
+                                    f"{foldername_d}/vendor/datatables/js/jquery.dataTables.min.js",
+                                    f"{foldername_d}/js/plugins-init/datatables.init.js",
+                                    f"{foldername_d}/vendor/owl-carousel/owl.carousel.js",
+                                    f"{foldername_d}/js/dashboard/instructor-student.js",
+                                ],
+                                "employee_comms":[
                                     f"{foldername_d}/vendor/chart.js/Chart.bundle.min.js",
                                     f"{foldername_d}/vendor/apexchart/apexchart.js",
                                     f"{foldername_d}/vendor/datatables/js/jquery.dataTables.min.js",

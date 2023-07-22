@@ -1,0 +1,160 @@
+{% extends 'dashboard/elements/layouts/admin.html' %}
+
+{% load static %}
+
+{% block additional_css %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+{% endblock %}
+
+{% block content %}
+
+
+
+<!-- MAIN COMMS -->
+    
+
+<div class="row">
+
+    <div class="col-xl-3 col-xxl-3 col-lg-3 col-sm-2">
+        <div class="widget-stat card">
+            <div class="card-body  p-4">
+                <div class="media ai-icon">
+                    <span class="me-3 bgl-danger text-danger">
+                        <svg id="icon-revenue" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-dollar-sign">
+                            <line x1="12" y1="1" x2="12" y2="23"></line>
+                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                        </svg>
+                    </span>
+                    <div class="media-body">
+                        <p class="mb-1">TOTAL {{month}}  </p>
+                        <h4 class="mb-0">{{comms_this_m.total|floatformat:2}}</h4>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+    
+    <div class="col-xl-3 col-xxl-3 col-lg-3 col-sm-2">
+        <div class="widget-stat card">
+            <div class="card-body p-4">
+                <div class="media ai-icon">
+                    <span class="me-3 bgl-warning text-warning">
+                        <svg id="icon-revenue" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-dollar-sign">
+                            <line x1="12" y1="1" x2="12" y2="23"></line>
+                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                        </svg>
+                    </span>
+                    <div class="media-body">
+                        <p class="mb-1">RR {{month}}  {% if comms_this_m.rr_percent == 1 %}{% else %}  ({{comms_this_m.rr_percent|floatformat:2}} %){% endif %}</p>
+                        <h4 class="mb-0">{{comms_this_m.rr_comm|floatformat:2}} </h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-xl-3 col-xxl-3 col-lg-3 col-sm-2">
+        <div class="widget-stat card">
+            <div class="card-body  p-4">
+                <div class="media ai-icon">
+                    <span class="me-3 bgl-info text-info">
+                        <svg id="icon-revenue" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-dollar-sign">
+                            <line x1="12" y1="1" x2="12" y2="23"></line>
+                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                        </svg>
+                    </span>
+                    <div class="media-body">
+                        <p class="mb-1">One Off {{month}} </p>
+                        <h4 class="mb-0">{{comms_this_m.one_off|floatformat:2}} </h4>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-xxl-3 col-lg-3 col-sm-2">
+        <div class="widget-stat card">
+            <div class="card-body p-4">
+                <div class="media ai-icon">
+                    <span class="me-3 bgl-primary text-primary">
+                        <svg id="icon-revenue" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-dollar-sign">
+                            <line x1="12" y1="1" x2="12" y2="23"></line>
+                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                        </svg>                    </span>
+                    <div class="media-body">
+                        <p class="mb-1">Up Sell {{month}} </p>
+                        <h4 class="mb-0">{{comms_this_m.up_sell|floatformat:2}}</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+
+<div class="card">   
+    <div class="card-body">
+        
+        <div class="d-flex flex-row mb-5">
+            <a class="btn btn-primary light fs-4" href="{% url 'dashboard:editemployee' id=employee.id %}#comms">
+                {{employee.name}}
+                <span class="btn-icon-end">
+                    <i class="fa-regular fa-user fs-3"></i>
+                </span>
+            </a>   
+        </div>
+        <!-- TABLE COMMS -->
+        <div class="table-responsive">
+            <table id="example4" class="display  pb-5" style="min-width: 845px">                            
+                <thead>
+                    <tr>
+                        <th>PERIOD</th>
+                        <th>RR</th>
+                        <th>ONE OFF</th>
+                        <th>UP SELL</th>
+                        <th>TOTAL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for comm in comms %}
+
+                    <tr>
+
+                            <td> {{comm.get_period}}</td>
+                            
+
+                            <td>
+                                $ {{comm.rr_comm|floatformat:2}} {% if comm.rr_percent == 1 %}{% else %}({{comm.rr_percent|floatformat:0}}%){% endif %}
+                            </td>
+                            <td> $ {{comm.one_off|floatformat:2}}
+                            </td>
+                            <td>
+                                $ {{comm.up_sell|floatformat:2}}
+                            </td>
+                            <td>$ {{comm.total|floatformat:2}}</td> 
+                       
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>   
+        </div>
+    </div>
+
+</div>
+<!-- end MAIN COMMS -->
+
+
+{% endblock %}
+
+
+{% block additional_js %}
+   
+
+{% endblock %}

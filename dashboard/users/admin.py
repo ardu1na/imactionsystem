@@ -1,7 +1,6 @@
 from django.contrib import admin
 from dashboard.users.models import CustomUser
 from django.contrib.auth.admin import UserAdmin
-from django.forms import Textarea
 
 
 
@@ -26,4 +25,3 @@ class UserAdminConfig(UserAdmin):
 
 admin.site.register(CustomUser,UserAdminConfig)
 
-# Register your models here.

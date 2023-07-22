@@ -82,268 +82,253 @@
 
 
 
-        <div class="page-titles">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{% url 'dashboard:ceo' %}">CEO</a></li>
-                <li class="breadcrumb-item active"><a href="javascript:void(0)">{{editemployee.name}}</a></li>
-            </ol>
-        </div>
+<div class="page-titles">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'dashboard:ceo' %}">CEO</a></li>
+        <li class="breadcrumb-item active"><a href="javascript:void(0)">{{editemployee.name}}</a></li>
+    </ol>
+</div>
 
-        <div class="row">
-            <div class="col-xl-12">
-                <div class="card">
-                    <div class="card-body">
-                        <!-- Nav tabs -->
-                        <ul class="nav nav-tabs" role="tablist">
-                            <li class="nav-item">
-                                <a class="nav-link active" data-bs-toggle="tab" href="#home8">
-                                    <span>
-                                        <i class="ti-user fs-4 me-2"></i>
-                                    </span> Personal
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="salary-tab" data-bs-toggle="tab" href="#messages8">
-                                    <span> 
-                                        <i class="ti-wallet fs-4 me-2"></i>
-                                    </span> Pay
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="holiday-tab" data-bs-toggle="tab" href="#holiday">
-                                    <span> 
-                                        <i class="ti-star fs-4 me-2"></i>
-                                    </span> Holidays
-                                </a>
-                            </li>
-                        </ul>
-                        <!-- Tab panes -->
-                        <div class="tab-content tabcontent-border">
-
-
-                            <div class="tab-pane fade show active" id="home8" role="tabpanel">
-                                <div class="pt-4">
-
-                                    <div class="basic-form">
-                                        <form method="post">
-                                            {% csrf_token %}
-                                            <div class="row">
-                                                <div class="mb-3 col-md-6">
-                                                    <label class="form-label">Name</label>
-                                                    {{editform.name}}
-                                                </div>
-                                                <div class="mb-3 col-md-6">
-                                                    <label class="form-label">Email</label>
-                                                    {{editform.email}}
-                                                </div>
-                                                <div class="mb-3 col-md-6">
-                                                    <label class="form-label">Address</label>
-                                                    {{editform.address}}
-                                                </div>
-                                                <div class="mb-3 col-md-6">
-                                                    <label>Phone Number</label>
-                                                    {{editform.tel}}
-                                                </div>
-
-                                                <div class="form-group my-3">
-                                                    <label class="form-label">Birthday</label>
-                                                    {{editform.dob}}
-                                                </div>
-                                            </div>
-
-                                                <div class="form-group my-3">
-                                                    <label class="form-label">Role</label>
-                                                    {{editform.rol}}
-                                                </div>
-
-                                                <div class="form-group my-3">
-                                                    <label class="form-label">Joined</label>
-                                                    {{editform.date_join}}
-                                                </div>
-
-                                                <div class="form-group my-3">
-                                                <label class="form-label">Active?</label>
-                                                {{ editform.active }}
-                                            </div>
-
-                                            <div class="mb-3" id="cancellation">
-                                                <label class="form-label">Gone</label>
-                                                {{ editform.date_gone }}
-                                            </div>
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card">
+            <div class="card-body">
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-bs-toggle="tab" href="#home8">
+                            <span>
+                                <i class="ti-user fs-4 me-2"></i>
+                            </span> Personal
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="salary-tab" data-bs-toggle="tab" href="#messages8">
+                            <span> 
+                                <i class="ti-wallet fs-4 me-2"></i>
+                            </span> Pay
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="holiday-tab" data-bs-toggle="tab" href="#holiday">
+                            <span> 
+                                <i class="ti-star fs-4 me-2"></i>
+                            </span> Holidays
+                        </a>
+                    </li>
+                </ul>
+                <!-- Tab panes -->
+                <div class="tab-content tabcontent-border">
 
 
-                                            <button type="submit" name="editemployee" class="btn btn-primary">Save</button>
-                                        </form>
-                                    </div>
+                    <div class="tab-pane fade show active" id="home8" role="tabpanel">
+                        <div class="pt-4">
 
-                                </div>
-                            </div>
-
-
-                            <div class="tab-pane fade" id="messages8" role="tabpanel">
-                                <div class="pt-4 my-5">
-                                    
-                                    <div class="basic-list-group m-3 px-4">
-                                        <div class="form-floating my-2 d-flex flex-row-reverse">                                                
-                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editwage{{editemployee.id}}">CHANGE
-                                            </button>
+                            <div class="basic-form">
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <div class="row">
+                                        <div class="mb-3 col-md-6">
+                                            <label class="form-label">Name</label>
+                                            {{editform.name}}
                                         </div>
-                                        <ul class="list-group">
-                                            <li class="list-group-item">
-                                                <h4>SALARY</h4> 
-                                                <p class="fs-4">
-                                                    <span class="badge light badge-info">
-                                                        $ {{editemployee.get_salary|floatformat:2}}
-                                                    </span>
-                                                </p>
-                                            </li>
+                                        <div class="mb-3 col-md-6">
+                                            <label class="form-label">Email</label>
+                                            {{editform.email}}
+                                        </div>
+                                        <div class="mb-3 col-md-6">
+                                            <label class="form-label">Address</label>
+                                            {{editform.address}}
+                                        </div>
+                                        <div class="mb-3 col-md-6">
+                                            <label>Phone Number</label>
+                                            {{editform.tel}}
+                                        </div>
 
-                                           
-                                            <li class="list-group-item">
-                                                <h4>MP</h4> 
-                                                <p class="fs-4">
-                                                    <span class="badge light badge-primary">
-                                                        $ {{editemployee.get_mp|floatformat:2}}
-                                                    </span>
-                                                </p>
-                                            </li>
-                                            <li class="list-group-item">
-                                                <h4>TC</h4> 
-                                                <p class="fs-4">
-                                                    <span class="badge light badge-secondary">
-                                                        $ {{editemployee.get_tc|floatformat:2}}
-                                                    </span>
-                                                </p>
-                                            </li>
-                                            
-
-
-                                            <li class="list-group-item">
-                                                <h4>ATM</h4> 
-                                                <p class="fs-4">
-                                                    <span class="badge light badge-secondary">
-                                                        $ {{editemployee.get_atm|floatformat:2}}
-                                                    </span>
-                                                </p>
-                                            </li>
-
-                                            <li class="list-group-item">
-                                                <h4>CASH $ </h4> 
-                                                <p class="fs-4">
-                                                    <span class="badge light badge-warning">
-                                                        $ {{editemployee.get_cash|floatformat:2}}
-                                                    </span>
-                                                </p>
-                                            </li>
-
-                                            <li class="list-group-item">
-                                                <h4>CASH USD</h4> 
-                                                <p class="fs-4">
-                                                    <span class="badge light badge-success">
-                                                        $ {{editemployee.get_cash_usd|floatformat:2}}
-                                                    </span>
-                                                </p>
-                                            </li>
-
-
-                                            <li class="list-group-item">
-                                                <h4>PAYPAL</h4> 
-                                                <p class="fs-4">
-                                                    <span class="badge light badge-info">
-                                                        $ {{editemployee.get_paypal|floatformat:2}}
-                                                    </span>
-                                                </p>
-                                            </li>
-
-                                           
-
-                                            <li class="list-group-item">
-                                                <h4>MONTHLY BONUS</h4> 
-                                                <p class="fs-4">
-                                                    <span class="badge light badge-light">
-                                                        $  {{editemployee.get_aguinaldo_mensual|floatformat:2}}
-                                                    </span>
-                                                </p>
-                                            </li>
-
-                                            <li class="list-group-item">
-                                                <h4>TOTAL</h4> 
-                                                <p class="fs-4">
-                                                    <span class="badge light badge-dark">
-                                                        $  {{editemployee.get_total_ceo|floatformat:2}}
-                                                    </span>
-                                                </p>
-                                            </li>
-
-                                        </ul>
+                                        <div class="form-group my-3">
+                                            <label class="form-label">Birthday</label>
+                                            {{editform.dob}}
+                                        </div>
                                     </div>
-                                </div>
-                                {% include 'dashboard/employees/salarieceo.html' %}
 
+                                        <div class="form-group my-3">
+                                            <label class="form-label">Role</label>
+                                            {{editform.rol}}
+                                        </div>
 
-                            </div>
+                                        <div class="form-group my-3">
+                                            <label class="form-label">Joined</label>
+                                            {{editform.date_join}}
+                                        </div>
 
+                                        <div class="form-group my-3">
+                                        <label class="form-label">Active?</label>
+                                        {{ editform.active }}
+                                    </div>
 
-                            <div class="tab-pane fade" id="holiday" role="tabpanel">
-                                <div class="pt-4 mb-4">
-
-                                    <div class="basic-form mb-4">
-                                        <form method="post">
-                                            {% csrf_token %}
-                                            <div class="row">
-                                                <div class="form-group my-3">
-                                                    <label class="form-label">YEAR</label>
-                                                    {{holidayform.year}}
-                                                </div>
-
-
-
-
-                                                <div class="form-group my-3">
-                                                    <label class="form-label">MONTH</label>
-
-
-                                                        {{holidayform.month}}
-                                                </div>
-
-
-                                                <div class="form-group my-3">
-                                                    <label class="form-label">DAYS</label>
-
-
-                                                        {{holidayform.days}}
-                                                </div>
-
-                                                <div class="form-group my-3">
-                                                    <label class="form-label">START</label>
-                                                    {{holidayform.date_start}}
-                                                </div>
-
-                                                <div class="form-group my-3">
-                                                    <label>END</label>
-                                                    {{holidayform.date_end}}
-                                                </div>
-                                            </div>
-
-
-                                            <button type="submit" name="holiday" class="mb-4 btn btn-primary">ADD</button>
-                                        </form>
+                                    <div class="mb-3" id="cancellation">
+                                        <label class="form-label">Gone</label>
+                                        {{ editform.date_gone }}
                                     </div>
 
 
-                                    {% include 'dashboard/employees/holidays.html' %}
-
-
-                                </div>
+                                    <button type="submit" name="editemployee" class="btn btn-primary">Save</button>
+                                </form>
                             </div>
 
-
-                            
                         </div>
                     </div>
+
+
+                    <div class="tab-pane fade" id="messages8" role="tabpanel">
+                        <div class="pt-4 my-5">
+                            
+                            <div class="basic-list-group m-3 px-4">
+                                <div class="form-floating my-2 d-flex flex-row-reverse">                                                
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editwage{{editemployee.id}}">CHANGE
+                                    </button>
+                                </div>
+                                <ul class="list-group">
+                                    <li class="list-group-item">
+                                        <h4>SALARY</h4> 
+                                        <p class="fs-4">
+                                            <span class="badge light badge-info">
+                                                $ {{editemployee.get_salary|floatformat:2}}
+                                            </span>
+                                        </p>
+                                    </li>
+
+                                    
+                                    <li class="list-group-item">
+                                        <h4>MP</h4> 
+                                        <p class="fs-4">
+                                            <span class="badge light badge-primary">
+                                                $ {{editemployee.get_mp|floatformat:2}}
+                                            </span>
+                                        </p>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <h4>TC</h4> 
+                                        <p class="fs-4">
+                                            <span class="badge light badge-secondary">
+                                                $ {{editemployee.get_tc|floatformat:2}}
+                                            </span>
+                                        </p>
+                                    </li>
+                                    
+
+
+                                    <li class="list-group-item">
+                                        <h4>ATM</h4> 
+                                        <p class="fs-4">
+                                            <span class="badge light badge-secondary">
+                                                $ {{editemployee.get_atm|floatformat:2}}
+                                            </span>
+                                        </p>
+                                    </li>
+
+                                    <li class="list-group-item">
+                                        <h4>CASH $ </h4> 
+                                        <p class="fs-4">
+                                            <span class="badge light badge-warning">
+                                                $ {{editemployee.get_cash|floatformat:2}}
+                                            </span>
+                                        </p>
+                                    </li>
+
+                                    <li class="list-group-item">
+                                        <h4>CASH USD</h4> 
+                                        <p class="fs-4">
+                                            <span class="badge light badge-success">
+                                                $ {{editemployee.get_cash_usd|floatformat:2}}
+                                            </span>
+                                        </p>
+                                    </li>
+
+
+                                    <li class="list-group-item">
+                                        <h4>PAYPAL</h4> 
+                                        <p class="fs-4">
+                                            <span class="badge light badge-info">
+                                                $ {{editemployee.get_paypal|floatformat:2}}
+                                            </span>
+                                        </p>
+                                    </li>
+
+                                    
+
+                                    <li class="list-group-item">
+                                        <h4>MONTHLY BONUS</h4> 
+                                        <p class="fs-4">
+                                            <span class="badge light badge-light">
+                                                $  {{editemployee.get_aguinaldo_mensual|floatformat:2}}
+                                            </span>
+                                        </p>
+                                    </li>
+
+                                    <li class="list-group-item">
+                                        <h4>TOTAL</h4> 
+                                        <p class="fs-4">
+                                            <span class="badge light badge-dark">
+                                                $  {{editemployee.get_total_ceo|floatformat:2}}
+                                            </span>
+                                        </p>
+                                    </li>
+
+                                </ul>
+                            </div>
+                        </div>
+                        {% include 'dashboard/employees/salarieceo.html' %}
+
+
+                    </div>
+
+
+                    <div class="tab-pane fade" id="holiday" role="tabpanel">
+                        <div class="pt-4 mb-4">
+
+                            <div class="basic-form mb-4">
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <div class="row">
+                                        
+                                        <div class="form-group my-3">
+                                            <label class="form-label">DAYS</label>
+
+
+                                                {{holidayform.days}}
+                                        </div>
+
+                                        <div class="form-group my-3">
+                                            <label class="form-label">START</label>
+                                            {{holidayform.date_start}}
+                                        </div>
+
+                                        <div class="form-group my-3">
+                                            <label>END</label>
+                                            {{holidayform.date_end}}
+                                        </div>
+                                    </div>
+
+
+                                    <button type="submit" name="holiday" class="mb-4 btn btn-primary">ADD</button>
+                                </form>
+                            </div>
+
+
+                            {% include 'dashboard/employees/holidays.html' %}
+
+
+                        </div>
+                    </div>
+
+
+                    
                 </div>
             </div>
         </div>
+    </div>
+</div>
 
 
 <!-- modals delete holidays -->

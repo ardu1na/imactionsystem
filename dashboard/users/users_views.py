@@ -10,7 +10,7 @@ from dashboard.users.forms import ( CustomUserForm,
 						  EditUserForm,
 						)
 from django.contrib.auth import login, logout
-from django.contrib.auth.decorators import login_required, permission_required 
+from django.contrib.auth.decorators import login_required, permission_required, user_passes_test 
 from django.contrib.auth.models import Group, Permission
 from django.db.models import Count
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
@@ -29,7 +29,7 @@ from dashboard.users import utils
 
 
 
-
+@user_passes_test(lambda user: user.groups.filter(name='admin').exists())   
 @login_required(login_url='dashboard:login')
 def password_change(request):
 	if request.method == 'POST':
@@ -51,7 +51,7 @@ def password_change(request):
 
 
 
-
+@user_passes_test(lambda user: user.groups.filter(name='admin').exists())   
 @login_required(login_url='dashboard:login')
 @permission_required({'users.view_customuser'}, raise_exception=True)
 def users(request):
@@ -109,7 +109,7 @@ def users(request):
 
 
 
-
+@user_passes_test(lambda user: user.groups.filter(name='admin').exists())   
 @login_required(login_url='dashboard:login')
 @permission_required({'users.view_customuser'}, raise_exception=True)
 def user_details(request,id):
@@ -123,7 +123,7 @@ def user_details(request,id):
 
 	return render(request,"dashboard/modules/user-details.html",context)
 
-
+@user_passes_test(lambda user: user.groups.filter(name='admin').exists())   
 @login_required(login_url='dashboard:login')
 @permission_required({'users.view_customuser','users.delete_customuser'},raise_exception=True)
 def delete_user(request,id):
@@ -134,7 +134,7 @@ def delete_user(request,id):
 	
 	return redirect('dashboard:users')
 
-
+@user_passes_test(lambda user: user.groups.filter(name='admin').exists())   
 @login_required(login_url='dashboard:login')
 @permission_required({'users.view_customuser','users.delete_customuser'},raise_exception=True)
 def delete_multiple_user(request):
@@ -150,7 +150,7 @@ def delete_multiple_user(request):
 
 
 
-
+@user_passes_test(lambda user: user.groups.filter(name='admin').exists())   
 @login_required(login_url='dashboard:login')
 @permission_required({'users.view_customuser','users.add_customuser'}, raise_exception=True)
 def add_user(request):
@@ -234,7 +234,7 @@ def activate(request, uidb64, token):
 		# return render(request, 'dashboard/modules/account_activation/account_activation_invalid.html')
 		return HttpResponse('Invalid')
 
-
+@user_passes_test(lambda user: user.groups.filter(name='admin').exists())   
 @login_required(login_url='dashboard:login')
 #@permission_required({'users.view_customuser','users.change_customuser'}, raise_exception=True)
 def edit_user(request,id):
@@ -296,7 +296,7 @@ def logout_user(request):
 
 
 
-
+@user_passes_test(lambda user: user.groups.filter(name='admin').exists())   
 @login_required(login_url='dashboard:login')
 @permission_required({'auth.view_group'}, raise_exception=True)
 def groups_list(request):
@@ -308,6 +308,7 @@ def groups_list(request):
 	
 	return render(request, 'dashboard/modules/group-list.html', context)
 
+@user_passes_test(lambda user: user.groups.filter(name='admin').exists())   
 @login_required(login_url='dashboard:login')
 @permission_required({'auth.view_group','auth.change_group'}, raise_exception=True)
 def group_edit(request,id):
@@ -341,6 +342,7 @@ def group_edit(request,id):
 	
 	return render(request, 'dashboard/modules/group-edit.html',{'form': form, "page_title":"Edit Group"})
 
+@user_passes_test(lambda user: user.groups.filter(name='admin').exists())   
 @login_required(login_url='dashboard:login')
 @permission_required({'auth.view_group','auth.delete_group'}, raise_exception=True)
 def group_delete(request,id):
@@ -351,6 +353,7 @@ def group_delete(request,id):
 
 	return redirect('dashboard:groups')
 
+@user_passes_test(lambda user: user.groups.filter(name='admin').exists())   
 @login_required(login_url='dashboard:login')
 @permission_required({'auth.view_group','auth.add_group'}, raise_exception=True)
 def group_add(request):
@@ -367,6 +370,7 @@ def group_add(request):
 		form = GroupForm()
 		return render(request, 'dashboard/modules/group-add.html',{'form': form, "page_title":"Add Group"})
 
+@user_passes_test(lambda user: user.groups.filter(name='admin').exists())   
 @login_required(login_url='dashboard:login')
 @permission_required({'auth.view_permission'}, raise_exception=True)
 def permissions(request):
@@ -379,6 +383,7 @@ def permissions(request):
 	
 	return render(request, 'dashboard/modules/permissions.html',context)
 
+@user_passes_test(lambda user: user.groups.filter(name='admin').exists())   
 @login_required(login_url='dashboard:login')
 @permission_required({'auth.view_permission','auth.change_permission'}, raise_exception=True)
 def edit_permissions(request,id):
@@ -392,6 +397,7 @@ def edit_permissions(request,id):
 		form = PermissionsForm(instance=perm_obj)
 		return render(request, 'dashboard/modules/edit-permissions.html',{'form': form, "page_title":"Edit Permissions"})
 
+@user_passes_test(lambda user: user.groups.filter(name='admin').exists())   
 @login_required(login_url='dashboard:login')
 @permission_required({'auth.view_permission','auth.delete_permission'}, raise_exception=True)
 def delete_permissions(request,id):
@@ -402,6 +408,7 @@ def delete_permissions(request,id):
 
 	return redirect('dashboard:permissions')
 
+@user_passes_test(lambda user: user.groups.filter(name='admin').exists())   
 @login_required(login_url='dashboard:login')
 @permission_required({'auth.view_permission','auth.add_permission','auth.change_permission'}, raise_exception=True)
 def assign_permissions_to_user(request,id):

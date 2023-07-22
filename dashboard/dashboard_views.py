@@ -13,8 +13,6 @@ from django.urls import reverse
 from django.conf import settings
 from django.http import HttpResponse, Http404, HttpResponseBadRequest, JsonResponse
 from django.contrib.auth.decorators import user_passes_test, login_required, permission_required 
-from django.template.loader import render_to_string
-from django.core.mail import send_mail
 from django.views.decorators.http import require_GET
 from django.db.models import Sum, Q
 from django.contrib.contenttypes.models import ContentType
@@ -25,15 +23,12 @@ from easyaudit.models import CRUDEvent, LoginEvent
 
 # dashboard app
 from dashboard import setup_config
-from dashboard.models import Configurations, Comms, LastBlue, ConfTier, BackUps, AutoRevenue
+from dashboard.models import Configurations, Comms, LastBlue, ConfTier
 from dashboard.users.models import CustomUser
 from dashboard.forms import CommsForm, TierConf
 
 # export/import db
 from dashboard.resources import ExportSales, ClientResource, ExportRR, ExpenseResource, ExportStaff, ExportCeo
-
-# this is for something not done
-from dashboard.utils import *
 
 # get blue venta 
 try: 
@@ -45,16 +40,15 @@ from customers.models import  Client
 from customers.forms import ClientForm, EditClientForm
 
 # sales app
-from sales.models import Sale, Service, Adj
+from sales.models import Sale, Service, Adj, Comm
 from sales.forms import AdjForm, ChangeAdj, SaleForm2, ClientSaleForm, CancellService, EditSaleForm
 
 # expenses app
 from expenses.models import Employee, Expense, Holiday, Salary
-from expenses.forms import RaiceForm, HolidayEmployeeForm, ExpenseForm, EmployeeForm, EmployeeSalaryForm, CeoForm, CeoSalaryForm, EditEmployeeForm, EditWageCeo 
+from expenses.forms import RaiceForm, HolidayEmployeeForm, ExpenseForm,\
+    EmployeeForm, EmployeeSalaryForm, CeoForm, CeoSalaryForm, EditEmployeeForm, EditWageCeo 
 
 ### END IMPORTS
-
-
 
 ####################################################################
 # VIEWS - LÓGICA DE LA APP
@@ -72,93 +66,18 @@ def client_autocomplete(request):
     results = [{'id': c.pk, 'text': c.name} for c in clients]
     return JsonResponse({'results': results})
 
-
-
-
-
-#######################################################################################
-
-############ INDEX
+############ INDEX ###################################################################################
 
 @login_required(login_url='dashboard:login')
 def index(request):
-    #######################################################################################
-    ########### PROCESOS EN SEGUNDO PLANO PARA CRONJOBS
     
     
-    
-    #############          B A C K U P S        #####################
-    try :
-        last_backup = BackUps.objects.get(id=1)
-        if last_backup.date.month != today.month:
-            print("doing back up")
-            
-            
-            export_sales()
-            export_clients()
-            export_employees()
-            export_expenses()
-            export_holidays()
-            
-            last_backup.date = today
-            last_backup.save()
-        else:
-            print("don't need to back up, allready updated")
-    except: last_backup = BackUps.objects.create(id=1)    
-    
-    try:
-        auto  = AutoRevenue.objects.get(pk=1)
-                
+    try:    
+        tier = ConfTier.objects.get(id=1)
     except:
-        auto = AutoRevenue.objects.create(
-                pk=1,
-                date=today,
-                sales=True,
-                wages=True,
-                expenses=True,                                 
-            )            
+        tier = ConfTier.objects.create()
         
-    if auto.date.month != today.month:
-        auto.date=today
-        auto.sales=True
-        auto.wages=True
-        auto.expenses=True
-        auto.save()
-
-        staff = Employee.objects.filter(active="Yes")
-        for employee in staff:
-            try:
-                last_salary = employee.salaries.last()
-                if last_salary.period.month != today.month:
-                    new_salary = Salary.objects.create(
-                    employee=last_salary.employee,
-                    period=today,
-                    salary=last_salary.salary,
-                    nigga=last_salary.nigga,
-                    mp=last_salary.mp,
-                    tc=last_salary.tc,
-                    cash=last_salary.cash,
-                    atm_cash=last_salary.atm_cash,
-                    cash_usd=last_salary.cash_usd,
-                    paypal=last_salary.paypal,
-                )
-            
-            except:
-                pass
-
-                
-        expenses_list = Expense.objects.filter(date__month=today.month-1, date__year=today.year)
-        for expense in expenses_list:    
-            if expense.date.month != today.month:
-                update_expense = Expense.objects.create(
-                date=today,
-                category=expense.category,
-                concept=expense.concept,
-                value=expense.value,
-                currency=expense.currency,
-                wop=expense.wop,
-            )
-        
+    
     #######################################################################################    
     # ACTUALIZACIÓN DEL DOLAR BLUE
     try:
@@ -188,156 +107,7 @@ def index(request):
     
     blue = last_blue.venta
     
-
-       
-       
-       
-    ##############################################    ##############################################
-
-    print("##############################################")
-    print("##############################################")
-    print("##############################################  ADJUSTMENTS")
-
-    #  internal reminder ----adjust client------ for email send 
-    print("#######################################")
-    print("####################################### REMINDER ")
-    
-    remind_list = Adj.objects.filter(
-                        adj_done=False,
-                        remind_sent = False,
-                        email_date__lte=today
-                    )
-    if remind_list:
-        for adj in remind_list:
-            if adj.type == "Service":
-                service = adj.service
-                print(f"######################################### REMIND found -------- --- - -- - > {adj.type} {service} ######")
-                print(f"######################################### values- - > OLD {service.total} NEW {adj.new_value} ######")
-                
-                email_message = render_to_string('dashboard/email_adjust_service_template.html', {'adj': adj})
-                actual = Decimal(adj.old_value)
-                con = Decimal(adj.new_value)
-                ajuste = Decimal(adj.dif)
-                try:
-                    send_mail(
-                        subject='Aviso: IMPORTANTE',
-                        message=f'({adj.notice_date} {adj.client.name} {adj.client.admin_email} {adj.service.service}) \n Estimado cliente,  \n  El motivo de este email es para comunicarte un ajuste por inflación.\n Inversión actual: ${actual} \n Inversión con ajuste: ${con} \n Ajuste: ${ajuste} \n El ajuste se hará en el próximo pago. \n Cualquier duda no dejes de consultarnos. \n Saludos, \n Imactions \n www.imactions.agency',
-                        html_message=email_message,
-                        from_email='systemimactions@gmail.com',
-                        recipient_list=['hola@imactions.com'],
-                        fail_silently=False,
-                    )
-                    print (f" adjust -- {adj} - {service} -- EMAIL reminder SEND")
-                    adj.remind_sent = True
-                    adj.save()
-                except:
-                    print("cant send email for adj, you  must be on dev")
-
-                
-            elif adj.type == "Account":
-                client = adj.client
-                print(f"######################################### REMIND found -------- --- - -- - > {adj.type}: {client} ######")
-                services = client.services.filter(state=True)
-                services_list = []
-                for service in services:
-                    print(f"{service}")
-                    services_list.append(service.service)
-                    
-                    
-                email_message = render_to_string('dashboard/email_adjust_account_template.html', {'adj': adj, 'services': services})
-                actual = Decimal(adj.old_value)
-                con = Decimal(adj.new_value)
-                ajuste = Decimal(adj.dif)
-                try:
-                    send_mail(
-                        subject='Aviso: IMPORTANTE',
-                        message=f'({adj.notice_date} {adj.client.name} {adj.client.admin_email} {services_list}) \n Estimado cliente, \n El motivo de este email es para comunicarte un ajuste por inflación.\n  \n Inversión actual: ${actual} \n Inversión con ajuste: ${con} \n Ajuste: ${ajuste} \n El ajuste se hará en el próximo pago. \n Cualquier duda no dejes de consultarnos. \n Saludos, \n Imactions \n www.imactions.agency',
-                        html_message=email_message,
-                        from_email='systemimactions@gmail.com',
-                        recipient_list=['hola@imactions.com'],
-                        fail_silently=False,
-                    )
-                    print (f" adjust -- {adj} - {client} -- EMAIL reminder SEND")
-                    adj.remind_sent = True
-                    adj.save()
-                except:
-                    print("cant send email you must be in dev")
-                    
-                    
-                    
-    print("##############         end reminders             ###############")
-
-                
-                
-
-
-    # adjust services script from adjustment view
-    print("")
-
-    print("#######################################")
-    print("####################################### ADJUST SERVICES ")
-
-    adj_list = Adj.objects.filter(
-                        adj_done=False,
-                        notice_date__lte=today
-                    )
-    if adj_list:
-        print(f"############################### adjust list:\n {adj_list}")
-        print("##############################################")
-        for adj in adj_list:
-            if adj.type == "Service":
-                service = adj.service
-                print(f"######################################### item found -------- --- - -- - > {adj.type} ######")
-                print(f"{service}")
-                print(f"######################################### old value-- - > {service.total} ######")
-                service.total = adj.new_value
-                
-                service.save() 
-                print(f"######################################### new value-- - > {service.total} ######")
-                adj.adj_done = True
-                adj.save()
-                print(f"###### Adjust {service} done ---- > {adj.adj_done} ######")
-            elif adj.type == "Account":
-                client = adj.client
-                print(f"######################################### item found -------- --- - -- - > {adj.type}: {client} ######")
-                services = client.services.filter(state=True)
-                for service in services:
-                    print(f"{service}")
-                    print(f"######################################### old value-- - > {service.total} ######")
-                    
-                    
-                    service.total = Decimal(service.total + ((adj.adj_percent / 100) * service.total))
-
-                    service.save() 
-                    print(f"######################################### new value-- - > {service.total} ######")
-                adj.adj_done = True
-                adj.save()
-                print(f"###### Adjust {client} done ---- > {adj.adj_done}######")
-        print("")
-        print(f"############################### done with adjustments ")
-        print("############################################################################################")
-    else:
-        print(f"############################### nothing to adjust ")
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    #############  
     
     ###############
     # birthdays
@@ -431,6 +201,8 @@ def index(request):
        
        
     #######################################################################################
+    #  % clients by service    -  pie chart data
+
     clients = Client.objects.filter(cancelled="Active")
     
     clients_rr = []
@@ -439,7 +211,8 @@ def index(request):
             clients_rr.append(client)
     c_rr_total = len(clients_rr)
     
-    #  % clients by service    -  pie chart data
+    
+    
                
     seo_clients = Service.objects.filter(service="SEO", state=True).count()
     gads_clients = Service.objects.filter(service="Google Ads", state=True).count()
@@ -475,6 +248,12 @@ def index(request):
     except:
         pass
     
+    
+
+    
+    ####################################################################
+    ###############################################
+    ############### CLIENTS BY TIER PieCHART
     ####################################################################
     #######################                 GET CLIENTS RR    ##########
 
@@ -484,13 +263,7 @@ def index(request):
     for client in clients:
         if client.get_rr_client == True:
             clients_rr.append(client)
-    c_rr_total = len(clients_rr)
-
-    
-    ####################################################################
-    ###############################################
-    ############### CLIENTS BY TIER PieCHART
-        
+    c_rr_total = len(clients_rr)    
     n_clients = len(clients_rr)
     i = 0
     ii = 0
@@ -518,205 +291,7 @@ def index(request):
         pass
     
 
-####################################################################
-    total_rr = 0
-
-    for client in clients:
-        if client.cancelled == "Active":
-            for sale in client.services.filter(state=True):
-                total_rr += sale.total           
-        
-    ##############################################
-
-    # GRAPHS rr   
-    sales_rr_current_year = Sale.objects.filter(revenue="RR")\
-                                        .filter(date__year=datetime.now().date().year)
-    total_rr_this_year = 0
-    for s in sales_rr_current_year:
-        total_rr_this_year += s.get_change
-    
-    enero = 0
-    febrero = 0
-    marzo = 0
-    abril = 0
-    mayo = 0
-    junio = 0
-    julio = 0
-    agosto = 0
-    septiembre = 0
-    octubre = 0
-    noviembre = 0
-    diciembre = 0
-    
-    for sale in sales_rr_current_year:
-        if sale.date.month == 1:
-            enero +=sale.get_change
-            
-        elif sale.date.month == 2:
-            febrero +=sale.get_change
-        elif sale.date.month == 3:
-            marzo +=sale.get_change
-        elif sale.date.month == 4:
-            abril +=sale.get_change
-        elif sale.date.month == 5:
-            mayo +=sale.get_change
-        elif sale.date.month == 6:
-            junio +=sale.get_change
-        elif sale.date.month == 7:
-            julio +=sale.get_change
-        elif sale.date.month == 8:
-            agosto +=sale.get_change
-        elif sale.date.month == 9:
-            septiembre +=sale.get_change
-        elif sale.date.month == 10:
-            octubre +=sale.get_change
-        elif sale.date.month == 11:
-            noviembre +=sale.get_change
-        else:
-            diciembre +=sale.get_change
-            
-            
-    sales_rr_last_year = Sale.objects.filter(revenue="RR")\
-                                        .filter(date__year=datetime.now().date().year-1)
-    total_rr_last_year = 0
-    for s in sales_rr_last_year:
-        total_rr_last_year += s.get_change
-    
-    enero_l = 0
-    febrero_l = 0
-    marzo_l = 0
-    abril_l = 0
-    mayo_l = 0
-    junio_l = 0
-    julio_l = 0
-    agosto_l = 0
-    septiembre_l = 0
-    octubre_l = 0
-    noviembre_l = 0
-    diciembre_l = 0
-    
-    for sale in sales_rr_last_year:
-        if sale.date.month == 1:
-            enero_l +=sale.get_change            
-        elif sale.date.month == 2:
-            febrero_l +=sale.get_change
-        elif sale.date.month == 3:
-            marzo_l +=sale.get_change
-        elif sale.date.month == 4:
-            abril_l +=sale.get_change
-        elif sale.date.month == 5:
-            mayo_l +=sale.get_change
-        elif sale.date.month == 6:
-            junio_l +=sale.get_change
-        elif sale.date.month == 7:
-            julio_l +=sale.get_change
-        elif sale.date.month == 8:
-            agosto_l +=sale.get_change
-        elif sale.date.month == 9:
-            septiembre_l +=sale.get_change
-        elif sale.date.month == 10:
-            octubre_l +=sale.get_change
-        elif sale.date.month == 11:
-            noviembre_l +=sale.get_change
-        else:
-            diciembre_l +=sale.get_change           
-            
-            
-    # GRAPHS ONEOFF   
-    sales_one_current_year = Sale.objects.filter(revenue="OneOff")\
-                                        .filter(date__year=datetime.now().date().year)
-    total_one_this_year = 0
-    for s in sales_one_current_year:
-        total_one_this_year += s.get_change
-    
-    enero_o = 0
-    febrero_o = 0
-    marzo_o = 0
-    abril_o = 0
-    mayo_o = 0
-    junio_o = 0
-    julio_o = 0
-    agosto_o = 0
-    septiembre_o = 0
-    octubre_o = 0
-    noviembre_o = 0
-    diciembre_o = 0
-    
-    for sale in sales_one_current_year:
-        if sale.date.month == 1:
-            enero_o +=sale.get_change
-            
-        elif sale.date.month == 2:
-            febrero_o +=sale.get_change
-        elif sale.date.month == 3:
-            marzo_o +=sale.get_change
-        elif sale.date.month == 4:
-            abril_o +=sale.get_change
-        elif sale.date.month == 5:
-            mayo_o +=sale.get_change
-        elif sale.date.month == 6:
-            junio_o +=sale.get_change
-        elif sale.date.month == 7:
-            julio_o +=sale.get_change
-        elif sale.date.month == 8:
-            agosto_o +=sale.get_change
-        elif sale.date.month == 9:
-            septiembre_o +=sale.get_change
-        elif sale.date.month == 10:
-            octubre_o +=sale.get_change
-        elif sale.date.month == 11:
-            noviembre_o +=sale.get_change
-        else:
-            diciembre_o +=sale.get_change
-            
-            
-    sales_one_last_year = Sale.objects.filter(revenue="OneOff")\
-                                        .filter(date__year=datetime.now().date().year-1)
-    total_one_last_year = 0
-    for s in sales_one_last_year:
-        total_one_last_year += s.get_change
-    
-    enero_l_o = 0
-    febrero_l_o = 0
-    marzo_l_o = 0
-    abril_l_o = 0
-    mayo_l_o = 0
-    junio_l_o = 0
-    julio_l_o = 0
-    agosto_l_o = 0
-    septiembre_l_o = 0
-    octubre_l_o = 0
-    noviembre_l_o = 0
-    diciembre_l_o = 0
-    
-    for sale in sales_one_last_year:
-        if sale.date.month == 1:
-            enero_l_o +=sale.get_change            
-        elif sale.date.month == 2:
-            febrero_l_o +=sale.get_change
-        elif sale.date.month == 3:
-            marzo_l_o +=sale.get_change
-        elif sale.date.month == 4:
-            abril_l_o +=sale.get_change
-        elif sale.date.month == 5:
-            mayo_l_o +=sale.get_change
-        elif sale.date.month == 6:
-            junio_l_o +=sale.get_change
-        elif sale.date.month == 7:
-            julio_l_o +=sale.get_change
-        elif sale.date.month == 8:
-            agosto_l_o +=sale.get_change
-        elif sale.date.month == 9:
-            septiembre_l_o +=sale.get_change
-        elif sale.date.month == 10:
-            octubre_l_o +=sale.get_change
-        elif sale.date.month == 11:
-            noviembre_l_o +=sale.get_change
-        else:
-            diciembre_l_o +=sale.get_change
-
-            
-            
+    ###################################################       
     # GRAPHS SERVICES  current year
     
     if request.method == 'GET':
@@ -1324,17 +899,23 @@ def index(request):
                     
     
     context={
+        # cards + info gral
         "page_title":"Dashboard",
         "bds" : bds,        
-        "activity": last_act[:7],
+        "activity": last_act[:10],
         "balance": balance,
+        
         "rr_t_clients": rr_t_clients,
         "rr_q_clients": rr_q_clients,
+        
         "rr_this":rr_s_thism,
         "month":month,
         "one_this":oneoff_s_thism,
         "cancell_q": cancell_q,
+        "blue": blue,
+        "hour": datetime.now(),
         
+        # pie chart rr accounts data
         "seo_clients": seo_clients,
         "gads_clients": gads_clients,
         "fads_clients": fads_clients,
@@ -1344,7 +925,6 @@ def index(request):
         "cm_clients": cm_clients,
         "emk_clients": emk_clients,
         "other_clients": other_clients,
-        
         "s_c": s_c,
         "g_c": g_c,
         "f_c": f_c,
@@ -1355,59 +935,7 @@ def index(request):
         "e_c": e_c,
         "o_c": o_c,
         
-        "blue": blue,
-        "hour": datetime.now(),
-        "c_rr_total": c_rr_total,
-        "total_rr":total_rr,
-        "total_rr_this_year": round(total_rr_this_year),
-        "enero" : round(enero),
-        "febrero": round(febrero),
-        "marzo": round(marzo),
-        "abril": round(abril),
-        "mayo": round(mayo),
-        "junio": round(junio),
-        "julio": round(julio),
-        "agosto": round(agosto),
-        "septiembre": round(septiembre),
-        "octubre": round(octubre),
-        "noviembre": round(noviembre),
-        "diciembre": round(diciembre),
-        "enero_l" : round(enero_l),
-        "febrero_l": round(febrero_l),
-        "marzo_l": round(marzo_l),
-        "abril_l": round(abril_l),
-        "mayo_l": round(mayo_l),
-        "junio_l": round(junio_l),
-        "julio_l": round(julio_l),
-        "agosto_l": round(agosto_l),
-        "septiembre_l": round(septiembre_l),
-        "octubre_l": round(octubre_l),
-        "noviembre_l": round(noviembre_l),
-        "diciembre_l": round(diciembre_l),
-        "enero_o" : round(enero_o),
-        "febrero_o": round(febrero_o),
-        "marzo_o": round(marzo_o),
-        "abril_o": round(abril_o),
-        "mayo_o": round(mayo_o),
-        "junio_o": round(junio_o),
-        "julio_o": round(julio_o),
-        "agosto_o": round(agosto_o),
-        "septiembre_o": round(septiembre_o),
-        "octubre_o": round(octubre_o),
-        "noviembre_o": round(noviembre_o),
-        "diciembre_o": round(diciembre_o),
-        "enero_l_o" : round(enero_l_o),
-        "febrero_l_o": round(febrero_l_o),
-        "marzo_l_o": round(marzo_l_o),
-        "abril_l_o": round(abril_l_o),
-        "mayo_l_o": round(mayo_l_o),
-        "junio_l_o": round(junio_l_o),
-        "julio_l_o": round(julio_l_o),
-        "agosto_l_o": round(agosto_l_o),
-        "septiembre_l_o": round(septiembre_l_o),
-        "octubre_l_o": round(octubre_l_o),
-        "noviembre_l_o": round(noviembre_l_o),
-        "diciembre_l_o": round(diciembre_l_o),
+        # line chart data
         "enero_seo" : round(enero_seo),
         "febrero_seo": round(febrero_seo),
         "marzo_seo": round(marzo_seo),
@@ -1492,6 +1020,8 @@ def index(request):
         "octubre_lk": round(octubre_lk),
         "noviembre_lk": round(noviembre_lk),
         "diciembre_lk": round(diciembre_lk),
+        
+        # tier clients pie chart
         "i" : i,
         "ii" : ii,
         "iii" : iii,
@@ -1508,8 +1038,7 @@ def index(request):
     return render(request,'dashboard/index.html',context)
 
 
-
-######################################################################################################################################
+############################################ LOGS ACTIVITY  HISTORY ######################################################################
 ## HISTORIAL DE CAMBIOS
 @user_passes_test(lambda user: user.groups.filter(name='admin').exists())   
 @login_required(login_url='dashboard:login')
@@ -1531,10 +1060,10 @@ def activity(request):
         "list" : elements,}
     return render(request,'dashboard/activity.html',context)
 
-######################################################################################################################################
+########################################  CONF AND SETTINGS ###############################################################
 
-
-## CONFIGURACIONES Y AJUSTES 
+## CONFIGURACIONES Y AJUSTES
+@user_passes_test(lambda user: user.groups.filter(name='admin').exists())   
 @login_required(login_url='dashboard:login')
 def setting (request):
     # pestaña principal de acceso a configuraciones
@@ -1543,14 +1072,17 @@ def setting (request):
             }
     return render (request, 'dashboard/settings.html', context)
 
-
+## conf TIERS parameters
 @user_passes_test(lambda user: user.groups.filter(name='admin').exists())
 @login_required(login_url='dashboard:login')
 def conf(request):
     
-    # ajuste de parámetros de valor del cliente (tier)    
-    tier = ConfTier.objects.get(id=1)
-
+    # ajuste de parámetros de valor del cliente (tier)
+    try:    
+        tier = ConfTier.objects.get(id=1)
+    except:
+        tier = ConfTier.objects.create()
+        
     if request.method == "GET":
 
         form = TierConf(instance=tier)
@@ -1574,7 +1106,7 @@ def conf(request):
                 f"Ups! Something went wrong. You should go back, update the page and try again. \n \n {form.errors}")
         
         
-### COMISIONES DE VENTA
+### CONF COMISIONES DE VENTA
 @user_passes_test(lambda user: user.groups.filter(name='admin').exists())
 @login_required(login_url='dashboard:login')
 def comms(request):
@@ -1605,14 +1137,10 @@ def comms(request):
                 f"Ups! Something went wrong. You should go back, update the page and try again. \n \n {form.errors}")
 
 
-
-#####################   EXPENSES  ##################################################################################
-
-
+#####################                                                EXPENSES  ##################################################################################
 ## EXPENSES CRUD
 
-
-# DELETE EXPENSE
+# DELETE MULTIPLE EXPENSES IN EXPENSES TABLE
 @user_passes_test(lambda user: user.groups.filter(name='expenses').exists())
 @login_required(login_url='dashboard:login')
 def delete_expenses(request):
@@ -1652,7 +1180,6 @@ def editexpense(request, id):
                 f"Ups! Something went wrong. You should go back, update the page and try again.\n \n {form.errors}"
                 )
         
-
 ## exportación de expenses para excel
 @login_required(login_url='dashboard:login')
 def export_expenses(request):
@@ -1793,7 +1320,6 @@ def expenses(request):
         "wages_staff1" : wages_staff1,}
     return render(request,'dashboard/expenses/expenses.html', context)
 
-
 ## borrar expense
 @user_passes_test(lambda user: user.groups.filter(name='expenses').exists())
 @login_required(login_url='dashboard:login')
@@ -1801,7 +1327,6 @@ def deleteexpense(request, id):
     expense = Expense.objects.get(id=id)
     expense.delete()
     return redirect(reverse('dashboard:expenses')+ "?deleted")
-
 
 # historial de una expensa    
 @user_passes_test(lambda user: user.groups.filter(name='expenses').exists())
@@ -1819,10 +1344,10 @@ def expenseshistory(request, id):
 
 
 
+################################# STAFF CEO EMPLOYEES SALARIES HOLIDAYS WAGES COMMS ####################################################################################################
 
 
-########################################################################################################################################################
-## EMPLOYEES
+############## EMPLOYEES staff
 
 ## función para exportar la info de los empleados para excel
 @login_required(login_url='dashboard:login')
@@ -1833,7 +1358,7 @@ def export_employees(request):
     return response
 
 ## LISTADO Y TABLA DE EMPLEADOS ACTIVOS
-@user_passes_test(lambda user: user.groups.filter(name='admin').exists())
+@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
 def employees(request):
     staff = Employee.objects.exclude(rol="CEO").filter(active="Yes")
@@ -1886,7 +1411,7 @@ def employees(request):
 
 
 # listado de empleados antiguos
-@user_passes_test(lambda user: user.groups.filter(name='admin').exists())
+@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
 def employeesold(request):
     old =Employee.objects.filter(active="No")                                
@@ -1897,7 +1422,7 @@ def employeesold(request):
 
 
 # eliminar un empleado
-@user_passes_test(lambda user: user.groups.filter(name='admin').exists())
+@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
 def deleteemployee(request, id):
     employee = Employee.objects.get(id=id)
@@ -1905,6 +1430,103 @@ def deleteemployee(request, id):
     employee.delete()
     return redirect(reverse('dashboard:employees')+ "?deleted")
 
+# HISTORIAL DE COMISIONES de un empleado
+@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
+@login_required(login_url='dashboard:login')
+def employee_comms(request, id):
+    employee = Employee.objects.get(id=id)
+    id = employee.id
+    comms = Comm.objects.filter(employee=employee)
+    this_month = today.month
+    month_name = date(1900, this_month, 1).strftime('%B')
+    # get comms conf variables
+    try:
+        comms_conf = Comms.objects.get(id=1)
+    except:
+        comms_conf = Comms.objects.create(
+            id=1,
+            com_rr_1 = 40,
+            rr_1 = 80000,
+            com_rr_2 = 50,
+            rr_2 = 240000,
+            com_rr_3 = 60,
+            rr_3 = 400000,
+            com_rr_4 = 65,
+            rr_4 = 560000,
+            com_rr_5 = 70,
+            rr_5 = 720000,
+            up_sell = 5,
+            one_off = 15,             
+            )   
+    
+    
+    
+    #### UPDATE COMMS VALUES """"""""        
+    for comm in employee.comms.all():
+        one_off_sales_this_m = 0
+        one_off_comm_percent = comms_conf.one_off  # you can change the % comm here on in the model instance or at the conf comms view
+        up_sell_sales_this_m = 0
+        up_sell_comm_percent = comms_conf.up_sell # you can change the % comm here on in the model instance or at the conf comms view
+        rr_sales_this_m = 0
+        rr_comm_percent = 1 # this value depends on the rr_sales_total of the month variable and it changes across the time
+        
+        for sale in comm.sales.all():
+            if sale.revenue == 'OneOff':
+                one_off_sales_this_m += sale.change
+            else:
+                if sale.kind == "Upsell":
+                    up_sell_sales_this_m += sale.change
+                else:
+                    rr_sales_this_m += sale.change
+        try:
+            one_off_comms_this_m = (one_off_sales_this_m * one_off_comm_percent)/100
+        except:
+            one_off_comms_this_m = 0
+        try:
+            up_sell_comms_this_m = (up_sell_sales_this_m * up_sell_comm_percent)/100
+        except:
+            up_sell_comms_this_m = 0
+        
+        if rr_sales_this_m >= comms_conf.rr_1 and rr_sales_this_m < comms_conf.rr_2:
+            rr_comm_percent = comms_conf.com_rr_1
+        elif rr_sales_this_m >= comms_conf.rr_2 and rr_sales_this_m < comms_conf.rr_3:
+            rr_comm_percent = comms_conf.com_rr_2
+        elif rr_sales_this_m >= comms_conf.rr_3 and rr_sales_this_m < comms_conf.rr_4:
+            rr_comm_percent = comms_conf.com_rr_3
+        elif rr_sales_this_m >= comms_conf.rr_4 and rr_sales_this_m < comms_conf.rr_5:
+            rr_comm_percent = comms_conf.rr_4
+        elif rr_sales_this_m >= comms_conf.com_rr_5:
+            rr_comm_percent = comms_conf.com_rr_5
+        else:
+            rr_comm_percent = 1
+
+        try:
+            rr_comms_this_m = (rr_sales_this_m * rr_comm_percent)/100
+        except:
+            rr_comms_this_m = 0     
+            
+        comm.one_off = one_off_comms_this_m
+        comm.up_sell = up_sell_comms_this_m
+        comm.rr_comm = rr_comms_this_m
+        comm.rr_percent = rr_comm_percent
+        comm.total = Decimal(one_off_comms_this_m) + Decimal(up_sell_comms_this_m) + Decimal(rr_comms_this_m)
+        comm.save()
+    else:
+        pass
+    try:
+        comms_this_m = Comm.objects.get(
+                employee=employee,
+                created_at__month=today.month, created_at__year=today.year)
+    except:
+        comms_this_m = Comm.objects.create(employee=employee)   
+    context = {
+        'employee': employee,
+        'comms': comms,
+        'comms_this_m': comms_this_m,
+        'month': month_name,
+        'page_title': f'{employee.name} COMMs'
+    }
+    return render(request,'dashboard/employees/employee_comms.html', context)
 
 ## detalle de un EMPLEADO
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
@@ -1914,16 +1536,96 @@ def editemployee(request, id):
     editemployee = Employee.objects.get(id=id)
     holidays = Holiday.objects.filter(employee=editemployee)
     salaries = Salary.objects.filter(employee=editemployee)
+    this_month = today.month
+    month_name = date(1900, this_month, 1).strftime('%B')
     try:
         wage_instance = Salary.objects.get(employee=editemployee, period__month=today.month, period__year=today.year)
     except:
         wage_instance =Salary.objects.filter(employee=editemployee).first()
-            
-    # if rol == seller get employees comms of current month
-    comms_this_m = 0
+             
+    
+    # get comms conf variables
+    try:
+        comms_conf = Comms.objects.get(id=1)
+    except:
+        comms_conf = Comms.objects.create(
+            id=1,
+            com_rr_1 = 40,
+            rr_1 = 80000,
+            com_rr_2 = 50,
+            rr_2 = 240000,
+            com_rr_3 = 60,
+            rr_3 = 400000,
+            com_rr_4 = 65,
+            rr_4 = 560000,
+            com_rr_5 = 70,
+            rr_5 = 720000,
+            up_sell = 5,
+            one_off = 15,             
+            )       
+        
+      
+    #### COMMS OF THIS MONTH """"""""        
+    # if rol == seller get and update employee's comms of current month
     if editemployee.rol == "Sales":
-        for sale in editemployee.sales.filter(date__month=today.month, date__year=today.year):
-            comms_this_m += sale.get_comm
+        # if the employee still does not has comms, create one for current month, else, get the current month comm instance.
+        try:
+            comms_this_m = Comm.objects.get(
+                employee=editemployee,
+                created_at__month=today.month, created_at__year=today.year)
+        except:
+            comms_this_m = Comm.objects.create(employee=editemployee) 
+               
+        one_off_sales_this_m = 0
+        one_off_comm_percent = comms_conf.one_off  # you can change the % comm here on in the model instance or at the conf comms view
+        up_sell_sales_this_m = 0
+        up_sell_comm_percent = comms_conf.up_sell # you can change the % comm here on in the model instance or at the conf comms view
+        rr_sales_this_m = 0
+        rr_comm_percent = 1 # this value depends on the rr_sales_total of the month variable and it changes across the time
+        
+        for sale in editemployee.sales.filter(sales_rep=editemployee, date__month=today.month, date__year=today.year):
+            if sale.revenue == 'OneOff':
+                one_off_sales_this_m += sale.change
+            else:
+                if sale.kind == "Upsell":
+                    up_sell_sales_this_m += sale.change
+                else:
+                    rr_sales_this_m += sale.change
+        try:
+            one_off_comms_this_m = (one_off_sales_this_m * one_off_comm_percent)/100
+        except:
+            one_off_comms_this_m = 0
+        try:
+            up_sell_comms_this_m = (up_sell_sales_this_m * up_sell_comm_percent)/100
+        except:
+            up_sell_comms_this_m = 0
+        
+        if rr_sales_this_m >= comms_conf.rr_1 and rr_sales_this_m < comms_conf.rr_2:
+            rr_comm_percent = comms_conf.com_rr_1
+        elif rr_sales_this_m >= comms_conf.rr_2 and rr_sales_this_m < comms_conf.rr_3:
+            rr_comm_percent = comms_conf.com_rr_2
+        elif rr_sales_this_m >= comms_conf.rr_3 and rr_sales_this_m < comms_conf.rr_4:
+            rr_comm_percent = comms_conf.com_rr_3
+        elif rr_sales_this_m >= comms_conf.rr_4 and rr_sales_this_m < comms_conf.rr_5:
+            rr_comm_percent = comms_conf.rr_4
+        elif rr_sales_this_m >= comms_conf.com_rr_5:
+            rr_comm_percent = comms_conf.com_rr_5
+        else:
+            rr_comm_percent = 1
+
+        try:
+            rr_comms_this_m = (rr_sales_this_m * rr_comm_percent)/100
+        except:
+            rr_comms_this_m = 0     
+            
+        comms_this_m.one_off = one_off_comms_this_m
+        comms_this_m.up_sell = up_sell_comms_this_m
+        comms_this_m.rr_comm = rr_comms_this_m
+        comms_this_m.rr_percent = rr_comm_percent
+        comms_this_m.total = Decimal(one_off_comms_this_m) + Decimal(up_sell_comms_this_m) + Decimal(rr_comms_this_m)
+        comms_this_m.save()
+    else:
+        comms_this_m = None   
         
         
     if request.method == "GET":      
@@ -1943,6 +1645,8 @@ def editemployee(request, id):
             'id': id,
             'holidays': holidays,
             'salaries': salaries,
+            'comms_conf': comms_conf,
+            'month': month_name,
             }       
         return render (request, 'dashboard/employees/editemployee.html', context)
 
@@ -1998,15 +1702,15 @@ def editemployee(request, id):
                 return HttpResponse(f"Ups! Something went wrong. You should go back, update the page and try again. \n \n {holydayform.errors}")
 
 
-
 # detalle de una vacacion
-@user_passes_test(lambda user: user.groups.filter(name='admin').exists())
+@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
 def editholiday(request, id):
     editholiday = Holiday.objects.get(id=id)
-    editemployee = editholiday.employee      
+    editemployee = editholiday.employee
+    holyday_instance = editholiday
+      
     if request.method == "GET":          
-        holyday_instance = Holiday.objects.filter(employee=editemployee).last()
         holydayform = HolidayEmployeeForm(instance=holyday_instance) if holyday_instance else HolidayEmployeeForm()
         context = {
             'holidayform'  : holydayform,
@@ -2017,20 +1721,22 @@ def editholiday(request, id):
     # editar una vacacion
     if request.method == 'POST':                
         if "holiday" in request.POST:
-            holyday_instance = Holiday.objects.filter(employee=editemployee).last()
             holydayform = HolidayEmployeeForm(request.POST, instance=holyday_instance) if holyday_instance else HolidayEmployeeForm(request.POST)
             if holydayform.is_valid():
                 holiday = holydayform.save(commit=False)
                 holiday.employee = editemployee
                 holiday.save()
-                return redirect('dashboard:editemployee', id=editemployee.id)
+                if holiday.employee.rol == "CEO":
+                    return redirect(reverse('dashboard:editceo', kwargs={'id': holiday.employee.id}) + '#holiday')
+                else:
+                    return redirect(reverse('dashboard:editemployee', kwargs={'id': holiday.employee.id}) + '#holiday')
+
             else:
                 return HttpResponse(
                     f"Ups! Something went wrong. You should go back, update the page and try again. \n \n {holydayform.errors}")
 
-
 # borrar una vacación
-@user_passes_test(lambda user: user.groups.filter(name='admin').exists())
+@user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
 def deleteholiday(request, id):
     holiday = Holiday.objects.get(id=id)
@@ -2043,9 +1749,7 @@ def deleteholiday(request, id):
         return redirect(reverse('dashboard:editemployee', kwargs={'id': employeeid}) + '#holiday')
 
 
-
 ############ CEO
-
 
 ## función para exportar data de ceo para excel
 @login_required(login_url='dashboard:login')
@@ -2157,16 +1861,9 @@ def editceo(request, id):
                     f"Ups! Something went wrong. You should go back, update the page and try again. \n\n {editwageform.errors}")
 
 
-
-
-
-
-
-
 #######################################################################################################################################################3
 ## SERVICES
 # un servicio es la suscripción mensual (de una sale RR)
-
 
 # ver detalle de un servicio
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
@@ -2191,11 +1888,7 @@ def restoreservice(request, id):
     return redirect ('dashboard:editclient', id=client_id)
             
 
-
-
-
-#####################################################################################################################################
-## AJUSTES
+############################################# AJUSTES
 # ajustes a los servicios
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
@@ -2239,10 +1932,6 @@ def adj(request):
     return render (request, 'dashboard/sales_and_services/adj.html', context)
 
 
-
-
-
-
 # BORRAR UN AJUSTE
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
@@ -2270,11 +1959,6 @@ def deleteadj(request, id):
             
             
     return redirect(reverse('dashboard:adjustment')+ "?deleted")
-
-
-
-
-
 
 
 ## para editar un ajuste antes de que sea ejecutado y notificado
@@ -2334,7 +2018,7 @@ def editadj(request, id):
 @login_required(login_url='dashboard:login')
 def adjustment(request):
     
-    # adjust services script from adjustment view
+    # adjust services
     print("")
 
     print("#######################################")
@@ -2379,8 +2063,6 @@ def adjustment(request):
         print("")
         print(f"############################### done with adjustments ")
         print("############################################################################################")
-    else:
-        print(f"############################### nothing to adjust ")
     
     services = Service.objects.filter(state=True)
     clients = Client.objects.filter(cancelled="Active")
@@ -2440,15 +2122,7 @@ def adjustment(request):
 
 
 
-
-
-
-
-
-
-
-
-#####################################################################################################################################
+#################################################### SALES ############################################################
 ## VENTAS
 
 ## función para exportar ventas para excel
@@ -2459,7 +2133,7 @@ def export_sales(request):
     response['Content-Disposition'] = 'attachment; filename="sales.xlsx"'
     return response
 
-
+## delete multiple sales in sales table
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
 def delete_sales(request):
@@ -2495,9 +2169,7 @@ def delete_sales(request):
         return redirect('dashboard:sales')
     else:
         return HttpResponseBadRequest('Invalid request')
-    
-    
-
+   
 
 ## TABLA Y LISTA DE VENTAS - SALES TABLE
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
@@ -2505,13 +2177,13 @@ def delete_sales(request):
 def sales(request):
     
     # CARDS DATA
-    clients = Client.objects.all()
-    services = ['SEO','Google Ads','Facebook Ads','Web Design', 'Hosting', 'LinkedIn', 'SSL certificate','Web Plan','Combo', 'Community Management', 'Email Marketing', 'Others', 'Others RR']
     this_month = today.month
     month_name = date(1900, this_month, 1).strftime('%B')
     
-    sales_this_month = Sale.objects.filter(date__month=today.month, date__year=today.year, revenue="RR").exclude(note="auto revenue sale")
+    clients = Client.objects.all()
+    services = ['SEO','Google Ads','Facebook Ads','Web Design', 'Hosting', 'LinkedIn', 'SSL certificate','Web Plan','Combo', 'Community Management', 'Email Marketing', 'Others', 'Others RR']
     
+    sales_this_month = Sale.objects.filter(date__month=today.month, date__year=today.year, revenue="RR").exclude(note="auto revenue sale")
     total_amount = sales_this_month.aggregate(Sum('change'))['change__sum']
     
     def get_total_format():
@@ -2560,12 +2232,9 @@ def sales(request):
                 return redirect(reverse('dashboard:sales') + "?added")
             else:
                
-                return HttpResponse(f"Ups! Something went wrong: \n\n {addform.errors}")
-
-                
+                return HttpResponse(f"Ups! Something went wrong: \n\n {addform.errors}")               
             
-            
-            
+                        
     # MAS DATA PARA LAS CARDS
     sales_by_service =Sale.objects.filter(date__month=today.month, date__year=today.year).exclude(note="auto revenue sale")
 
@@ -2583,7 +2252,6 @@ def sales(request):
     s_em = 0
     s_other1 = 0
     
-
     for sale in sales_by_service:
         if sale.service == "SEO":
             s_seo += sale.get_change
@@ -2611,22 +2279,28 @@ def sales(request):
             s_em += sale.get_change
         elif sale.service == "Others":
             s_other1 += sale.get_change
-            
         else: pass
 
                 
     context={
-        "clients": clients,
         "page_title":"SALES",
+        
+        "clients": clients,
         "sales" : sales,
+        'services': services,
+        
+        "addform" : addform,
+        
+        # cards data
         "sales_this_month" : get_total_format,
         "sales1_this_month" : get_total1_format,
         "clients_this_month" : total_clients,
         "this_month": month_name,
         'upsell': total_upsell_this_month,
         'cross': total_crosssell_this_month,
-        'services': services,
-        "addform" : addform,
+            
+        
+        # card con filter by service and get total of this month
         "total_seo" : '{:,.0f}'.format(s_seo),
         "total_googleads" : '{:,.0f}'.format(s_gads),
         "total_facebookads" : '{:,.0f}'.format(s_fads),
@@ -2642,8 +2316,6 @@ def sales(request):
         "total_other" : '{:,.0f}'.format(s_other1)
     }
     return render(request,'dashboard/sales_and_services/sales.html',context)
-
-
 
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
@@ -2718,10 +2390,6 @@ def salesdata(request):
     return render(request,'dashboard/sales_and_services/salesdata.html', context)
 
 
-
-
-
-
 # BORRAR VENTA
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
@@ -2755,7 +2423,6 @@ def deletesale(request, id):
     
     sale.delete()
     return redirect(reverse('dashboard:sales')+ "?deleted")
-
 
 
 
@@ -2809,10 +2476,6 @@ def editsale(request, id):
         else: return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
 
 
-
-
-
-
 ############################################################################################
 ###################### CLIENTES - CLIENTS - ACCOUNTS """"""
 
@@ -2833,8 +2496,6 @@ def export_rr(request):
     response = HttpResponse(dataset.xlsx, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     response['Content-Disposition'] = 'attachment; filename="rr.xlsx"'
     return response
-
-
 
 
 ## CLIENTS TABLE  - ACCOUNTS RR
@@ -2957,9 +2618,6 @@ def clients(request):
     return render(request,'dashboard/clients/clients.html',context)
 
 
-
-
-
 # DELETE CLIENT
 @user_passes_test(lambda user: user.groups.filter(name='clients').exists())
 @login_required(login_url='dashboard:login')
@@ -2967,7 +2625,6 @@ def deleteclient(request, id):
     client = Client.objects.get(id=id)
     client.delete()
     return redirect(reverse('dashboard:clients')+ "?deleted")
-
 
 # DELETE MULTIPLE CLIENTS
 @user_passes_test(lambda user: user.groups.filter(name='clients').exists())
@@ -2979,8 +2636,6 @@ def delete_clients(request):
         return redirect('dashboard:clients')
     else:
         return HttpResponseBadRequest('Invalid request')
-
-
 
 
 ## client detail --- edit client --- see sales, services and cancellations of a client
@@ -3073,9 +2728,6 @@ def addclientsale(request, id):
             return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
         
         
-        
-
-
 
 ####################################################### CANCELLATIONS
 @user_passes_test(lambda user: user.groups.filter(Q(name='sales')).exists())
@@ -3109,14 +2761,6 @@ def cancellations(request):
     }   
     
     return render(request,'dashboard/clients/cancellations.html',context)
-
-
-
-
-
-
-
-
 
 
 ############ W3CMS VIEWS

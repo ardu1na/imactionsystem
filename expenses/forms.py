@@ -18,21 +18,12 @@ class HolidayEmployeeForm(ModelForm):
         exclude = ['id', 'employee']
 
         widgets = {            
-            'year': TextInput(attrs={
-                'class':"form-control",
-                'id':"year",
-                'placeholder':"YEAR",
-            }),      
-                  
-            'month': Select(attrs={
-                'class':"default-select form-control wide mb-3",
-                'id':"month",
-            }),       
+             
                  
             'days': TextInput(attrs={
                 'class':"form-control",
                 'id':"days",
-                'placeholder':"DAYS",
+                'placeholder':"(Leave blank to auto fill)",
             }),            
             'date_start': TextInput(attrs={
                 'class':"datetimepicker form-control",

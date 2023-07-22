@@ -1,4 +1,5 @@
-from datetime import date
+from datetime import date, timedelta
+
 from decimal import Decimal
 
 from django.db import models
@@ -383,50 +384,43 @@ class Employee(models.Model):
     def __str__ (self):
         return self.name
     
+    @property
+    def get_sales_this_m(self):
+        if self.rol == "Sales":
+            sales = self.sales.filter(date__month=today.month, date__year=today.year)
+            return sales
+        else:
+            return None
     
     
     
-    
-    
-class Holiday (models.Model):
-    JAN = 'January'
-    FEB = 'February'
-    MAR = 'March'
-    APR = 'April'
-    MAY = 'May'
-    JUN = 'June'
-    JUL = 'July'
-    AUG = 'August'
-    SEP = 'September'
-    OCT = 'October'
-    NOV = 'November'
-    DEC = 'December'
-    MONTH_CHOICES = (
-        (JAN, ('January')),
-        (FEB, ('February')),
-        (MAR, ('March')),
-        (APR, ('April')),
-        (MAY, ('May')),
-        (JUN, ('June')),
-        (JUL, ('July')),
-        (AUG, ('August')),
-        (SEP, ('September')),
-        (OCT, ('October')),
-        (NOV, ('November')),
-        (DEC, ('December')),       
-    )
 
-    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, verbose_name="EMPLOYEE", related_name="holidays")
-    year = models.IntegerField(verbose_name="YEAR", null=True, blank= True)
-    
-    month = models.CharField(choices=MONTH_CHOICES, max_length=150, null=True, blank= False, default=None, verbose_name="MONTH")
-    
-    days = models.SmallIntegerField(verbose_name="WORKING DAYS", null=True, blank= True)
-    date_start = models.DateField(null=True, blank= True)
-    date_end = models.DateField(null=True, blank= True)
-    
-    def __str__ (self):
-        return '{} {} {} holidays'.format(self.employee, self.month, self.year)       
+class Holiday(models.Model):
+    employee = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, verbose_name="EMPLOYEE", related_name="holidays")
+    days = models.SmallIntegerField(verbose_name="WORKING DAYS", null=True, blank=True, help_text="Leave blank to auto fill")
+    date_start = models.DateField(null=False, blank=False)
+    date_end = models.DateField(null=False, blank=False)
+
+    def __str__(self):
+        start_month_year = self.date_start.strftime("%B %Y")
+        return '{} {} holidays'.format(start_month_year, self.employee)
+
+    def save(self, *args, **kwargs):
+        if self.days is None:
+            # Calculate the number of working days between date_start and date_end
+            # excluding Saturdays and Sundays
+            current_date = self.date_start
+            working_days = 0
+
+            while current_date <= self.date_end:
+                # 0 for Monday, 6 for Sunday (weekday() method returns values from 0 to 6)
+                if current_date.weekday() < 5:  # Monday to Friday are working days
+                    working_days += 1
+                current_date += timedelta(days=1)
+
+            self.days = working_days
+        super(Holiday, self).save(*args, **kwargs)
+   
 
 
 class Expense(models.Model):
