@@ -1709,9 +1709,10 @@ def editemployee(request, id):
 @login_required(login_url='dashboard:login')
 def editholiday(request, id):
     editholiday = Holiday.objects.get(id=id)
-    editemployee = editholiday.employee      
+    editemployee = editholiday.employee
+    holyday_instance = editholiday
+      
     if request.method == "GET":          
-        holyday_instance = Holiday.objects.filter(employee=editemployee).last()
         holydayform = HolidayEmployeeForm(instance=holyday_instance) if holyday_instance else HolidayEmployeeForm()
         context = {
             'holidayform'  : holydayform,
@@ -1722,13 +1723,16 @@ def editholiday(request, id):
     # editar una vacacion
     if request.method == 'POST':                
         if "holiday" in request.POST:
-            holyday_instance = Holiday.objects.filter(employee=editemployee).last()
             holydayform = HolidayEmployeeForm(request.POST, instance=holyday_instance) if holyday_instance else HolidayEmployeeForm(request.POST)
             if holydayform.is_valid():
                 holiday = holydayform.save(commit=False)
                 holiday.employee = editemployee
                 holiday.save()
-                return redirect('dashboard:editemployee', id=editemployee.id)
+                if holiday.employee.rol == "CEO":
+                    return redirect(reverse('dashboard:editceo', kwargs={'id': holiday.employee.id}) + '#holiday')
+                else:
+                    return redirect(reverse('dashboard:editemployee', kwargs={'id': holiday.employee.id}) + '#holiday')
+
             else:
                 return HttpResponse(
                     f"Ups! Something went wrong. You should go back, update the page and try again. \n \n {holydayform.errors}")
@@ -2761,7 +2765,6 @@ def cancellations(request):
     }   
     
     return render(request,'dashboard/clients/cancellations.html',context)
-
 
 
 ############ W3CMS VIEWS

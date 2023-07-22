@@ -3,74 +3,52 @@
 
 {% block content %}
 
+<div class="page-titles">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'dashboard:employees' %}">Employees</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'dashboard:editemployee' id=editemployee.id %}">{{editemployee.name}}</a></li>
+        <li class="breadcrumb-item active"><a href="javascript:void(0)">Change {{editemployee.name}} Holiday</a></li>
+
+    </ol>
+</div>
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="basic-form">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="row">
 
 
+                            <div class="mb-3 col-md-6">
+                                <label class="form-label">WORKING DAYS</label>
 
 
-        <div class="page-titles">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{% url 'dashboard:employees' %}">Employees</a></li>
-                <li class="breadcrumb-item"><a href="{% url 'dashboard:editemployee' id=editemployee.id %}">{{editemployee.name}}</a></li>
-                <li class="breadcrumb-item active"><a href="javascript:void(0)">Change {{editemployee.name}} Holiday</a></li>
+                                    {{holidayform.days}}
+                            </div>
 
-            </ol>
-        </div>
-
-        <div class="row">
-            <div class="col-xl-12">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="basic-form">
-                            <form method="post">
-                                {% csrf_token %}
-                                <div class="row">
-                                    <div class="mb-3 col-md-6">
-                                        <label class="form-label">YEAR</label>
-                                        {{holidayform.year}}
-                                    </div>
-
-
-
-
-                                    <div class="mb-3 col-md-6">
-                                        <label class="form-label">MONTH</label>
-
-
-                                            {{holidayform.month}}
-                                    </div>
-
-
-                                    <div class="mb-3 col-md-6">
-                                        <label class="form-label">WORKING DAYS</label>
-
-
-                                            {{holidayform.days}}
-                                    </div>
-
-                                    <div class="mb-3 col-md-6">
-                                        <label class="form-label">START</label>
-                                        {{holidayform.date_start}}
-                                    </div>
-                                    <div class="mb-3 col-md-6">
-                                        <label>END</label>
-                                        {{holidayform.date_end}}
-                                    </div>
-                                </div>
-
-                                <a href="{% url 'dashboard:editemployee' id=editemployee.id %}" class="btn btn-info px-3">Cancel </a>
-
-                                <button type="submit" name="holiday" class="btn btn-primary">CHANGE</button>
-                                
-                            </form>
+                            <div class="mb-3 col-md-6">
+                                <label class="form-label">START</label>
+                                {{holidayform.date_start}}
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label>END</label>
+                                {{holidayform.date_end}}
+                            </div>
                         </div>
-                    </div>
+
+                        <a href="{% url 'dashboard:editemployee' id=editemployee.id %}" class="btn btn-info px-3">Cancel </a>
+
+                        <button type="submit" name="holiday" class="btn btn-primary">CHANGE</button>
+                        
+                    </form>
                 </div>
             </div>
         </div>
-
-
-
-
+    </div>
+</div>
 
 {% endblock %}
 
