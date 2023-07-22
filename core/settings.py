@@ -57,7 +57,8 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
 
     'import_export',
-
+    'django_crontab',
+    
     'widget_tweaks',
     'dashboard',
     'dashboard.users',
@@ -154,6 +155,22 @@ DECIMAL_SEPARATOR= ','
 USE_THOUSAND_SEPARATOR= True
 
 THOUSAND_SEPARATOR = '.'
+
+
+
+CRONJOBS = [
+    # Run every day at 3 AM
+    ('0 3 * * *', 'dashboard.email_adj.email_adj_remind'),
+
+    # Run on the first day of each month at 3 AM
+    ('0 3 1 * *', 'dashboard.email_backups.export_and_send_all_resources_data'),
+    ('0 3 1 * *', 'dashboard.revenue_expenses.revenue_expenses_and_salaries'),
+]
+
+
+
+
+
 
 
 # Static files (CSS, JavaScript, Images)

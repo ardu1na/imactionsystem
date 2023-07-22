@@ -70,7 +70,8 @@
 
 
 ############################### TODO
-#################### PASAR A CRONJOBS
+#################### cronjobs with django-crontab
+## run with : python3 manage.py crontab add
 
 # MONTHLY
 ## MAIL Y EXPORTACIÓN PARA BACKUP: dashboard/email_backups.py
