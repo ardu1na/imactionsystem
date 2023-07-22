@@ -30,9 +30,6 @@ from dashboard.forms import CommsForm, TierConf
 # export/import db
 from dashboard.resources import ExportSales, ClientResource, ExportRR, ExpenseResource, ExportStaff, ExportCeo
 
-# this is for something not done
-from dashboard.utils import *
-
 # get blue venta 
 try: 
     from dashboard.services import venta as b_venta
@@ -48,7 +45,8 @@ from sales.forms import AdjForm, ChangeAdj, SaleForm2, ClientSaleForm, CancellSe
 
 # expenses app
 from expenses.models import Employee, Expense, Holiday, Salary
-from expenses.forms import RaiceForm, HolidayEmployeeForm, ExpenseForm, EmployeeForm, EmployeeSalaryForm, CeoForm, CeoSalaryForm, EditEmployeeForm, EditWageCeo 
+from expenses.forms import RaiceForm, HolidayEmployeeForm, ExpenseForm,\
+    EmployeeForm, EmployeeSalaryForm, CeoForm, CeoSalaryForm, EditEmployeeForm, EditWageCeo 
 
 ### END IMPORTS
 
