@@ -52,8 +52,6 @@ from expenses.forms import RaiceForm, HolidayEmployeeForm, ExpenseForm, Employee
 
 ### END IMPORTS
 
-
-
 ####################################################################
 # VIEWS - LÓGICA DE LA APP
 
@@ -70,13 +68,7 @@ def client_autocomplete(request):
     results = [{'id': c.pk, 'text': c.name} for c in clients]
     return JsonResponse({'results': results})
 
-
-
-
-
-#######################################################################################
-
-############ INDEX
+############ INDEX ###################################################################################
 
 @login_required(login_url='dashboard:login')
 def index(request):
@@ -1048,8 +1040,7 @@ def index(request):
     return render(request,'dashboard/index.html',context)
 
 
-
-######################################################################################################################################
+############################################ LOGS ACTIVITY  HISTORY ######################################################################
 ## HISTORIAL DE CAMBIOS
 @user_passes_test(lambda user: user.groups.filter(name='admin').exists())   
 @login_required(login_url='dashboard:login')
@@ -1071,8 +1062,7 @@ def activity(request):
         "list" : elements,}
     return render(request,'dashboard/activity.html',context)
 
-######################################################################################################################################
-
+########################################  CONF AND SETTINGS ###############################################################
 
 ## CONFIGURACIONES Y AJUSTES
 @user_passes_test(lambda user: user.groups.filter(name='admin').exists())   
@@ -1084,7 +1074,7 @@ def setting (request):
             }
     return render (request, 'dashboard/settings.html', context)
 
-
+## conf TIERS parameters
 @user_passes_test(lambda user: user.groups.filter(name='admin').exists())
 @login_required(login_url='dashboard:login')
 def conf(request):
@@ -1118,7 +1108,7 @@ def conf(request):
                 f"Ups! Something went wrong. You should go back, update the page and try again. \n \n {form.errors}")
         
         
-### COMISIONES DE VENTA
+### CONF COMISIONES DE VENTA
 @user_passes_test(lambda user: user.groups.filter(name='admin').exists())
 @login_required(login_url='dashboard:login')
 def comms(request):
@@ -1149,14 +1139,10 @@ def comms(request):
                 f"Ups! Something went wrong. You should go back, update the page and try again. \n \n {form.errors}")
 
 
-
-#####################   EXPENSES  ##################################################################################
-
-
+#####################                                                EXPENSES  ##################################################################################
 ## EXPENSES CRUD
 
-
-# DELETE EXPENSE
+# DELETE MULTIPLE EXPENSES IN EXPENSES TABLE
 @user_passes_test(lambda user: user.groups.filter(name='expenses').exists())
 @login_required(login_url='dashboard:login')
 def delete_expenses(request):
@@ -1196,7 +1182,6 @@ def editexpense(request, id):
                 f"Ups! Something went wrong. You should go back, update the page and try again.\n \n {form.errors}"
                 )
         
-
 ## exportación de expenses para excel
 @login_required(login_url='dashboard:login')
 def export_expenses(request):
@@ -1337,7 +1322,6 @@ def expenses(request):
         "wages_staff1" : wages_staff1,}
     return render(request,'dashboard/expenses/expenses.html', context)
 
-
 ## borrar expense
 @user_passes_test(lambda user: user.groups.filter(name='expenses').exists())
 @login_required(login_url='dashboard:login')
@@ -1345,7 +1329,6 @@ def deleteexpense(request, id):
     expense = Expense.objects.get(id=id)
     expense.delete()
     return redirect(reverse('dashboard:expenses')+ "?deleted")
-
 
 # historial de una expensa    
 @user_passes_test(lambda user: user.groups.filter(name='expenses').exists())
@@ -1363,10 +1346,10 @@ def expenseshistory(request, id):
 
 
 
+################################# STAFF CEO EMPLOYEES SALARIES HOLIDAYS WAGES COMMS ####################################################################################################
 
 
-########################################################################################################################################################
-## EMPLOYEES
+############## EMPLOYEES staff
 
 ## función para exportar la info de los empleados para excel
 @login_required(login_url='dashboard:login')
@@ -1449,7 +1432,6 @@ def deleteemployee(request, id):
     employee.delete()
     return redirect(reverse('dashboard:employees')+ "?deleted")
 
-
 # HISTORIAL DE COMISIONES de un empleado
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
@@ -1457,14 +1439,95 @@ def employee_comms(request, id):
     employee = Employee.objects.get(id=id)
     id = employee.id
     comms = Comm.objects.filter(employee=employee)
+    this_month = today.month
+    month_name = date(1900, this_month, 1).strftime('%B')
+    # get comms conf variables
+    try:
+        comms_conf = Comms.objects.get(id=1)
+    except:
+        comms_conf = Comms.objects.create(
+            id=1,
+            com_rr_1 = 40,
+            rr_1 = 80000,
+            com_rr_2 = 50,
+            rr_2 = 240000,
+            com_rr_3 = 60,
+            rr_3 = 400000,
+            com_rr_4 = 65,
+            rr_4 = 560000,
+            com_rr_5 = 70,
+            rr_5 = 720000,
+            up_sell = 5,
+            one_off = 15,             
+            )   
+    
+    
+    
+    #### UPDATE COMMS VALUES """"""""        
+    for comm in employee.comms.all():
+        one_off_sales_this_m = 0
+        one_off_comm_percent = comms_conf.one_off  # you can change the % comm here on in the model instance or at the conf comms view
+        up_sell_sales_this_m = 0
+        up_sell_comm_percent = comms_conf.up_sell # you can change the % comm here on in the model instance or at the conf comms view
+        rr_sales_this_m = 0
+        rr_comm_percent = 1 # this value depends on the rr_sales_total of the month variable and it changes across the time
+        
+        for sale in comm.sales.all():
+            if sale.revenue == 'OneOff':
+                one_off_sales_this_m += sale.change
+            else:
+                if sale.kind == "Upsell":
+                    up_sell_sales_this_m += sale.change
+                else:
+                    rr_sales_this_m += sale.change
+        try:
+            one_off_comms_this_m = (one_off_sales_this_m * one_off_comm_percent)/100
+        except:
+            one_off_comms_this_m = 0
+        try:
+            up_sell_comms_this_m = (up_sell_sales_this_m * up_sell_comm_percent)/100
+        except:
+            up_sell_comms_this_m = 0
+        
+        if rr_sales_this_m >= comms_conf.rr_1 and rr_sales_this_m < comms_conf.rr_2:
+            rr_comm_percent = comms_conf.com_rr_1
+        elif rr_sales_this_m >= comms_conf.rr_2 and rr_sales_this_m < comms_conf.rr_3:
+            rr_comm_percent = comms_conf.com_rr_2
+        elif rr_sales_this_m >= comms_conf.rr_3 and rr_sales_this_m < comms_conf.rr_4:
+            rr_comm_percent = comms_conf.com_rr_3
+        elif rr_sales_this_m >= comms_conf.rr_4 and rr_sales_this_m < comms_conf.rr_5:
+            rr_comm_percent = comms_conf.rr_4
+        elif rr_sales_this_m >= comms_conf.com_rr_5:
+            rr_comm_percent = comms_conf.com_rr_5
+        else:
+            rr_comm_percent = 1
+
+        try:
+            rr_comms_this_m = (rr_sales_this_m * rr_comm_percent)/100
+        except:
+            rr_comms_this_m = 0     
+            
+        comm.one_off = one_off_comms_this_m
+        comm.up_sell = up_sell_comms_this_m
+        comm.rr_comm = rr_comms_this_m
+        comm.rr_percent = rr_comm_percent
+        comm.total = Decimal(one_off_comms_this_m) + Decimal(up_sell_comms_this_m) + Decimal(rr_comms_this_m)
+        comm.save()
+    else:
+        pass
+    try:
+        comms_this_m = Comm.objects.get(
+                employee=employee,
+                created_at__month=today.month, created_at__year=today.year)
+    except:
+        comms_this_m = Comm.objects.create(employee=employee)   
     context = {
         'employee': employee,
         'comms': comms,
+        'comms_this_m': comms_this_m,
+        'month': month_name
     }
     return render(request,'dashboard/employees/employee_comms.html', context)
-
-
-
 
 ## detalle de un EMPLEADO
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
@@ -1523,7 +1586,7 @@ def editemployee(request, id):
             if sale.revenue == 'OneOff':
                 one_off_sales_this_m += sale.change
             else:
-                if sale.kind == "UpSell":
+                if sale.kind == "Upsell":
                     up_sell_sales_this_m += sale.change
                 else:
                     rr_sales_this_m += sale.change
@@ -1637,7 +1700,6 @@ def editemployee(request, id):
                 return HttpResponse(f"Ups! Something went wrong. You should go back, update the page and try again. \n \n {holydayform.errors}")
 
 
-
 # detalle de una vacacion
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
@@ -1667,7 +1729,6 @@ def editholiday(request, id):
                 return HttpResponse(
                     f"Ups! Something went wrong. You should go back, update the page and try again. \n \n {holydayform.errors}")
 
-
 # borrar una vacación
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
@@ -1682,9 +1743,7 @@ def deleteholiday(request, id):
         return redirect(reverse('dashboard:editemployee', kwargs={'id': employeeid}) + '#holiday')
 
 
-
 ############ CEO
-
 
 ## función para exportar data de ceo para excel
 @login_required(login_url='dashboard:login')
@@ -1796,12 +1855,9 @@ def editceo(request, id):
                     f"Ups! Something went wrong. You should go back, update the page and try again. \n\n {editwageform.errors}")
 
 
-
-
 #######################################################################################################################################################3
 ## SERVICES
 # un servicio es la suscripción mensual (de una sale RR)
-
 
 # ver detalle de un servicio
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
@@ -1826,11 +1882,7 @@ def restoreservice(request, id):
     return redirect ('dashboard:editclient', id=client_id)
             
 
-
-
-
-#####################################################################################################################################
-## AJUSTES
+############################################# AJUSTES
 # ajustes a los servicios
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
@@ -1874,10 +1926,6 @@ def adj(request):
     return render (request, 'dashboard/sales_and_services/adj.html', context)
 
 
-
-
-
-
 # BORRAR UN AJUSTE
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
@@ -1905,11 +1953,6 @@ def deleteadj(request, id):
             
             
     return redirect(reverse('dashboard:adjustment')+ "?deleted")
-
-
-
-
-
 
 
 ## para editar un ajuste antes de que sea ejecutado y notificado
@@ -2075,15 +2118,7 @@ def adjustment(request):
 
 
 
-
-
-
-
-
-
-
-
-#####################################################################################################################################
+#################################################### SALES ############################################################
 ## VENTAS
 
 ## función para exportar ventas para excel
@@ -2094,7 +2129,7 @@ def export_sales(request):
     response['Content-Disposition'] = 'attachment; filename="sales.xlsx"'
     return response
 
-
+## delete multiple sales in sales table
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
 def delete_sales(request):
@@ -2130,9 +2165,7 @@ def delete_sales(request):
         return redirect('dashboard:sales')
     else:
         return HttpResponseBadRequest('Invalid request')
-    
-    
-
+   
 
 ## TABLA Y LISTA DE VENTAS - SALES TABLE
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
@@ -2140,14 +2173,10 @@ def delete_sales(request):
 def sales(request):
     
     # CARDS DATA
-    
-    
     this_month = today.month
     month_name = date(1900, this_month, 1).strftime('%B')
     
-    
     clients = Client.objects.all()
-    
     services = ['SEO','Google Ads','Facebook Ads','Web Design', 'Hosting', 'LinkedIn', 'SSL certificate','Web Plan','Combo', 'Community Management', 'Email Marketing', 'Others', 'Others RR']
     
     sales_this_month = Sale.objects.filter(date__month=today.month, date__year=today.year, revenue="RR").exclude(note="auto revenue sale")
@@ -2199,12 +2228,9 @@ def sales(request):
                 return redirect(reverse('dashboard:sales') + "?added")
             else:
                
-                return HttpResponse(f"Ups! Something went wrong: \n\n {addform.errors}")
-
-                
+                return HttpResponse(f"Ups! Something went wrong: \n\n {addform.errors}")               
             
-            
-            
+                        
     # MAS DATA PARA LAS CARDS
     sales_by_service =Sale.objects.filter(date__month=today.month, date__year=today.year).exclude(note="auto revenue sale")
 
@@ -2222,7 +2248,6 @@ def sales(request):
     s_em = 0
     s_other1 = 0
     
-
     for sale in sales_by_service:
         if sale.service == "SEO":
             s_seo += sale.get_change
@@ -2250,7 +2275,6 @@ def sales(request):
             s_em += sale.get_change
         elif sale.service == "Others":
             s_other1 += sale.get_change
-            
         else: pass
 
                 
@@ -2288,8 +2312,6 @@ def sales(request):
         "total_other" : '{:,.0f}'.format(s_other1)
     }
     return render(request,'dashboard/sales_and_services/sales.html',context)
-
-
 
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
@@ -2364,10 +2386,6 @@ def salesdata(request):
     return render(request,'dashboard/sales_and_services/salesdata.html', context)
 
 
-
-
-
-
 # BORRAR VENTA
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
@@ -2401,7 +2419,6 @@ def deletesale(request, id):
     
     sale.delete()
     return redirect(reverse('dashboard:sales')+ "?deleted")
-
 
 
 
@@ -2455,10 +2472,6 @@ def editsale(request, id):
         else: return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
 
 
-
-
-
-
 ############################################################################################
 ###################### CLIENTES - CLIENTS - ACCOUNTS """"""
 
@@ -2479,8 +2492,6 @@ def export_rr(request):
     response = HttpResponse(dataset.xlsx, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     response['Content-Disposition'] = 'attachment; filename="rr.xlsx"'
     return response
-
-
 
 
 ## CLIENTS TABLE  - ACCOUNTS RR
@@ -2603,9 +2614,6 @@ def clients(request):
     return render(request,'dashboard/clients/clients.html',context)
 
 
-
-
-
 # DELETE CLIENT
 @user_passes_test(lambda user: user.groups.filter(name='clients').exists())
 @login_required(login_url='dashboard:login')
@@ -2613,7 +2621,6 @@ def deleteclient(request, id):
     client = Client.objects.get(id=id)
     client.delete()
     return redirect(reverse('dashboard:clients')+ "?deleted")
-
 
 # DELETE MULTIPLE CLIENTS
 @user_passes_test(lambda user: user.groups.filter(name='clients').exists())
@@ -2625,8 +2632,6 @@ def delete_clients(request):
         return redirect('dashboard:clients')
     else:
         return HttpResponseBadRequest('Invalid request')
-
-
 
 
 ## client detail --- edit client --- see sales, services and cancellations of a client
@@ -2719,9 +2724,6 @@ def addclientsale(request, id):
             return HttpResponse("Ups! Something went wrong. You should go back, update the page and try again.")
         
         
-        
-
-
 
 ####################################################### CANCELLATIONS
 @user_passes_test(lambda user: user.groups.filter(Q(name='sales')).exists())
@@ -2755,13 +2757,6 @@ def cancellations(request):
     }   
     
     return render(request,'dashboard/clients/cancellations.html',context)
-
-
-
-
-
-
-
 
 
 

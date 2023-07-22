@@ -383,7 +383,13 @@ class Employee(models.Model):
     def __str__ (self):
         return self.name
     
-    
+    @property
+    def get_sales_this_m(self):
+        if self.rol == "Sales":
+            sales = self.sales.filter(date__month=today.month, date__year=today.year)
+            return sales
+        else:
+            return None
     
     
     

@@ -229,7 +229,7 @@ class Sale(models.Model):
                     'Comm',
                     related_name='sales',
                     null=True, blank=True,
-                    on_delete=models.CASCADE,
+                    on_delete=models.SET_NULL,
                     verbose_name="Employee's COMM")
     
     kind = models.CharField(max_length=50, choices=KIND_CHOICES, null=True, blank=False, default=None, verbose_name="KIND")
@@ -316,7 +316,9 @@ class Sale(models.Model):
                     
                 except Comm.DoesNotExist:                
                     values = {
-                        "employee": self.sales_rep,                   
+                        "employee": self.sales_rep,
+                        
+                        "created_at": self.date                  
                         }            
                     comm = Comm(**values)
                     comm.save()  
@@ -409,7 +411,7 @@ class Sale(models.Model):
 class Comm(models.Model):
     #
     # Modelo de comisiones mensuales de los vendedores
-    created_at = models.DateField(auto_now_add=True)
+    created_at = models.DateField(default=date.today)
 
     # se busca o crea y asocia automáticamente
     # desde el modelo Sale('get_comm_or_create')
