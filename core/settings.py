@@ -43,7 +43,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG =  False
 
 
-ALLOWED_HOSTS = ['http://200.58.98.179','200.58.98.179', 'app.imactions.agency']
+ALLOWED_HOSTS = ['http://200.58.98.179','200.58.98.179', 'app.imactions.agency', 'http://app.imactions.agency', 'https://app.imactions.agency']
 
 # Application definition
 

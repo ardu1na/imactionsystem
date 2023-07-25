@@ -69,9 +69,11 @@
 
 
 
-############################### TODO
+############################### 
 #################### cronjobs with django-crontab
 ## run with : python3 manage.py crontab add
+
+# conf en core/settings.py CRONJOBS
 
 # MONTHLY
 ## MAIL Y EXPORTACIÓN PARA BACKUP: dashboard/email_backups.py
@@ -80,5 +82,13 @@
 # DIARLY
 ## SEE IF IS SOMETHING TO ADJ OR EMAIL TO SEND: dashboard/email_adj.py
 
+ab add
+show current active jobs of this project:
 
+python manage.py crontab show
+removing all defined jobs is straight forward:
+
+python manage.py crontab remove
+
+# DOCS https://pypi.org/project/django-crontab/
 ######################## 

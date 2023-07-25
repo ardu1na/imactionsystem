@@ -358,7 +358,7 @@ class Employee(models.Model):
                     print("Error creating salary object:", str(e))
                     wages = None
 
-            if wages is not None:
+            if wages != None:
                 month = wages.salary/12
             else:
                 month = 0

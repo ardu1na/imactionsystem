@@ -141,7 +141,7 @@ class Adj(models.Model):
 
 # get comms conf variables
 try:
-    comms_conf = Comms.objects.get(id=1)
+    comms_conf = Comms.objects.last()
 except Comms.DoesNotExist:
     comms_conf = Comms.objects.create(
         id=1,
@@ -356,28 +356,31 @@ class Sale(models.Model):
     # (se pueden llamar direcatemnte en el template html
     # )
         
-   
+    
+    # get comms conf variables
+    
         
     @property
     def get_comm_per(self):
-        
-        
-            ## obtener el porcentaje de comisiones por venta para los empleados vendedores
-            if self.revenue == "OneOff":
-                return comms_conf.one_off
-            else:    
-                if self.kind == "Upsell":
-                    return comms_conf.up_sell
-                else:
-                    com = self.comm
-                    comm_rr = com.rr_percent
-                    return comm_rr
+        comms_conf = Comms.objects.last()
+        print(comms_conf)
+        ## obtener el porcentaje de comisiones por venta para los empleados vendedores
+        if self.revenue == "OneOff":
+            return comms_conf.one_off
+        else:    
+            if self.kind == "Upsell":
+                return comms_conf.up_sell
+            else:
+                com = self.comm
+                comm_rr = com.rr_percent
+                return comm_rr
             
     @property
     def get_comm(self):
         # obtener el valor de la comisión según el precio de la venta y el prcjje
         try:
             comm = (self.get_comm_per * self.change)/100
+            print(f'comm: KIND: {self.kind}\n comm % {self.get_comm_per} \n COMM ${self.comm} ( sale ${self.total})')
             return comm
         # si la venta es menor a comms.rr_1 retornar 0 comisión
         except:
