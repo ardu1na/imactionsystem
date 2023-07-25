@@ -91,13 +91,15 @@ def index(request):
     # solicitar a la api de dolarhoy para mantener actualizado el valor de la venta
     # b_venta viene de dashboard.services.py
     try:
-        if last_blue.venta != b_venta and b_venta is not None:
+        if b_venta != None:
             last_blue.venta = b_venta
-        last_blue.save()
-        print("##############################################")
+            last_blue.save()
+            print("##############################################")
 
-        print("Blue exchange Updated successfully !!!!!")
-    
+            print("Blue exchange Updated successfully !!!!!")
+        else:
+            print('last_blue api variable is None')
+        
     
         print()
     except:
@@ -123,8 +125,10 @@ def index(request):
     # card activity
     ct = ContentType.objects.get_for_model(LastBlue)
     ct2 = ContentType.objects.get_for_model(CustomUser)
+    ct3 = ContentType.objects.get_for_model(Comm)
+    ct4 = ContentType.objects.get_for_model(Service)
 
-    events = CRUDEvent.objects.exclude(content_type=ct).exclude(content_type=ct2)
+    events = CRUDEvent.objects.exclude(content_type=ct).exclude(content_type=ct2).exclude(content_type=ct3).exclude(content_type=ct4)
     
     
     last_act = events[:7]   
@@ -1048,7 +1052,11 @@ def activity(request):
     # exceptuando cambios en la cotización del blue y usuarios.
     ct = ContentType.objects.get_for_model(LastBlue)
     ct2 = ContentType.objects.get_for_model(CustomUser)
-    events = CRUDEvent.objects.exclude(content_type=ct).exclude(content_type=ct2)
+    ct3 = ContentType.objects.get_for_model(Comm)
+    ct4 = ContentType.objects.get_for_model(Service)
+
+    events = CRUDEvent.objects.exclude(content_type=ct).exclude(content_type=ct2).exclude(content_type=ct3).exclude(content_type=ct4)
+    
     logs = LoginEvent.objects.all()
     combined_list = list(chain(events, logs))     
     paginator = Paginator(combined_list, 20) # Show 20 elements per page.
@@ -2540,7 +2548,7 @@ def clients(request):
                 newclient = addform.save()
                 return redirect('dashboard:editclient', id=newclient.id)
             else:
-                return HttpResponse("hacked from las except else form")
+                return HttpResponse(f"Ups Something was wrong. \n {addform.errors}")
     
     
     services = Service.objects.filter(state=True)

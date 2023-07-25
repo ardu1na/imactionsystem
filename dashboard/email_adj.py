@@ -46,7 +46,7 @@ def email_adj_remind():
                         message=f'({adj.notice_date} {adj.client.name} {adj.client.admin_email} {adj.service.service}) \n Estimado cliente,  \n  El motivo de este email es para comunicarte un ajuste por inflación.\n Inversión actual: ${actual} \n Inversión con ajuste: ${con} \n Ajuste: ${ajuste} \n El ajuste se hará en el próximo pago. \n Cualquier duda no dejes de consultarnos. \n Saludos, \n Imactions \n www.imactions.agency',
                         html_message=email_message,
                         from_email='systemimactions@gmail.com',
-                        recipient_list=['systemimactions@gmail.com'], # ['hola@imactions.com'],
+                        recipient_list=['systemimactions@gmail.com', 'hola@imactions.com'], # ['hola@imactions.com'],
                         fail_silently=False,
                     )
                     print (f" adjust -- {adj} - {service} -- EMAIL reminder SEND")

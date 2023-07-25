@@ -34,7 +34,7 @@ def export_and_send_all_resources_data():
     # Create the email
     email_subject = 'System Backup'
     email_body = 'Please find attached the backup of all resources data.'
-    email_recipients = ['aprendizajenaturalconciente@gmail.com'] # "hola@imactions.com"
+    email_recipients = ['systemimactions@gmail.com', 'hola@imactions.com'] # "hola@imactions.com"
 
     # Create the email message
     email = EmailMessage(

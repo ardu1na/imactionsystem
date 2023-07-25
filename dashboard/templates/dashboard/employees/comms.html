@@ -45,7 +45,7 @@
                     <td>{% if i.revenue == "OneOff" %}
                             {{comms_conf.one_off}} %
                         {% else %}
-                            {% if i.kind == "UpSell" %}
+                            {% if i.kind == "Upsell" %}
                                 {{comms_conf.up_sell}} %
                             {% else %}
                                {% if comms_this_m.rr_percent == 1 %} {% else %}{{comms_this_m.rr_percent}} %{% endif %}
