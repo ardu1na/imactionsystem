@@ -12,4 +12,4 @@ try:
     blue = casa["casa"] 
     venta = float(blue["venta"].replace(',', '.')) # si se desea obtener la compra simplemente es blue["compra"]
 except:
-    print("cant read the api")
+    print("cant read the ap i")

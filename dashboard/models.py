@@ -45,12 +45,14 @@ class Comms (models.Model):
                                  )
     rr_3 = models.IntegerField(
                 default=1)
+    
     com_rr_4 = models.DecimalField(
                 max_digits=15, decimal_places=2,
                 default=1
                                  )
     rr_4 = models.IntegerField(
                 default=1)
+    
     com_rr_5 = models.DecimalField(
                 max_digits=15, decimal_places=2,
                 default=1

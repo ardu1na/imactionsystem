@@ -17,6 +17,7 @@ from django.views.decorators.http import require_GET
 from django.db.models import Sum, Q
 from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator
+from django.views.decorators.cache import never_cache
 
 ## external packages 
 from easyaudit.models import CRUDEvent, LoginEvent
@@ -67,7 +68,7 @@ def client_autocomplete(request):
     return JsonResponse({'results': results})
 
 ############ INDEX ###################################################################################
-
+@never_cache
 @login_required(login_url='dashboard:login')
 def index(request):
     
@@ -1071,6 +1072,7 @@ def activity(request):
 ########################################  CONF AND SETTINGS ###############################################################
 
 ## CONFIGURACIONES Y AJUSTES
+@never_cache
 @user_passes_test(lambda user: user.groups.filter(name='admin').exists())   
 @login_required(login_url='dashboard:login')
 def setting (request):
@@ -1081,6 +1083,7 @@ def setting (request):
     return render (request, 'dashboard/settings.html', context)
 
 ## conf TIERS parameters
+@never_cache
 @user_passes_test(lambda user: user.groups.filter(name='admin').exists())
 @login_required(login_url='dashboard:login')
 def conf(request):
@@ -1111,10 +1114,11 @@ def conf(request):
             return redirect(reverse('dashboard:index')+ "?changed")
         else:
             return HttpResponse(
-                f"Ups! Something went wrong. You should go back, update the page and try again. \n \n {form.errors}")
-        
+                f"Ups! Something went wrong. Yo u should go back, update the page and try again. \n \n {form.errors}")
+          
         
 ### CONF COMISIONES DE VENTA
+@never_cache
 @user_passes_test(lambda user: user.groups.filter(name='admin').exists())
 @login_required(login_url='dashboard:login')
 def comms(request):
@@ -1439,6 +1443,7 @@ def deleteemployee(request, id):
     return redirect(reverse('dashboard:employees')+ "?deleted")
 
 # HISTORIAL DE COMISIONES de un empleado
+@never_cache
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
 def employee_comms(request, id):
@@ -1485,7 +1490,8 @@ def employee_comms(request, id):
                 if sale.kind == "Upsell":
                     up_sell_sales_this_m += sale.change
                 else:
-                    rr_sales_this_m += sale.change
+                    if sale.revenue == "RR":
+                        rr_sales_this_m += sale.change
         try:
             one_off_comms_this_m = (one_off_sales_this_m * one_off_comm_percent)/100
         except:
@@ -1537,6 +1543,7 @@ def employee_comms(request, id):
     return render(request,'dashboard/employees/employee_comms.html', context)
 
 ## detalle de un EMPLEADO
+@never_cache
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
 def editemployee(request, id):
@@ -1598,7 +1605,8 @@ def editemployee(request, id):
                 if sale.kind == "Upsell":
                     up_sell_sales_this_m += sale.change
                 else:
-                    rr_sales_this_m += sale.change
+                    if sale.revenue == "RR":
+                        rr_sales_this_m += sale.change
         try:
             one_off_comms_this_m = (one_off_sales_this_m * one_off_comm_percent)/100
         except:
@@ -1610,6 +1618,7 @@ def editemployee(request, id):
         
         if rr_sales_this_m >= comms_conf.rr_1 and rr_sales_this_m < comms_conf.rr_2:
             rr_comm_percent = comms_conf.com_rr_1
+            
         elif rr_sales_this_m >= comms_conf.rr_2 and rr_sales_this_m < comms_conf.rr_3:
             rr_comm_percent = comms_conf.com_rr_2
         elif rr_sales_this_m >= comms_conf.rr_3 and rr_sales_this_m < comms_conf.rr_4:
@@ -1620,6 +1629,9 @@ def editemployee(request, id):
             rr_comm_percent = comms_conf.com_rr_5
         else:
             rr_comm_percent = 1
+            
+        print(rr_sales_this_m)
+        print(rr_comm_percent)
 
         try:
             rr_comms_this_m = (rr_sales_this_m * rr_comm_percent)/100
@@ -1873,7 +1885,7 @@ def editceo(request, id):
 ## SERVICES
 # un servicio es la suscripción mensual (de una sale RR)
 
-# ver detalle de un servicio
+@never_cache # ver detalle de un servicio
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
 def editservice(request, id):   
@@ -1885,6 +1897,7 @@ def editservice(request, id):
 
 
 # restaurar un servicio cancelado
+@never_cache
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
 def restoreservice(request, id):        
@@ -1898,6 +1911,7 @@ def restoreservice(request, id):
 
 ############################################# AJUSTES
 # ajustes a los servicios
+@never_cache
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
 def adj(request):      
@@ -1941,6 +1955,7 @@ def adj(request):
 
 
 # BORRAR UN AJUSTE
+@never_cache
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
 def deleteadj(request, id):
@@ -1970,6 +1985,7 @@ def deleteadj(request, id):
 
 
 ## para editar un ajuste antes de que sea ejecutado y notificado
+@never_cache
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
 def editadj(request, id):  
@@ -2022,6 +2038,7 @@ def editadj(request, id):
         
         
 # ESTA ES LA VISTA DE AJUSTES 
+@never_cache
 @user_passes_test(lambda user: user.groups.filter(name='sales').exists())
 @login_required(login_url='dashboard:login')
 def adjustment(request):
@@ -2036,8 +2053,9 @@ def adjustment(request):
                         adj_done=False,
                         notice_date__lte=today
                     )
+    print(f"############################### adjust list:\n {adj_list}")
+
     if adj_list:
-        print(f"############################### adjust list:\n {adj_list}")
         print("##############################################")
         for adj in adj_list:
             if adj.type == "Service":
@@ -2507,6 +2525,7 @@ def export_rr(request):
 
 
 ## CLIENTS TABLE  - ACCOUNTS RR
+@never_cache
 @user_passes_test(lambda user: user.groups.filter(name='clients').exists())
 @login_required(login_url='dashboard:login')
 def clients(request):
@@ -2646,7 +2665,7 @@ def delete_clients(request):
         return HttpResponseBadRequest('Invalid request')
 
 
-## client detail --- edit client --- see sales, services and cancellations of a client
+@never_cache ## client detail --- edit client --- see sales, services and cancellations of a client
 @user_passes_test(lambda user: user.groups.filter(name='clients').exists())
 @login_required(login_url='dashboard:login')
 def editclient(request, id):
