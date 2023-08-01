@@ -1560,25 +1560,7 @@ def editemployee(request, id):
              
     
     # get comms conf variables
-    try:
-        comms_conf = Comms.objects.get(id=1)
-    except:
-        comms_conf = Comms.objects.create(
-            id=1,
-            com_rr_1 = 40,
-            rr_1 = 80000,
-            com_rr_2 = 50,
-            rr_2 = 240000,
-            com_rr_3 = 60,
-            rr_3 = 400000,
-            com_rr_4 = 65,
-            rr_4 = 560000,
-            com_rr_5 = 70,
-            rr_5 = 720000,
-            up_sell = 5,
-            one_off = 15,             
-            )       
-        
+    comms_conf = Comms.objects.last()
       
     #### COMMS OF THIS MONTH """"""""        
     # if rol == seller get and update employee's comms of current month
@@ -1593,10 +1575,11 @@ def editemployee(request, id):
                
         one_off_sales_this_m = 0
         one_off_comm_percent = comms_conf.one_off  # you can change the % comm here on in the model instance or at the conf comms view
+        
         up_sell_sales_this_m = 0
         up_sell_comm_percent = comms_conf.up_sell # you can change the % comm here on in the model instance or at the conf comms view
+        
         rr_sales_this_m = 0
-        rr_comm_percent = 1 # this value depends on the rr_sales_total of the month variable and it changes across the time
         
         for sale in editemployee.sales.filter(sales_rep=editemployee, date__month=today.month, date__year=today.year):
             if sale.revenue == 'OneOff':
@@ -1616,20 +1599,7 @@ def editemployee(request, id):
         except:
             up_sell_comms_this_m = 0
         
-        if rr_sales_this_m >= comms_conf.rr_1 and rr_sales_this_m < comms_conf.rr_2:
-            rr_comm_percent = comms_conf.com_rr_1
-            
-        elif rr_sales_this_m >= comms_conf.rr_2 and rr_sales_this_m < comms_conf.rr_3:
-            rr_comm_percent = comms_conf.com_rr_2
-        elif rr_sales_this_m >= comms_conf.rr_3 and rr_sales_this_m < comms_conf.rr_4:
-            rr_comm_percent = comms_conf.com_rr_3
-        elif rr_sales_this_m >= comms_conf.rr_4 and rr_sales_this_m < comms_conf.rr_5:
-            rr_comm_percent = comms_conf.rr_4
-        elif rr_sales_this_m >= comms_conf.com_rr_5:
-            rr_comm_percent = comms_conf.com_rr_5
-        else:
-            rr_comm_percent = 1
-            
+        rr_comm_percent =  comms_this_m.get_rr_percent
         print(rr_sales_this_m)
         print(rr_comm_percent)
 

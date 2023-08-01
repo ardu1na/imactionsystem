@@ -26,14 +26,14 @@ class Comms (models.Model):
     
     com_rr_1 = models.DecimalField(
                 max_digits=15, decimal_places=2,
-                default=1
+                default=1, verbose_name="primer %"
                                  )
     rr_1 = models.IntegerField(
                 default=1)
 
     com_rr_2 = models.DecimalField(
                 max_digits=15, decimal_places=2,
-                default=1
+                default=1, verbose_name="segundo %"
                                  )
     rr_2 = models.IntegerField(
                 default=1)
@@ -41,21 +41,21 @@ class Comms (models.Model):
     
     com_rr_3 = models.DecimalField(
                 default=1,
-                max_digits=15, decimal_places=2
+                max_digits=15, decimal_places=2, verbose_name="tercer %"
                                  )
     rr_3 = models.IntegerField(
                 default=1)
     
     com_rr_4 = models.DecimalField(
                 max_digits=15, decimal_places=2,
-                default=1
+                default=1, verbose_name="cuarto %"
                                  )
     rr_4 = models.IntegerField(
                 default=1)
     
     com_rr_5 = models.DecimalField(
                 max_digits=15, decimal_places=2,
-                default=1
+                default=1, verbose_name="quinto %"
                                  )
     rr_5 = models.IntegerField(
                 default=1)

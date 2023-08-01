@@ -138,31 +138,31 @@ class Adj(models.Model):
         super(Adj, self).save(*args, **kwargs)
 
 
-
-# get comms conf variables
-try:
-    comms_conf = Comms.objects.last()
-except Comms.DoesNotExist:
-    comms_conf = Comms.objects.create(
-        id=1,
-        com_rr_1 = 40,
-        rr_1 = 80000,
-        com_rr_2 = 50,
-        rr_2 = 240000,
-        com_rr_3 = 60,
-        rr_3 = 400000,
-        com_rr_4 = 65,
-        rr_4 = 560000,
-        com_rr_5 = 70,
-        rr_5 = 720000,
-        up_sell = 5,
-        one_off = 15,             
-        )
-    comms_conf.save()
         
         
 class Sale(models.Model):  
     
+
+    # get comms conf variables
+    try:
+        comms_conf = Comms.objects.last()
+    except Comms.DoesNotExist:
+        comms_conf = Comms.objects.create(
+            id=1,
+            com_rr_1 = 40,
+            rr_1 = 80000,
+            com_rr_2 = 50,
+            rr_2 = 240000,
+            com_rr_3 = 60,
+            rr_3 = 400000,
+            com_rr_4 = 65,
+            rr_4 = 560000,
+            com_rr_5 = 70,
+            rr_5 = 720000,
+            up_sell = 5,
+            one_off = 15,             
+            )
+        comms_conf.save()
 
     UPSELL='Upsell'
     NEW_CLIENT='New Client'
@@ -363,7 +363,6 @@ class Sale(models.Model):
     @property
     def get_comm_per(self):
         comms_conf = Comms.objects.last()
-        print(comms_conf)
         ## obtener el porcentaje de comisiones por venta para los empleados vendedores
         if self.revenue == "OneOff":
             return comms_conf.one_off
@@ -372,7 +371,7 @@ class Sale(models.Model):
                 return comms_conf.up_sell
             else:
                 com = self.comm
-                comm_rr = com.rr_percent
+                comm_rr = com.get_rr_percent
                 return comm_rr
             
     @property
@@ -412,7 +411,10 @@ class Sale(models.Model):
         
         
 class Comm(models.Model):
-    #
+    
+    # get comms conf variables
+        
+        #
     # Modelo de comisiones mensuales de los vendedores
     created_at = models.DateField(default=date.today)
 
@@ -479,3 +481,30 @@ class Comm(models.Model):
         total = self.rr_comm + self.one_off + self.up_sell
         return total
     
+    
+    @property
+    def get_rr_percent(self):
+        comms_conf = Comms.objects.last()
+
+        sales = self.sales.filter(revenue='RR').exclude(kind='Upsell')
+        rr_sales_this_m = 0
+        for sale in sales:
+            rr_sales_this_m += sale.change
+            
+        if rr_sales_this_m >= comms_conf.rr_1 and rr_sales_this_m < comms_conf.rr_2:
+            return comms_conf.com_rr_1
+            
+        elif rr_sales_this_m >= comms_conf.rr_2 and rr_sales_this_m < comms_conf.rr_3:
+            return comms_conf.com_rr_2
+        elif rr_sales_this_m >= comms_conf.rr_3 and rr_sales_this_m < comms_conf.rr_4:
+            return comms_conf.com_rr_3
+        elif rr_sales_this_m >= comms_conf.rr_4 and rr_sales_this_m < comms_conf.rr_5:
+            return comms_conf.com_rr_4
+        elif rr_sales_this_m >= comms_conf.rr_5:
+            return comms_conf.com_rr_5
+        else:
+            return 1
+        
+    def save(self, *args, **kwargs):
+        self.rr_percent = self.get_rr_percent
+        super(Comm, self).save(*args, **kwargs)
